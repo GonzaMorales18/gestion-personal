@@ -1,0 +1,391 @@
+function doGet(e) {
+
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  // Cotización de ticker vía Google Finance Nativo
+  if (e && e.parameter && e.parameter.sheet === 'cotizacion') {
+    const ticker = (e.parameter.ticker || '').toUpperCase();
+    
+    // Si no tiene punto (es local), le agregamos BCBA: para Google Finance
+    const gfTicker = ticker.includes(':') ? ticker : (ticker.includes('.') ? ticker.split('.')[0] : 'BCBA:' + ticker);
+    
+    const configSheet = ss.getSheetByName('Config');
+    
+    // Usamos la celda Z1 de Config como auxiliar (asegúrate de que esté vacía)
+    const tempCell = configSheet.getRange('Z1');
+    
+    // Escribimos la fórmula envuelta en un IFERROR por si el ticker no existe
+    tempCell.setFormula('=IFERROR(GOOGLEFINANCE("' + gfTicker + '", "price"), 0)');
+    SpreadsheetApp.flush(); // Obliga a Google a calcularla ahora mismo
+    
+    // Le damos un respiro para que termine de procesar (Google Finance a veces tarda)
+    Utilities.sleep(1500); 
+    
+    let price = tempCell.getValue();
+    
+    // Si sigue diciendo "#N/A" o "Loading...", esperamos un poco más
+    if (price === '#N/A' || price === 'Loading...' || price === '') {
+      Utilities.sleep(1500);
+      price = tempCell.getValue();
+    }
+    
+    tempCell.clear(); // Limpiamos la celda
+    
+    const parsedPrice = parseFloat(price);
+    if (!isNaN(parsedPrice) && parsedPrice > 0) {
+      return ContentService.createTextOutput(JSON.stringify({ precio: parsedPrice, simbolo: ticker }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    return ContentService.createTextOutput(JSON.stringify({ precio: 0, simbolo: ticker }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  // Hoja de ahorros
+  if (e && e.parameter && e.parameter.sheet === 'ahorros') {
+    let sheet = ss.getSheetByName('ahorros');
+    if (!sheet) {
+      return ContentService.createTextOutput(JSON.stringify({ ahorros: [] }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    const rows = sheet.getDataRange().getValues();
+    rows.shift();
+    return ContentService.createTextOutput(JSON.stringify({ ahorros: rows }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  // Hoja de tenis
+  if (e && e.parameter && e.parameter.sheet === 'tenis') {
+    const sheet = ss.getSheetByName('tenis');
+    if (!sheet) return ContentService.createTextOutput(JSON.stringify({ tenis: [] }))
+      .setMimeType(ContentService.MimeType.JSON);
+    const rows = sheet.getDataRange().getDisplayValues();
+    rows.shift();
+    const filtradas = rows.filter(r => r[0] && r[0].trim() !== '');
+    return ContentService.createTextOutput(JSON.stringify({ tenis: filtradas }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  // Hoja de sueldos
+  if (e && e.parameter && e.parameter.sheet === 'sueldos') {
+    const sheet = ss.getSheetByName('sueldos');
+    if (!sheet) return ContentService.createTextOutput(JSON.stringify({ sueldos: [] }))
+      .setMimeType(ContentService.MimeType.JSON);
+    const rows     = sheet.getDataRange().getDisplayValues();
+    rows.shift();
+    const filtradas = rows.filter(r => r[0] && r[0].trim() !== '');
+    return ContentService.createTextOutput(JSON.stringify({ sueldos: filtradas }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  // Hoja de operaciones (compras y ventas)
+  if (e && e.parameter && e.parameter.sheet === 'operaciones') {
+    const sheet = ss.getSheetByName('operaciones');
+    if (!sheet) return ContentService.createTextOutput(JSON.stringify({ operaciones: [] })).setMimeType(ContentService.MimeType.JSON);
+    const rows = sheet.getDataRange().getValues();
+    rows.shift();
+    return ContentService.createTextOutput(JSON.stringify({ operaciones: rows })).setMimeType(ContentService.MimeType.JSON);
+  }
+
+  // Finanzas (por defecto)
+  const configSheet  = ss.getSheetByName('Config');
+  const lastRow      = configSheet.getLastRow();
+  const categorias   = configSheet.getRange('A2:A' + lastRow).getValues().flat().filter(String);
+  const metodos      = configSheet.getRange('B2:B' + lastRow).getValues().flat().filter(String);
+  const tiposActivo  = configSheet.getRange('C2:C' + lastRow).getValues().flat().filter(String);
+  const dataSheet    = ss.getSheetByName('ingresos_gastos');
+  const rawData      = dataSheet.getDataRange().getValues();
+  rawData.shift();
+
+  return ContentService.createTextOutput(JSON.stringify({ categorias, metodos, tiposActivo, historico: rawData }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+
+function doPost(e) {
+  const ss   = SpreadsheetApp.getActiveSpreadsheet();
+  const data = JSON.parse(e.postData.contents);
+
+  // ── Ahorros: guardar ──────────────────────────────────────────────────────
+  if (data.accion === 'guardarAhorro') {
+    let sheet = ss.getSheetByName('ahorros');
+    if (!sheet) {
+      sheet = ss.insertSheet('ahorros');
+      sheet.appendRow(['Tipo', 'Ticker', 'Descripcion', 'Cantidad', 'PrecioRef']);
+    }
+    sheet.appendRow([
+      data.tipo,
+      data.ticker       || '',
+      data.descripcion  || '',
+      data.cantidad,
+      data.precioManual || 0
+    ]);
+    return ok();
+  }
+
+  // ── Operaciones: registrar compra o venta ──────────────────────────────────
+  if (data.accion === 'registrarOperacion') {
+    let sheet = ss.getSheetByName('operaciones');
+    if (!sheet) {
+      sheet = ss.insertSheet('operaciones');
+      sheet.appendRow(['Fecha','Operacion','Tipo','Ticker','Descripcion','Cantidad','Precio','PrecioCompra','TotalARS','PnL']);
+    }
+    const nextRow = sheet.getLastRow() + 1;
+    const formulaCotizacion = data.ticker 
+      ? `=GOOGLEFINANCE(CONCAT("BCBA:";D${nextRow}); "price")`
+      : "";
+
+    sheet.appendRow([
+      data.fecha        ? new Date(data.fecha) : new Date(),
+      data.operacion    || 'Compra',
+      data.tipo         || '',
+      data.ticker       || '',
+      data.descripcion  || '',
+      data.cantidad     || 0,
+      data.precio       || 0,
+      data.precioCompra || 0,
+      data.totalARS     || 0,
+      data.pnl          || 0
+    ]);
+    return ok();
+  }
+
+  // ── Operaciones: eliminar ────────────────────────────────────────────────────
+  if (data.accion === 'eliminarOperacion') {
+    const sheet = ss.getSheetByName('operaciones');
+    if (sheet) {
+      const rows = sheet.getDataRange().getValues();
+      for (let i = rows.length - 1; i >= 1; i--) {
+        const mismaOp   = String(rows[i][1]||'') === String(data.operacion||'');
+        const mismoTipo = String(rows[i][2]||'') === String(data.tipo||'');
+        const mismoTick = String(rows[i][3]||'') === String(data.ticker||'');
+        const mismoDesc = String(rows[i][4]||'') === String(data.descripcion||'');
+        const mismoCant = Math.abs((parseFloat(rows[i][5])||0) - (parseFloat(data.cantidad)||0)) < 0.0001;
+        const mismoPrecio = Math.abs((parseFloat(rows[i][6])||0) - (parseFloat(data.precio)||0)) < 0.01;
+        if (mismaOp && mismoTipo && mismoTick && mismoDesc && mismoCant && mismoPrecio) {
+          sheet.deleteRow(i + 1);
+          break;
+        }
+      }
+    }
+    return ok();
+  }
+
+  // ── Operaciones: editar ──────────────────────────────────────────────────────
+  if (data.accion === 'editarOperacion') {
+    const sheet = ss.getSheetByName('operaciones');
+    if (sheet) {
+      const ant  = data.anterior || {};
+      const nvo  = data.nuevo    || {};
+      const rows = sheet.getDataRange().getValues();
+      for (let i = rows.length - 1; i >= 1; i--) {
+        const mismaOp   = String(rows[i][1]||'') === String(ant.operacion||'');
+        const mismoTipo = String(rows[i][2]||'') === String(ant.tipo||'');
+        const mismoTick = String(rows[i][3]||'') === String(ant.ticker||'');
+        const mismoDesc = String(rows[i][4]||'') === String(ant.descripcion||'');
+        const mismoCant = Math.abs((parseFloat(rows[i][5])||0) - (parseFloat(ant.cantidad)||0)) < 0.0001;
+        const mismoPrecio = Math.abs((parseFloat(rows[i][6])||0) - (parseFloat(ant.precio)||0)) < 0.01;
+        if (mismaOp && mismoTipo && mismoTick && mismoDesc && mismoCant && mismoPrecio) {
+          const rowNum = i + 1;
+          const currentTicker = nvo.ticker || ant.ticker || '';
+          
+          sheet.getRange(rowNum, 1).setValue(nvo.fecha ? new Date(nvo.fecha) : rows[i][0]);
+          sheet.getRange(rowNum, 2).setValue(nvo.operacion   || ant.operacion);
+          sheet.getRange(rowNum, 4).setValue(currentTicker);
+          sheet.getRange(rowNum, 5).setValue(nvo.descripcion || ant.descripcion || '');
+          sheet.getRange(rowNum, 6).setValue(nvo.cantidad    || ant.cantidad);
+          sheet.getRange(rowNum, 7).setValue(nvo.precio      || ant.precio);
+          sheet.getRange(rowNum, 8).setValue(nvo.precioCompra != null ? nvo.precioCompra : rows[i][7]);
+          sheet.getRange(rowNum, 9).setValue(nvo.totalARS    || (nvo.cantidad * nvo.precio));
+          sheet.getRange(rowNum, 10).setValue(nvo.pnl != null ? nvo.pnl : rows[i][9]);
+          
+          break;
+        }
+      }
+    }
+    return ok();
+  }
+
+  // ── Ahorros: eliminar ─────────────────────────────────────────────────────
+  if (data.accion === 'eliminarAhorro') {
+    const sheet = ss.getSheetByName('ahorros');
+    if (sheet) {
+      // Eliminar TODAS las filas que coincidan (activos duplicados consolidados)
+      const rows = sheet.getDataRange().getValues();
+      for (let i = rows.length - 1; i >= 1; i--) {
+        if (rows[i][0] === data.tipo &&
+            String(rows[i][1] || '') === String(data.ticker || '') &&
+            rows[i][2] === data.descripcion) {
+          sheet.deleteRow(i + 1);
+        }
+      }
+    }
+    return ok();
+  }
+
+  // ── Ahorros: editar ────────────────────────────────────────────────────────
+  if (data.accion === 'editarAhorro') {
+    const sheet = ss.getSheetByName('ahorros');
+    if (sheet) {
+      const ant  = data.anterior || {};
+      const nvo  = data.nuevo    || {};
+      const rows = sheet.getDataRange().getValues();
+      for (let i = rows.length - 1; i >= 1; i--) {
+        if (rows[i][0] === ant.tipo &&
+            String(rows[i][1] || '') === String(ant.ticker || '') &&
+            rows[i][2] === ant.descripcion) {
+          sheet.getRange(i+1, 1).setValue(nvo.tipo         || ant.tipo);
+          sheet.getRange(i+1, 2).setValue(nvo.ticker       || ant.ticker       || '');
+          sheet.getRange(i+1, 3).setValue(nvo.descripcion  || ant.descripcion  || '');
+          sheet.getRange(i+1, 4).setValue(nvo.cantidad     != null ? nvo.cantidad     : rows[i][3]);
+          sheet.getRange(i+1, 5).setValue(nvo.precioManual != null ? nvo.precioManual : rows[i][4]);
+          break;
+        }
+      }
+    }
+    return ok();
+  }
+
+  // ── Tenis: guardar ────────────────────────────────────────────────────────
+  if (data.sheet === 'tenis' || data.accion === 'guardarTenis') {
+    let sheet = ss.getSheetByName('tenis');
+    if (!sheet) {
+      sheet = ss.insertSheet('tenis');
+      sheet.appendRow(['Fecha', 'Torneo', 'Categoria', 'Instancia', 'Rival', 'Resultado', 'W/L']);
+    }
+    sheet.appendRow(data.data);
+    return ok();
+  }
+
+  // ── Sueldos: guardar ──────────────────────────────────────────────────────
+  if (data.accion === 'guardarSueldo') {
+    let sheet = ss.getSheetByName('sueldos');
+    if (!sheet) {
+      sheet = ss.insertSheet('sueldos');
+      sheet.appendRow(['Mes', 'Bruto', 'Neto', 'Bruto USD', 'Neto USD', 'Diferencia ARS', 'Diferencia USD']);
+    }
+    sheet.appendRow([
+      data.mes,
+      data.bruto,
+      data.neto,
+      data.brutoUSD,
+      data.netoUSD,
+      (data.difARS || 0) / 100,
+      (data.difUSD || 0) / 100
+    ]);
+    return ok();
+  }
+
+  // ── Finanzas: eliminar movimiento ─────────────────────────────────────────
+  if (data.accion === 'eliminarMovimiento') {
+    const sheet = ss.getSheetByName('ingresos_gastos');
+    if (!sheet) return ok();
+    const rows = sheet.getDataRange().getValues();
+    // Buscar desde abajo para encontrar el más reciente primero
+    for (let i = rows.length - 1; i >= 1; i--) {
+      const tipo      = String(rows[i][1] || '').trim();
+      const concepto  = String(rows[i][2] || '').trim();
+      const categoria = String(rows[i][3] || '').trim();
+      const monto     = parseFloat(rows[i][4]) || 0;
+      if (tipo      === String(data.tipo      || '').trim() &&
+          concepto  === String(data.concepto  || '').trim() &&
+          categoria === String(data.categoria || '').trim() &&
+          Math.abs(monto - (parseFloat(data.monto) || 0)) < 0.01) {
+        sheet.deleteRow(i + 1);
+        break;
+      }
+    }
+    return ok();
+  }
+
+  // ── Finanzas: editar movimiento ───────────────────────────────────────────
+  if (data.accion === 'editarMovimiento') {
+    const sheet = ss.getSheetByName('ingresos_gastos');
+    if (!sheet) return ok();
+    const ant  = data.anterior || {};   // valores originales
+    const nvo  = data.nuevo    || {};   // valores nuevos
+    const rows = sheet.getDataRange().getValues();
+
+    // Buscar la fila que coincida con los datos anteriores
+    for (let i = rows.length - 1; i >= 1; i--) {
+      const tipo      = String(rows[i][1] || '').trim();
+      const concepto  = String(rows[i][2] || '').trim();
+      const categoria = String(rows[i][3] || '').trim();
+      const monto     = parseFloat(rows[i][4]) || 0;
+
+      const matchTipo     = tipo      === String(ant.tipo      || '').trim();
+      const matchConcepto = concepto  === String(ant.concepto  || '').trim();
+      const matchCat      = categoria === String(ant.categoria || '').trim();
+      const matchMonto    = Math.abs(monto - (parseFloat(ant.monto) || 0)) < 0.01;
+
+      if (matchTipo && matchConcepto && matchCat && matchMonto) {
+        const rowNum = i + 1; // fila en Sheets (1-based, con encabezado)
+
+        // Actualizar cada celda con el nuevo valor
+        // Columna A = Fecha, B = Tipo, C = Concepto, D = Categoría, E = Monto, F = Método
+        sheet.getRange(rowNum, 1).setValue(new Date(nvo.fecha));
+        sheet.getRange(rowNum, 2).setValue(nvo.tipo      || ant.tipo);
+        sheet.getRange(rowNum, 3).setValue(nvo.concepto  || ant.concepto);
+        sheet.getRange(rowNum, 4).setValue(nvo.categoria || ant.categoria);
+        sheet.getRange(rowNum, 5).setValue(parseFloat(nvo.monto) || monto);
+        sheet.getRange(rowNum, 6).setValue(nvo.metodo    || ant.metodo || '');
+
+        // Si la categoría nueva no existe en Config, agregarla
+        if (nvo.categoria && nvo.categoria !== ant.categoria) {
+          const configSheet          = ss.getSheetByName('Config');
+          const categoriasExistentes = configSheet
+            .getRange('A2:A' + configSheet.getLastRow())
+            .getValues().flat();
+          if (!categoriasExistentes.includes(nvo.categoria)) {
+            configSheet.appendRow([nvo.categoria]);
+          }
+        }
+        break;
+      }
+    }
+    return ok();
+  }
+
+  // ── Finanzas: registrar movimiento nuevo ──────────────────────────────────
+  // Validar campos obligatorios antes de guardar
+  const monto    = parseFloat(data.monto);
+  const concepto = String(data.concepto || '').trim();
+  if (!monto || monto <= 0 || !concepto || !data.categoria) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ result: 'error', msg: 'Datos incompletos' }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  const sheet       = ss.getSheetByName('ingresos_gastos');
+  const configSheet = ss.getSheetByName('Config');
+
+  // Agregar categoría nueva si no existe
+  const categoriasExistentes = configSheet
+    .getRange('A2:A' + configSheet.getLastRow())
+    .getValues().flat();
+  if (data.categoria && !categoriasExistentes.includes(data.categoria)) {
+    configSheet.appendRow([data.categoria]);
+  }
+
+  // Usar la fecha enviada por el cliente (o ahora si no viene)
+  const fecha = data.fecha ? new Date(data.fecha) : new Date();
+
+  sheet.appendRow([
+    fecha,
+    data.tipo,
+    concepto,
+    data.categoria,
+    monto,
+    data.metodo_pago  || '',
+    data.recurrente   ? 'Sí' : 'No'
+  ]);
+
+  return ok();
+}
+
+// Helper
+function ok() {
+  return ContentService
+    .createTextOutput(JSON.stringify({ result: 'success' }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
