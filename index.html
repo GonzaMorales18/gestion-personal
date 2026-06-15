@@ -160,8 +160,16 @@
       <span class="font-bold text-sm uppercase tracking-wider">Inicio</span>
     </a>
 
-    <!-- Grupo: Mis Finanzas -->
-    <div class="px-6 pt-5 pb-2 text-[9px] font-black text-slate-500 uppercase tracking-[0.25em]">Mis Finanzas</div>
+    <!-- Grupo: Salud -->
+    <div class="px-6 pt-5 pb-2 text-[9px] font-black text-slate-500 uppercase tracking-[0.25em]">Salud</div>
+    <a href="#" onclick="showSection('actividad')" id="nav-actividad"
+       class="flex items-center px-6 py-3.5 text-slate-400 hover:bg-slate-800 border-l-4 border-transparent transition-colors">
+      <i class="fas fa-heartbeat w-6 text-sm"></i>
+      <span class="font-bold text-sm uppercase tracking-wider">Actividad</span>
+    </a>
+
+    <!-- Grupo: Finanzas -->
+    <div class="px-6 pt-5 pb-2 text-[9px] font-black text-slate-500 uppercase tracking-[0.25em]">Finanzas</div>
     <a href="#" onclick="showSection('finanzas')" id="nav-finanzas"
        class="flex items-center px-6 py-3.5 bg-blue-600/10 border-l-4 border-blue-500 text-blue-400 transition-colors">
       <i class="fas fa-chart-line w-6 text-sm"></i>
@@ -245,13 +253,19 @@
       <p id="inicio-fecha" class="text-[11px] text-slate-400 mt-1 uppercase tracking-widest mono"></p>
     </div>
 
-    <!-- Grid de tarjetas de resumen -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+    <!-- Contenedor Superior (FINANZAS y SALUD) -->
+    <div class="grid grid-cols-1 xl:grid-cols-5 gap-4 mb-8">
+      
+      <!-- Sección FINANZAS -->
+      <div class="xl:col-span-3">
+        <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 ml-1">Finanzas</h3>
+        <!-- Grid de tarjetas de resumen -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
       <!-- Tarjeta Finanzas -->
       <div onclick="showSection('finanzas')"
            id="card-inicio-finanzas"
-           class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-6 cursor-pointer
+           class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-4 xl:p-5 cursor-pointer
                   transition-all duration-200 hover:-translate-y-1 hover:shadow-xl
                   balance-neutral relative overflow-hidden">
 
@@ -275,7 +289,7 @@
         <!-- Balance mensual — dato principal -->
         <div class="relative">
           <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Balance del mes</p>
-          <h3 id="inicio-balance" class="text-3xl font-black mono tracking-tighter text-white"><span class="skeleton w-32 h-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></h3>
+          <h3 id="inicio-balance" class="text-2xl font-black mono tracking-tighter text-white"><span class="skeleton w-32 h-8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></h3>
           <div id="inicio-balance-badge" class="mt-1.5 inline-flex items-center gap-1">
             <span id="inicio-balance-label" class="text-[9px] font-bold uppercase tracking-widest text-slate-400">—</span>
           </div>
@@ -287,7 +301,7 @@
         <!-- Ingresos totales — dato secundario -->
         <div class="flex items-center justify-between">
           <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Ingresos del mes</p>
-          <p id="inicio-ingresos" class="text-sm font-black mono text-green-400 tracking-tight"><span class="skeleton w-20 h-4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
+          <p id="inicio-ingresos" class="text-xs font-black mono text-green-400 tracking-tight"><span class="skeleton w-20 h-4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
         </div>
 
       </div>
@@ -296,7 +310,7 @@
       <!-- Tarjeta Ahorros -->
       <div onclick="showSection('ahorros')"
            id="card-inicio-ahorros"
-           class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-6 cursor-pointer
+           class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-4 xl:p-5 cursor-pointer
                   transition-all duration-200 hover:-translate-y-1 hover:shadow-xl
                   relative overflow-hidden">
         <!-- Fondo decorativo sutil -->
@@ -319,7 +333,7 @@
         <!-- Total Ahorros ARS -->
         <div class="relative">
           <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total en ARS</p>
-          <h3 id="inicio-ahorros-ars" class="text-3xl font-black mono tracking-tighter text-white"><span class="skeleton w-32 h-8">&nbsp;</span></h3>
+          <h3 id="inicio-ahorros-ars" class="text-2xl font-black mono tracking-tighter text-white"><span class="skeleton w-32 h-8">&nbsp;</span></h3>
           <div id="inicio-ahorros-ganancia-badge" class="hidden mt-1.5 inline-flex items-center gap-1">
             <span id="inicio-ahorros-ganancia" class="text-[9px] font-bold uppercase tracking-widest text-slate-400">—</span>
           </div>
@@ -331,7 +345,7 @@
         <!-- Total Ahorros USD -->
         <div class="flex items-center justify-between">
           <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Total en USD</p>
-          <p id="inicio-ahorros-usd" class="text-sm font-black mono text-green-400 tracking-tight"><span class="skeleton w-20 h-4">&nbsp;</span></p>
+          <p id="inicio-ahorros-usd" class="text-xs font-black mono text-green-400 tracking-tight"><span class="skeleton w-20 h-4">&nbsp;</span></p>
         </div>
       </div>
       <!-- /Tarjeta Ahorros -->
@@ -339,7 +353,7 @@
       <!-- Tarjeta Sueldos -->
       <div onclick="showSection('sueldos')"
            id="card-inicio-sueldos"
-           class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-6 cursor-pointer
+           class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-4 xl:p-5 cursor-pointer
                   transition-all duration-200 hover:-translate-y-1 hover:shadow-xl
                   relative overflow-hidden">
         <!-- Fondo decorativo sutil -->
@@ -362,7 +376,7 @@
         <!-- Sueldo mensual -->
         <div class="relative">
           <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Último Sueldo Neto</p>
-          <h3 id="inicio-sueldo-neto" class="text-3xl font-black mono tracking-tighter text-white"><span class="skeleton w-32 h-8">&nbsp;</span></h3>
+          <h3 id="inicio-sueldo-neto" class="text-2xl font-black mono tracking-tighter text-white"><span class="skeleton w-32 h-8">&nbsp;</span></h3>
           <div id="inicio-sueldo-badge" class="mt-1.5 inline-flex items-center gap-1">
             <span id="inicio-sueldo-label" class="text-[9px] font-bold uppercase tracking-widest text-slate-400">—</span>
           </div>
@@ -374,36 +388,314 @@
         <!-- Incremento -->
         <div class="flex items-center justify-between">
           <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Variación mensual</p>
-          <p id="inicio-sueldo-var" class="text-sm font-black mono text-green-400 tracking-tight"><span class="skeleton w-20 h-4">&nbsp;</span></p>
+          <p id="inicio-sueldo-var" class="text-xs font-black mono text-green-400 tracking-tight"><span class="skeleton w-20 h-4">&nbsp;</span></p>
         </div>
       </div>
       <!-- /Tarjeta Sueldos -->
 
-      <!-- Widget Mini Calendario -->
-      <div class="col-span-1 sm:col-span-2 xl:col-span-2 group bg-slate-900 rounded-2xl border border-slate-700/60 p-6 relative overflow-hidden flex flex-col">
-        <!-- Fondo decorativo sutil -->
-        <div class="absolute inset-0 bg-gradient-to-br from-pink-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
+        </div>
 
-        <!-- Cabecera de la tarjeta -->
-        <div class="flex items-center justify-between mb-5 relative z-10">
-          <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-xl bg-pink-900/50 flex items-center justify-center">
-              <i class="fas fa-calendar-alt text-pink-500 text-xs"></i>
+        <!-- Sección PRODUCTIVIDAD (Movida para reducir margen) -->
+        <div class="mt-8">
+          <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 ml-1">Productividad</h3>
+          <div class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-6 relative overflow-hidden flex flex-col w-full">
+            <!-- Fondo decorativo sutil -->
+            <div class="absolute inset-0 bg-gradient-to-br from-pink-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
+
+            <!-- Cabecera de la tarjeta -->
+            <div class="flex items-center justify-between mb-5 relative z-10">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-pink-900/50 flex items-center justify-center">
+                  <i class="fas fa-calendar-alt text-pink-500 text-xs"></i>
+                </div>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Calendario</span>
+              </div>
+              <div onclick="showSection('calendario')" class="flex items-center gap-1 text-slate-500 hover:text-pink-400 transition-colors cursor-pointer">
+                <span class="text-[9px] font-bold uppercase tracking-widest hidden sm:block">Ver más</span>
+                <i class="fas fa-arrow-right text-[10px]"></i>
+              </div>
             </div>
-            <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Calendario</span>
-          </div>
-          <div onclick="showSection('calendario')" class="flex items-center gap-1 text-slate-500 hover:text-pink-400 transition-colors cursor-pointer">
-            <span class="text-[9px] font-bold uppercase tracking-widest hidden sm:block">Ver más</span>
-            <i class="fas fa-arrow-right text-[10px]"></i>
+
+            <div id="inicio-cal-grid" class="grid grid-cols-1 md:grid-cols-4 gap-3 relative z-10 flex-1">
+               <div class="col-span-full text-[11px] text-slate-500 font-bold uppercase tracking-widest text-center mt-4">Sincronizando...</div>
+            </div>
           </div>
         </div>
 
-        <div id="inicio-cal-grid" class="grid grid-cols-1 md:grid-cols-4 gap-3 relative z-10 flex-1">
-           <div class="col-span-full text-[11px] text-slate-500 font-bold uppercase tracking-widest text-center mt-4">Sincronizando...</div>
+      </div>
+      
+      <!-- Sección SALUD -->
+      <div class="xl:col-span-2">
+        <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 ml-1">Salud</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          
+          <!-- Tarjeta Caminata (Inicio) -->
+          <div onclick="showSection('actividad')" class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-4 xl:p-5 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-teal-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="flex items-center justify-between mb-5 relative z-10">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-teal-900/50 flex items-center justify-center">
+                  <i class="fas fa-shoe-prints text-teal-500 text-xs"></i>
+                </div>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Pasos</span>
+              </div>
+              <div class="flex items-center gap-1 text-slate-500 group-hover:text-teal-400 transition-colors">
+                <span class="text-[9px] font-bold uppercase tracking-widest hidden sm:block">Ver más</span>
+                <i class="fas fa-arrow-right text-[10px]"></i>
+              </div>
+            </div>
+            <div class="relative z-10">
+              <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Pasos Diarios</p>
+              <h3 id="inicio-health-steps" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+              <div class="mt-1.5 inline-flex items-center gap-1">
+                <span id="inicio-health-steps-subtitle" class="text-[9px] font-bold uppercase tracking-widest text-slate-500">Hoy</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tarjeta Recorrido (Inicio) -->
+          <div onclick="showSection('actividad')" class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-4 xl:p-5 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="flex items-center justify-between mb-5 relative z-10">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-emerald-900/50 flex items-center justify-center">
+                  <i class="fas fa-route text-emerald-500 text-xs"></i>
+                </div>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Distancia</span>
+              </div>
+              <div class="flex items-center gap-1 text-slate-500 group-hover:text-emerald-400 transition-colors">
+                <span class="text-[9px] font-bold uppercase tracking-widest hidden sm:block">Ver más</span>
+                <i class="fas fa-arrow-right text-[10px]"></i>
+              </div>
+            </div>
+            <div class="relative z-10">
+              <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Distancia (Km)</p>
+              <h3 id="inicio-health-distance" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+              <div class="mt-1.5 inline-flex items-center gap-1">
+                <span id="inicio-health-distance-subtitle" class="text-[9px] font-bold uppercase tracking-widest text-slate-500">Hoy</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tarjeta Corporal (Inicio) -->
+          <div onclick="showSection('actividad')" class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-4 xl:p-5 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="flex items-center justify-between mb-5 relative z-10">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-blue-900/50 flex items-center justify-center">
+                  <i class="fas fa-weight text-blue-500 text-xs"></i>
+                </div>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Peso</span>
+              </div>
+              <div class="flex items-center gap-1 text-slate-500 group-hover:text-blue-400 transition-colors">
+                <span class="text-[9px] font-bold uppercase tracking-widest hidden sm:block">Ver más</span>
+                <i class="fas fa-arrow-right text-[10px]"></i>
+              </div>
+            </div>
+            <div class="relative z-10">
+              <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Peso Promedio (Kg)</p>
+              <h3 id="inicio-health-weight" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+              <div class="mt-1.5 inline-flex items-center gap-1">
+                <span id="inicio-health-weight-subtitle" class="text-[9px] font-bold uppercase tracking-widest text-slate-500">Último registro</span>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
-      <!-- /Widget Mini Calendario -->
+      
+    </div>
 
+
+  </main>
+
+  <!-- SECCIÓN SALUD - ACTIVIDAD -->
+  <main id="section-actividad" class="hidden p-4 md:p-8 max-w-[1400px] mx-auto w-full space-y-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+      
+      <!-- Tarjeta Pasos -->
+      <div class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+        <div class="absolute inset-0 bg-gradient-to-br from-teal-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+        <div class="flex items-center justify-between mb-5 relative z-10">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-teal-900/50 flex items-center justify-center">
+              <i class="fas fa-shoe-prints text-teal-500 text-xs"></i>
+            </div>
+            <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Pasos</span>
+          </div>
+        </div>
+        <div class="relative z-10">
+          <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Pasos Diarios</p>
+          <h3 id="health-steps" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+          <div class="mt-1.5 inline-flex items-center gap-1">
+            <span id="health-steps-subtitle" class="text-[9px] font-bold uppercase tracking-widest text-slate-500">Hoy</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta Distancia -->
+      <div class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+        <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+        <div class="flex items-center justify-between mb-5 relative z-10">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-emerald-900/50 flex items-center justify-center">
+              <i class="fas fa-route text-emerald-500 text-xs"></i>
+            </div>
+            <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Distancia</span>
+          </div>
+        </div>
+        <div class="relative z-10">
+          <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Distancia (Km)</p>
+          <h3 id="health-distance" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+          <div class="mt-1.5 inline-flex items-center gap-1">
+            <span id="health-distance-subtitle" class="text-[9px] font-bold uppercase tracking-widest text-slate-500">Hoy</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta Peso -->
+      <div class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+        <div class="flex items-center justify-between mb-5 relative z-10">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-blue-900/50 flex items-center justify-center">
+              <i class="fas fa-weight text-blue-500 text-xs"></i>
+            </div>
+            <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Peso</span>
+          </div>
+        </div>
+        <div class="relative z-10">
+          <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Peso Promedio (Kg)</p>
+          <h3 id="health-weight" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+          <div class="mt-1.5 inline-flex items-center gap-1">
+            <span id="health-weight-subtitle" class="text-[9px] font-bold uppercase tracking-widest text-slate-500">Último registro</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta Calorías -->
+      <div class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+        <div class="absolute inset-0 bg-gradient-to-br from-orange-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+        <div class="flex items-center justify-between mb-5 relative z-10">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-orange-900/50 flex items-center justify-center">
+              <i class="fas fa-fire text-orange-500 text-xs"></i>
+            </div>
+            <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Calorías</span>
+          </div>
+        </div>
+        <div class="relative z-10">
+          <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Gasto Energético</p>
+          <h3 id="health-calories" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+          <div class="mt-1.5 inline-flex items-center gap-1">
+            <span id="health-calories-subtitle" class="text-[9px] font-bold uppercase tracking-widest text-slate-500">Hoy</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta Minutos Activos -->
+      <div class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+        <div class="absolute inset-0 bg-gradient-to-br from-rose-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+        <div class="flex items-center justify-between mb-5 relative z-10">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-rose-900/50 flex items-center justify-center">
+              <i class="fas fa-heartbeat text-rose-500 text-xs"></i>
+            </div>
+            <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Actividad</span>
+          </div>
+        </div>
+        <div class="relative z-10">
+          <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Minutos Activos</p>
+          <h3 id="health-activeMinutes" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+          <div class="mt-1.5 inline-flex items-center gap-1">
+            <span id="health-activeMinutes-subtitle" class="text-[9px] font-bold uppercase tracking-widest text-slate-500">Hoy</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Filtro global de Actividad -->
+    <div class="bg-slate-900 p-4 rounded-2xl border border-slate-700/60 flex flex-col xl:flex-row gap-3 xl:items-center">
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mr-1">Período:</span>
+        <div id="actividad-filtros" class="flex gap-2 flex-wrap items-center">
+          <button id="act-filtro-hoy" onclick="setActividadFiltro('hoy')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors bg-slate-900 text-white">Hoy</button>
+          <button id="act-filtro-semana" onclick="setActividadFiltro('semana')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors bg-slate-100 text-slate-400 hover:bg-slate-700">Semana</button>
+          <button id="act-filtro-mes" onclick="setActividadFiltro('mes')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors bg-slate-100 text-slate-400 hover:bg-slate-700">Mes</button>
+          <button id="act-filtro-año" onclick="setActividadFiltro('año')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors bg-slate-100 text-slate-400 hover:bg-slate-700">Año</button>
+          
+          <div class="hidden xl:block w-px h-6 bg-slate-700/60 mx-1"></div>
+          
+          <button id="act-filtro-personalizado" onclick="setActividadFiltro('personalizado')" class="h-8 px-3 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors flex items-center gap-1.5 text-slate-400 border border-slate-700 hover:bg-slate-800">
+            <i class="fas fa-calendar-alt"></i> Personalizado
+          </button>
+        </div>
+      </div>
+      
+      <!-- Controles de fecha personalizada (ocultos por defecto) -->
+      <div id="actividad-custom-dates" class="hidden items-center gap-2 mt-2 xl:mt-0 xl:ml-2">
+        <input type="text" id="act-fecha-inicio" placeholder="Desde" class="w-24 h-8 px-3 bg-slate-800 border border-slate-700 rounded-lg text-[11px] font-bold text-white outline-none focus:ring-2 focus:ring-teal-500/30">
+        <span class="text-slate-500 font-bold">-</span>
+        <input type="text" id="act-fecha-fin" placeholder="Hasta" class="w-24 h-8 px-3 bg-slate-800 border border-slate-700 rounded-lg text-[11px] font-bold text-white outline-none focus:ring-2 focus:ring-teal-500/30">
+        <button onclick="filtrarActividadCustom()" class="h-8 px-4 bg-slate-800 hover:bg-teal-600 border border-slate-700 rounded-lg text-[11px] font-black text-white uppercase tracking-wider transition-colors">
+          Filtrar
+        </button>
+      </div>
+    </div>
+
+    <!-- Contenedor de gráficos (se oculta si filtro es Hoy) -->
+    <div id="charts-actividad-container" class="hidden grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+      <!-- Gráfico Pasos -->
+      <div class="bg-slate-900 rounded-2xl border border-slate-700/60 p-5">
+        <div class="flex items-center gap-2 mb-4">
+           <i class="fas fa-shoe-prints text-teal-500 text-xs"></i>
+           <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Evolución Pasos</h4>
+        </div>
+        <div class="h-[180px] w-full relative">
+          <canvas id="chart-steps"></canvas>
+        </div>
+      </div>
+      <!-- Gráfico Distancia -->
+      <div class="bg-slate-900 rounded-2xl border border-slate-700/60 p-5">
+         <div class="flex items-center gap-2 mb-4">
+           <i class="fas fa-route text-emerald-500 text-xs"></i>
+           <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Evolución Distancia</h4>
+        </div>
+        <div class="h-[180px] w-full relative">
+          <canvas id="chart-distance"></canvas>
+        </div>
+      </div>
+      <!-- Gráfico Peso -->
+      <div class="bg-slate-900 rounded-2xl border border-slate-700/60 p-5">
+         <div class="flex items-center gap-2 mb-4">
+           <i class="fas fa-weight text-blue-500 text-xs"></i>
+           <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tendencia de Peso</h4>
+        </div>
+        <div class="h-[180px] w-full relative">
+          <canvas id="chart-weight"></canvas>
+        </div>
+      </div>
+      <!-- Gráfico Calorías -->
+      <div class="bg-slate-900 rounded-2xl border border-slate-700/60 p-5">
+         <div class="flex items-center gap-2 mb-4">
+           <i class="fas fa-fire text-orange-500 text-xs"></i>
+           <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Evolución Calorías</h4>
+        </div>
+        <div class="h-[180px] w-full relative">
+          <canvas id="chart-calories"></canvas>
+        </div>
+      </div>
+      <!-- Gráfico Minutos Activos -->
+      <div class="bg-slate-900 rounded-2xl border border-slate-700/60 p-5">
+         <div class="flex items-center gap-2 mb-4">
+           <i class="fas fa-heartbeat text-rose-500 text-xs"></i>
+           <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Minutos Activos</h4>
+        </div>
+        <div class="h-[180px] w-full relative">
+          <canvas id="chart-activeMinutes"></canvas>
+        </div>
+      </div>
     </div>
 
   </main>
@@ -488,22 +780,52 @@
         <!-- Tarjetas de resumen -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <!-- Ingresos -->
-          <div class="bg-green-900/20 p-5 rounded-2xl border border-green-800/50">
-            <p class="text-[9px] font-bold text-green-400 uppercase tracking-widest mb-1">Ingresos</p>
-            <h4 id="total-ingresos" class="text-2xl font-black text-green-300 mono tracking-tighter">$0</h4>
-            <p id="top-categoria-ing" class="text-[9px] text-green-400 mt-1 tracking-wide truncate">—</p>
+          <div class="group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="flex items-center justify-between mb-5 relative z-10">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-green-900/50 flex items-center justify-center">
+                  <i class="fas fa-arrow-down text-green-500 text-xs"></i>
+                </div>
+                <span class="text-[10px] font-black text-green-400 uppercase tracking-[0.2em]">Ingresos</span>
+              </div>
+            </div>
+            <div class="relative z-10">
+              <h4 id="total-ingresos" class="text-3xl font-black text-green-300 mono tracking-tighter transition-all duration-300">$0</h4>
+              <p id="top-categoria-ing" class="text-[9px] font-bold text-green-400 mt-1.5 tracking-wide truncate">—</p>
+            </div>
           </div>
           <!-- Balance neto -->
-          <div id="card-balance" class="bg-slate-900 p-5 rounded-2xl border border-slate-700/60 balance-neutral transition-all">
-            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Balance Neto</p>
-            <h4 id="total-balance" class="text-2xl font-black text-white mono tracking-tighter">$0</h4>
-            <p id="balance-label" class="text-[9px] font-bold text-slate-400 uppercase mt-1 tracking-widest">—</p>
+          <div id="card-balance" class="group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl balance-neutral">
+            <div class="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="flex items-center justify-between mb-5 relative z-10">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-blue-900/50 flex items-center justify-center">
+                  <i class="fas fa-scale-balanced text-blue-500 text-xs"></i>
+                </div>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Balance Neto</span>
+              </div>
+            </div>
+            <div class="relative z-10">
+              <h4 id="total-balance" class="text-3xl font-black text-white mono tracking-tighter transition-all duration-300">$0</h4>
+              <p id="balance-label" class="text-[9px] font-bold text-slate-400 mt-1.5 uppercase tracking-widest">—</p>
+            </div>
           </div>
           <!-- Gastos -->
-          <div class="bg-red-900/20 p-5 rounded-2xl border border-red-800/50">
-            <p class="text-[9px] font-bold text-red-400 uppercase tracking-widest mb-1">Gastos</p>
-            <h4 id="total-gastos" class="text-2xl font-black text-red-300 mono tracking-tighter">$0</h4>
-            <p id="top-categoria-gas" class="text-[9px] text-red-400 mt-1 tracking-wide truncate">—</p>
+          <div class="group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-red-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="flex items-center justify-between mb-5 relative z-10">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-red-900/50 flex items-center justify-center">
+                  <i class="fas fa-arrow-up text-red-500 text-xs"></i>
+                </div>
+                <span class="text-[10px] font-black text-red-400 uppercase tracking-[0.2em]">Gastos</span>
+              </div>
+            </div>
+            <div class="relative z-10">
+              <h4 id="total-gastos" class="text-3xl font-black text-red-300 mono tracking-tighter transition-all duration-300">$0</h4>
+              <p id="top-categoria-gas" class="text-[9px] font-bold text-red-400 mt-1.5 tracking-wide truncate">—</p>
+            </div>
           </div>
           
           <!-- Nueva Tarjeta: Gasto Mensual vs Promedio -->
@@ -872,25 +1194,65 @@
 
         <!-- Tarjetas resumen -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="bg-green-900/20 p-5 rounded-2xl border border-green-800/50">
-            <p class="text-[9px] font-bold text-green-400 uppercase tracking-widest mb-1">Total en ARS</p>
-            <h4 id="ah-total-ars" class="text-2xl font-black text-green-300 mono tracking-tighter">$—</h4>
-            <p id="ah-ars-sub" class="text-[10px] text-green-400/70 mt-1">—</p>
+          <div class="group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="flex items-center justify-between mb-5 relative z-10">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-green-900/50 flex items-center justify-center">
+                  <i class="fas fa-wallet text-green-500 text-xs"></i>
+                </div>
+                <span class="text-[10px] font-black text-green-400 uppercase tracking-[0.2em]">Total en ARS</span>
+              </div>
+            </div>
+            <div class="relative z-10">
+              <h4 id="ah-total-ars" class="text-3xl font-black text-green-300 mono tracking-tighter transition-all duration-300">$—</h4>
+              <p id="ah-ars-sub" class="text-[10px] text-green-400/70 mt-1.5">—</p>
+            </div>
           </div>
-          <div class="bg-green-900/20 p-5 rounded-2xl border border-green-800/50">
-            <p class="text-[9px] font-bold text-green-400 uppercase tracking-widest mb-1">Total en USD</p>
-            <h4 id="ah-total-usd" class="text-2xl font-black text-green-300 mono tracking-tighter">U$S —</h4>
-            <p id="ah-usd-sub" class="text-[10px] text-green-400/70 mt-1">—</p>
+          <div class="group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="flex items-center justify-between mb-5 relative z-10">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-green-900/50 flex items-center justify-center">
+                  <i class="fas fa-dollar-sign text-green-500 text-xs"></i>
+                </div>
+                <span class="text-[10px] font-black text-green-400 uppercase tracking-[0.2em]">Total en USD</span>
+              </div>
+            </div>
+            <div class="relative z-10">
+              <h4 id="ah-total-usd" class="text-3xl font-black text-green-300 mono tracking-tighter transition-all duration-300">U$S —</h4>
+              <p id="ah-usd-sub" class="text-[10px] text-green-400/70 mt-1.5">—</p>
+            </div>
           </div>
-          <div id="card-ah-pnl" class="bg-slate-900 p-5 rounded-2xl border border-green-800/50 transition-all">
-            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">P&L Realizado</p>
-            <h4 id="ah-pnl-total" class="text-2xl font-black mono tracking-tighter text-slate-400">$—</h4>
-            <p id="ah-pnl-sub" class="text-[10px] text-slate-400 mt-1">Total de ventas</p>
+          <div id="card-ah-pnl" class="group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-indigo-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="flex items-center justify-between mb-5 relative z-10">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-indigo-900/50 flex items-center justify-center">
+                  <i class="fas fa-chart-line text-indigo-500 text-xs"></i>
+                </div>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">P&L Realizado</span>
+              </div>
+            </div>
+            <div class="relative z-10">
+              <h4 id="ah-pnl-total" class="text-3xl font-black mono tracking-tighter text-slate-400 transition-all duration-300">$—</h4>
+              <p id="ah-pnl-sub" class="text-[10px] text-slate-400 mt-1.5">Total de ventas</p>
+            </div>
           </div>
-          <div class="bg-slate-900 p-5 rounded-2xl border border-slate-700/60">
-            <p class="text-[9px] font-bold text-violet-400 uppercase tracking-widest mb-1">Cotizaciones</p>
-            <div id="ah-cotizaciones" class="space-y-1 mt-2">
-              <p class="text-[11px] text-slate-400 mono">Cargando...</p>
+          <div class="group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-violet-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="flex items-center justify-between mb-5 relative z-10">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-violet-900/50 flex items-center justify-center">
+                  <i class="fas fa-exchange-alt text-violet-500 text-xs"></i>
+                </div>
+                <span class="text-[10px] font-black text-violet-400 uppercase tracking-[0.2em]">Cotizaciones</span>
+              </div>
+            </div>
+            <div class="relative z-10">
+              <div id="ah-cotizaciones" class="space-y-1 mt-0">
+                <p class="text-[11px] text-slate-400 mono">Cargando...</p>
+              </div>
             </div>
           </div>
         </div>
@@ -1059,19 +1421,50 @@
       <div class="lg:col-span-8 space-y-5">
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="bg-green-900/20 p-5 rounded-2xl border border-green-800/50">
-            <p class="text-[9px] font-bold text-green-400 uppercase tracking-widest mb-1">Último Neto ARS</p>
-            <h4 id="su-ultimo-neto" class="text-2xl font-black text-green-300 mono tracking-tighter">$—</h4>
-            <p id="su-ultimo-mes" class="text-[10px] text-green-400/70 mt-1">—</p>
+          <div class="group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="flex items-center justify-between mb-5 relative z-10">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-green-900/50 flex items-center justify-center">
+                  <i class="fas fa-money-bill-wave text-green-500 text-xs"></i>
+                </div>
+                <span class="text-[10px] font-black text-green-400 uppercase tracking-[0.2em]">TOTAL NETO ARS</span>
+              </div>
+            </div>
+            <div class="relative z-10">
+              <h4 id="su-ultimo-neto" class="text-3xl font-black text-green-300 mono tracking-tighter transition-all duration-300">$—</h4>
+              <p id="su-ultimo-mes" class="text-[10px] text-green-400/70 mt-1.5">—</p>
+            </div>
           </div>
-          <div class="bg-green-900/20 p-5 rounded-2xl border border-green-800/50">
-            <p class="text-[9px] font-bold text-green-400 uppercase tracking-widest mb-1">Último Neto USD</p>
-            <h4 id="su-ultimo-neto-usd" class="text-2xl font-black text-green-300 mono tracking-tighter">U$S —</h4>
+          <div class="group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="flex items-center justify-between mb-5 relative z-10">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-green-900/50 flex items-center justify-center">
+                  <i class="fas fa-dollar-sign text-green-500 text-xs"></i>
+                </div>
+                <span class="text-[10px] font-black text-green-400 uppercase tracking-[0.2em]">TOTAL NETO USD</span>
+              </div>
+            </div>
+            <div class="relative z-10">
+              <h4 id="su-ultimo-neto-usd" class="text-3xl font-black text-green-300 mono tracking-tighter transition-all duration-300">U$S —</h4>
+              <p id="su-ultimo-mes-usd" class="text-[10px] text-green-400/70 mt-1.5">—</p>
+            </div>
           </div>
-          <div class="bg-slate-900 p-5 rounded-2xl border border-slate-700/60">
-            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Registros totales</p>
-            <h4 id="su-total-registros" class="text-2xl font-black text-white mono tracking-tighter">—</h4>
-            <p id="su-tiempo-total" class="text-[10px] text-slate-400 mt-1">—</p>
+          <div class="group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-slate-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="flex items-center justify-between mb-5 relative z-10">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-slate-800 flex items-center justify-center">
+                  <i class="fas fa-list-ol text-slate-400 text-xs"></i>
+                </div>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Registros totales</span>
+              </div>
+            </div>
+            <div class="relative z-10">
+              <h4 id="su-total-registros" class="text-3xl font-black text-white mono tracking-tighter transition-all duration-300">—</h4>
+              <p id="su-tiempo-total" class="text-[10px] text-slate-400 mt-1.5">—</p>
+            </div>
           </div>
         </div>
 
@@ -1086,12 +1479,12 @@
             <input type="text" id="su-fecha-inicio" placeholder="Desde" class="w-24 h-8 px-3 bg-slate-800 border border-slate-700 rounded-lg text-[11px] font-bold text-white outline-none focus:ring-2 focus:ring-blue-500/30">
             <span class="text-slate-500 font-bold">-</span>
             <input type="text" id="su-fecha-fin" placeholder="Hasta" class="w-24 h-8 px-3 bg-slate-800 border border-slate-700 rounded-lg text-[11px] font-bold text-white outline-none focus:ring-2 focus:ring-blue-500/30">
-            <button onclick="renderTablaSueldos();renderGraficoSueldos();" class="h-8 px-4 bg-slate-800 hover:bg-blue-600 border border-slate-700 rounded-lg text-[11px] font-black text-white uppercase tracking-wider transition-colors">
+            <button onclick="renderTablaSueldos();renderGraficoSueldos();renderResumenSueldos();" class="h-8 px-4 bg-slate-800 hover:bg-blue-600 border border-slate-700 rounded-lg text-[11px] font-black text-white uppercase tracking-wider transition-colors">
               Filtrar
             </button>
           </div>
         </div>
-        <div class="bg-slate-900 p-6 rounded-2xl border border-slate-700/60">
+        <div id="sueldos-chart-container" class="bg-slate-900 p-6 rounded-2xl border border-slate-700/60">
           <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-4">Evolución del Sueldo</p>
           <canvas id="chartSueldos" class="max-h-[260px]"></canvas>
         </div>
@@ -1366,14 +1759,6 @@
 
   <!-- SECCIÓN CALENDARIO -->
   <main id="section-calendario" class="hidden p-4 md:p-8 max-w-[1400px] mx-auto w-full space-y-6">
-    <div class="flex flex-col sm:flex-row items-end sm:items-center justify-end mb-2 gap-4">
-      <button id="btn-conectar-google" onclick="conectarGoogleCalendar()" class="bg-pink-600 hover:bg-pink-500 text-white font-black py-2.5 px-6 rounded-xl border border-white/20 active:scale-95 transition-all flex items-center justify-center gap-2 text-[11px] uppercase tracking-widest">
-        <i class="fab fa-google"></i><span>Conectar Google Calendar</span>
-      </button>
-      <button id="btn-desconectar-google" onclick="desconectarGoogleCalendar()" class="hidden bg-slate-800 hover:bg-slate-700 text-slate-300 font-black py-2.5 px-6 rounded-xl border border-slate-600 active:scale-95 transition-all flex items-center justify-center gap-2 text-[11px] uppercase tracking-widest">
-        <i class="fas fa-unlink"></i><span>Desconectar</span>
-      </button>
-    </div>
     
 
 
@@ -1660,6 +2045,7 @@ let pendingDeleteIndex = null;
 // ─── HEADER dinámico ──────────────────────────────────────────────────────────
 const HEADER_MAP = {
   inicio:   { titulo: 'Inicio',    icono: 'fa-home'           },
+  actividad:{ titulo: 'Actividad', icono: 'fa-heartbeat'      },
   finanzas: { titulo: 'Balance',  icono: 'fa-chart-line'     },
   ahorros:  { titulo: 'Ahorros',   icono: 'fa-piggy-bank'     },
   sueldos:  { titulo: 'Sueldos',   icono: 'fa-money-bill-wave'},
@@ -1673,6 +2059,7 @@ const HEADER_MAP = {
 // Color de acento por módulo
 const MODULE_ACCENT = {
   inicio:    { nav: 'border-blue-500 text-blue-400 bg-blue-600/10',    icon: 'text-blue-400'   },
+  actividad: { nav: 'border-teal-500 text-teal-400 bg-teal-600/10',    icon: 'text-teal-400'   },
   finanzas:  { nav: 'border-blue-500 text-blue-400 bg-blue-600/10',    icon: 'text-blue-400'   },
   ahorros:   { nav: 'border-violet-500 text-violet-400 bg-violet-600/10', icon: 'text-violet-400' },
   sueldos:   { nav: 'border-yellow-500 text-yellow-400 bg-yellow-600/10', icon: 'text-yellow-400' },
@@ -1683,7 +2070,7 @@ const MODULE_ACCENT = {
 };
 
 function showSection(nombre) {
-  ['inicio', 'finanzas', 'ahorros', 'sueldos', 'tenis', 'alfajores', 'relojes', 'calendario'].forEach(s => {
+  ['inicio', 'actividad', 'finanzas', 'ahorros', 'sueldos', 'tenis', 'alfajores', 'relojes', 'calendario'].forEach(s => {
     const sec = document.getElementById('section-' + s);
     sec.classList.add('hidden');
     sec.classList.remove('section-active');
@@ -1792,6 +2179,11 @@ async function recargarDatos() {
   await cargarDatos(true);
   icon.classList.remove('spin');
   showToast('Datos actualizados', 'ok');
+  
+  // Refrescar u obtener token de Google (Calendar y Health)
+  if (typeof conectarGoogle === 'function') {
+    conectarGoogle();
+  }
 }
 
 // ─── EXPORTAR CSV ─────────────────────────────────────────────────────────────
@@ -1876,7 +2268,10 @@ let finanzasFiltroPeriodo = 'mes_actual';
 
 function toggleFinanzasCustomDates() {
   const isCustom = finanzasFiltroPeriodo === 'personalizado';
-  document.getElementById('finanzas-custom-dates').classList.toggle('hidden', !isCustom);
+  const fd = document.getElementById('finanzas-custom-dates');
+  fd.classList.toggle('hidden', !isCustom);
+  fd.classList.toggle('flex', isCustom);
+  fd.classList.toggle('flex-wrap', isCustom);
 }
 
 function finanzasSelAnio(anio) {
@@ -2223,19 +2618,19 @@ function actualizarResumen(datos) {
   card.classList.remove('balance-positive','balance-negative','balance-neutral');
   if (balance > 0) {
     card.classList.add('balance-positive');
-    balEl.className   = 'text-2xl font-black text-green-300 mono tracking-tighter';
+    balEl.className   = 'text-3xl font-black text-green-300 mono tracking-tighter transition-all duration-300';
     label.textContent = '↑ Superávit';
-    label.className   = 'text-[9px] font-bold text-green-500 uppercase mt-1 tracking-widest';
+    label.className   = 'text-[9px] font-bold text-green-500 uppercase mt-1.5 tracking-widest';
   } else if (balance < 0) {
     card.classList.add('balance-negative');
-    balEl.className   = 'text-2xl font-black text-red-400 mono tracking-tighter';
+    balEl.className   = 'text-3xl font-black text-red-400 mono tracking-tighter transition-all duration-300';
     label.textContent = '↓ Déficit';
-    label.className   = 'text-[9px] font-bold text-red-500 uppercase mt-1 tracking-widest';
+    label.className   = 'text-[9px] font-bold text-red-500 uppercase mt-1.5 tracking-widest';
   } else {
     card.classList.add('balance-neutral');
-    balEl.className   = 'text-2xl font-black text-white mono tracking-tighter';
+    balEl.className   = 'text-3xl font-black text-white mono tracking-tighter transition-all duration-300';
     label.textContent = '— Equilibrio';
-    label.className   = 'text-[9px] font-bold text-slate-400 uppercase mt-1 tracking-widest';
+    label.className   = 'text-[9px] font-bold text-slate-400 uppercase mt-1.5 tracking-widest';
   }
 }
 
@@ -3065,17 +3460,13 @@ function renderTablaAhorros() {
 
   const cardAhorros = document.getElementById('card-inicio-ahorros');
   if (cardAhorros) {
-    cardAhorros.classList.remove('balance-positive', 'balance-negative', 'balance-neutral');
     if (gananciaARS >= 0) {
-      cardAhorros.classList.add('balance-positive');
       if (inicioAhorrosArs) inicioAhorrosArs.className = 'text-3xl font-black mono tracking-tighter text-green-300';
       if (inicioAhorrosUsd) inicioAhorrosUsd.className = 'text-sm font-black mono text-green-400 tracking-tight';
     } else if (gananciaARS < 0) {
-      cardAhorros.classList.add('balance-negative');
       if (inicioAhorrosArs) inicioAhorrosArs.className = 'text-3xl font-black mono tracking-tighter text-green-300';
       if (inicioAhorrosUsd) inicioAhorrosUsd.className = 'text-sm font-black mono text-green-400 tracking-tight';
     } else {
-      cardAhorros.classList.add('balance-neutral');
       if (inicioAhorrosArs) inicioAhorrosArs.className = 'text-3xl font-black mono tracking-tighter text-green-300';
       if (inicioAhorrosUsd) inicioAhorrosUsd.className = 'text-sm font-black mono text-green-400 tracking-tight';
     }
@@ -3549,7 +3940,7 @@ function renderPnlTotal() {
   const card     = document.getElementById('card-ah-pnl');
   if (!el) return;
   if (!ventas.length) { 
-    el.textContent = '$0'; el.className = 'text-2xl font-black mono tracking-tighter text-slate-400'; 
+    el.textContent = '$0'; el.className = 'text-3xl font-black mono tracking-tighter text-slate-400 transition-all duration-300'; 
     if(sub) sub.textContent = '0 ventas realizadas'; 
     if(card) card.className = 'bg-slate-900 p-5 rounded-2xl border transition-all balance-neutral border-slate-700/60';
     return; 
@@ -3559,7 +3950,7 @@ function renderPnlTotal() {
   const esNeg = totalPnl < 0;
   
   el.textContent = (esPos ? '+' : (esNeg ? '-' : '')) + '$' + Math.round(Math.abs(totalPnl)).toLocaleString('es-AR');
-  el.className   = `text-2xl font-black mono tracking-tighter ${esPos ? 'text-green-400' : (esNeg ? 'text-red-500' : 'text-yellow-500')}`;
+  el.className   = `text-3xl font-black mono tracking-tighter transition-all duration-300 ${esPos ? 'text-green-400' : (esNeg ? 'text-red-500' : 'text-yellow-500')}`;
   
   if (card) {
     let cardStyle = 'bg-slate-900 p-5 rounded-2xl border transition-all ';
@@ -3701,19 +4092,34 @@ async function guardarEdicionOperacion() {
 // ═══════════════════════════════════════════════════════════════════════════════
 let sueldosData     = [];
 let sueldosIniciado = false;
-let suFiltroPeriodo = new Date().getFullYear();
+let suFiltroPeriodo = 'ultimo_mes';
 let chartSueldos    = null;
 const SU_MESES_CORTOS = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 
 function toggleSueldosCustomDates() {
   const isCustom = suFiltroPeriodo === 'personalizado';
-  document.getElementById('sueldos-custom-dates').classList.toggle('hidden', !isCustom);
+  const sd = document.getElementById('sueldos-custom-dates');
+  sd.classList.toggle('hidden', !isCustom);
+  sd.classList.toggle('flex', isCustom);
+  sd.classList.toggle('flex-wrap', isCustom);
 }
 
 function filtrarSueldosActivos() {
   const periodo = suFiltroPeriodo;
   if (periodo === 'Todos') {
     return sueldosData;
+  } else if (periodo === 'ultimo_mes') {
+    const ahora = new Date();
+    let m = ahora.getMonth(); // 0-indexed, so getMonth() is the previous month (1-12)
+    let y = ahora.getFullYear();
+    if (m === 0) {
+      m = 12;
+      y = y - 1;
+    }
+    return sueldosData.filter(row => {
+      const p = suParseMes(row.mes);
+      return p && p.mes === m && p.anio === y;
+    });
   } else if (periodo === 'mes_actual') {
     const ahora = new Date();
     const m = ahora.getMonth() + 1;
@@ -3872,7 +4278,11 @@ function renderFiltroAniosSueldos() {
     Histórico
   </button>`;
   
-
+  html += `
+    <button onclick="suSelAnio('ultimo_mes')" id="su-btn-anio-ultimo_mes"
+            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'ultimo_mes' === suFiltroPeriodo ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
+      Último Mes
+    </button>`;
   
   html += `
     <button onclick="suSelAnio(${currentYear})" id="su-btn-anio-${currentYear}"
@@ -3908,28 +4318,56 @@ function suSelAnio(anio) {
   toggleSueldosCustomDates();
   renderTablaSueldos();
   renderGraficoSueldos();
+  renderResumenSueldos();
 }
 
 function renderResumenSueldos() {
   if (!sueldosData.length) return;
-  const sorted = [...sueldosData].sort((a,b) => suOrden(b) - suOrden(a));
-  const ult    = sorted[0];
-  const fmt    = n => '$' + Math.round(n).toLocaleString('es-AR');
-  document.getElementById('su-ultimo-neto').textContent     = fmt(ult.neto);
-  document.getElementById('su-ultimo-mes').textContent      = suDisplayMesLargo(ult.mes).toUpperCase();
-  document.getElementById('su-ultimo-neto-usd').textContent = 'U$S' + ult.netoUSD.toLocaleString('en-US',{maximumFractionDigits:2});
   
-  // Calcular lapso de tiempo entre el primero y el último
-  const oldest = sorted[sorted.length - 1];
-  const diffMeses = suOrden(ult) - suOrden(oldest) + 1; // +1 para ser inclusivo
-  const aniosSpan = Math.floor(diffMeses / 12);
-  const mesesSpan = diffMeses % 12;
-  let spanText = [];
-  if (aniosSpan > 0) spanText.push(`${aniosSpan} año${aniosSpan > 1 ? 's' : ''}`);
-  if (mesesSpan > 0) spanText.push(`${mesesSpan} mes${mesesSpan > 1 ? 'es' : ''}`);
+  // Dashboard panel (uses absolute historical data)
+  const allSorted = [...sueldosData].sort((a,b) => suOrden(b) - suOrden(a));
+  const absUlt = allSorted[0];
+  const fmt = n => '$' + Math.round(n).toLocaleString('es-AR');
+
+  // Sueldos module cards (uses filtered data)
+  const filtered = filtrarSueldosActivos();
+  const sorted = [...filtered].sort((a,b) => suOrden(b) - suOrden(a));
   
-  document.getElementById('su-total-registros').textContent = sueldosData.length;
-  document.getElementById('su-tiempo-total').textContent = spanText.length ? spanText.join(' y ') : '1 mes';
+  if (sorted.length > 0) {
+    const totalNetoARS = sorted.reduce((sum, row) => sum + (row.neto || 0), 0);
+    const totalNetoUSD = sorted.reduce((sum, row) => sum + (row.netoUSD || 0), 0);
+    
+    document.getElementById('su-ultimo-neto').textContent = fmt(totalNetoARS);
+    
+    let subtitle = '';
+    if (suFiltroPeriodo === 'ultimo_mes') subtitle = 'Último mes';
+    else if (suFiltroPeriodo === 'Todos') subtitle = 'Histórico';
+    else if (suFiltroPeriodo === 'personalizado') subtitle = 'Personalizado';
+    else subtitle = 'Año ' + suFiltroPeriodo;
+    
+    document.getElementById('su-ultimo-mes').textContent = subtitle;
+    document.getElementById('su-ultimo-mes-usd').textContent = subtitle;
+    document.getElementById('su-ultimo-neto-usd').textContent = 'U$S ' + totalNetoUSD.toLocaleString('en-US',{maximumFractionDigits:2});
+    
+    const oldest = sorted[sorted.length - 1];
+    const ultFiltered = sorted[0];
+    const diffMeses = suOrden(ultFiltered) - suOrden(oldest) + 1;
+    const aniosSpan = Math.floor(diffMeses / 12);
+    const mesesSpan = diffMeses % 12;
+    let spanText = [];
+    if (aniosSpan > 0) spanText.push(`${aniosSpan} año${aniosSpan > 1 ? 's' : ''}`);
+    if (mesesSpan > 0) spanText.push(`${mesesSpan} mes${mesesSpan > 1 ? 'es' : ''}`);
+    
+    document.getElementById('su-total-registros').textContent = sorted.length;
+    document.getElementById('su-tiempo-total').textContent = spanText.length ? spanText.join(' y ') : '1 mes';
+  } else {
+    document.getElementById('su-ultimo-neto').textContent = '$0';
+    document.getElementById('su-ultimo-mes').textContent = 'SIN DATOS';
+    document.getElementById('su-ultimo-mes-usd').textContent = 'SIN DATOS';
+    document.getElementById('su-ultimo-neto-usd').textContent = 'U$S 0';
+    document.getElementById('su-total-registros').textContent = '0';
+    document.getElementById('su-tiempo-total').textContent = '—';
+  }
 
   // Actualizar tarjeta del Panel de Control (Inicio)
   const inicioNetoEl = document.getElementById('inicio-sueldo-neto');
@@ -3937,15 +4375,17 @@ function renderResumenSueldos() {
   const inicioVarEl = document.getElementById('inicio-sueldo-var');
   const cardSueldos = document.getElementById('card-inicio-sueldos');
   
-  if (inicioNetoEl) {
-    inicioNetoEl.textContent = fmt(ult.neto);
-    inicioLabelEl.textContent = suDisplayMesLargo(ult.mes).toUpperCase();
+  if (inicioNetoEl && absUlt) {
+    inicioNetoEl.textContent = fmt(absUlt.neto);
+    inicioLabelEl.textContent = suDisplayMesLargo(absUlt.mes).toUpperCase();
     
-    if (cardSueldos) cardSueldos.classList.remove('balance-positive', 'balance-negative', 'balance-neutral');
+    if (cardSueldos) {
+        // no class assignment
+    }
 
-    if (sorted.length > 1) {
-      const prev = sorted[1];
-      const pct = ((ult.neto - prev.neto) / prev.neto) * 100;
+    if (allSorted.length > 1) {
+      const prev = allSorted[1];
+      const pct = ((absUlt.neto - prev.neto) / prev.neto) * 100;
       const pos = pct >= 0;
       const neg = pct < 0;
       const pctStr = (pos ? '+' : '') + pct.toFixed(1) + '%';
@@ -3954,21 +4394,14 @@ function renderResumenSueldos() {
       if (pos) {
         inicioVarEl.className = 'text-sm font-black mono text-green-400 tracking-tight';
         inicioNetoEl.className = 'text-3xl font-black mono tracking-tighter text-green-300';
-        if (cardSueldos) cardSueldos.classList.add('balance-positive');
       } else if (neg) {
         inicioVarEl.className = 'text-sm font-black mono text-red-400 tracking-tight';
-        inicioNetoEl.className = 'text-3xl font-black mono tracking-tighter text-green-300';
-        if (cardSueldos) cardSueldos.classList.add('balance-negative');
-      } else {
-        inicioVarEl.className = 'text-sm font-black mono text-slate-400 tracking-tight';
-        inicioNetoEl.className = 'text-3xl font-black mono tracking-tighter text-green-300';
-        if (cardSueldos) cardSueldos.classList.add('balance-neutral');
+        inicioNetoEl.className = 'text-3xl font-black mono tracking-tighter text-red-400';
       }
     } else {
       inicioVarEl.textContent = '—';
       inicioVarEl.className = 'text-sm font-black mono text-slate-400 tracking-tight';
       inicioNetoEl.className = 'text-3xl font-black mono tracking-tighter text-green-300';
-      if (cardSueldos) cardSueldos.classList.add('balance-neutral');
     }
   }
 }
@@ -4020,6 +4453,14 @@ function renderTablaSueldos() {
 }
 
 function renderGraficoSueldos() {
+  const container = document.getElementById('sueldos-chart-container');
+  if (suFiltroPeriodo === 'ultimo_mes') {
+    if (container) container.classList.add('hidden');
+    return;
+  } else {
+    if (container) container.classList.remove('hidden');
+  }
+
   const filtrados = filtrarSueldosActivos().sort((a,b) => suOrden(a)-suOrden(b));
   const ctx = document.getElementById('chartSueldos').getContext('2d');
   if (chartSueldos instanceof Chart) chartSueldos.destroy();
@@ -4124,6 +4565,7 @@ document.getElementById('sueldosForm').addEventListener('submit', async e => {
   const brutoUSD = parseFloat(document.getElementById('su-bruto-usd').value) || 0;
   const netoUSD  = parseFloat(document.getElementById('su-neto-usd').value)  || 0;
   if (!neto) return showToast('No se pudo calcular el Neto. Verificá el coeficiente.', 'error');
+  
   const mesLabel = '1/' + mesNum + '/' + anio;
   const btn  = document.getElementById('btn-guardar-sueldo');
   const orig = btn.innerHTML;
@@ -4189,23 +4631,19 @@ function actualizarTarjetaFinanzas() {
   const cardEl   = document.getElementById('card-inicio-finanzas');
 
   balEl.textContent = fmt(balance);
-  cardEl.classList.remove('balance-positive','balance-negative','balance-neutral');
 
   if (balance > 0) {
     balEl.className   = 'text-3xl font-black mono tracking-tighter text-green-300';
     labelEl.textContent = '↑ Superávit';
     labelEl.className   = 'text-[9px] font-bold uppercase tracking-widest text-green-500';
-    cardEl.classList.add('balance-positive');
   } else if (balance < 0) {
     balEl.className   = 'text-3xl font-black mono tracking-tighter text-green-300';
     labelEl.textContent = '↓ Déficit';
     labelEl.className   = 'text-[9px] font-bold uppercase tracking-widest text-red-500';
-    cardEl.classList.add('balance-negative');
   } else {
     balEl.className   = 'text-3xl font-black mono tracking-tighter text-green-300';
     labelEl.textContent = '— Equilibrio';
     labelEl.className   = 'text-[9px] font-bold uppercase tracking-widest text-slate-400';
-    cardEl.classList.add('balance-neutral');
   }
 
   // Ingresos
@@ -4234,6 +4672,20 @@ window.onload = () => {
     theme: "dark"
   });
   flatpickr("#fecha-fin", {
+    dateFormat: "Y-m-d",
+    altInput: true,
+    altFormat: "d/m/Y",
+    locale: "es",
+    theme: "dark"
+  });
+  flatpickr("#act-fecha-inicio", {
+    dateFormat: "Y-m-d",
+    altInput: true,
+    altFormat: "d/m/Y",
+    locale: "es",
+    theme: "dark"
+  });
+  flatpickr("#act-fecha-fin", {
     dateFormat: "Y-m-d",
     altInput: true,
     altFormat: "d/m/Y",
@@ -4388,7 +4840,10 @@ function filtrarTenisActivos() {
 function renderTenis() {
   renderFiltroAniosTenis();
   const isCustom = teFiltroPeriodo === 'personalizado';
-  document.getElementById('te-custom-dates').classList.toggle('hidden', !isCustom);
+  const td = document.getElementById('te-custom-dates');
+  td.classList.toggle('hidden', !isCustom);
+  td.classList.toggle('flex', isCustom);
+  td.classList.toggle('flex-wrap', isCustom);
   
   const filtrados = filtrarTenisActivos().sort((a,b) => parseTenisDateStr(b.fecha) - parseTenisDateStr(a.fecha));
   
@@ -4672,7 +5127,7 @@ document.getElementById('tenisForm')?.addEventListener('submit', async (e) => {
 const CALENDAR_CLIENT_ID = '153589356690-gk27a6fhfn1tv19mdeqpac9pdfcvjfuc.apps.googleusercontent.com'; // <--- REEMPLAZAR AQUÍ
 const CALENDAR_API_KEY = 'AIzaSyAqO2e2L2cuqgVu1wYT5iIh8eYeDAgsnFI'; // <--- REEMPLAZAR AQUÍ
 const CALENDAR_DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
-const CALENDAR_SCOPES = 'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/userinfo.email';
+const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/fitness.activity.read https://www.googleapis.com/auth/fitness.body.read https://www.googleapis.com/auth/fitness.location.read';
 
 let tokenClient;
 let gapiInited = false;
@@ -4717,7 +5172,7 @@ function checkGoogleApis() {
     gapi.load('client', initGapiClient);
     tokenClient = google.accounts.oauth2.initTokenClient({
       client_id: CALENDAR_CLIENT_ID,
-      scope: CALENDAR_SCOPES,
+      scope: GOOGLE_SCOPES,
       callback: handleAuthResponse,
     });
     gisInited = true;
@@ -4757,12 +5212,15 @@ async function handleAuthResponse(resp) {
     console.error('Error fetching user info', e);
   }
 
-  document.getElementById('btn-conectar-google').classList.add('hidden');
-  document.getElementById('btn-desconectar-google').classList.remove('hidden');
+  const btnC = document.getElementById('btn-conectar-google');
+  if (btnC) btnC.classList.add('hidden');
+  const btnD = document.getElementById('btn-desconectar-google');
+  if (btnD) btnD.classList.remove('hidden');
   const alertEl = document.getElementById('calendar-alert');
   if (alertEl) alertEl.classList.add('hidden');
   
   await fetchGoogleEvents();
+  if (typeof fetchGoogleFitness === 'function') await fetchGoogleFitness();
 }
 
 async function initGapiClient() {
@@ -4783,11 +5241,14 @@ async function initGapiClient() {
        const tokenData = JSON.parse(stored);
        if (tokenData.expireTime > Date.now()) {
           gapi.client.setToken({access_token: tokenData.access_token});
-          document.getElementById('btn-conectar-google').classList.add('hidden');
-          document.getElementById('btn-desconectar-google').classList.remove('hidden');
+          const btnC = document.getElementById('btn-conectar-google');
+          if (btnC) btnC.classList.add('hidden');
+          const btnD = document.getElementById('btn-desconectar-google');
+          if (btnD) btnD.classList.remove('hidden');
           const alertEl = document.getElementById('calendar-alert');
           if (alertEl) alertEl.classList.add('hidden');
           fetchGoogleEvents();
+          if (typeof fetchGoogleFitness === 'function') fetchGoogleFitness();
           return;
        } else {
           localStorage.removeItem('gcal_token');
@@ -4806,7 +5267,7 @@ async function initGapiClient() {
   }
 }
 
-function conectarGoogleCalendar() {
+function conectarGoogle() {
   if (CALENDAR_CLIENT_ID === 'YOUR_CLIENT_ID') {
     showToast('Falta configurar tu Client ID', 'error');
     return;
@@ -4819,11 +5280,13 @@ function conectarGoogleCalendar() {
   if (gapi.client.getToken() === null) {
     tokenClient.requestAccessToken({prompt: 'consent'});
   } else {
-    tokenClient.requestAccessToken({prompt: ''});
+    // Si ya hay token, refrescar datos
+    fetchGoogleEvents();
+    if (typeof fetchGoogleFitness === 'function') fetchGoogleFitness();
   }
 }
 
-function desconectarGoogleCalendar() {
+function desconectarGoogle() {
   const token = gapi.client.getToken();
   if (token !== null) {
     google.accounts.oauth2.revoke(token.access_token);
@@ -4831,8 +5294,10 @@ function desconectarGoogleCalendar() {
     localStorage.removeItem('gcal_token');
     localStorage.removeItem('gcal_auto_connect');
     localStorage.removeItem('gcal_login_hint');
-    document.getElementById('btn-conectar-google').classList.remove('hidden');
-    document.getElementById('btn-desconectar-google').classList.add('hidden');
+    const btnC = document.getElementById('btn-conectar-google');
+    if (btnC) btnC.classList.remove('hidden');
+    const btnD = document.getElementById('btn-desconectar-google');
+    if (btnD) btnD.classList.add('hidden');
     const alertEl = document.getElementById('calendar-alert');
     if (alertEl) alertEl.classList.remove('hidden');
     if (fullCalendarInst) fullCalendarInst.removeAllEvents();
@@ -4842,7 +5307,7 @@ function desconectarGoogleCalendar() {
 
 async function fetchGoogleEvents() {
   try {
-    showToast('Sincronizando calendarios...', 'ok');
+    showToast('Sincronizando servicios de Google...', 'ok');
     
     // Fetch last 3 months and next 1 year
     const timeMin = new Date();
@@ -4924,7 +5389,7 @@ async function fetchGoogleEvents() {
     globalGoogleEvents = allEvents;
     renderMiniCalendar();
     
-    showToast(`${allEvents.length} eventos sincronizados`, 'ok');
+    showToast('Datos de Google sincronizados', 'ok');
 
   } catch (err) {
     console.error(err);
@@ -5026,6 +5491,453 @@ function renderMiniCalendar() {
     `;
   });
   grid.innerHTML = htmlGrid;
+}
+
+// ─── MÓDULO ACTIVIDAD (FITNESS) ──────────────────────────────────────────────
+window.fitnessData = { steps: [], distance: [], weight: [], calories: [], activeMinutes: [] };
+window.healthCharts = { steps: null, distance: null, weight: null, calories: null, activeMinutes: null };
+window.currentHealthFilter = 'hoy';
+
+function setActividadFiltro(period) {
+  window.currentHealthFilter = period;
+  
+  // Actualizar botones de filtro
+  const ids = ['hoy', 'semana', 'mes', 'año'];
+  ids.forEach(id => {
+    const btn = document.getElementById('act-filtro-' + id);
+    if (!btn) return;
+    btn.className = "h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors " + 
+      (id === period ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-400 hover:bg-slate-700");
+  });
+
+  const btnCustom = document.getElementById('act-filtro-personalizado');
+  if (btnCustom) {
+    btnCustom.className = "h-8 px-3 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors flex items-center gap-1.5 " + 
+      (period === 'personalizado' ? "bg-blue-600 text-white border-transparent" : "text-slate-400 border border-slate-700 hover:bg-slate-800");
+  }
+
+  const customDates = document.getElementById('actividad-custom-dates');
+  if (period === 'personalizado') {
+    customDates.classList.remove('hidden');
+    customDates.classList.add('flex', 'flex-wrap');
+    return; // Esperamos a que le den al botón Filtrar
+  } else {
+    customDates.classList.add('hidden');
+    customDates.classList.remove('flex', 'flex-wrap');
+  }
+  
+  ['steps', 'distance', 'weight', 'calories', 'activeMinutes'].forEach(type => {
+    renderHealthCard(type, period);
+  });
+}
+
+function filtrarActividadCustom() {
+  const fIni = document.getElementById('act-fecha-inicio').value;
+  const fFin = document.getElementById('act-fecha-fin').value;
+  if (!fIni || !fFin) return showToast('Seleccioná ambas fechas', 'warning');
+  
+  window.currentHealthFilter = 'personalizado';
+  
+  ['steps', 'distance', 'weight', 'calories', 'activeMinutes'].forEach(type => {
+    renderHealthCard(type, 'personalizado');
+  });
+}
+
+async function fetchGoogleFitness() {
+  const token = gapi.client.getToken();
+  if (!token) return;
+  const accessToken = token.access_token;
+  
+  const now = new Date();
+  const endTimeMillis = now.getTime();
+  const url = 'https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate';
+  
+  try {
+    const headers = {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json'
+    };
+    
+    const promisesActivity = [];
+    const promisesWeight = [];
+    
+    // Google Fit API tiene un límite de días por petición (suele fallar con > 90 días).
+    // Pedimos 4 bloques de 90 días para tener los 360 días del año.
+    for (let i = 0; i < 4; i++) {
+      const chunkEnd = endTimeMillis - (i * 90 * 24 * 60 * 60 * 1000);
+      const chunkStart = chunkEnd - (90 * 24 * 60 * 60 * 1000);
+      
+      const bodyActivity = {
+        aggregateBy: [
+          { dataSourceId: 'derived:com.google.step_count.delta:com.google.android.gms:estimated_steps' },
+          { dataSourceId: 'derived:com.google.distance.delta:com.google.android.gms:pruned_distance' },
+          { dataTypeName: 'com.google.calories.expended' },
+          { dataTypeName: 'com.google.heart_minutes' }
+        ],
+        bucketByTime: { durationMillis: 86400000 },
+        startTimeMillis: chunkStart,
+        endTimeMillis: chunkEnd
+      };
+
+      const bodyWeight = {
+        aggregateBy: [
+          { dataTypeName: 'com.google.weight' }
+        ],
+        bucketByTime: { durationMillis: 86400000 },
+        startTimeMillis: chunkStart,
+        endTimeMillis: chunkEnd
+      };
+
+      promisesActivity.push(fetch(url, { method: 'POST', headers, body: JSON.stringify(bodyActivity) }).then(async r => {
+        if (!r.ok) { console.error("Act Err:", await r.text()); return {}; }
+        return r.json();
+      }));
+      
+      promisesWeight.push(fetch(url, { method: 'POST', headers, body: JSON.stringify(bodyWeight) }).then(async r => {
+        if (!r.ok) { console.error("Weight Err:", await r.text()); return {}; }
+        return r.json();
+      }));
+    }
+    
+    const resultsActivity = await Promise.all(promisesActivity);
+    const resultsWeight = await Promise.all(promisesWeight);
+    
+    window.fitnessData = { steps: [], distance: [], weight: [], calories: [], activeMinutes: [] };
+    
+    // Unificar buckets de los 4 chunks (vienen ordenados del más reciente al más antiguo, así que invertimos o procesamos ordenando)
+    let allActivityBuckets = [];
+    let allWeightBuckets = [];
+    
+    resultsActivity.forEach(res => {
+      if (res.bucket) allActivityBuckets = allActivityBuckets.concat(res.bucket);
+    });
+    resultsWeight.forEach(res => {
+      if (res.bucket) allWeightBuckets = allWeightBuckets.concat(res.bucket);
+    });
+    
+    // Ordenar cronológicamente ascendente por startTimeMillis
+    allActivityBuckets.sort((a, b) => parseInt(a.startTimeMillis) - parseInt(b.startTimeMillis));
+    allWeightBuckets.sort((a, b) => parseInt(a.startTimeMillis) - parseInt(b.startTimeMillis));
+    
+    // Process Activity
+    allActivityBuckets.forEach(b => {
+      const bDate = new Date(parseInt(b.startTimeMillis));
+      let daySteps = 0;
+      let dayDist = 0;
+      let dayCalories = 0;
+      let dayActiveMins = 0;
+      
+      if (b.dataset) {
+        b.dataset.forEach(ds => {
+          if (ds.point) {
+            ds.point.forEach(p => {
+              const typeStr = p.dataTypeName || (ds.dataSourceId ? ds.dataSourceId : '');
+              if (typeStr.includes('step_count')) {
+                p.value.forEach(v => daySteps += (v.intVal || v.fpVal || 0));
+              }
+              if (typeStr.includes('distance')) {
+                p.value.forEach(v => dayDist += (v.fpVal || v.intVal || 0));
+              }
+              if (typeStr.includes('calories.expended')) {
+                p.value.forEach(v => dayCalories += (v.fpVal || v.intVal || 0));
+              }
+              if (typeStr.includes('heart_minutes')) {
+                p.value.forEach(v => dayActiveMins += (v.fpVal || v.intVal || 0));
+              }
+            });
+          }
+        });
+      }
+      window.fitnessData.steps.push({ date: bDate, value: daySteps });
+      window.fitnessData.distance.push({ date: bDate, value: dayDist });
+      window.fitnessData.calories.push({ date: bDate, value: dayCalories });
+      window.fitnessData.activeMinutes.push({ date: bDate, value: dayActiveMins });
+    });
+    
+    // Process Weight
+    allWeightBuckets.forEach(b => {
+      const bDate = new Date(parseInt(b.startTimeMillis));
+      let dayWeight = null;
+      
+      if (b.dataset) {
+        b.dataset.forEach(ds => {
+          if (ds.point) {
+            ds.point.forEach(p => {
+              const typeStr = p.dataTypeName || (ds.dataSourceId ? ds.dataSourceId : '');
+              if (typeStr.includes('weight')) {
+                if (p.value && p.value.length > 0) {
+                   dayWeight = p.value[0].fpVal || p.value[0].intVal || dayWeight;
+                }
+              }
+            });
+          }
+        });
+      }
+      window.fitnessData.weight.push({ date: bDate, value: dayWeight });
+    });
+    
+    setActividadFiltro(window.currentHealthFilter);
+    
+  } catch (error) {
+    console.error('Error fetching Google Fitness data:', error);
+  }
+}
+
+function renderHealthCard(type, period) {
+  if (!window.fitnessData[type] || window.fitnessData[type].length === 0) return;
+  
+  const dataArray = window.fitnessData[type];
+  let filtered = [];
+  let labels = [];
+  let values = [];
+  let aggregatedValue = 0;
+  let subtitle = '';
+  
+  if (period === 'hoy') {
+    const todayData = dataArray[dataArray.length - 1]; 
+    aggregatedValue = todayData.value;
+    if (type === 'weight' && aggregatedValue === null) {
+      const lastWeightEntry = [...dataArray].reverse().find(d => d.value !== null);
+      aggregatedValue = lastWeightEntry ? lastWeightEntry.value : 0;
+    }
+    subtitle = type === 'weight' ? 'Último registro' : 'Hoy';
+  } 
+  else if (period === 'semana') {
+    filtered = dataArray.slice(-7);
+    labels = filtered.map(d => d.date.toLocaleDateString('es-ES', {weekday:'short'}));
+    values = filtered.map(d => d.value || 0);
+    
+    if (type === 'weight') {
+      const validWeights = values.filter(v => v > 0);
+      aggregatedValue = validWeights.length > 0 ? validWeights.reduce((a,b)=>a+b,0)/validWeights.length : 0;
+      subtitle = 'Promedio 7 días';
+    } else {
+      aggregatedValue = values.reduce((a,b)=>a+b,0);
+      subtitle = 'Total semanal';
+    }
+  }
+  else if (period === 'mes') {
+    filtered = dataArray.slice(-30);
+    labels = filtered.map(d => d.date.getDate().toString());
+    values = filtered.map(d => d.value || 0);
+    
+    if (type === 'weight') {
+      const validWeights = values.filter(v => v > 0);
+      aggregatedValue = validWeights.length > 0 ? validWeights.reduce((a,b)=>a+b,0)/validWeights.length : 0;
+      subtitle = 'Promedio mensual';
+    } else {
+      aggregatedValue = values.reduce((a,b)=>a+b,0);
+      subtitle = 'Total mensual';
+    }
+  }
+  else if (period === 'año') {
+    const monthlyGroups = {};
+    dataArray.forEach(d => {
+      const monthKey = d.date.toLocaleString('es-ES', { month: 'short', year: 'numeric' });
+      if (!monthlyGroups[monthKey]) monthlyGroups[monthKey] = [];
+      if (d.value !== null) monthlyGroups[monthKey].push(d.value);
+    });
+    
+    labels = Object.keys(monthlyGroups);
+    values = labels.map(key => {
+      const arr = monthlyGroups[key];
+      if (arr.length === 0) return 0;
+      if (type === 'weight') {
+        return arr.reduce((a,b)=>a+b,0) / arr.length;
+      } else {
+        return arr.reduce((a,b)=>a+b,0);
+      }
+    });
+    
+    if (type === 'weight') {
+      const validWeights = values.filter(v => v > 0);
+      aggregatedValue = validWeights.length > 0 ? validWeights.reduce((a,b)=>a+b,0)/validWeights.length : 0;
+      subtitle = 'Promedio anual';
+    } else {
+      aggregatedValue = values.reduce((a,b)=>a+b,0);
+      subtitle = 'Total anual';
+    }
+  }
+  else if (period === 'personalizado') {
+    const fIni = document.getElementById('act-fecha-inicio').value;
+    const fFin = document.getElementById('act-fecha-fin').value;
+    const [y1, m1, d1] = fIni.split('-');
+    const [y2, m2, d2] = fFin.split('-');
+    
+    const startDate = new Date(y1, m1 - 1, d1, 0, 0, 0);
+    const endDate = new Date(y2, m2 - 1, d2, 23, 59, 59);
+    
+    filtered = dataArray.filter(d => d.date >= startDate && d.date <= endDate);
+    const diffTime = Math.abs(endDate - startDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+    
+    if (diffDays > 90) {
+      // Agrupar por mes si son más de 90 días
+      const monthlyGroups = {};
+      filtered.forEach(d => {
+        const monthKey = d.date.toLocaleString('es-ES', { month: 'short', year: 'numeric' });
+        if (!monthlyGroups[monthKey]) monthlyGroups[monthKey] = [];
+        if (d.value !== null) monthlyGroups[monthKey].push(d.value);
+      });
+      labels = Object.keys(monthlyGroups);
+      values = labels.map(key => {
+        const arr = monthlyGroups[key];
+        if (arr.length === 0) return 0;
+        return type === 'weight' ? arr.reduce((a,b)=>a+b,0) / arr.length : arr.reduce((a,b)=>a+b,0);
+      });
+    } else {
+      // Mostrar por día
+      labels = filtered.map(d => d.date.toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit'}));
+      values = filtered.map(d => d.value || 0);
+    }
+    
+    if (type === 'weight') {
+      const validWeights = filtered.filter(v => (v.value || 0) > 0);
+      aggregatedValue = validWeights.length > 0 ? validWeights.reduce((a,b)=>a+(b.value||0),0)/validWeights.length : 0;
+      subtitle = 'Promedio (Personalizado)';
+    } else {
+      aggregatedValue = filtered.reduce((a,b)=>a+(b.value||0),0);
+      subtitle = 'Total (Personalizado)';
+    }
+  }
+  
+  const valEl = document.getElementById('health-' + type);
+  const subEl = document.getElementById('health-' + type + '-subtitle');
+  
+  if (subEl) subEl.textContent = subtitle;
+  
+  if (type === 'steps') {
+    const txt = aggregatedValue > 0 ? Math.floor(aggregatedValue).toLocaleString('es-ES') : '--';
+    if (valEl) valEl.textContent = txt;
+  } else if (type === 'distance') {
+    const km = aggregatedValue / 1000;
+    const txt = km > 0 ? km.toFixed(2) : '--';
+    if (valEl) valEl.textContent = txt;
+    if (period !== 'hoy') values = values.map(v => v / 1000);
+  } else if (type === 'weight') {
+    const txt = aggregatedValue > 0 ? aggregatedValue.toFixed(1) : '--';
+    if (valEl) valEl.textContent = txt;
+  } else if (type === 'calories') {
+    const txt = aggregatedValue > 0 ? Math.floor(aggregatedValue).toLocaleString('es-ES') : '--';
+    if (valEl) valEl.textContent = txt;
+  } else if (type === 'activeMinutes') {
+    const txt = aggregatedValue > 0 ? Math.floor(aggregatedValue).toLocaleString('es-ES') : '--';
+    if (valEl) valEl.textContent = txt;
+  }
+
+  // SIEMPRE calcular y mostrar el dato de "hoy" para el Panel de Control (inicio)
+  const todayData = dataArray[dataArray.length - 1]; 
+  let hoyAggValue = todayData ? todayData.value : 0;
+  let hoySubtitle = 'Hoy';
+  
+  if (type === 'weight') {
+    if (hoyAggValue === null || hoyAggValue === 0) {
+      const lastWeightEntry = [...dataArray].reverse().find(d => d.value > 0);
+      hoyAggValue = lastWeightEntry ? lastWeightEntry.value : 0;
+    }
+    hoySubtitle = 'Último registro';
+  }
+  
+  const valElInicio = document.getElementById('inicio-health-' + type);
+  const subElInicio = document.getElementById('inicio-health-' + type + '-subtitle');
+  if (subElInicio) subElInicio.textContent = hoySubtitle;
+  
+  if (valElInicio) {
+    if (type === 'steps') {
+      valElInicio.textContent = hoyAggValue > 0 ? Math.floor(hoyAggValue).toLocaleString('es-ES') : '--';
+    } else if (type === 'distance') {
+      const km = hoyAggValue / 1000;
+      valElInicio.textContent = km > 0 ? km.toFixed(2) : '--';
+    } else if (type === 'weight') {
+      valElInicio.textContent = hoyAggValue > 0 ? hoyAggValue.toFixed(1) : '--';
+    }
+  }
+  
+  const mainChartsContainer = document.getElementById('charts-actividad-container');
+  
+  if (period === 'hoy') {
+    mainChartsContainer.classList.add('hidden');
+  } else {
+    mainChartsContainer.classList.remove('hidden');
+    drawHealthChart(type, labels, values);
+  }
+}
+
+function drawHealthChart(type, labels, data) {
+  const ctx = document.getElementById('chart-' + type).getContext('2d');
+  
+  if (window.healthCharts[type] instanceof Chart) {
+    window.healthCharts[type].destroy();
+  }
+  
+  let color = '#fff';
+  let chartType = 'bar';
+  
+  if (type === 'steps') color = '#14b8a6'; // teal-500
+  if (type === 'distance') color = '#10b981'; // emerald-500
+  if (type === 'weight') {
+    color = '#3b82f6'; // blue-500
+    chartType = 'line';
+  }
+  if (type === 'calories') color = '#f97316'; // orange-500
+  if (type === 'activeMinutes') color = '#f43f5e'; // rose-500
+  
+  const chartData = data.map(v => v === 0 && type === 'weight' ? null : v);
+  
+  window.healthCharts[type] = new Chart(ctx, {
+    type: chartType,
+    data: {
+      labels: labels,
+      datasets: [{
+        label: '',
+        data: chartData,
+        backgroundColor: color + '80',
+        borderColor: color,
+        borderWidth: 2,
+        borderRadius: chartType === 'bar' ? 4 : 0,
+        tension: 0.4,
+        pointBackgroundColor: color,
+        pointRadius: chartType === 'line' ? 3 : 0,
+        spanGaps: true
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1e293b',
+          titleColor: '#94a3b8',
+          bodyColor: '#f8fafc',
+          padding: 8,
+          displayColors: false,
+          callbacks: {
+            label: function(ctx) {
+              let val = ctx.raw;
+              if (type === 'steps') return Math.floor(val).toLocaleString('es-ES') + ' pasos';
+              if (type === 'distance') return val.toFixed(2) + ' km';
+              if (type === 'weight') return val.toFixed(1) + ' kg';
+              if (type === 'calories') return Math.floor(val).toLocaleString('es-ES') + ' kcal';
+              if (type === 'activeMinutes') return Math.floor(val).toLocaleString('es-ES') + ' min';
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false, drawBorder: false },
+          ticks: { color: '#64748b', font: { size: 9 }, maxTicksLimit: 7 }
+        },
+        y: {
+          display: true,
+          beginAtZero: type !== 'weight',
+          grid: { color: 'rgba(51, 65, 85, 0.4)', drawBorder: false },
+          ticks: { color: '#64748b', font: { size: 9 }, maxTicksLimit: 5 }
+        }
+      }
+    }
+  });
 }
 
 </script>
