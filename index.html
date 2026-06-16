@@ -2180,9 +2180,17 @@ async function recargarDatos() {
   icon.classList.remove('spin');
   showToast('Datos actualizados', 'ok');
   
-  // Refrescar u obtener token de Google (Calendar y Health)
-  if (typeof conectarGoogle === 'function') {
-    conectarGoogle();
+  // Refrescar Google (Calendar y Health) sin forzar popup
+  if (typeof fetchGoogleEvents === 'function') {
+    if (gapi.client && gapi.client.getToken() !== null) {
+      fetchGoogleEvents();
+      if (typeof fetchGoogleFitness === 'function') fetchGoogleFitness();
+    } else if (localStorage.getItem('gcal_auto_connect') === 'true' && typeof tokenClient !== 'undefined' && tokenClient) {
+      const loginHint = localStorage.getItem('gcal_login_hint');
+      const tokenParams = { prompt: 'none' };
+      if (loginHint) tokenParams.login_hint = loginHint;
+      tokenClient.requestAccessToken(tokenParams);
+    }
   }
 }
 
@@ -5278,7 +5286,7 @@ function conectarGoogle() {
   }
   
   if (gapi.client.getToken() === null) {
-    tokenClient.requestAccessToken({prompt: 'consent'});
+    tokenClient.requestAccessToken();
   } else {
     // Si ya hay token, refrescar datos
     fetchGoogleEvents();
@@ -5549,7 +5557,10 @@ async function fetchGoogleFitness() {
   const accessToken = token.access_token;
   
   const now = new Date();
-  const endTimeMillis = now.getTime();
+  // Alinear endTimeMillis a la medianoche de mañana para que los buckets de 24h 
+  // coincidan exactamente con los días calendario en hora local.
+  const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+  const endTimeMillis = endOfToday.getTime();
   const url = 'https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate';
   
   try {
