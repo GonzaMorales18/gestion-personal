@@ -4342,7 +4342,9 @@ function renderResumenSueldos() {
   if (!sueldosData.length) return;
   
   // Dashboard panel (uses absolute historical data)
-  const allSorted = [...sueldosData].sort((a,b) => suOrden(b) - suOrden(a));
+  const allSorted = [...sueldosData]
+    .filter(r => !String(r.mes).toUpperCase().includes('SAC') && !String(r.mes).toUpperCase().includes('BONUS'))
+    .sort((a,b) => suOrden(b) - suOrden(a));
   const absUlt = allSorted[0];
   const fmt = n => '$' + Math.round(n).toLocaleString('es-AR');
 
