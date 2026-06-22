@@ -1366,6 +1366,11 @@
                        class="w-full h-11 px-4 bg-slate-800 border border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-yellow-500/30 text-sm font-bold text-white mono">
               </div>
             </div>
+            
+            <div class="flex items-center gap-2 ml-1">
+              <input type="checkbox" id="su-es-sac" class="w-4 h-4 rounded bg-slate-800 border-slate-700 text-yellow-500 focus:ring-yellow-500/30">
+              <label for="su-es-sac" class="text-[11px] font-bold text-slate-400 uppercase cursor-pointer">Es SAC / Bonus</label>
+            </div>
             <!-- Bruto ARS -->
             <div class="space-y-1.5">
               <label class="text-[10px] font-bold text-slate-400 uppercase ml-1">Bruto ARS</label>
@@ -4179,7 +4184,7 @@ function suParsNum(v) {
 
 function suParseMes(str) {
   if (!str) return null;
-  const s   = String(str).toLowerCase().trim();
+  const s   = String(str).toLowerCase().trim().replace(/\s+(sac|bonus)$/, '');
   const map = {
     ene:1, enero:1, jan:1, january:1,
     feb:2, febrero:2, february:2,
@@ -4239,13 +4244,17 @@ function suOrden(row)   { const p = suParseMes(row.mes); return p ? p.anio * 12 
 function suDisplayMes(str) {
   const p = suParseMes(str);
   if (!p) return str;
-  return SU_MESES_CORTOS[p.mes - 1] + '-' + String(p.anio).slice(2);
+  const sac = String(str).toUpperCase().includes('SAC') ? ' SAC' : '';
+  const bonus = String(str).toUpperCase().includes('BONUS') ? ' BONUS' : '';
+  return SU_MESES_CORTOS[p.mes - 1] + '-' + String(p.anio).slice(2) + sac + bonus;
 }
 function suDisplayMesLargo(str) {
   const p = suParseMes(str);
   if (!p) return str;
+  const sac = String(str).toUpperCase().includes('SAC') ? ' SAC' : '';
+  const bonus = String(str).toUpperCase().includes('BONUS') ? ' BONUS' : '';
   const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-  return meses[p.mes - 1] + ' ' + p.anio;
+  return meses[p.mes - 1] + ' ' + p.anio + sac + bonus;
 }
 
 async function cargarSueldosSheet() {
@@ -4432,7 +4441,15 @@ function suDeltaLg(actual, anterior) {
 }
 
 function renderTablaSueldos() {
-  const filtrados = filtrarSueldosActivos().sort((a,b) => suOrden(b)-suOrden(a));
+  const filtrados = filtrarSueldosActivos().sort((a,b) => {
+    const diff = suOrden(b) - suOrden(a);
+    if (diff !== 0) return diff;
+    const aSac = String(a.mes).toUpperCase().includes('SAC') || String(a.mes).toUpperCase().includes('BONUS');
+    const bSac = String(b.mes).toUpperCase().includes('SAC') || String(b.mes).toUpperCase().includes('BONUS');
+    if (aSac && !bSac) return -1;
+    if (!aSac && bSac) return 1;
+    return 0;
+  });
   document.getElementById('su-count').textContent = `${filtrados.length} registros`;
   const tbody = document.getElementById('su-tabla');
   if (!filtrados.length) {
@@ -4443,19 +4460,31 @@ function renderTablaSueldos() {
   const fmt    = n => '$' + Math.round(n).toLocaleString('es-AR');
   const fmtUSD = n => 'U$S' + n.toLocaleString('en-US',{maximumFractionDigits:2});
   tbody.innerHTML = filtrados.map((r,i) => {
-    // El siguiente en el array ordenado desc es el mes anterior
-    const prev = filtrados[i + 1] || null;
+    // Si este sueldo es SAC, no muestra %
+    const rIsSac = String(r.mes).toUpperCase().includes('SAC') || String(r.mes).toUpperCase().includes('BONUS');
+    
+    // Buscar el siguiente hacia atrás que NO sea SAC
+    let prevIndex = i + 1;
+    while (prevIndex < filtrados.length) {
+      if (!String(filtrados[prevIndex].mes).toUpperCase().includes('SAC') && 
+          !String(filtrados[prevIndex].mes).toUpperCase().includes('BONUS')) {
+        break;
+      }
+      prevIndex++;
+    }
+    const prevParaComparar = rIsSac ? null : (filtrados[prevIndex] || null);
+
     return `
     <tr class="table-row border-b border-slate-800 fade-row" style="animation-delay:${i*0.03}s">
       <td class="px-5 py-3.5 font-bold text-[12px] text-white uppercase tracking-wider">${suDisplayMes(r.mes)}</td>
       <td class="px-4 py-3.5 text-right mono text-[12px] text-slate-400">${fmt(r.bruto)}</td>
-      ${suDelta(r.bruto, prev?.bruto)}
+      ${suDelta(r.bruto, prevParaComparar?.bruto)}
       <td class="px-4 py-3.5 text-right mono font-black text-[13px] text-white">${fmt(r.neto)}</td>
-      ${suDelta(r.neto, prev?.neto)}
+      ${suDelta(r.neto, prevParaComparar?.neto)}
       <td class="px-4 py-3.5 text-right mono text-[11px] text-slate-400 hidden md:table-cell">${fmtUSD(r.brutoUSD)}</td>
-      ${suDeltaLg(r.brutoUSD, prev?.brutoUSD)}
+      ${suDeltaLg(r.brutoUSD, prevParaComparar?.brutoUSD)}
       <td class="px-5 py-3.5 text-right mono text-[12px] text-slate-400 hidden md:table-cell">${fmtUSD(r.netoUSD)}</td>
-      ${suDeltaLg(r.netoUSD, prev?.netoUSD)}
+      ${suDeltaLg(r.netoUSD, prevParaComparar?.netoUSD)}
     </tr>`;
   }).join('');
 }
@@ -4470,15 +4499,35 @@ function renderGraficoSueldos() {
   }
 
   const filtrados = filtrarSueldosActivos().sort((a,b) => suOrden(a)-suOrden(b));
+
+  // Excluir SAC/Bonus del gráfico de evolución para no distorsionar la tendencia
+  const soloSueldos = filtrados.filter(r => {
+    const s = String(r.mes).toUpperCase();
+    return !s.includes('SAC') && !s.includes('BONUS');
+  });
+
+  // Agrupar por mes para sumar en caso de múltiples sueldos regulares en el mismo mes
+  const agrupados = [];
+  const mapMes = new Map();
+  for (const r of soloSueldos) {
+    const label = suDisplayMes(r.mes).toUpperCase();
+    if (!mapMes.has(label)) {
+      const nuevo = { label, brutoUSD: 0 };
+      mapMes.set(label, nuevo);
+      agrupados.push(nuevo);
+    }
+    mapMes.get(label).brutoUSD += (r.brutoUSD || 0);
+  }
+
   const ctx = document.getElementById('chartSueldos').getContext('2d');
   if (chartSueldos instanceof Chart) chartSueldos.destroy();
-  if (!filtrados.length) return;
+  if (!agrupados.length) return;
   chartSueldos = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: filtrados.map(r => suDisplayMes(r.mes).toUpperCase()),
+      labels: agrupados.map(a => a.label),
       datasets: [
-        { label: 'Bruto USD', data: filtrados.map(r => r.brutoUSD),
+        { label: 'Bruto USD', data: agrupados.map(a => a.brutoUSD),
           borderColor: '#6366f1', backgroundColor: '#6366f120',
           pointBackgroundColor: '#6366f1', borderWidth: 2.5, pointRadius: 5,
           tension: 0.35, fill: true }
@@ -4574,7 +4623,9 @@ document.getElementById('sueldosForm').addEventListener('submit', async e => {
   const netoUSD  = parseFloat(document.getElementById('su-neto-usd').value)  || 0;
   if (!neto) return showToast('No se pudo calcular el Neto. Verificá el coeficiente.', 'error');
   
-  const mesLabel = '1/' + mesNum + '/' + anio;
+  const isSac = document.getElementById('su-es-sac')?.checked;
+  const dia = isSac ? '15' : '1';
+  const mesLabel = dia + '/' + mesNum + '/' + anio + (isSac ? ' SAC' : '');
   const btn  = document.getElementById('btn-guardar-sueldo');
   const orig = btn.innerHTML;
   btn.disabled = true;
@@ -4590,6 +4641,7 @@ document.getElementById('sueldosForm').addEventListener('submit', async e => {
     document.getElementById('su-mes').value  = new Date().getMonth()+1;
     document.getElementById('su-anio').value = new Date().getFullYear();
     document.getElementById('su-coef').value = '0.17';
+    if (document.getElementById('su-es-sac')) document.getElementById('su-es-sac').checked = false;
     const pctEl = document.getElementById('su-coef-pct');
     if (pctEl) pctEl.textContent = '17%';
     document.getElementById('su-preview').classList.add('hidden');
@@ -4659,6 +4711,10 @@ function actualizarTarjetaFinanzas() {
 }
 
 window.onload = () => {
+  setTimeout(() => {
+    recargarDatos();
+  }, 5000);
+
   setFechaHoy();
   // FIX #12 — restaurar último módulo visitado
   let seccionInicial = 'inicio';
