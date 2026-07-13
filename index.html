@@ -4694,16 +4694,20 @@ function actualizarTarjetaFinanzas() {
 
   balEl.textContent = fmt(balance);
 
+  cardEl.classList.remove('balance-positive', 'balance-negative', 'balance-neutral');
   if (balance > 0) {
-    balEl.className   = 'text-3xl font-black mono tracking-tighter text-green-300';
+    cardEl.classList.add('balance-positive');
+    balEl.className   = 'text-3xl font-black mono tracking-tighter text-green-300 transition-all duration-300';
     labelEl.textContent = '↑ Superávit';
     labelEl.className   = 'text-[9px] font-bold uppercase tracking-widest text-green-500';
   } else if (balance < 0) {
-    balEl.className   = 'text-3xl font-black mono tracking-tighter text-green-300';
+    cardEl.classList.add('balance-negative');
+    balEl.className   = 'text-3xl font-black mono tracking-tighter text-red-400 transition-all duration-300';
     labelEl.textContent = '↓ Déficit';
     labelEl.className   = 'text-[9px] font-bold uppercase tracking-widest text-red-500';
   } else {
-    balEl.className   = 'text-3xl font-black mono tracking-tighter text-green-300';
+    cardEl.classList.add('balance-neutral');
+    balEl.className   = 'text-3xl font-black mono tracking-tighter text-white transition-all duration-300';
     labelEl.textContent = '— Equilibrio';
     labelEl.className   = 'text-[9px] font-bold uppercase tracking-widest text-slate-400';
   }
