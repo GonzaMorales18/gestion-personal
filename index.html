@@ -2628,19 +2628,15 @@ function actualizarResumen(datos) {
   const card  = document.getElementById('card-balance');
   const label = document.getElementById('balance-label');
   const balEl = document.getElementById('total-balance');
-  card.classList.remove('balance-positive','balance-negative','balance-neutral');
   if (balance > 0) {
-    card.classList.add('balance-positive');
     balEl.className   = 'text-3xl font-black text-green-300 mono tracking-tighter transition-all duration-300';
     label.textContent = '↑ Superávit';
     label.className   = 'text-[9px] font-bold text-green-500 uppercase mt-1.5 tracking-widest';
   } else if (balance < 0) {
-    card.classList.add('balance-negative');
     balEl.className   = 'text-3xl font-black text-red-400 mono tracking-tighter transition-all duration-300';
     label.textContent = '↓ Déficit';
     label.className   = 'text-[9px] font-bold text-red-500 uppercase mt-1.5 tracking-widest';
   } else {
-    card.classList.add('balance-neutral');
     balEl.className   = 'text-3xl font-black text-white mono tracking-tighter transition-all duration-300';
     label.textContent = '— Equilibrio';
     label.className   = 'text-[9px] font-bold text-slate-400 uppercase mt-1.5 tracking-widest';
@@ -4694,19 +4690,15 @@ function actualizarTarjetaFinanzas() {
 
   balEl.textContent = fmt(balance);
 
-  cardEl.classList.remove('balance-positive', 'balance-negative', 'balance-neutral');
   if (balance > 0) {
-    cardEl.classList.add('balance-positive');
     balEl.className   = 'text-3xl font-black mono tracking-tighter text-green-300 transition-all duration-300';
     labelEl.textContent = '↑ Superávit';
     labelEl.className   = 'text-[9px] font-bold uppercase tracking-widest text-green-500';
   } else if (balance < 0) {
-    cardEl.classList.add('balance-negative');
     balEl.className   = 'text-3xl font-black mono tracking-tighter text-red-400 transition-all duration-300';
     labelEl.textContent = '↓ Déficit';
     labelEl.className   = 'text-[9px] font-bold uppercase tracking-widest text-red-500';
   } else {
-    cardEl.classList.add('balance-neutral');
     balEl.className   = 'text-3xl font-black mono tracking-tighter text-white transition-all duration-300';
     labelEl.textContent = '— Equilibrio';
     labelEl.className   = 'text-[9px] font-bold uppercase tracking-widest text-slate-400';
