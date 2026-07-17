@@ -78,6 +78,24 @@ function doGet(e) {
       .setMimeType(ContentService.MimeType.JSON);
   }
 
+  // Hoja de nutricion
+  if (e && e.parameter && e.parameter.sheet === 'nutricion') {
+    const sheet = ss.getSheetByName('nutricion');
+    if (!sheet) return ContentService.createTextOutput(JSON.stringify({ historico: [] })).setMimeType(ContentService.MimeType.JSON);
+    const rows = sheet.getDataRange().getDisplayValues();
+    rows.shift();
+    const historico = rows.filter(r => r[0] && r[0].trim() !== '').map(r => ({
+      id: r[0],
+      fecha: r[1],
+      comida: r[2],
+      calorias: r[3],
+      proteinas: r[4],
+      carbos: r[5],
+      grasas: r[6]
+    }));
+    return ContentService.createTextOutput(JSON.stringify({ historico })).setMimeType(ContentService.MimeType.JSON);
+  }
+
   // Hoja de operaciones (compras y ventas)
   if (e && e.parameter && e.parameter.sheet === 'operaciones') {
     const sheet = ss.getSheetByName('operaciones');
@@ -341,6 +359,40 @@ function doPost(e) {
           }
         }
         break;
+      }
+    }
+    return ok();
+  }
+
+  // ── Nutrición: registrar ──────────────────────────────────────────────────
+  if (data.accion === 'registrarNutricion') {
+    let sheet = ss.getSheetByName('nutricion');
+    if (!sheet) {
+      sheet = ss.insertSheet('nutricion');
+      sheet.appendRow(['ID', 'Fecha', 'Comida', 'Calorías', 'Proteínas', 'Carbos', 'Grasas']);
+    }
+    sheet.appendRow([
+      data.id || Date.now().toString(),
+      data.fecha || '',
+      data.comida || '',
+      data.calorias || 0,
+      data.proteinas || 0,
+      data.carbos || 0,
+      data.grasas || 0
+    ]);
+    return ok();
+  }
+
+  // ── Nutrición: eliminar ───────────────────────────────────────────────────
+  if (data.accion === 'eliminarNutricion') {
+    const sheet = ss.getSheetByName('nutricion');
+    if (sheet) {
+      const rows = sheet.getDataRange().getValues();
+      for (let i = rows.length - 1; i >= 1; i--) {
+        if (String(rows[i][0]) === String(data.id)) {
+          sheet.deleteRow(i + 1);
+          break;
+        }
       }
     }
     return ok();
