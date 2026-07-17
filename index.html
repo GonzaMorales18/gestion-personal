@@ -766,10 +766,16 @@
               </div>
             </div>
 
-            <button type="submit" id="btnGuardar"
-                    class="w-full bg-red-600 hover:opacity-90 text-white font-black py-4 rounded-xl border border-white/20 active:scale-95 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest">
-              <i class="fas fa-save"></i><span>Registrar</span>
-            </button>
+            <div class="flex gap-3">
+              <button type="button" id="btnIA" onclick="abrirModalIA()"
+                      class="w-1/3 bg-purple-600 hover:bg-purple-500 text-white font-black py-4 rounded-xl border border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.4)] active:scale-95 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest">
+                <i class="fas fa-wand-magic-sparkles"></i><span class="hidden sm:inline">IA</span>
+              </button>
+              <button type="submit" id="btnGuardar"
+                      class="w-2/3 bg-red-600 hover:opacity-90 text-white font-black py-4 rounded-xl border border-white/20 active:scale-95 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest">
+                <i class="fas fa-save"></i><span>Registrar</span>
+              </button>
+            </div>
           </form>
         </section>
       </div>
@@ -863,6 +869,37 @@
           </div>
           
 
+        </div>
+
+        <!-- MODAL IA -->
+        <div id="modal-ia" class="fixed inset-0 z-[200] flex items-center justify-center p-4" style="display:none!important">
+          <div class="absolute inset-0 bg-black/75 backdrop-blur-sm" onclick="cerrarModalIA()"></div>
+          <div class="relative bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg flex flex-col overflow-hidden border border-purple-500/30">
+             <div class="px-6 py-5 border-b border-slate-700/60 flex items-center justify-between bg-purple-900/20">
+               <div class="flex items-center gap-2">
+                 <i class="fas fa-wand-magic-sparkles text-purple-400"></i>
+                 <h3 class="font-black text-white uppercase tracking-widest text-sm">Registro con IA</h3>
+               </div>
+               <button onclick="cerrarModalIA()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-800 hover:bg-slate-700 transition-colors text-slate-400">
+                 <i class="fas fa-times text-xs"></i>
+               </button>
+             </div>
+             <div class="p-6 space-y-4">
+               <p class="text-[11px] text-slate-400 font-bold">Escribe o dicta tu movimiento (ej. "Gasté 15000 en el súper con débito"):</p>
+               <div class="relative">
+                 <textarea id="ia-texto" rows="4" class="w-full p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-purple-500/50 text-sm text-white resize-none overflow-hidden" placeholder="Escribe aquí..."></textarea>
+                 <button type="button" id="btn-dictar-ia" onclick="toggleDictadoIA()" class="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-slate-700 hover:bg-purple-600 text-slate-300 flex items-center justify-center transition-colors border border-slate-600">
+                   <i class="fas fa-microphone"></i>
+                 </button>
+               </div>
+               <div id="ia-status" class="text-[10px] font-bold uppercase tracking-widest text-purple-400 hidden animate-pulse">Escuchando...</div>
+               <div class="pt-2">
+                 <button type="button" id="btn-procesar-ia" onclick="procesarTextoIA()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-black py-3 rounded-xl border border-white/20 active:scale-95 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest">
+                   <i class="fas fa-microchip"></i><span id="ia-btn-text">Procesar</span>
+                 </button>
+               </div>
+             </div>
+          </div>
         </div>
 
         <!-- MODAL RESUMEN ANUAL -->
@@ -2988,12 +3025,217 @@ document.getElementById('financeForm').addEventListener('submit', async e => {
   }
 });
 
-// ─── UI HELPERS ───────────────────────────────────────────────────────────────
 function updateButtonColor() {
   const tipo = document.getElementById('tipo').value;
   const btn  = document.getElementById('btnGuardar');
   const base = 'w-full hover:opacity-90 text-white font-black py-4 rounded-xl border border-white/20 active:scale-95 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest';
   btn.className = base + (tipo === 'Gasto' ? ' bg-red-600' : ' bg-green-600');
+}
+
+function cerrarModalAnual() {
+  document.getElementById('modal-anual').style.setProperty('display', 'none', 'important');
+}
+
+/* ==========================================================================
+   INTEGRACIÓN IA (GEMINI API) Y DICTADO POR VOZ
+   ========================================================================== */
+
+let isRecording = false;
+let recognition = null;
+
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SpeechRecognition();
+  recognition.lang = 'es-AR';
+  recognition.continuous = false;
+  recognition.interimResults = false;
+
+  recognition.onresult = function(event) {
+    const transcript = event.results[0][0].transcript;
+    const textArea = document.getElementById('ia-texto');
+    textArea.value = (textArea.value + ' ' + transcript).trim();
+  };
+
+  recognition.onend = function() {
+    isRecording = false;
+    document.getElementById('ia-status').classList.add('hidden');
+    document.getElementById('btn-dictar-ia').classList.remove('bg-red-600', 'text-white', 'border-red-500');
+    document.getElementById('btn-dictar-ia').classList.add('bg-slate-700', 'text-slate-300', 'border-slate-600');
+  };
+  
+  recognition.onerror = function(event) {
+    console.error('Speech recognition error', event.error);
+    isRecording = false;
+    document.getElementById('ia-status').classList.add('hidden');
+    document.getElementById('btn-dictar-ia').classList.remove('bg-red-600', 'text-white', 'border-red-500');
+    document.getElementById('btn-dictar-ia').classList.add('bg-slate-700', 'text-slate-300', 'border-slate-600');
+  };
+}
+
+function abrirModalIA() {
+  document.getElementById('modal-ia').style.setProperty('display', 'flex', 'important');
+  document.getElementById('ia-texto').focus();
+}
+
+function cerrarModalIA() {
+  document.getElementById('modal-ia').style.setProperty('display', 'none', 'important');
+  if (isRecording && recognition) {
+    recognition.stop();
+  }
+}
+
+function toggleDictadoIA() {
+  if (!recognition) {
+    alert("El dictado por voz no está soportado en este navegador.");
+    return;
+  }
+  
+  if (isRecording) {
+    recognition.stop();
+  } else {
+    recognition.start();
+    isRecording = true;
+    document.getElementById('ia-status').classList.remove('hidden');
+    document.getElementById('btn-dictar-ia').classList.remove('bg-slate-700', 'text-slate-300', 'border-slate-600');
+    document.getElementById('btn-dictar-ia').classList.add('bg-red-600', 'text-white', 'border-red-500');
+  }
+}
+
+async function procesarTextoIA() {
+  const texto = document.getElementById('ia-texto').value.trim();
+  if (!texto) {
+    alert("Por favor ingresa un texto o usa el micrófono.");
+    return;
+  }
+
+  let apiKey = localStorage.getItem('GEMINI_API_KEY');
+  if (!apiKey) {
+    apiKey = prompt("Para usar la IA, ingresa tu API Key de Gemini (se guardará en tu navegador):\n\nPuedes obtener una gratis en: https://aistudio.google.com/app/apikey");
+    if (!apiKey) return;
+    localStorage.setItem('GEMINI_API_KEY', apiKey.trim());
+  }
+
+  const btnText = document.getElementById('ia-btn-text');
+  const originalText = btnText.innerText;
+  btnText.innerText = "Procesando...";
+  document.getElementById('btn-procesar-ia').disabled = true;
+
+  try {
+    const selectCatOpts = Array.from(document.getElementById('categoria').options).map(o => o.value).filter(v => v);
+    const selectMetOpts = Array.from(document.getElementById('metodo_pago').options).map(o => o.value).filter(v => v);
+    const catsStr = selectCatOpts.length > 0 ? selectCatOpts.join(', ') : 'Supermercado, Alquiler, Sueldo, Transferencia, Comida';
+    const metsStr = selectMetOpts.length > 0 ? selectMetOpts.join(', ') : 'Efectivo, Débito, Crédito, MercadoPago';
+
+    const systemPrompt = `Eres un asistente de finanzas personales. Tu tarea es extraer la información de gastos o ingresos a partir del texto provisto por el usuario.
+Deberás devolver ÚNICAMENTE un objeto JSON válido con las siguientes claves:
+- "tipo": Debe ser "Gasto" o "Ingreso".
+- "monto": Un número (sin símbolos de moneda). Si no hay monto explícito, pon 0.
+- "concepto": Una breve descripción (ej: "Compra Coto", "Sueldo").
+- "categoria": Elige la categoría más adecuada de esta lista: [${catsStr}]. Si ninguna encaja bien, sugiere una nueva con la primera letra en mayúscula.
+- "metodo_pago": Elige de esta lista: [${metsStr}]. Si no se menciona o no está claro, déjalo vacío o usa el que parezca más lógico (ej. Efectivo).
+
+Texto del usuario: "${texto}"`;
+
+    let response;
+    let success = false;
+    let errorMsg = '';
+    const models = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-flash-latest'];
+
+    for (const model of models) {
+      response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: systemPrompt }] }],
+          generationConfig: { temperature: 0.1 }
+        })
+      });
+
+      if (response.ok) {
+        success = true;
+        break;
+      } else {
+        if (response.status === 400 || response.status === 403) {
+          localStorage.removeItem('GEMINI_API_KEY');
+          throw new Error("API Key inválida o sin permisos (Error 400/403). Por favor genera una nueva.");
+        }
+        try {
+          const errData = await response.json();
+          if (errData.error && errData.error.message) {
+            errorMsg = errData.error.message;
+          }
+        } catch (e) {}
+      }
+    }
+
+    if (!success) {
+      throw new Error(`Ningún modelo funcionó. Último error: ${errorMsg}`);
+    }
+
+    const data = await response.json();
+    const candidateText = data.candidates[0].content.parts[0].text;
+    const aiResult = JSON.parse(candidateText);
+
+    // Rellenar el formulario
+    if (aiResult.tipo) {
+      switchFinTab(aiResult.tipo); // Cambia el tab (Gasto/Ingreso)
+    }
+    
+    if (aiResult.monto) {
+      document.getElementById('monto').value = aiResult.monto;
+    }
+    if (aiResult.concepto) {
+      document.getElementById('concepto').value = aiResult.concepto;
+    }
+    
+    // Categoría
+    if (aiResult.categoria) {
+      let selectCat = document.getElementById('categoria');
+      let foundCat = false;
+      for (let i = 0; i < selectCat.options.length; i++) {
+        if (selectCat.options[i].value.toLowerCase() === aiResult.categoria.toLowerCase()) {
+          selectCat.selectedIndex = i;
+          foundCat = true;
+          break;
+        }
+      }
+      if (!foundCat) {
+        // Agregar nueva opción
+        const newOption = new Option(aiResult.categoria, aiResult.categoria);
+        selectCat.add(newOption);
+        selectCat.value = aiResult.categoria;
+      }
+    }
+    
+    // Método de pago
+    if (aiResult.metodo_pago) {
+      let selectMetodo = document.getElementById('metodo_pago');
+      let foundMet = false;
+      for (let i = 0; i < selectMetodo.options.length; i++) {
+        if (selectMetodo.options[i].value.toLowerCase() === aiResult.metodo_pago.toLowerCase()) {
+          selectMetodo.selectedIndex = i;
+          foundMet = true;
+          break;
+        }
+      }
+      if (!foundMet) {
+         const newOption = new Option(aiResult.metodo_pago, aiResult.metodo_pago);
+         selectMetodo.add(newOption);
+         selectMetodo.value = aiResult.metodo_pago;
+      }
+    }
+
+    cerrarModalIA();
+    document.getElementById('ia-texto').value = '';
+    showToast('Datos cargados por IA. Revisa y presiona Registrar.', 'success');
+
+  } catch (error) {
+    console.error(error);
+    alert("Error al procesar con IA: " + error.message);
+  } finally {
+    btnText.innerText = originalText;
+    document.getElementById('btn-procesar-ia').disabled = false;
+  }
 }
 
 function showToast(msg = 'OK', tipo = 'ok') {
