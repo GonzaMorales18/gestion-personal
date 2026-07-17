@@ -3376,10 +3376,12 @@ async function procesarTextoIA() {
     return;
   }
 
-  const p1 = 'AQ.Ab8RN6II0Dt';
-  const p2 = 'Un4v6fcwzZqBsCSi';
-  const p3 = 'G0tmEgXodZt35BKbUFoDQ9w';
-  const apiKey = p1 + p2 + p3;
+  let apiKey = localStorage.getItem('GEMINI_API_KEY');
+  if (!apiKey) {
+    apiKey = prompt("Por favor, ingresa tu API Key de Google Gemini:");
+    if (!apiKey) return;
+    localStorage.setItem('GEMINI_API_KEY', apiKey.trim());
+  }
 
   const btnText = document.getElementById('ia-btn-text');
   const originalText = btnText.innerText;
@@ -3407,7 +3409,7 @@ Texto del usuario: "${texto}"`;
     let response;
     let success = false;
     let errorMsg = '';
-    const models = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-flash-latest'];
+    const models = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash', 'gemini-1.5-flash'];
 
     for (const model of models) {
       response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
@@ -3423,19 +3425,26 @@ Texto del usuario: "${texto}"`;
         success = true;
         break;
       } else {
-        if (response.status === 400 || response.status === 403) {
-          throw new Error("API Key inválida o sin permisos (Error 400/403). Por favor revisa la key.");
-        }
         try {
           const errData = await response.json();
           if (errData.error && errData.error.message) {
             errorMsg = errData.error.message;
           }
         } catch (e) {}
+        
+        if (response.status === 400 || response.status === 401 || response.status === 403) {
+           continue;
+        }
+        if (response.status === 404) {
+           continue; 
+        }
       }
     }
 
     if (!success) {
+      if (errorMsg.includes("API key not valid") || errorMsg.includes("API Key") || errorMsg.includes("credentials")) {
+         localStorage.removeItem('GEMINI_API_KEY');
+      }
       throw new Error(`Ningún modelo funcionó. Último error: ${errorMsg}`);
     }
     const data = await response.json();
@@ -7116,10 +7125,12 @@ async function procesarNutricionIA() {
   const texto = document.getElementById('ia-nut-texto').value.trim();
   if (!texto && !nutImageBase64) return;
   
-  const p1 = 'AQ.Ab8RN6II0Dt';
-  const p2 = 'Un4v6fcwzZqBsCSi';
-  const p3 = 'G0tmEgXodZt35BKbUFoDQ9w';
-  const apiKey = p1 + p2 + p3;
+  let apiKey = localStorage.getItem('GEMINI_API_KEY');
+  if (!apiKey) {
+    apiKey = prompt("Por favor, ingresa tu API Key de Google Gemini:");
+    if (!apiKey) return;
+    localStorage.setItem('GEMINI_API_KEY', apiKey.trim());
+  }
 
   const btn = document.getElementById('btn-procesar-ia-nut');
   const btnText = document.getElementById('ia-nut-btn-text');
@@ -7159,7 +7170,7 @@ async function procesarNutricionIA() {
     let response;
     let success = false;
     let errorMsg = '';
-    const models = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-flash-latest', 'gemini-1.5-flash'];
+    const models = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash', 'gemini-1.5-flash'];
 
     for (const model of models) {
       try {
@@ -7175,9 +7186,7 @@ async function procesarNutricionIA() {
         } else {
           const errData = await response.json();
           errorMsg = errData.error?.message || 'Error desconocido';
-          if (response.status === 400 || response.status === 403) {
-            break; 
-          }
+          continue; // Si falla, intentamos con el siguiente modelo
         }
       } catch (e) {
         errorMsg = e.message;
@@ -7185,6 +7194,9 @@ async function procesarNutricionIA() {
     }
 
     if (!success) {
+      if (errorMsg.includes("API key not valid") || errorMsg.includes("API Key") || errorMsg.includes("credentials")) {
+         localStorage.removeItem('GEMINI_API_KEY');
+      }
       throw new Error("Error en la API de Google Gemini: " + errorMsg);
     }
 
