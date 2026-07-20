@@ -6956,7 +6956,32 @@ function renderNutricionChart() {
         },
         scales: {
           x: { grid: { display: false, drawBorder: false }, ticks: { color: '#64748b', font: { size: 10 } } },
-          y: { grid: { color: 'rgba(51, 65, 85, 0.4)', drawBorder: false }, ticks: { color: '#64748b', font: { size: 10 } }, beginAtZero: true, max: 4000 }
+          y: { grid: { color: 'rgba(51, 65, 85, 0.4)', drawBorder: false }, ticks: { color: '#64748b', font: { size: 10 } }, beginAtZero: true, max: 4000 },
+          yTime: {
+            position: 'right',
+            grid: { display: false, drawBorder: false },
+            ticks: {
+              color: '#64748b',
+              font: { size: 10 },
+              callback: function(value) {
+                let h = 7 + (value / 4000) * 18;
+                let m = Math.round((h - Math.floor(h)) * 60);
+                let actualH = Math.floor(h);
+                if (m === 60) {
+                  actualH += 1;
+                  m = 0;
+                }
+                let ampm = actualH >= 12 && actualH < 24 ? 'pm' : 'am';
+                let displayH = actualH % 12;
+                if (displayH === 0) displayH = 12;
+                let displayHStr = actualH === 25 ? '01' : displayH.toString();
+                if (m === 0) return displayHStr + ampm;
+                return displayHStr + ':' + m.toString().padStart(2, '0') + ampm;
+              }
+            },
+            beginAtZero: true,
+            max: 4000
+          }
         }
       }
     });
