@@ -668,6 +668,7 @@
         <div class="h-[180px] w-full relative">
           <canvas id="chart-steps"></canvas>
         </div>
+        <div id="chart-steps-range" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-4 text-center empty:hidden"></div>
       </div>
       <!-- Gráfico Distancia -->
       <div class="bg-slate-900 rounded-2xl border border-slate-700/60 p-5">
@@ -678,6 +679,7 @@
         <div class="h-[180px] w-full relative">
           <canvas id="chart-distance"></canvas>
         </div>
+        <div id="chart-distance-range" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-4 text-center empty:hidden"></div>
       </div>
       <!-- Gráfico Peso -->
       <div class="bg-slate-900 rounded-2xl border border-slate-700/60 p-5">
@@ -688,6 +690,7 @@
         <div class="h-[180px] w-full relative">
           <canvas id="chart-weight"></canvas>
         </div>
+        <div id="chart-weight-range" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-4 text-center empty:hidden"></div>
       </div>
       <!-- Gráfico Calorías -->
       <div class="bg-slate-900 rounded-2xl border border-slate-700/60 p-5">
@@ -698,6 +701,7 @@
         <div class="h-[180px] w-full relative">
           <canvas id="chart-calories"></canvas>
         </div>
+        <div id="chart-calories-range" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-4 text-center empty:hidden"></div>
       </div>
       <!-- Gráfico Minutos Activos -->
       <div class="bg-slate-900 rounded-2xl border border-slate-700/60 p-5">
@@ -708,6 +712,7 @@
         <div class="h-[180px] w-full relative">
           <canvas id="chart-activeMinutes"></canvas>
         </div>
+        <div id="chart-activeMinutes-range" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-4 text-center empty:hidden"></div>
       </div>
     </div>
 
@@ -6526,17 +6531,44 @@ function renderHealthCard(type, period) {
     }
   }
   
+  let startPhysChangeIndex = -1;
+  if (type === 'weight') {
+    const targetDate = new Date(2026, 6, 16);
+    if (filtered.length === labels.length && filtered.length > 0) {
+      startPhysChangeIndex = filtered.findIndex(d => 
+        d.date.getFullYear() === targetDate.getFullYear() &&
+        d.date.getMonth() === targetDate.getMonth() &&
+        d.date.getDate() === targetDate.getDate()
+      );
+    } else if (labels.length > 0) {
+      const targetMonthKey = targetDate.toLocaleString('es-ES', { month: 'short', year: 'numeric' });
+      startPhysChangeIndex = labels.findIndex(l => l.toLowerCase() === targetMonthKey.toLowerCase());
+    }
+  }
+  
   const mainChartsContainer = document.getElementById('charts-actividad-container');
   
+  const rangeEl = document.getElementById('chart-' + type + '-range');
+  if (rangeEl) {
+    if ((period === 'semana' || period === 'mes' || period === 'personalizado') && filtered && filtered.length > 0) {
+      const start = filtered[0].date;
+      const end = filtered[filtered.length - 1].date;
+      const options = { day: 'numeric', month: 'long' };
+      rangeEl.textContent = `Del ${start.toLocaleDateString('es-ES', options)} al ${end.toLocaleDateString('es-ES', options)}`;
+    } else {
+      rangeEl.textContent = '';
+    }
+  }
+
   if (period === 'hoy') {
     mainChartsContainer.classList.add('hidden');
   } else {
     mainChartsContainer.classList.remove('hidden');
-    drawHealthChart(type, labels, values);
+    drawHealthChart(type, labels, values, startPhysChangeIndex);
   }
 }
 
-function drawHealthChart(type, labels, data) {
+function drawHealthChart(type, labels, data, startPhysChangeIndex = -1) {
   const ctx = document.getElementById('chart-' + type).getContext('2d');
   
   if (window.healthCharts[type] instanceof Chart) {
@@ -6557,8 +6589,42 @@ function drawHealthChart(type, labels, data) {
   
   const chartData = data.map(v => v === 0 && type === 'weight' ? null : v);
   
+  const chartPlugins = [];
+  if (type === 'weight' && startPhysChangeIndex !== -1) {
+    chartPlugins.push({
+      id: 'verticalLinePhysChange',
+      afterDraw: (chart) => {
+        const ctx = chart.ctx;
+        const yAxis = chart.scales.y;
+        const meta = chart.getDatasetMeta(0);
+        if (!meta || !meta.data[startPhysChangeIndex]) return;
+        
+        const x = meta.data[startPhysChangeIndex].x;
+        
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(x, yAxis.top);
+        ctx.lineTo(x, yAxis.bottom);
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.8)';
+        ctx.setLineDash([4, 4]);
+        ctx.stroke();
+        
+        ctx.fillStyle = 'rgba(148, 163, 184, 1)';
+        ctx.font = 'bold 9px "Space Grotesk"';
+        ctx.textAlign = 'center';
+        if (x < 25) ctx.textAlign = 'left';
+        if (x > chart.width - 25) ctx.textAlign = 'right';
+        ctx.fillText('INICIO', x, yAxis.top - 12);
+        ctx.fillText('CAMBIO', x, yAxis.top - 2);
+        ctx.restore();
+      }
+    });
+  }
+  
   window.healthCharts[type] = new Chart(ctx, {
     type: chartType,
+    plugins: chartPlugins,
     data: {
       labels: labels,
       datasets: [{
@@ -6575,6 +6641,9 @@ function drawHealthChart(type, labels, data) {
       }]
     },
     options: {
+      layout: {
+        padding: { top: (type === 'weight' && startPhysChangeIndex !== -1) ? 24 : 0 }
+      },
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
