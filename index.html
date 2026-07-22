@@ -206,16 +206,6 @@
       <i class="fas fa-table-tennis w-6 text-sm"></i>
       <span class="font-bold text-sm uppercase tracking-wider">Tenis</span>
     </a>
-    <a href="#" onclick="showSection('alfajores')" id="nav-alfajores"
-       class="flex items-center px-6 py-3.5 text-slate-400 hover:bg-slate-800 border-l-4 border-transparent transition-colors">
-      <i class="fas fa-cookie-bite w-6 text-sm"></i>
-      <span class="font-bold text-sm uppercase tracking-wider">Alfajores</span>
-    </a>
-    <a href="#" onclick="showSection('relojes')" id="nav-relojes"
-       class="flex items-center px-6 py-3.5 text-slate-400 hover:bg-slate-800 border-l-4 border-transparent transition-colors">
-      <i class="fas fa-clock w-6 text-sm"></i>
-      <span class="font-bold text-sm uppercase tracking-wider">Relojes</span>
-    </a>
   </nav>
   <!-- Status indicador -->
   <div class="p-4 border-t border-slate-800 flex items-center gap-2">
@@ -235,7 +225,13 @@
       <span id="header-title" class="font-black text-white uppercase tracking-[0.15em] text-xs">Balance</span>
     </div>
     <div class="flex items-center gap-3">
-      <!-- Botón exportar CSV (solo visible en finanzas) -->
+      <!-- Botón Fuente -->
+      <a id="btn-fuente" href="https://docs.google.com/spreadsheets/d/12B_--vUStI5IXJ7KmN2f8xNsx8RdoYaCV_dYx_sgPbo/edit?gid=0#gid=0" target="_blank" title="Abrir fuente de datos"
+              class="hidden items-center gap-2 text-[11px] font-bold text-slate-400 hover:text-purple-400 transition-colors uppercase tracking-wider">
+        <i class="fas fa-external-link-alt text-xs"></i>
+        <span class="hidden md:inline">Fuente</span>
+      </a>
+      <!-- Botón exportar CSV -->
       <button id="btn-export-csv" onclick="exportarCSV()"
               class="hidden items-center gap-2 text-[11px] font-bold text-slate-400 hover:text-green-400 transition-colors uppercase tracking-wider">
         <i class="fas fa-file-csv text-xs"></i>
@@ -2050,36 +2046,6 @@
     </div>
   </main>
 
-  <!-- SECCIÓN ALFAJORES -->
-  <main id="section-alfajores" class="hidden p-4 md:p-8 max-w-[1400px] mx-auto w-full">
-    <div class="mb-8">
-      <h2 class="text-xl font-black text-white uppercase tracking-[0.12em]">Alfajores</h2>
-      <p class="text-[11px] text-slate-500 mt-1 uppercase tracking-widest mono">Próximamente</p>
-    </div>
-    <div class="bg-slate-900 rounded-2xl border border-slate-700/60 p-16 flex flex-col items-center justify-center text-center">
-      <div class="w-16 h-16 rounded-2xl bg-amber-900/20 border border-amber-800/50 flex items-center justify-center mb-4">
-        <i class="fas fa-cookie-bite text-2xl text-amber-500"></i>
-      </div>
-      <p class="text-[11px] font-black text-slate-500 uppercase tracking-[0.2em]">Módulo en construcción</p>
-      <p class="text-[10px] text-slate-600 mt-1">Acá vas a poder registrar degustaciones, rankings y más.</p>
-    </div>
-  </main>
-
-  <!-- SECCIÓN RELOJES -->
-  <main id="section-relojes" class="hidden p-4 md:p-8 max-w-[1400px] mx-auto w-full">
-    <div class="mb-8">
-      <h2 class="text-xl font-black text-white uppercase tracking-[0.12em]">Relojes</h2>
-      <p class="text-[11px] text-slate-500 mt-1 uppercase tracking-widest mono">Próximamente</p>
-    </div>
-    <div class="bg-slate-900 rounded-2xl border border-slate-700/60 p-16 flex flex-col items-center justify-center text-center">
-      <div class="w-16 h-16 rounded-2xl bg-cyan-900/20 border border-cyan-800/50 flex items-center justify-center mb-4">
-        <i class="fas fa-clock text-2xl text-cyan-500"></i>
-      </div>
-      <p class="text-[11px] font-black text-slate-500 uppercase tracking-[0.2em]">Módulo en construcción</p>
-      <p class="text-[10px] text-slate-600 mt-1">Acá vas a poder llevar el registro de tu colección.</p>
-    </div>
-  </main>
-
   <!-- SECCIÓN CALENDARIO -->
   <main id="section-calendario" class="hidden p-4 md:p-8 max-w-[1400px] mx-auto w-full space-y-6">
     
@@ -2374,8 +2340,6 @@ const HEADER_MAP = {
   ahorros:  { titulo: 'Ahorros',   icono: 'fa-piggy-bank'     },
   sueldos:  { titulo: 'Sueldos',   icono: 'fa-money-bill-wave'},
   tenis:    { titulo: 'Tenis',    icono: 'fa-table-tennis'  },
-  alfajores:{ titulo: 'Alfajores',icono: 'fa-cookie-bite'   },
-  relojes:  { titulo: 'Relojes',  icono: 'fa-clock'         },
   calendario:{ titulo: 'Calendario', icono: 'fa-calendar-alt' },
 };
 
@@ -2389,13 +2353,11 @@ const MODULE_ACCENT = {
   ahorros:   { nav: 'border-violet-500 text-violet-400 bg-violet-600/10', icon: 'text-violet-400' },
   sueldos:   { nav: 'border-yellow-500 text-yellow-400 bg-yellow-600/10', icon: 'text-yellow-400' },
   tenis:     { nav: 'border-emerald-500 text-emerald-400 bg-emerald-600/10', icon: 'text-emerald-400' },
-  alfajores: { nav: 'border-amber-500 text-amber-400 bg-amber-600/10',   icon: 'text-amber-400'  },
-  relojes:   { nav: 'border-cyan-500 text-cyan-400 bg-cyan-600/10',      icon: 'text-cyan-400'   },
   calendario:{ nav: 'border-pink-500 text-pink-400 bg-pink-600/10',      icon: 'text-pink-400'   },
 };
 
 function showSection(nombre) {
-  ['inicio', 'actividad', 'nutricion', 'finanzas', 'ahorros', 'sueldos', 'tenis', 'alfajores', 'relojes', 'calendario'].forEach(s => {
+  ['inicio', 'actividad', 'nutricion', 'finanzas', 'ahorros', 'sueldos', 'tenis', 'calendario'].forEach(s => {
     const sec = document.getElementById('section-' + s);
     if (sec) {
       sec.classList.add('hidden');
@@ -2424,14 +2386,15 @@ function showSection(nombre) {
 
 
 
-  // Mostrar/ocultar botón exportar
+  // Mostrar/ocultar botón exportar y fuente
   const btnExport = document.getElementById('btn-export-csv');
-  if (['finanzas', 'ahorros', 'sueldos'].includes(nombre)) {
-    btnExport.classList.remove('hidden');
-    btnExport.classList.add('flex');
+  const btnFuente = document.getElementById('btn-fuente');
+  if (['finanzas', 'ahorros', 'sueldos', 'actividad', 'nutricion'].includes(nombre)) {
+    if (btnExport) { btnExport.classList.remove('hidden'); btnExport.classList.add('flex'); }
+    if (btnFuente) { btnFuente.classList.remove('hidden'); btnFuente.classList.add('flex'); }
   } else {
-    btnExport.classList.add('hidden');
-    btnExport.classList.remove('flex');
+    if (btnExport) { btnExport.classList.add('hidden'); btnExport.classList.remove('flex'); }
+    if (btnFuente) { btnFuente.classList.add('hidden'); btnFuente.classList.remove('flex'); }
   }
 
   // FIX #12 — Persistencia
@@ -2555,6 +2518,40 @@ function exportarCSV() {
     const csv  = [cabecera.join(','), ...filas].join('\n');
     descargarCSV(csv, `sueldos_${new Date().toISOString().slice(0,10)}.csv`);
     showToast(`${sueldosData.length} sueldos exportados ✓`, 'ok');
+    return;
+  }
+
+  if (seccionActiva === 'nutricion') {
+    if (!datosNutricion || !datosNutricion.length) return showToast('No hay datos para exportar', 'error');
+    const cabecera = ['Fecha','Comida','Calorias','Proteinas','Carbos','Grasas'];
+    const filas = datosNutricion.map(r => [
+      r.fecha || '',
+      `"${(r.comida || '').replace(/"/g, '""')}"`,
+      r.calorias || 0,
+      r.proteinas || 0,
+      r.carbos || 0,
+      r.grasas || 0
+    ].join(','));
+    const csv  = [cabecera.join(','), ...filas].join('\n');
+    descargarCSV(csv, `nutricion_${new Date().toISOString().slice(0,10)}.csv`);
+    showToast(`${datosNutricion.length} registros exportados ✓`, 'ok');
+    return;
+  }
+
+  if (seccionActiva === 'actividad') {
+    if (!window.fitnessData) return showToast('No hay datos para exportar', 'error');
+    let allRecords = [];
+    ['steps', 'distance', 'weight', 'calories', 'activeMinutes'].forEach(metric => {
+       if(window.fitnessData[metric]) {
+          window.fitnessData[metric].forEach(r => {
+             allRecords.push([metric, r.date || '', r.value || 0].join(','));
+          });
+       }
+    });
+    if (!allRecords.length) return showToast('No hay datos para exportar', 'error');
+    const csv  = ['Metrica,Fecha,Valor', ...allRecords].join('\n');
+    descargarCSV(csv, `actividad_${new Date().toISOString().slice(0,10)}.csv`);
+    showToast(`${allRecords.length} registros exportados ✓`, 'ok');
     return;
   }
 
@@ -5166,6 +5163,7 @@ document.getElementById('sueldosForm').addEventListener('submit', async e => {
   if (!neto) return showToast('No se pudo calcular el Neto. Verificá el coeficiente.', 'error');
   
   const isSac = document.getElementById('su-es-sac')?.checked;
+
   const dia = isSac ? '15' : '1';
   const mesLabel = dia + '/' + mesNum + '/' + anio + (isSac ? ' SAC' : '');
   const btn  = document.getElementById('btn-guardar-sueldo');
@@ -5262,7 +5260,7 @@ window.onload = () => {
   let seccionInicial = 'inicio';
   try {
     const saved = localStorage.getItem('gp_last_section');
-    const validas = ['inicio','finanzas','ahorros','sueldos','tenis','alfajores','relojes'];
+    const validas = ['inicio','actividad','nutricion','finanzas','ahorros','sueldos','tenis','calendario'];
     if (saved && validas.includes(saved)) seccionInicial = saved;
   } catch(e) {}
   showSection(seccionInicial);
@@ -6685,7 +6683,7 @@ function drawHealthChart(type, labels, data, startPhysChangeIndex = -1) {
 // ─── MÓDULO NUTRICIÓN ────────────────────────────────────────────────────────
 let datosNutricion = [];
 let chartNutricion = null;
-let currentNutricionFiltro = 'Esta Semana';
+let currentNutricionFiltro = 'Semana';
 let nutricionPaginationPage = 1;
 const NUT_ITEMS_PER_PAGE = 20;
 
@@ -6721,7 +6719,7 @@ async function iniciarNutricion() {
 function renderFiltroTiempoNutricion() {
   const container = document.getElementById('nutricion-filtro-tiempo');
   if (!container) return;
-  const opciones = ['Hoy', 'Esta Semana', 'Mes Actual', 'Mes Anterior', 'Este Año', 'Todos'];
+  const opciones = ['Hoy', 'Semana', 'Mes', 'Año'];
   let html = opciones.map(opt => `
     <button onclick="setFiltroNutricion('${opt}')" 
             class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${currentNutricionFiltro === opt ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
@@ -6785,15 +6783,17 @@ function filtrarDatosNutricion() {
     
     if (currentNutricionFiltro === 'Hoy') {
       return y === actualY && (m - 1) === actualM && day === actualD;
-    } else if (currentNutricionFiltro === 'Esta Semana') {
-      return dObj >= inicioSemana;
-    } else if (currentNutricionFiltro === 'Mes Actual') {
-      return y === actualY && (m - 1) === actualM;
-    } else if (currentNutricionFiltro === 'Mes Anterior') {
-      let prevM = actualM - 1, prevY = actualY;
-      if (prevM < 0) { prevM = 11; prevY--; }
-      return y === prevY && (m - 1) === prevM;
-    } else if (currentNutricionFiltro === 'Este Año') {
+    } else if (currentNutricionFiltro === 'Semana') {
+      const inicio = new Date(ahora);
+      inicio.setDate(ahora.getDate() - 6);
+      inicio.setHours(0,0,0,0);
+      return dObj >= inicio;
+    } else if (currentNutricionFiltro === 'Mes') {
+      const inicio = new Date(ahora);
+      inicio.setDate(ahora.getDate() - 29);
+      inicio.setHours(0,0,0,0);
+      return dObj >= inicio;
+    } else if (currentNutricionFiltro === 'Año') {
       return y === actualY;
     }
     return true; // Todos
@@ -6896,15 +6896,17 @@ function actualizarTarjetasNutricion() {
       
       if (currentNutricionFiltro === 'Hoy') {
         return y === actualY && m === actualM && day === actualD;
-      } else if (currentNutricionFiltro === 'Esta Semana') {
-        return date >= inicioSemana;
-      } else if (currentNutricionFiltro === 'Mes Actual') {
-        return y === actualY && m === actualM;
-      } else if (currentNutricionFiltro === 'Mes Anterior') {
-        let prevM = actualM - 1, prevY = actualY;
-        if (prevM < 0) { prevM = 11; prevY--; }
-        return y === prevY && m === prevM;
-      } else if (currentNutricionFiltro === 'Este Año') {
+      } else if (currentNutricionFiltro === 'Semana') {
+        const inicio = new Date(ahora);
+        inicio.setDate(ahora.getDate() - 6);
+        inicio.setHours(0,0,0,0);
+        return date >= inicio;
+      } else if (currentNutricionFiltro === 'Mes') {
+        const inicio = new Date(ahora);
+        inicio.setDate(ahora.getDate() - 29);
+        inicio.setHours(0,0,0,0);
+        return date >= inicio;
+      } else if (currentNutricionFiltro === 'Año') {
         return y === actualY;
       } else if (currentNutricionFiltro === 'personalizado') {
         const dInicio = document.getElementById('nut-fecha-inicio') ? document.getElementById('nut-fecha-inicio').value : '';
