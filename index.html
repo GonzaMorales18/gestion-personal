@@ -821,7 +821,7 @@
             </div>
             <div class="relative z-10">
               <h4 id="nut-tot-pro" class="text-3xl font-black text-blue-300 mono tracking-tighter transition-all duration-300">0g</h4>
-              <p id="nut-desvio-pro" class="text-[9px] font-bold mt-1.5 tracking-wide truncate text-slate-400">Objetivo: 140g</p>
+              <p id="nut-desvio-pro" class="text-[9px] font-bold mt-1.5 tracking-wide truncate text-slate-400">Objetivo: 60g</p>
             </div>
           </div>
           <!-- Carbos -->
@@ -853,7 +853,7 @@
             </div>
             <div class="relative z-10">
               <h4 id="nut-tot-fat" class="text-3xl font-black text-yellow-300 mono tracking-tighter transition-all duration-300">0g</h4>
-              <p id="nut-desvio-fat" class="text-[9px] font-bold mt-1.5 tracking-wide truncate text-slate-400">Objetivo: 115g</p>
+              <p id="nut-desvio-fat" class="text-[9px] font-bold mt-1.5 tracking-wide truncate text-slate-400">Objetivo: 120g</p>
             </div>
           </div>
         </div>
@@ -6939,9 +6939,9 @@ function actualizarTarjetasNutricion() {
   };
 
   document.getElementById('nut-desvio-cal').innerHTML = formatDev(avgCal, 3250, '');
-  document.getElementById('nut-desvio-pro').innerHTML = formatDev(avgPro, 140, 'g');
+  document.getElementById('nut-desvio-pro').innerHTML = formatDev(avgPro, 60, 'g');
   document.getElementById('nut-desvio-car').innerHTML = formatDev(avgCar, 410, 'g');
-  document.getElementById('nut-desvio-fat').innerHTML = formatDev(avgFat, 115, 'g');
+  document.getElementById('nut-desvio-fat').innerHTML = formatDev(avgFat, 120, 'g');
 }
 
 function renderNutricionChart() {
@@ -7069,9 +7069,9 @@ function renderNutricionChart() {
           { label: 'Proteínas', data: dataPro, backgroundColor: '#3b82f6', borderRadius: 4, order: 2 },
           { label: 'Carbos', data: dataCar, backgroundColor: '#22c55e', borderRadius: 4, order: 2 },
           { label: 'Grasas', data: dataFat, backgroundColor: '#eab308', borderRadius: 4, order: 2 },
-          { label: 'Obj. Prot (140g)', data: [], type: 'line', borderColor: '#3b82f6', borderWidth: 2, borderDash: [4, 4] },
+          { label: 'Obj. Prot (60g)', data: [], type: 'line', borderColor: '#3b82f6', borderWidth: 2, borderDash: [4, 4] },
           { label: 'Obj. Carb (410g)', data: [], type: 'line', borderColor: '#22c55e', borderWidth: 2, borderDash: [4, 4] },
-          { label: 'Obj. Grasas (115g)', data: [], type: 'line', borderColor: '#eab308', borderWidth: 2, borderDash: [4, 4] }
+          { label: 'Obj. Grasas (120g)', data: [], type: 'line', borderColor: '#eab308', borderWidth: 2, borderDash: [4, 4] }
         ]
       },
       plugins: [{
@@ -7080,9 +7080,9 @@ function renderNutricionChart() {
           const ctx = chart.ctx;
           const yAxis = chart.scales.y;
           const goals = [
-            { idx: 0, val: 140, color: '#3b82f6' },
+            { idx: 0, val: 60, color: '#3b82f6' },
             { idx: 1, val: 410, color: '#22c55e' },
-            { idx: 2, val: 115, color: '#eab308' }
+            { idx: 2, val: 120, color: '#eab308' }
           ];
           
           goals.forEach(goal => {
@@ -7094,6 +7094,16 @@ function renderNutricionChart() {
                 const width = bar.width;
                 
                 ctx.save();
+                // Borde negro
+                ctx.beginPath();
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 5;
+                ctx.setLineDash([4, 4]);
+                ctx.moveTo(xPos - width/2 - 2, yPos);
+                ctx.lineTo(xPos + width/2 + 2, yPos);
+                ctx.stroke();
+                
+                // Línea de color
                 ctx.beginPath();
                 ctx.strokeStyle = goal.color;
                 ctx.lineWidth = 3;
