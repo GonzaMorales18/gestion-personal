@@ -387,7 +387,7 @@ function doPost(e) {
   if (data.accion === 'editarNutricion') {
     const sheet = ss.getSheetByName('nutricion');
     if (sheet) {
-      const rows = sheet.getDataRange().getValues();
+      const rows = sheet.getDataRange().getDisplayValues();
       for (let i = 1; i < rows.length; i++) {
         if (String(rows[i][0]) === String(data.id)) {
           sheet.getRange(i + 1, 2).setValue(data.fecha || '');
@@ -407,7 +407,7 @@ function doPost(e) {
   if (data.accion === 'eliminarNutricion') {
     const sheet = ss.getSheetByName('nutricion');
     if (sheet) {
-      const rows = sheet.getDataRange().getValues();
+      const rows = sheet.getDataRange().getDisplayValues();
       for (let i = rows.length - 1; i >= 1; i--) {
         if (String(rows[i][0]) === String(data.id)) {
           sheet.deleteRow(i + 1);
