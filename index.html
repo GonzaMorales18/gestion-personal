@@ -249,9 +249,18 @@
   <main id="section-inicio" class="hidden p-4 md:p-8 max-w-[1400px] mx-auto w-full">
 
     <!-- Saludo y fecha -->
-    <div class="mb-8">
-      <h2 class="text-xl font-black text-white uppercase tracking-[0.12em]">Panel de Control</h2>
-      <p id="inicio-fecha" class="text-[11px] text-white mt-1 uppercase tracking-widest mono"></p>
+    <div class="mb-8 flex justify-between items-center">
+      <div>
+        <h2 class="text-xl font-black text-white uppercase tracking-[0.12em]">Panel de Control</h2>
+        <p id="inicio-fecha" class="text-[11px] text-white mt-1 uppercase tracking-widest mono"></p>
+      </div>
+      
+      <!-- Widget Clima Resistencia -->
+      <div id="inicio-clima" onclick="abrirModalClima()" class="flex items-center gap-2 cursor-pointer transition-all hover:opacity-70 group" title="Ver pronóstico">
+        <i id="clima-icono" class="fas fa-sun text-yellow-400 text-base"></i>
+        <span class="text-[10px] font-bold uppercase tracking-widest text-slate-300 group-hover:text-white transition-colors">Resistencia</span>
+        <span id="clima-temp" class="text-sm font-black mono text-white ml-1"><span class="skeleton w-6 h-4 inline-block">&nbsp;</span></span>
+      </div>
     </div>
 
     <!-- Contenedor Superior (FINANZAS y SALUD) -->
@@ -2467,6 +2476,7 @@ async function recargarDatos() {
   const icon = document.getElementById('icon-refresh');
   icon.classList.add('spin');
   await cargarDatos(true);
+  await cargarClimaResistencia();
   icon.classList.remove('spin');
   showToast('Datos actualizados', 'ok');
   
@@ -5205,6 +5215,85 @@ function setFechaHoy() {
   if (fechaEl) {
     fechaEl.textContent = `${diasSemana[hoy.getDay()]}, ${dd} de ${mesesNombres[hoy.getMonth()]} de ${yyyy}`;
   }
+  
+  cargarClimaResistencia();
+}
+
+async function cargarClimaResistencia() {
+  const tempEl = document.getElementById('clima-temp');
+  const iconoEl = document.getElementById('clima-icono');
+  const modalContenido = document.getElementById('clima-modal-lista');
+  if (!tempEl) return;
+  
+  try {
+    const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=-27.4606&longitude=-58.9839&current_weather=true&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=auto');
+    const data = await response.json();
+    
+    const getIconClass = (code) => {
+      if (code === 0) return 'fa-sun text-yellow-400';
+      if (code >= 1 && code <= 3) return 'fa-cloud-sun text-slate-300';
+      if (code >= 45 && code <= 48) return 'fa-smog text-slate-400';
+      if (code >= 51 && code <= 67) return 'fa-cloud-rain text-blue-400';
+      if (code >= 71 && code <= 77) return 'fa-snowflake text-white';
+      if (code >= 80 && code <= 82) return 'fa-cloud-showers-heavy text-blue-500';
+      if (code >= 95 && code <= 99) return 'fa-bolt text-yellow-500';
+      return 'fa-cloud text-slate-400';
+    };
+    
+    if (data && data.current_weather) {
+      // Clima actual
+      const temp = data.current_weather.temperature;
+      const code = data.current_weather.weathercode;
+      tempEl.textContent = `${temp}°C`;
+      iconoEl.className = `fas ${getIconClass(code)} text-base`;
+      
+      // Pronóstico modal (7 días)
+      if (data.daily && data.daily.time && modalContenido) {
+        let htmlPronostico = '';
+        const diasSemana = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+        
+        for (let i = 0; i < Math.min(7, data.daily.time.length); i++) {
+          const dateObj = new Date(data.daily.time[i] + 'T00:00:00');
+          const diaNombre = i === 0 ? 'Hoy' : (i === 1 ? 'Mañana' : diasSemana[dateObj.getDay()]);
+          const min = Math.round(data.daily.temperature_2m_min[i]);
+          const max = Math.round(data.daily.temperature_2m_max[i]);
+          const dailyCode = data.daily.weathercode[i];
+          
+          htmlPronostico += `
+            <div class="flex items-center justify-between p-3 bg-slate-800/50 rounded-xl mb-2">
+               <span class="text-xs font-bold text-slate-300 uppercase w-24">${diaNombre}</span>
+               <i class="fas ${getIconClass(dailyCode)} text-lg w-8 text-center"></i>
+               <span class="text-sm font-black mono text-white">${max}° <span class="text-slate-500 ml-2">${min}°</span></span>
+            </div>
+          `;
+        }
+        modalContenido.innerHTML = htmlPronostico;
+      }
+    } else {
+      tempEl.textContent = '--°C';
+      if (modalContenido) modalContenido.innerHTML = '<span class="text-xs text-slate-500">Error cargando pronóstico.</span>';
+    }
+  } catch (error) {
+    console.error('Error cargando clima:', error);
+    tempEl.textContent = '--°C';
+    if (modalContenido) modalContenido.innerHTML = '<span class="text-xs text-slate-500">Error de conexión.</span>';
+  }
+}
+
+function abrirModalClima() {
+  const modal = document.getElementById('modal-clima');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+}
+
+function cerrarModalClima() {
+  const modal = document.getElementById('modal-clima');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
 }
 
 function actualizarTarjetaFinanzas() {
@@ -7550,5 +7639,20 @@ async function procesarNutricionIA() {
 }
 
 </script>
+  <!-- Modal Clima -->
+  <div id="modal-clima" class="hidden fixed inset-0 bg-black/70 z-[300] items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700/60 rounded-2xl w-full max-w-sm overflow-hidden flex flex-col shadow-2xl relative">
+      <div class="p-5 border-b border-slate-700/60 flex items-center justify-between">
+        <h3 class="text-sm font-black uppercase tracking-widest text-white">Pronóstico - Resistencia</h3>
+        <button onclick="cerrarModalClima()" class="text-slate-400 hover:text-white transition-colors">
+          <i class="fas fa-times text-lg"></i>
+        </button>
+      </div>
+      <div class="p-4 overflow-y-auto max-h-[60vh]" id="clima-modal-lista">
+        <!-- Contenido generado por JS -->
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
