@@ -7237,7 +7237,7 @@ function actualizarTarjetasNutricion() {
 
   const subCalInicio = document.getElementById('inicio-health-calorias-subtitle');
   if (subCalInicio) {
-    const colorCal = diffCal > 0 ? 'text-red-400' : 'text-green-400';
+    const colorCal = diffCal >= 0 ? 'text-green-400' : 'text-amber-400';
     const signCal = diffCal >= 0 ? '+' : '-';
     const strCal = Math.abs(diffCal).toLocaleString('es-ES');
     subCalInicio.innerHTML = `Obj Diario: 3.250 kcal <span class="${colorCal} ml-1 font-black">(${signCal}${strCal} kcal)</span>`;
@@ -7305,7 +7305,7 @@ function actualizarTarjetasNutricion() {
   const formatDev = (val, goal, suffix) => {
     const diff = Math.round(val - goal);
     const sign = diff > 0 ? '+' : '';
-    const color = diff > 0 ? 'text-red-400' : (diff < 0 ? 'text-green-400' : 'text-slate-400');
+    const color = diff >= 0 ? 'text-green-400' : 'text-amber-400';
     
     return `Obj Diario: ${goal.toLocaleString('es-ES')} <span class="${color} ml-1 font-black">(${sign}${diff}${suffix})</span>`;
   };
