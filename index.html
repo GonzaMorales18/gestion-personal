@@ -511,31 +511,7 @@
             </div>
           </div>
 
-          <!-- Tarjeta Calorías (Inicio) -->
-          <div onclick="showSection('nutricion')" class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-4 xl:p-5 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
-            <div class="absolute inset-0 bg-gradient-to-br from-orange-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
-            <div class="flex items-center justify-between mb-5 relative z-10">
-              <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-xl bg-orange-900/50 flex items-center justify-center">
-                  <i class="fas fa-fire text-orange-500 text-xs"></i>
-                </div>
-                <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Calorías</span>
-              </div>
-              <div class="flex items-center gap-1 text-slate-500 group-hover:text-orange-400 transition-colors">
-                <span class="text-[9px] font-bold uppercase tracking-widest hidden sm:block">Ver más</span>
-                <i class="fas fa-arrow-right text-[10px]"></i>
-              </div>
-            </div>
-            <div class="relative z-10">
-              <p class="text-[9px] font-bold text-white uppercase tracking-widest mb-1">Calorías (Kcal)</p>
-              <h3 id="inicio-health-calorias" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
-              <div class="mt-1.5 inline-flex items-center gap-1">
-                <span id="inicio-health-calorias-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block mt-0.5">Obj Diario: 3.250 kcal</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Tarjeta Proteínas (Inicio) -->
+          <!-- Tarjeta Proteínas (Inicio - a la derecha de peso) -->
           <div onclick="showSection('nutricion')" class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-4 xl:p-5 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
             <div class="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
@@ -555,6 +531,61 @@
               <h3 id="inicio-health-proteinas" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
               <div class="mt-1.5 inline-flex items-center gap-1">
                 <span id="inicio-health-proteinas-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block mt-0.5">Obj Diario: 160g</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tarjeta Doble Calorías (Inicio - ocupa todo el ancho) -->
+          <div onclick="showSection('nutricion')" class="sm:col-span-2 group bg-slate-900 rounded-2xl border border-slate-700/60 p-4 xl:p-6 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-orange-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="flex items-center justify-between mb-5 relative z-10">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-orange-900/50 flex items-center justify-center">
+                  <i class="fas fa-fire text-orange-500 text-xs"></i>
+                </div>
+                <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Calorías Diarias & Balance</span>
+              </div>
+              <div class="flex items-center gap-1 text-slate-500 group-hover:text-orange-400 transition-colors">
+                <span class="text-[9px] font-bold uppercase tracking-widest hidden sm:block">Ver más</span>
+                <i class="fas fa-arrow-right text-[10px]"></i>
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:divide-x sm:divide-slate-800 relative z-10">
+              <!-- Consumidas -->
+              <div class="sm:pr-4">
+                <div class="flex items-center gap-1.5 mb-1">
+                  <span class="w-2 h-2 rounded-full bg-orange-500 inline-block"></span>
+                  <p class="text-[9px] font-bold text-white uppercase tracking-widest">Consumidas (Nutrición)</p>
+                </div>
+                <h3 id="inicio-health-calorias" class="text-2xl sm:text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+                <div class="mt-1.5 inline-flex items-center gap-1">
+                  <span id="inicio-health-calorias-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block mt-0.5">Obj Diario: 3.250 kcal</span>
+                </div>
+              </div>
+              
+              <!-- Gastadas -->
+              <div class="sm:px-4 pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-800">
+                <div class="flex items-center gap-1.5 mb-1">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
+                  <p class="text-[9px] font-bold text-white uppercase tracking-widest">Gastadas (Actividad)</p>
+                </div>
+                <h3 id="inicio-health-calories" class="text-2xl sm:text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+                <div class="mt-1.5 inline-flex items-center gap-1">
+                  <span id="inicio-health-calories-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block mt-0.5">Obj Diario: 2.000 kcal</span>
+                </div>
+              </div>
+
+              <!-- Diferencia -->
+              <div class="sm:pl-4 pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-800">
+                <div class="flex items-center gap-1.5 mb-1">
+                  <span class="w-2 h-2 rounded-full bg-indigo-500 inline-block"></span>
+                  <p class="text-[9px] font-bold text-white uppercase tracking-widest">Diferencia (Balance)</p>
+                </div>
+                <h3 id="inicio-health-cal-dif" class="text-2xl sm:text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+                <div class="mt-1.5 inline-flex items-center gap-1">
+                  <span id="inicio-health-cal-dif-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block mt-0.5">Consumidas vs. Gastadas</span>
+                </div>
               </div>
             </div>
           </div>
@@ -6853,6 +6884,8 @@ function renderHealthCard(type, period) {
       valElInicio.textContent = km > 0 ? km.toFixed(2) : '--';
     } else if (type === 'weight') {
       valElInicio.textContent = hoyAggValue > 0 ? hoyAggValue.toFixed(1) : '--';
+    } else if (type === 'calories' || type === 'activeMinutes') {
+      valElInicio.textContent = hoyAggValue > 0 ? Math.floor(hoyAggValue).toLocaleString('es-ES') + ' kcal' : '--';
     }
   }
 
@@ -6860,6 +6893,9 @@ function renderHealthCard(type, period) {
     const nutValEl = document.getElementById('nut-health-calories');
     if (nutValEl) {
       nutValEl.textContent = hoyAggValue > 0 ? Math.floor(hoyAggValue).toLocaleString('es-ES') : '--';
+    }
+    if (typeof actualizarBalanceCaloriasInicio === 'function') {
+      actualizarBalanceCaloriasInicio();
     }
   }
   
@@ -7189,6 +7225,40 @@ function renderNutricionTable() {
   }
 }
 
+function actualizarBalanceCaloriasInicio() {
+  const elCons = document.getElementById('inicio-health-calorias');
+  const elGast = document.getElementById('inicio-health-calories');
+  const elDif = document.getElementById('inicio-health-cal-dif');
+  const subDif = document.getElementById('inicio-health-cal-dif-subtitle');
+  if (!elDif) return;
+  
+  const parseVal = (el) => {
+    if (!el || el.textContent === '--') return 0;
+    return parseInt(el.textContent.replace(/\./g, '').replace(/[^0-9]/g, '')) || 0;
+  };
+  
+  const cons = parseVal(elCons);
+  const gast = parseVal(elGast);
+  
+  if (cons === 0 && gast === 0 && (!elGast || elGast.textContent === '--')) {
+    elDif.textContent = '--';
+    if (subDif) subDif.innerHTML = `Consumidas vs. Gastadas`;
+    return;
+  }
+  
+  const dif = cons - gast;
+  const difFormatted = Math.abs(dif).toLocaleString('es-ES');
+  const signo = dif >= 0 ? '+' : '-';
+  
+  elDif.textContent = `${signo}${difFormatted} kcal`;
+  elDif.className = "text-2xl sm:text-3xl font-black mono tracking-tighter text-white transition-all duration-300";
+  
+  if (subDif) {
+    const badgeColor = dif >= 0 ? 'text-green-400' : 'text-amber-400';
+    subDif.innerHTML = `Consumidas vs. Gastadas <span class="${badgeColor} font-black ml-1">(${dif >= 0 ? 'Superávit' : 'Déficit'})</span>`;
+  }
+}
+
 function actualizarTarjetasNutricion() {
   const filtered = filtrarDatosNutricion();
   let tCal=0, tPro=0, tCar=0, tFat=0;
@@ -7227,7 +7297,7 @@ function actualizarTarjetasNutricion() {
   });
   const elCalInicio = document.getElementById('inicio-health-calorias');
   const elProInicio = document.getElementById('inicio-health-proteinas');
-  if (elCalInicio) elCalInicio.textContent = calHoyInicio > 0 ? Math.round(calHoyInicio).toLocaleString('es-ES') : '0';
+  if (elCalInicio) elCalInicio.textContent = calHoyInicio > 0 ? Math.round(calHoyInicio).toLocaleString('es-ES') + ' kcal' : '0 kcal';
   if (elProInicio) elProInicio.textContent = proHoyInicio > 0 ? Math.round(proHoyInicio) + 'g' : '0g';
 
   const metaCal = 3250;
@@ -7249,6 +7319,10 @@ function actualizarTarjetasNutricion() {
     const signPro = diffPro >= 0 ? '+' : '-';
     const strPro = Math.abs(diffPro).toLocaleString('es-ES');
     subProInicio.innerHTML = `Obj Diario: 160g <span class="${colorPro} ml-1 font-black">(${signPro}${strPro}g)</span>`;
+  }
+  
+  if (typeof actualizarBalanceCaloriasInicio === 'function') {
+    actualizarBalanceCaloriasInicio();
   }
 
   // Calcular calorías gastadas promedio para el mismo filtro
