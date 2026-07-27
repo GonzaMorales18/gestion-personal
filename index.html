@@ -455,10 +455,12 @@
               </div>
             </div>
             <div class="relative z-10">
-              <p class="text-[9px] font-bold text-white uppercase tracking-widest mb-1">Pasos Diarios</p>
-              <h3 id="inicio-health-steps" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+              <div class="flex items-baseline">
+                <h3 id="inicio-health-steps" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+                <span class="text-xs font-bold text-slate-400 ml-1.5">pasos</span>
+              </div>
               <div class="mt-1.5 inline-flex items-center gap-1">
-                <span id="inicio-health-steps-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block mt-0.5">Obj Diario: 10.000</span>
+                <span id="inicio-health-steps-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block mt-0.5">Obj Diario: 10.000 pasos</span>
               </div>
             </div>
           </div>
@@ -479,8 +481,10 @@
               </div>
             </div>
             <div class="relative z-10">
-              <p class="text-[9px] font-bold text-white uppercase tracking-widest mb-1">Distancia (Km)</p>
-              <h3 id="inicio-health-distance" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+              <div class="flex items-baseline">
+                <h3 id="inicio-health-distance" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+                <span class="text-xs font-bold text-slate-400 ml-1">km</span>
+              </div>
               <div class="mt-1.5 inline-flex items-center gap-1">
                 <span id="inicio-health-distance-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block mt-0.5">Obj Diario: 8 km</span>
               </div>
@@ -503,8 +507,10 @@
               </div>
             </div>
             <div class="relative z-10">
-              <p class="text-[9px] font-bold text-white uppercase tracking-widest mb-1">Peso Promedio (Kg)</p>
-              <h3 id="inicio-health-weight" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+              <div class="flex items-baseline">
+                <h3 id="inicio-health-weight" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+                <span class="text-xs font-bold text-slate-400 ml-1">kg</span>
+              </div>
               <div class="mt-1.5 inline-flex items-center gap-1">
                 <span id="inicio-health-weight-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block mt-0.5">Obj Diario: 75 kg</span>
               </div>
@@ -527,8 +533,10 @@
               </div>
             </div>
             <div class="relative z-10">
-              <p class="text-[9px] font-bold text-white uppercase tracking-widest mb-1">Proteínas (g)</p>
-              <h3 id="inicio-health-proteinas" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+              <div class="flex items-baseline">
+                <h3 id="inicio-health-proteinas" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+                <span class="text-xs font-bold text-slate-400 ml-1">g</span>
+              </div>
               <div class="mt-1.5 inline-flex items-center gap-1">
                 <span id="inicio-health-proteinas-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block mt-0.5">Obj Diario: 160g</span>
               </div>
@@ -536,14 +544,14 @@
           </div>
 
           <!-- Tarjeta Doble Calorías (Inicio - ocupa todo el ancho) -->
-          <div onclick="showSection('nutricion')" class="sm:col-span-2 group bg-slate-900 rounded-2xl border border-slate-700/60 p-4 xl:p-6 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+          <div onclick="showSection('nutricion')" class="sm:col-span-2 group bg-slate-900 rounded-2xl border border-slate-700/60 p-4 xl:p-5 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
             <div class="absolute inset-0 bg-gradient-to-br from-orange-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
                 <div class="w-8 h-8 rounded-xl bg-orange-900/50 flex items-center justify-center">
                   <i class="fas fa-fire text-orange-500 text-xs"></i>
                 </div>
-                <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Calorías Diarias & Balance</span>
+                <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Calorías</span>
               </div>
               <div class="flex items-center gap-1 text-slate-500 group-hover:text-orange-400 transition-colors">
                 <span class="text-[9px] font-bold uppercase tracking-widest hidden sm:block">Ver más</span>
@@ -554,11 +562,11 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:divide-x sm:divide-slate-800 relative z-10">
               <!-- Consumidas -->
               <div class="sm:pr-4">
-                <div class="flex items-center gap-1.5 mb-1">
-                  <span class="w-2 h-2 rounded-full bg-orange-500 inline-block"></span>
-                  <p class="text-[9px] font-bold text-white uppercase tracking-widest">Consumidas (Nutrición)</p>
+                <p class="text-[9px] font-bold text-white uppercase tracking-widest mb-1">Consumidas</p>
+                <div class="flex items-baseline">
+                  <h3 id="inicio-health-calorias" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+                  <span class="text-xs font-bold text-slate-400 ml-1.5">kcal</span>
                 </div>
-                <h3 id="inicio-health-calorias" class="text-2xl sm:text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
                 <div class="mt-1.5 inline-flex items-center gap-1">
                   <span id="inicio-health-calorias-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block mt-0.5">Obj Diario: 3.250 kcal</span>
                 </div>
@@ -566,25 +574,25 @@
               
               <!-- Gastadas -->
               <div class="sm:px-4 pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-800">
-                <div class="flex items-center gap-1.5 mb-1">
-                  <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
-                  <p class="text-[9px] font-bold text-white uppercase tracking-widest">Gastadas (Actividad)</p>
+                <p class="text-[9px] font-bold text-white uppercase tracking-widest mb-1">Gastadas</p>
+                <div class="flex items-baseline">
+                  <h3 id="inicio-health-calories" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+                  <span class="text-xs font-bold text-slate-400 ml-1.5">kcal</span>
                 </div>
-                <h3 id="inicio-health-calories" class="text-2xl sm:text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
                 <div class="mt-1.5 inline-flex items-center gap-1">
                   <span id="inicio-health-calories-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block mt-0.5">Obj Diario: 2.000 kcal</span>
                 </div>
               </div>
 
-              <!-- Diferencia -->
+              <!-- Balance -->
               <div class="sm:pl-4 pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-800">
-                <div class="flex items-center gap-1.5 mb-1">
-                  <span class="w-2 h-2 rounded-full bg-indigo-500 inline-block"></span>
-                  <p class="text-[9px] font-bold text-white uppercase tracking-widest">Diferencia (Balance)</p>
+                <p class="text-[9px] font-bold text-white uppercase tracking-widest mb-1">Balance</p>
+                <div class="flex items-baseline">
+                  <h3 id="inicio-health-cal-dif" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+                  <span class="text-xs font-bold text-slate-400 ml-1.5">kcal</span>
                 </div>
-                <h3 id="inicio-health-cal-dif" class="text-2xl sm:text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
                 <div class="mt-1.5 inline-flex items-center gap-1">
-                  <span id="inicio-health-cal-dif-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block mt-0.5">Consumidas vs. Gastadas</span>
+                  <span id="inicio-health-cal-dif-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block mt-0.5">Balance Neto: <span class="text-slate-400 ml-1 font-black">(--)</span></span>
                 </div>
               </div>
             </div>
@@ -614,10 +622,12 @@
           </div>
         </div>
         <div class="relative z-10">
-          <p class="text-[9px] font-bold text-white uppercase tracking-widest mb-1">Pasos Diarios</p>
-          <h3 id="health-steps" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+          <div class="flex items-baseline">
+            <h3 id="health-steps" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+            <span class="text-xs font-bold text-slate-400 ml-1.5">pasos</span>
+          </div>
           <div class="mt-1.5 inline-flex items-center gap-1">
-            <span id="health-steps-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block mt-0.5">Obj Diario: 10.000</span>
+            <span id="health-steps-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block mt-0.5">Obj Diario: 10.000 pasos</span>
           </div>
         </div>
       </div>
@@ -634,8 +644,10 @@
           </div>
         </div>
         <div class="relative z-10">
-          <p class="text-[9px] font-bold text-white uppercase tracking-widest mb-1">Distancia (Km)</p>
-          <h3 id="health-distance" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+          <div class="flex items-baseline">
+            <h3 id="health-distance" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+            <span class="text-xs font-bold text-slate-400 ml-1">km</span>
+          </div>
           <div class="mt-1.5 inline-flex items-center gap-1">
             <span id="health-distance-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block mt-0.5">Obj Diario: 8 km</span>
           </div>
@@ -654,8 +666,10 @@
           </div>
         </div>
         <div class="relative z-10">
-          <p class="text-[9px] font-bold text-white uppercase tracking-widest mb-1">Peso Promedio (Kg)</p>
-          <h3 id="health-weight" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+          <div class="flex items-baseline">
+            <h3 id="health-weight" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+            <span class="text-xs font-bold text-slate-400 ml-1">kg</span>
+          </div>
           <div class="mt-1.5 inline-flex items-center gap-1">
             <span id="health-weight-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block mt-0.5">Obj Diario: 75 kg</span>
           </div>
@@ -674,8 +688,10 @@
           </div>
         </div>
         <div class="relative z-10">
-          <p class="text-[9px] font-bold text-white uppercase tracking-widest mb-1">Gasto Energético</p>
-          <h3 id="health-calories" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+          <div class="flex items-baseline">
+            <h3 id="health-calories" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+            <span class="text-xs font-bold text-slate-400 ml-1.5">kcal</span>
+          </div>
           <div class="mt-1.5 inline-flex items-center gap-1">
             <span id="health-calories-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block mt-0.5">Obj Diario: 2.000 kcal</span>
           </div>
@@ -694,8 +710,10 @@
           </div>
         </div>
         <div class="relative z-10">
-          <p class="text-[9px] font-bold text-white uppercase tracking-widest mb-1">Minutos Activos</p>
-          <h3 id="health-activeMinutes" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+          <div class="flex items-baseline">
+            <h3 id="health-activeMinutes" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+            <span class="text-xs font-bold text-slate-400 ml-1">min</span>
+          </div>
           <div class="mt-1.5 inline-flex items-center gap-1">
             <span id="health-activeMinutes-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block mt-0.5">Obj Diario: 120 min</span>
           </div>
@@ -887,12 +905,18 @@
             </div>
             <div class="relative z-10 flex items-end justify-between">
               <div>
-                <h4 id="nut-tot-cal" class="text-3xl font-black text-orange-300 mono tracking-tighter transition-all duration-300">0</h4>
-                <p id="nut-desvio-cal" class="text-[9px] font-bold mt-1.5 tracking-wide truncate text-slate-400">Objetivo: 3.250 kcal</p>
+                <div class="flex items-baseline">
+                  <h4 id="nut-tot-cal" class="text-3xl font-black text-orange-300 mono tracking-tighter transition-all duration-300">0</h4>
+                  <span class="text-xs font-bold text-slate-400 ml-1.5">kcal</span>
+                </div>
+                <p id="nut-desvio-cal" class="text-[9px] font-bold mt-1.5 tracking-wide truncate text-slate-400">Obj Diario: 3.250 kcal</p>
               </div>
               <div class="text-right">
                 <p class="text-[9px] font-bold text-white uppercase tracking-widest mb-0.5">Gastadas</p>
-                <h4 id="nut-health-calories" class="text-xl font-black text-orange-400 mono tracking-tighter transition-all duration-300">--</h4>
+                <div class="flex items-baseline justify-end">
+                  <h4 id="nut-health-calories" class="text-xl font-black text-orange-400 mono tracking-tighter transition-all duration-300">--</h4>
+                  <span class="text-[10px] font-bold text-slate-400 ml-1">kcal</span>
+                </div>
               </div>
             </div>
           </div>
@@ -908,7 +932,10 @@
               </div>
             </div>
             <div class="relative z-10">
-              <h4 id="nut-tot-pro" class="text-3xl font-black text-blue-300 mono tracking-tighter transition-all duration-300">0g</h4>
+              <div class="flex items-baseline">
+                <h4 id="nut-tot-pro" class="text-3xl font-black text-blue-300 mono tracking-tighter transition-all duration-300">0</h4>
+                <span class="text-xs font-bold text-slate-400 ml-1">g</span>
+              </div>
               <p id="nut-desvio-pro" class="text-[9px] font-bold mt-1.5 tracking-wide truncate text-slate-400">Objetivo: 160g</p>
             </div>
           </div>
@@ -924,7 +951,10 @@
               </div>
             </div>
             <div class="relative z-10">
-              <h4 id="nut-tot-car" class="text-3xl font-black text-green-300 mono tracking-tighter transition-all duration-300">0g</h4>
+              <div class="flex items-baseline">
+                <h4 id="nut-tot-car" class="text-3xl font-black text-green-300 mono tracking-tighter transition-all duration-300">0</h4>
+                <span class="text-xs font-bold text-slate-400 ml-1">g</span>
+              </div>
               <p id="nut-desvio-car" class="text-[9px] font-bold mt-1.5 tracking-wide truncate text-slate-400">Objetivo: 370g</p>
             </div>
           </div>
@@ -940,7 +970,10 @@
               </div>
             </div>
             <div class="relative z-10">
-              <h4 id="nut-tot-fat" class="text-3xl font-black text-yellow-300 mono tracking-tighter transition-all duration-300">0g</h4>
+              <div class="flex items-baseline">
+                <h4 id="nut-tot-fat" class="text-3xl font-black text-yellow-300 mono tracking-tighter transition-all duration-300">0</h4>
+                <span class="text-xs font-bold text-slate-400 ml-1">g</span>
+              </div>
               <p id="nut-desvio-fat" class="text-[9px] font-bold mt-1.5 tracking-wide truncate text-slate-400">Objetivo: 120g</p>
             </div>
           </div>
@@ -6800,7 +6833,7 @@ function renderHealthCard(type, period) {
   const formatHealthGoal = (metricType, rawVal) => {
     const val = (metricType === 'distance') ? (rawVal / 1000) : (rawVal || 0);
     let goal = 0, suffix = '', isReverse = false, decimals = 0;
-    if (metricType === 'steps') { goal = 10000; suffix = ''; isReverse = false; decimals = 0; }
+    if (metricType === 'steps') { goal = 10000; suffix = ' pasos'; isReverse = false; decimals = 0; }
     else if (metricType === 'distance') { goal = 8; suffix = ' km'; isReverse = false; decimals = 1; }
     else if (metricType === 'weight') { goal = 75; suffix = ' kg'; isReverse = true; decimals = 1; }
     else if (metricType === 'calories') { goal = 2000; suffix = ' kcal'; isReverse = false; decimals = 0; }
@@ -6885,7 +6918,7 @@ function renderHealthCard(type, period) {
     } else if (type === 'weight') {
       valElInicio.textContent = hoyAggValue > 0 ? hoyAggValue.toFixed(1) : '--';
     } else if (type === 'calories' || type === 'activeMinutes') {
-      valElInicio.textContent = hoyAggValue > 0 ? Math.floor(hoyAggValue).toLocaleString('es-ES') + ' kcal' : '--';
+      valElInicio.textContent = hoyAggValue > 0 ? Math.floor(hoyAggValue).toLocaleString('es-ES') : '--';
     }
   }
 
@@ -7250,12 +7283,12 @@ function actualizarBalanceCaloriasInicio() {
   const difFormatted = Math.abs(dif).toLocaleString('es-ES');
   const signo = dif >= 0 ? '+' : '-';
   
-  elDif.textContent = `${signo}${difFormatted} kcal`;
-  elDif.className = "text-2xl sm:text-3xl font-black mono tracking-tighter text-white transition-all duration-300";
+  elDif.textContent = `${signo}${difFormatted}`;
+  elDif.className = "text-3xl font-black mono tracking-tighter text-white transition-all duration-300";
   
   if (subDif) {
     const badgeColor = dif >= 0 ? 'text-green-400' : 'text-amber-400';
-    subDif.innerHTML = `Consumidas vs. Gastadas <span class="${badgeColor} font-black ml-1">(${dif >= 0 ? 'Superávit' : 'Déficit'})</span>`;
+    subDif.innerHTML = `Balance Neto: <span class="${badgeColor} font-black ml-1">(${dif >= 0 ? 'Superávit' : 'Déficit'})</span>`;
   }
 }
 
@@ -7279,9 +7312,9 @@ function actualizarTarjetasNutricion() {
   const avgFat = Math.round(tFat / dias);
 
   document.getElementById('nut-tot-cal').innerText = avgCal.toLocaleString('es-ES');
-  document.getElementById('nut-tot-pro').innerText = avgPro + 'g';
-  document.getElementById('nut-tot-car').innerText = avgCar + 'g';
-  document.getElementById('nut-tot-fat').innerText = avgFat + 'g';
+  document.getElementById('nut-tot-pro').innerText = avgPro.toLocaleString('es-ES');
+  document.getElementById('nut-tot-car').innerText = avgCar.toLocaleString('es-ES');
+  document.getElementById('nut-tot-fat').innerText = avgFat.toLocaleString('es-ES');
 
   // Actualizar tarjetas en el Panel de Control (Inicio) - Datos de hoy y faltante
   const hoyNut = new Date();
@@ -7297,8 +7330,8 @@ function actualizarTarjetasNutricion() {
   });
   const elCalInicio = document.getElementById('inicio-health-calorias');
   const elProInicio = document.getElementById('inicio-health-proteinas');
-  if (elCalInicio) elCalInicio.textContent = calHoyInicio > 0 ? Math.round(calHoyInicio).toLocaleString('es-ES') + ' kcal' : '0 kcal';
-  if (elProInicio) elProInicio.textContent = proHoyInicio > 0 ? Math.round(proHoyInicio) + 'g' : '0g';
+  if (elCalInicio) elCalInicio.textContent = calHoyInicio > 0 ? Math.round(calHoyInicio).toLocaleString('es-ES') : '0';
+  if (elProInicio) elProInicio.textContent = proHoyInicio > 0 ? Math.round(proHoyInicio).toLocaleString('es-ES') : '0';
 
   const metaCal = 3250;
   const metaPro = 160;
@@ -7380,11 +7413,12 @@ function actualizarTarjetasNutricion() {
     const diff = Math.round(val - goal);
     const sign = diff > 0 ? '+' : '';
     const color = diff >= 0 ? 'text-green-400' : 'text-amber-400';
+    const goalStr = goal.toLocaleString('es-ES') + suffix;
     
-    return `Obj Diario: ${goal.toLocaleString('es-ES')} <span class="${color} ml-1 font-black">(${sign}${diff}${suffix})</span>`;
+    return `Obj Diario: ${goalStr} <span class="${color} ml-1 font-black">(${sign}${diff.toLocaleString('es-ES')}${suffix})</span>`;
   };
 
-  document.getElementById('nut-desvio-cal').innerHTML = formatDev(avgCal, 3250, '');
+  document.getElementById('nut-desvio-cal').innerHTML = formatDev(avgCal, 3250, ' kcal');
   document.getElementById('nut-desvio-pro').innerHTML = formatDev(avgPro, 160, 'g');
   document.getElementById('nut-desvio-car').innerHTML = formatDev(avgCar, 370, 'g');
   document.getElementById('nut-desvio-fat').innerHTML = formatDev(avgFat, 120, 'g');
