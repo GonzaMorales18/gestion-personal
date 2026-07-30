@@ -142,13 +142,13 @@
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://apis.google.com/js/api.js" async defer></script>
 </head>
-<body class="bg-slate-950 text-white min-h-screen">
+<body class="bg-black text-white min-h-screen">
 
 <!-- Overlay móvil -->
 <div id="overlay" class="fixed inset-0 bg-black/70 z-40 hidden" onclick="toggleMenu()"></div>
 
 <!-- Sidebar -->
-<aside id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-slate-950 text-white z-50 -translate-x-full md:translate-x-0 shadow-2xl flex flex-col border-r border-slate-800">
+<aside id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-black text-white z-50 -translate-x-full md:translate-x-0 shadow-2xl flex flex-col border-r border-slate-800">
   <div class="p-6 border-b border-slate-800/80 text-center">
     <h1 class="text-3xl font-black tracking-tight text-white mono">GM APP</h1>
   </div>
@@ -215,10 +215,10 @@
 </aside>
 
 <!-- Contenido principal -->
-<div class="md:ml-64 flex flex-col min-h-screen bg-slate-950">
+<div class="md:ml-64 flex flex-col min-h-screen bg-black">
 
   <!-- Header -->
-  <header class="bg-slate-950/90 sticky top-0 z-30 border-b border-slate-800 backdrop-blur-md h-16 flex items-center justify-between px-6">
+  <header class="bg-black/90 sticky top-0 z-30 border-b border-slate-800 backdrop-blur-md h-16 flex items-center justify-between px-6">
     <button onclick="toggleMenu()" class="md:hidden text-2xl text-slate-400"><i class="fas fa-bars"></i></button>
     <div class="flex items-center gap-3">
       <i id="header-icon" class="fas fa-wallet text-blue-500 text-sm"></i>
@@ -275,7 +275,7 @@
       <!-- Tarjeta Finanzas -->
       <div onclick="showSection('finanzas')"
            id="card-inicio-finanzas"
-           class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-4 xl:p-5 cursor-pointer
+           class="group bg-black rounded-2xl border border-slate-700/60 p-4 xl:p-5 cursor-pointer
                   transition-all duration-200 hover:-translate-y-1 hover:shadow-xl
                   balance-neutral relative overflow-hidden">
 
@@ -320,7 +320,7 @@
       <!-- Tarjeta Ahorros -->
       <div onclick="showSection('ahorros')"
            id="card-inicio-ahorros"
-           class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-4 xl:p-5 cursor-pointer
+           class="group bg-black rounded-2xl border border-slate-700/60 p-4 xl:p-5 cursor-pointer
                   transition-all duration-200 hover:-translate-y-1 hover:shadow-xl
                   relative overflow-hidden">
         <!-- Fondo decorativo sutil -->
@@ -363,7 +363,7 @@
       <!-- Tarjeta Sueldos -->
       <div onclick="showSection('sueldos')"
            id="card-inicio-sueldos"
-           class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-4 xl:p-5 cursor-pointer
+           class="group bg-black rounded-2xl border border-slate-700/60 p-4 xl:p-5 cursor-pointer
                   transition-all duration-200 hover:-translate-y-1 hover:shadow-xl
                   relative overflow-hidden">
         <!-- Fondo decorativo sutil -->
@@ -408,7 +408,7 @@
         <!-- Sección PRODUCTIVIDAD (Movida para reducir margen) -->
         <div class="mt-8">
           <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em] mb-4 ml-1">Productividad</h3>
-          <div class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-6 relative overflow-hidden flex flex-col w-full">
+          <div class="group bg-black rounded-2xl border border-slate-700/60 p-6 relative overflow-hidden flex flex-col w-full">
             <!-- Fondo decorativo sutil -->
             <div class="absolute inset-0 bg-gradient-to-br from-pink-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
 
@@ -440,7 +440,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           
           <!-- Tarjeta Caminata (Inicio) -->
-          <div onclick="showSection('actividad')" class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-4 xl:p-5 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+          <div onclick="showSection('actividad')" class="group bg-black rounded-2xl border border-slate-700/60 p-4 xl:p-5 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
             <div class="absolute inset-0 bg-gradient-to-br from-teal-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
@@ -466,7 +466,7 @@
           </div>
 
           <!-- Tarjeta Recorrido (Inicio) -->
-          <div onclick="showSection('actividad')" class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-4 xl:p-5 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+          <div onclick="showSection('actividad')" class="group bg-black rounded-2xl border border-slate-700/60 p-4 xl:p-5 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
             <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
@@ -492,7 +492,7 @@
           </div>
 
           <!-- Tarjeta Corporal (Inicio) -->
-          <div onclick="showSection('actividad')" class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-4 xl:p-5 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+          <div onclick="showSection('actividad')" class="group bg-black rounded-2xl border border-slate-700/60 p-4 xl:p-5 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
             <div class="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
@@ -518,7 +518,7 @@
           </div>
 
           <!-- Tarjeta Proteínas (Inicio - a la derecha de peso) -->
-          <div onclick="showSection('nutricion')" class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-4 xl:p-5 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+          <div onclick="showSection('nutricion')" class="group bg-black rounded-2xl border border-slate-700/60 p-4 xl:p-5 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
             <div class="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
@@ -544,7 +544,7 @@
           </div>
 
           <!-- Tarjeta Doble Calorías (Inicio - ocupa todo el ancho) -->
-          <div onclick="showSection('nutricion')" class="sm:col-span-2 group bg-slate-900 rounded-2xl border border-slate-700/60 p-4 xl:p-5 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+          <div onclick="showSection('nutricion')" class="sm:col-span-2 group bg-black rounded-2xl border border-slate-700/60 p-4 xl:p-5 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
             <div class="absolute inset-0 bg-gradient-to-br from-orange-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
@@ -611,7 +611,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
       
       <!-- Tarjeta Pasos -->
-      <div class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+      <div class="group bg-black rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
         <div class="absolute inset-0 bg-gradient-to-br from-teal-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
         <div class="flex items-center justify-between mb-5 relative z-10">
           <div class="flex items-center gap-2.5">
@@ -633,7 +633,7 @@
       </div>
 
       <!-- Tarjeta Distancia -->
-      <div class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+      <div class="group bg-black rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
         <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
         <div class="flex items-center justify-between mb-5 relative z-10">
           <div class="flex items-center gap-2.5">
@@ -655,7 +655,7 @@
       </div>
 
       <!-- Tarjeta Peso -->
-      <div class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+      <div class="group bg-black rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
         <div class="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
         <div class="flex items-center justify-between mb-5 relative z-10">
           <div class="flex items-center gap-2.5">
@@ -677,7 +677,7 @@
       </div>
 
       <!-- Tarjeta Calorías -->
-      <div class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+      <div class="group bg-black rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
         <div class="absolute inset-0 bg-gradient-to-br from-orange-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
         <div class="flex items-center justify-between mb-5 relative z-10">
           <div class="flex items-center gap-2.5">
@@ -699,7 +699,7 @@
       </div>
 
       <!-- Tarjeta Minutos Activos -->
-      <div class="group bg-slate-900 rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+      <div class="group bg-black rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
         <div class="absolute inset-0 bg-gradient-to-br from-rose-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
         <div class="flex items-center justify-between mb-5 relative z-10">
           <div class="flex items-center gap-2.5">
@@ -723,11 +723,11 @@
     </div>
 
     <!-- Filtro global de Actividad -->
-    <div class="bg-slate-900 p-4 rounded-2xl border border-slate-700/60 flex flex-col xl:flex-row gap-3 xl:items-center">
+    <div class="bg-black p-4 rounded-2xl border border-slate-700/60 flex flex-col xl:flex-row gap-3 xl:items-center">
       <div class="flex items-center gap-2 flex-wrap">
         <span class="text-[10px] font-black text-white uppercase tracking-widest mr-1">Período:</span>
         <div id="actividad-filtros" class="flex gap-2 flex-wrap items-center">
-          <button id="act-filtro-hoy" onclick="setActividadFiltro('hoy')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors bg-slate-900 text-white">Hoy</button>
+          <button id="act-filtro-hoy" onclick="setActividadFiltro('hoy')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors bg-black text-white">Hoy</button>
           <button id="act-filtro-semana" onclick="setActividadFiltro('semana')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors bg-slate-100 text-slate-400 hover:bg-slate-700">Semana</button>
           <button id="act-filtro-mes" onclick="setActividadFiltro('mes')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors bg-slate-100 text-slate-400 hover:bg-slate-700">Mes</button>
           <button id="act-filtro-año" onclick="setActividadFiltro('año')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors bg-slate-100 text-slate-400 hover:bg-slate-700">Año</button>
@@ -762,7 +762,7 @@
     <!-- Contenedor de gráficos (se oculta si filtro es Hoy) -->
     <div id="charts-actividad-container" class="hidden grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-5 gap-4">
       <!-- Gráfico Pasos -->
-      <div class="bg-slate-900 rounded-2xl border border-slate-700/60 p-5">
+      <div class="bg-black rounded-2xl border border-slate-700/60 p-5">
         <div class="flex items-center gap-2 mb-4">
            <i class="fas fa-shoe-prints text-teal-500 text-xs"></i>
            <h4 class="text-[10px] font-black text-white uppercase tracking-widest">Evolución Pasos</h4>
@@ -773,7 +773,7 @@
         <div id="chart-steps-range" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-4 text-center empty:hidden"></div>
       </div>
       <!-- Gráfico Distancia -->
-      <div class="bg-slate-900 rounded-2xl border border-slate-700/60 p-5">
+      <div class="bg-black rounded-2xl border border-slate-700/60 p-5">
          <div class="flex items-center gap-2 mb-4">
            <i class="fas fa-route text-emerald-500 text-xs"></i>
            <h4 class="text-[10px] font-black text-white uppercase tracking-widest">Evolución Distancia</h4>
@@ -784,7 +784,7 @@
         <div id="chart-distance-range" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-4 text-center empty:hidden"></div>
       </div>
       <!-- Gráfico Peso -->
-      <div class="bg-slate-900 rounded-2xl border border-slate-700/60 p-5">
+      <div class="bg-black rounded-2xl border border-slate-700/60 p-5">
          <div class="flex items-center gap-2 mb-4">
            <i class="fas fa-weight text-blue-500 text-xs"></i>
            <h4 class="text-[10px] font-black text-white uppercase tracking-widest">Tendencia de Peso</h4>
@@ -795,7 +795,7 @@
         <div id="chart-weight-range" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-4 text-center empty:hidden"></div>
       </div>
       <!-- Gráfico Calorías -->
-      <div class="bg-slate-900 rounded-2xl border border-slate-700/60 p-5">
+      <div class="bg-black rounded-2xl border border-slate-700/60 p-5">
          <div class="flex items-center gap-2 mb-4">
            <i class="fas fa-fire text-orange-500 text-xs"></i>
            <h4 class="text-[10px] font-black text-white uppercase tracking-widest">Evolución Calorías</h4>
@@ -806,7 +806,7 @@
         <div id="chart-calories-range" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-4 text-center empty:hidden"></div>
       </div>
       <!-- Gráfico Minutos Activos -->
-      <div class="bg-slate-900 rounded-2xl border border-slate-700/60 p-5">
+      <div class="bg-black rounded-2xl border border-slate-700/60 p-5">
          <div class="flex items-center gap-2 mb-4">
            <i class="fas fa-heartbeat text-rose-500 text-xs"></i>
            <h4 class="text-[10px] font-black text-white uppercase tracking-widest">Minutos Activos</h4>
@@ -826,7 +826,7 @@
       
       <!-- Columna izquierda: Formulario -->
       <div class="lg:col-span-4">
-        <section class="bg-slate-900 rounded-2xl shadow-lg border border-slate-700/60 overflow-hidden sticky top-24">
+        <section class="bg-black rounded-2xl shadow-lg border border-slate-700/60 overflow-hidden sticky top-24">
           <div class="bg-slate-800 px-6 py-4 border-b border-slate-700/60 flex items-center justify-between">
             <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Registrar Comida</h3>
             <span id="form-nut-status" class="text-[10px] font-bold text-slate-500 uppercase tracking-widest"></span>
@@ -893,7 +893,7 @@
         <!-- Tarjetas de resumen Nutrición -->
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4">
           <!-- Calorías -->
-          <div class="xl:col-span-2 group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between">
+          <div class="xl:col-span-2 group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between">
             <div class="absolute inset-0 bg-gradient-to-br from-orange-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
@@ -921,7 +921,7 @@
             </div>
           </div>
           <!-- Proteínas -->
-          <div class="group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
             <div class="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
@@ -940,7 +940,7 @@
             </div>
           </div>
           <!-- Carbos -->
-          <div class="group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
             <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
@@ -959,7 +959,7 @@
             </div>
           </div>
           <!-- Grasas -->
-          <div class="group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
             <div class="absolute inset-0 bg-gradient-to-br from-yellow-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
@@ -980,7 +980,7 @@
         </div>
 
         <!-- Filtro período -->
-        <div class="bg-slate-900 p-4 rounded-2xl border border-slate-700/60 flex flex-col xl:flex-row gap-3 xl:items-center">
+        <div class="bg-black p-4 rounded-2xl border border-slate-700/60 flex flex-col xl:flex-row gap-3 xl:items-center">
           <div class="flex items-center gap-2 flex-wrap">
             <span class="text-[10px] font-black text-white uppercase tracking-widest mr-1">Período:</span>
             <div id="nutricion-filtro-tiempo" class="flex gap-2 flex-wrap"></div>
@@ -996,7 +996,7 @@
         </div>
 
         <!-- Gráfico Nutrición -->
-        <div id="nut-chart-container" class="bg-slate-900 p-6 rounded-2xl border border-slate-700/60 mt-5 mb-5">
+        <div id="nut-chart-container" class="bg-black p-6 rounded-2xl border border-slate-700/60 mt-5 mb-5">
           <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-3">
              <p class="text-[9px] font-black text-white uppercase tracking-widest">Consumo en el período</p>
              <select id="nut-chart-metric" onchange="renderNutricionChart()" class="bg-slate-800 border border-slate-700 text-white text-[11px] rounded-lg px-2 py-1 outline-none">
@@ -1008,7 +1008,7 @@
         </div>
 
         <!-- Historial de comidas -->
-        <div class="bg-slate-900 rounded-2xl border border-slate-700/60 overflow-hidden">
+        <div class="bg-black rounded-2xl border border-slate-700/60 overflow-hidden">
           <div class="px-6 py-4 border-b border-slate-700/60 flex items-center justify-between">
             <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Historial de Comidas</h3>
             <span id="nut-historial-count" class="text-[10px] font-bold text-slate-500 mono">0 registros</span>
@@ -1019,7 +1019,7 @@
               <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
               <input type="text" id="buscador-nut" placeholder="Buscar por comida..."
                      oninput="renderNutricionTable()"
-                     class="w-full h-9 pl-8 pr-4 bg-slate-900 border border-slate-700 rounded-lg text-[12px] outline-none focus:ring-2 focus:ring-orange-500/30 text-white">
+                     class="w-full h-9 pl-8 pr-4 bg-black border border-slate-700 rounded-lg text-[12px] outline-none focus:ring-2 focus:ring-orange-500/30 text-white">
             </div>
           </div>
 
@@ -1053,7 +1053,7 @@
   <!-- MODAL IA NUTRICIÓN -->
   <div id="modal-ia-nutricion" class="fixed inset-0 z-[200] flex items-center justify-center p-4" style="display:none!important">
     <div class="absolute inset-0 bg-black/75 backdrop-blur-sm" onclick="cerrarModalIANut()"></div>
-    <div class="relative bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg flex flex-col overflow-hidden border border-orange-500/30">
+    <div class="relative bg-black rounded-2xl shadow-2xl w-full max-w-lg flex flex-col overflow-hidden border border-orange-500/30">
        <div class="px-6 py-5 border-b border-slate-700/60 flex items-center justify-between bg-orange-900/20">
          <div class="flex items-center gap-2">
            <i class="fas fa-wand-magic-sparkles text-orange-400"></i>
@@ -1104,7 +1104,7 @@
 
       <!-- Columna izquierda: Formulario -->
       <div class="lg:col-span-4">
-        <section class="bg-slate-900 rounded-2xl shadow-lg border border-slate-700/60 overflow-hidden sticky top-24">
+        <section class="bg-black rounded-2xl shadow-lg border border-slate-700/60 overflow-hidden sticky top-24">
           <div class="bg-slate-800 px-6 py-4 border-b border-slate-700/60 flex items-center justify-between">
             <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Registrar Movimiento</h3>
             <span id="form-status" class="text-[10px] font-bold text-slate-500 uppercase tracking-widest"></span>
@@ -1184,7 +1184,7 @@
         <!-- Tarjetas de resumen -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <!-- Ingresos -->
-          <div class="group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
             <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
@@ -1200,7 +1200,7 @@
             </div>
           </div>
           <!-- Balance neto -->
-          <div id="card-balance" class="group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl balance-neutral">
+          <div id="card-balance" class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl balance-neutral">
             <div class="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
@@ -1216,7 +1216,7 @@
             </div>
           </div>
           <!-- Gastos -->
-          <div class="group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
             <div class="absolute inset-0 bg-gradient-to-br from-red-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
@@ -1233,7 +1233,7 @@
           </div>
           
           <!-- Nueva Tarjeta: Gasto Mensual vs Promedio -->
-          <div class="md:col-span-3 bg-slate-900 p-5 rounded-2xl border border-slate-700/60 flex flex-col justify-center">
+          <div class="md:col-span-3 bg-black p-5 rounded-2xl border border-slate-700/60 flex flex-col justify-center">
             <div class="flex justify-between items-end mb-2">
               <p class="text-[9px] font-bold text-white uppercase tracking-widest">Gasto Mes Actual vs Promedio Mensual (Último Año)</p>
               <p id="progreso-gasto-text" class="text-[11px] font-black mono text-slate-300">0%</p>
@@ -1250,7 +1250,7 @@
         </div>
 
         <!-- Filtro período -->
-        <div class="bg-slate-900 p-4 rounded-2xl border border-slate-700/60 flex flex-col xl:flex-row gap-3 xl:items-center">
+        <div class="bg-black p-4 rounded-2xl border border-slate-700/60 flex flex-col xl:flex-row gap-3 xl:items-center">
           <div class="flex items-center gap-2 flex-wrap">
             <span class="text-[10px] font-black text-white uppercase tracking-widest mr-1">Período:</span>
             <div id="finanzas-filtro-anios" class="flex gap-2 flex-wrap"></div>
@@ -1272,7 +1272,7 @@
         <!-- MODAL IA -->
         <div id="modal-ia" class="fixed inset-0 z-[200] flex items-center justify-center p-4" style="display:none!important">
           <div class="absolute inset-0 bg-black/75 backdrop-blur-sm" onclick="cerrarModalIA()"></div>
-          <div class="relative bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg flex flex-col overflow-hidden border border-purple-500/30">
+          <div class="relative bg-black rounded-2xl shadow-2xl w-full max-w-lg flex flex-col overflow-hidden border border-purple-500/30">
              <div class="px-6 py-5 border-b border-slate-700/60 flex items-center justify-between bg-purple-900/20">
                <div class="flex items-center gap-2">
                  <i class="fas fa-wand-magic-sparkles text-purple-400"></i>
@@ -1303,7 +1303,7 @@
         <!-- MODAL RESUMEN ANUAL -->
         <div id="modal-anual" class="fixed inset-0 z-[200] flex items-center justify-center p-4" style="display:none!important">
           <div class="absolute inset-0 bg-black/75 backdrop-blur-sm" onclick="cerrarModalAnual()"></div>
-          <div class="relative bg-slate-900 rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden">
+          <div class="relative bg-black rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden">
             <div class="px-6 py-5 border-b border-slate-700/60 flex items-center justify-between">
               <div>
                 <h3 class="font-black text-white uppercase tracking-widest text-sm">Resumen Anual</h3>
@@ -1350,7 +1350,7 @@
         </div>
 
         <!-- Gráficos con total en el centro (Unificados) -->
-        <div class="bg-slate-900 rounded-2xl border border-slate-700/60 overflow-hidden w-full">
+        <div class="bg-black rounded-2xl border border-slate-700/60 overflow-hidden w-full">
           <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-700/60">
             <!-- Contenedor Gastos -->
             <div id="grafico-container-gasto" class="block">
@@ -1415,13 +1415,13 @@
         </div>
 
         <!-- Gráfico de Tendencia de Balance -->
-        <div id="chartBalanceTrendContainer" class="bg-slate-900 p-6 rounded-2xl border border-slate-700/60 mt-5 mb-5 hidden">
+        <div id="chartBalanceTrendContainer" class="bg-black p-6 rounded-2xl border border-slate-700/60 mt-5 mb-5 hidden">
           <p class="text-[9px] font-black text-white uppercase tracking-widest mb-4">Evolución de Balance Mensual</p>
           <canvas id="chartBalanceTrend" class="max-h-[260px]"></canvas>
         </div>
 
         <!-- Historial de movimientos -->
-        <div class="bg-slate-900 rounded-2xl border border-slate-700/60 overflow-hidden">
+        <div class="bg-black rounded-2xl border border-slate-700/60 overflow-hidden">
           <div class="px-6 py-4 border-b border-slate-700/60 flex items-center justify-between">
             <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Historial de Movimientos</h3>
             <span id="historial-count" class="text-[10px] font-bold text-slate-500 mono">0 registros</span>
@@ -1429,7 +1429,7 @@
 
           <!-- Buscador y Filtros -->
           <div class="px-6 py-3 border-b border-slate-800 bg-slate-800/50 flex flex-col md:flex-row gap-3">
-            <select id="filtro-tipo-movimiento" onchange="buscarHistorial()" class="h-9 px-3 bg-slate-900 border border-slate-700 rounded-lg text-[12px] outline-none text-white w-full md:w-32 font-bold">
+            <select id="filtro-tipo-movimiento" onchange="buscarHistorial()" class="h-9 px-3 bg-black border border-slate-700 rounded-lg text-[12px] outline-none text-white w-full md:w-32 font-bold">
               <option value="Todos">Todos</option>
               <option value="Ingreso">Ingresos</option>
               <option value="Gasto">Gastos</option>
@@ -1438,7 +1438,7 @@
               <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
               <input type="text" id="buscador" placeholder="Buscar por concepto, categoría..."
                      oninput="buscarHistorial()"
-                     class="w-full h-9 pl-8 pr-4 bg-slate-900 border border-slate-700 rounded-lg text-[12px] outline-none focus:ring-2 focus:ring-blue-500/30 text-white">
+                     class="w-full h-9 pl-8 pr-4 bg-black border border-slate-700 rounded-lg text-[12px] outline-none focus:ring-2 focus:ring-blue-500/30 text-white">
             </div>
           </div>
 
@@ -1493,7 +1493,7 @@
 
       <!-- Formulario con tabs Compra / Venta -->
       <div class="lg:col-span-4">
-        <section class="bg-slate-900 rounded-2xl shadow-lg border border-slate-700/60 overflow-hidden sticky top-24">
+        <section class="bg-black rounded-2xl shadow-lg border border-slate-700/60 overflow-hidden sticky top-24">
           <div class="bg-slate-800 px-6 py-4 border-b border-slate-700/60 flex items-center justify-between">
             <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Registrar Ahorro</h3>
           </div>
@@ -1533,7 +1533,7 @@
                 <input type="text" id="ah-ticker" placeholder="GGAL" oninput="resetTickerStatus()"
                        class="flex-1 h-11 px-4 bg-slate-800 border border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-green-500/30 text-sm text-white uppercase font-bold tracking-widest">
                 <button type="button" onclick="buscarTicker()" id="btn-buscar-ticker"
-                        class="h-11 px-4 bg-slate-900 text-white rounded-xl text-[11px] font-bold uppercase hover:bg-green-600 transition-colors">
+                        class="h-11 px-4 bg-black text-white rounded-xl text-[11px] font-bold uppercase hover:bg-green-600 transition-colors">
                   <i class="fas fa-search"></i>
                 </button>
               </div>
@@ -1629,7 +1629,7 @@
 
         <!-- Tarjetas resumen -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
             <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
@@ -1644,7 +1644,7 @@
               <p id="ah-ars-sub" class="text-[10px] text-green-400/70 mt-1.5">—</p>
             </div>
           </div>
-          <div class="group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
             <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
@@ -1659,7 +1659,7 @@
               <p id="ah-usd-sub" class="text-[10px] text-green-400/70 mt-1.5">—</p>
             </div>
           </div>
-          <div id="card-ah-pnl" class="group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+          <div id="card-ah-pnl" class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
             <div class="absolute inset-0 bg-gradient-to-br from-indigo-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
@@ -1674,7 +1674,7 @@
               <p id="ah-pnl-sub" class="text-[10px] text-slate-400 mt-1.5">Total de ventas</p>
             </div>
           </div>
-          <div class="group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
             <div class="absolute inset-0 bg-gradient-to-br from-violet-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
@@ -1693,7 +1693,7 @@
         </div>
 
         <!-- Tabla portfolio -->
-        <div class="bg-slate-900 rounded-2xl border border-slate-700/60 overflow-hidden">
+        <div class="bg-black rounded-2xl border border-slate-700/60 overflow-hidden">
           <div class="px-6 py-4 border-b border-slate-700/60 flex items-center justify-between">
             <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Mis Activos</h3>
             <button onclick="actualizarCotizacionesAhorros(true)" id="btn-refrescar-ah"
@@ -1736,7 +1736,7 @@
         </div>
 
         <!-- Historial de operaciones (compras y ventas) -->
-        <div class="bg-slate-900 rounded-2xl border border-slate-700/60 overflow-hidden">
+        <div class="bg-black rounded-2xl border border-slate-700/60 overflow-hidden">
           <div class="px-6 py-4 border-b border-slate-700/60 flex items-center justify-between">
             <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Historial de Operaciones</h3>
             <span id="ah-ops-count" class="text-[10px] font-bold text-slate-500 mono">— operaciones</span>
@@ -1778,7 +1778,7 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
       <div class="lg:col-span-4">
-        <section class="bg-slate-900 rounded-2xl shadow-lg border border-slate-700/60 overflow-hidden sticky top-24">
+        <section class="bg-black rounded-2xl shadow-lg border border-slate-700/60 overflow-hidden sticky top-24">
           <div class="bg-slate-800 px-6 py-4 border-b border-slate-700/60">
             <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Registrar Sueldo</h3>
           </div>
@@ -1861,7 +1861,7 @@
       <div class="lg:col-span-8 space-y-5">
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
             <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
@@ -1876,7 +1876,7 @@
               <p id="su-ultimo-mes" class="text-[10px] text-green-400/70 mt-1.5">—</p>
             </div>
           </div>
-          <div class="group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
             <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
@@ -1891,7 +1891,7 @@
               <p id="su-ultimo-mes-usd" class="text-[10px] text-green-400/70 mt-1.5">—</p>
             </div>
           </div>
-          <div class="group bg-slate-900 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
             <div class="absolute inset-0 bg-gradient-to-br from-slate-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
@@ -1908,7 +1908,7 @@
           </div>
         </div>
 
-        <div class="bg-slate-900 p-4 rounded-2xl border border-slate-700/60 flex flex-col xl:flex-row gap-3 xl:items-center">
+        <div class="bg-black p-4 rounded-2xl border border-slate-700/60 flex flex-col xl:flex-row gap-3 xl:items-center">
           <div class="flex items-center gap-2 flex-wrap">
             <span class="text-[10px] font-black text-white uppercase tracking-widest mr-1">Período:</span>
             <div id="su-filtro-anios" class="flex gap-2 flex-wrap"></div>
@@ -1924,11 +1924,11 @@
             </button>
           </div>
         </div>
-        <div id="sueldos-chart-container" class="bg-slate-900 p-6 rounded-2xl border border-slate-700/60">
+        <div id="sueldos-chart-container" class="bg-black p-6 rounded-2xl border border-slate-700/60">
           <p class="text-[9px] font-black text-white uppercase tracking-widest mb-4">Evolución del Sueldo</p>
           <canvas id="chartSueldos" class="max-h-[260px]"></canvas>
         </div>
-        <div class="bg-slate-900 rounded-2xl border border-slate-700/60 overflow-hidden">
+        <div class="bg-black rounded-2xl border border-slate-700/60 overflow-hidden">
           <div class="px-6 py-4 border-b border-slate-700/60 flex items-center justify-between">
             <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Historial de Sueldos</h3>
             <span id="su-count" class="text-[10px] font-bold text-slate-500 mono">— registros</span>
@@ -1939,7 +1939,7 @@
               <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
               <input type="text" id="su-buscador" placeholder="Buscar por mes..."
                      oninput="buscarSueldos()"
-                     class="w-full h-9 pl-8 pr-4 bg-slate-900 border border-slate-700 rounded-lg text-[12px] outline-none focus:ring-2 focus:ring-blue-500/30 text-white">
+                     class="w-full h-9 pl-8 pr-4 bg-black border border-slate-700 rounded-lg text-[12px] outline-none focus:ring-2 focus:ring-blue-500/30 text-white">
             </div>
           </div>
           <div class="overflow-x-auto">
@@ -1971,7 +1971,7 @@
       
       <!-- Columna Izquierda: Formulario -->
       <div class="lg:col-span-4">
-        <section class="bg-slate-900 rounded-2xl shadow-lg border border-slate-700/60 overflow-hidden sticky top-24">
+        <section class="bg-black rounded-2xl shadow-lg border border-slate-700/60 overflow-hidden sticky top-24">
           <div class="bg-slate-800 px-6 py-4 border-b border-slate-700/60">
             <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Registrar Partido</h3>
           </div>
@@ -2071,7 +2071,7 @@
 
         <!-- Resumen Tarjetas -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="bg-slate-900 p-4 rounded-2xl border border-slate-700/60 flex flex-col justify-center text-center">
+          <div class="bg-black p-4 rounded-2xl border border-slate-700/60 flex flex-col justify-center text-center">
             <p class="text-[9px] font-bold text-white uppercase tracking-widest mb-1">Partidos Jugados</p>
             <h4 id="te-res-partidos" class="text-2xl font-black text-white mono tracking-tighter">0</h4>
           </div>
@@ -2088,7 +2088,7 @@
             <h4 id="te-res-efec" class="text-2xl font-black text-amber-300 mono tracking-tighter">0%</h4>
           </div>
           
-          <div class="col-span-2 bg-slate-900 p-4 rounded-2xl border border-slate-700/60 flex items-center justify-between">
+          <div class="col-span-2 bg-black p-4 rounded-2xl border border-slate-700/60 flex items-center justify-between">
             <div>
               <p class="text-[9px] font-bold text-white uppercase tracking-widest mb-1">Torneos Jugados</p>
               <h4 id="te-res-tor-jug" class="text-2xl font-black text-white mono tracking-tighter">0</h4>
@@ -2108,7 +2108,7 @@
         </div>
 
         <!-- Filtro Período -->
-        <div class="bg-slate-900 p-4 rounded-2xl border border-slate-700/60 flex flex-col xl:flex-row gap-3 xl:items-center">
+        <div class="bg-black p-4 rounded-2xl border border-slate-700/60 flex flex-col xl:flex-row gap-3 xl:items-center">
           <div class="flex items-center gap-2 flex-wrap">
             <span class="text-[10px] font-black text-white uppercase tracking-widest mr-1">Período:</span>
             <div id="te-filtro-anios" class="flex gap-2 flex-wrap"></div>
@@ -2125,18 +2125,18 @@
         
         <!-- Gráficos Tenis -->
         <div class="space-y-5">
-          <div class="bg-slate-900 p-6 rounded-2xl border border-slate-700/60">
+          <div class="bg-black p-6 rounded-2xl border border-slate-700/60">
             <p class="text-[9px] font-black text-white uppercase tracking-widest mb-4">Evolución de Instancia Máxima por Torneo</p>
             <canvas id="chartTenisTrend" class="max-h-[260px]"></canvas>
           </div>
-          <div class="bg-slate-900 p-6 rounded-2xl border border-slate-700/60">
+          <div class="bg-black p-6 rounded-2xl border border-slate-700/60">
             <p class="text-[9px] font-black text-white uppercase tracking-widest mb-4">Cantidad de Torneos por Instancia Alcanzada</p>
             <canvas id="chartTenisBar" class="max-h-[260px]"></canvas>
           </div>
         </div>
 
         <!-- Tabla de Partidos -->
-        <div class="bg-slate-900 rounded-2xl border border-slate-700/60 overflow-hidden">
+        <div class="bg-black rounded-2xl border border-slate-700/60 overflow-hidden">
           <div class="px-6 py-4 border-b border-slate-700/60 flex flex-wrap gap-4 items-center justify-between">
             <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Historial de Partidos</h3>
             <div class="flex items-center gap-3">
@@ -2172,7 +2172,7 @@
     
 
 
-    <div class="bg-slate-900 rounded-2xl border border-slate-700/60 p-4 md:p-6 overflow-hidden">
+    <div class="bg-black rounded-2xl border border-slate-700/60 p-4 md:p-6 overflow-hidden">
       <div id="fullcalendar-container" class="min-h-[600px]"></div>
     </div>
   </main>
@@ -2181,7 +2181,7 @@
 
 <!-- Modal todas las cotizaciones -->
 <div id="modal-cotizaciones" class="hidden fixed inset-0 bg-black/70 z-[300] flex items-center justify-center p-4">
-  <div class="bg-slate-900 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
+  <div class="bg-black rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
     <div class="px-6 py-4 border-b border-slate-700/60 flex items-center justify-between">
       <div>
         <h3 class="font-black text-white text-sm uppercase tracking-wider">Cotizaciones</h3>
@@ -2203,7 +2203,7 @@
 
 <!-- Modal tickers sin precio -->
 <div id="modal-fallidos" class="hidden fixed inset-0 bg-black/70 z-[200] flex items-center justify-center p-4">
-  <div class="bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+  <div class="bg-black rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
     <div class="px-6 py-4 border-b border-slate-700/60 flex items-center justify-between">
       <div>
         <h3 class="font-black text-white text-sm uppercase tracking-wider">Precios no encontrados</h3>
@@ -2226,7 +2226,7 @@
 
 <!-- Modal editar movimiento -->
 <div id="modal-editar" class="hidden fixed inset-0 bg-black/70 z-[300] flex items-center justify-center p-4">
-  <div class="bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+  <div class="bg-black rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
     <div class="px-6 py-5 border-b border-slate-700/60 flex items-center justify-between">
       <div>
         <h3 class="font-black text-white text-sm uppercase tracking-wider">Editar Movimiento</h3>
@@ -2275,7 +2275,7 @@
 </div>
 <!-- Modal confirmar eliminación -->
 <div id="modal-confirm-delete" class="hidden fixed inset-0 bg-black/70 z-[300] flex items-center justify-center p-4">
-  <div class="bg-slate-900 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
+  <div class="bg-black rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
     <div class="px-6 py-5 border-b border-slate-700/60 flex items-center gap-3">
       <div class="w-8 h-8 rounded-xl bg-red-900/30 flex items-center justify-center flex-shrink-0">
         <i class="fas fa-trash-alt text-red-400 text-xs"></i>
@@ -2300,7 +2300,7 @@
 
 <!-- Modal confirmar eliminación operación -->
 <div id="modal-confirm-delete-op" class="hidden fixed inset-0 bg-black/70 z-[300] flex items-center justify-center p-4">
-  <div class="bg-slate-900 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
+  <div class="bg-black rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
     <div class="px-6 py-5 border-b border-slate-700/60 flex items-center gap-3">
       <div class="w-8 h-8 rounded-xl bg-red-900/30 flex items-center justify-center flex-shrink-0">
         <i class="fas fa-trash-alt text-red-400 text-xs"></i>
@@ -2319,7 +2319,7 @@
 
 <!-- Modal editar operación -->
 <div id="modal-editar-op" class="hidden fixed inset-0 bg-black/70 z-[300] flex items-center justify-center p-4">
-  <div class="bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+  <div class="bg-black rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
     <div class="px-6 py-5 border-b border-slate-700/60 flex items-center justify-between">
       <div>
         <h3 class="font-black text-white text-sm uppercase tracking-wider">Editar Operación</h3>
@@ -2368,7 +2368,7 @@
 </div>
 <!-- Modal confirmar eliminación ahorro -->
 <div id="modal-confirm-delete-ahorro" class="hidden fixed inset-0 bg-black/70 z-[300] flex items-center justify-center p-4">
-  <div class="bg-slate-900 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
+  <div class="bg-black rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
     <div class="px-6 py-5 border-b border-slate-700/60 flex items-center gap-3">
       <div class="w-8 h-8 rounded-xl bg-red-900/30 flex items-center justify-center flex-shrink-0">
         <i class="fas fa-trash-alt text-red-400 text-xs"></i>
@@ -2387,7 +2387,7 @@
 
 <!-- Modal editar ahorro -->
 <div id="modal-editar-ahorro" class="hidden fixed inset-0 bg-black/70 z-[300] flex items-center justify-center p-4">
-  <div class="bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+  <div class="bg-black rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
     <div class="px-6 py-5 border-b border-slate-700/60 flex items-center justify-between">
       <div>
         <h3 class="font-black text-white text-sm uppercase tracking-wider">Editar Activo</h3>
@@ -2431,7 +2431,7 @@
 </div>
 <!-- Toast -->
 <div id="toast"
-     class="fixed bottom-8 left-1/2 -translate-x-1/2 translate-y-4 bg-slate-900 text-white px-8 py-4 rounded-2xl shadow-2xl z-[100] opacity-0 pointer-events-none flex items-center gap-3">
+     class="fixed bottom-8 left-1/2 -translate-x-1/2 translate-y-4 bg-black text-white px-8 py-4 rounded-2xl shadow-2xl z-[100] opacity-0 pointer-events-none flex items-center gap-3">
   <i id="toast-icon" class="fas fa-check-circle text-green-400"></i>
   <span id="toast-msg" class="font-bold uppercase tracking-widest text-[10px]">Registro Exitoso</span>
 </div>
@@ -2749,19 +2749,19 @@ function renderFiltroAniosFinanzas() {
   const pastYears = anios.filter(a => a !== currentYear);
   
   let html = `<button onclick="finanzasSelAnio('Todos')" id="fin-btn-anio-Todos"
-          class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'Todos' === finanzasFiltroPeriodo ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
+          class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'Todos' === finanzasFiltroPeriodo ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
     Histórico
   </button>`;
   
   html += `
     <button onclick="finanzasSelAnio('mes_actual')" id="fin-btn-anio-mes_actual"
-            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'mes_actual' === finanzasFiltroPeriodo ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
+            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'mes_actual' === finanzasFiltroPeriodo ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
       Mes Actual
     </button>`;
   
   html += `
     <button onclick="finanzasSelAnio(${currentYear})" id="fin-btn-anio-${currentYear}"
-            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${currentYear === finanzasFiltroPeriodo ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
+            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${currentYear === finanzasFiltroPeriodo ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
       ${currentYear}
     </button>`;
 
@@ -2769,7 +2769,7 @@ function renderFiltroAniosFinanzas() {
     const isPastYear = pastYears.includes(Number(finanzasFiltroPeriodo));
     html += `
       <select onchange="finanzasSelAnio(Number(this.value))" id="fin-select-otros-anios"
-              class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors outline-none cursor-pointer appearance-none ${isPastYear ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}"
+              class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors outline-none cursor-pointer appearance-none ${isPastYear ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}"
               style="padding-right: 2rem; background-position: right 0.5rem center;">
         <option value="" disabled ${!isPastYear ? 'selected' : ''}>OTROS AÑOS</option>
         ${pastYears.map(a => `<option value="${a}" ${a === Number(finanzasFiltroPeriodo) ? 'selected' : ''}>${a}</option>`).join('')}
@@ -3702,7 +3702,7 @@ function abrirModalAnual() {
 
   document.getElementById('modal-years').innerHTML = anios.map(a => `
     <button onclick="seleccionarAnioModal(${a})" id="btn-anio-${a}"
-            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${a === modalAnioActivo ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
+            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${a === modalAnioActivo ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
       ${a}
     </button>`).join('');
 
@@ -3717,7 +3717,7 @@ function seleccionarAnioModal(anio) {
   modalAnioActivo = anio;
   document.querySelectorAll('[id^="btn-anio-"]').forEach(btn => {
     const isActive = btn.id === `btn-anio-${anio}`;
-    btn.className = `h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${isActive ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}`;
+    btn.className = `h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${isActive ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}`;
   });
   renderModalAnio(anio);
 }
@@ -4172,7 +4172,7 @@ function mostrarModalFallidos(tickers) {
                    class="w-32 h-9 pl-7 pr-3 bg-slate-800 border border-slate-700 rounded-lg text-sm font-bold text-white mono outline-none focus:ring-2 focus:ring-blue-500/30">
           </div>
           <button onclick="guardarPrecioManual('${t}')"
-                  class="h-9 px-3 bg-slate-900 text-white rounded-lg text-[11px] font-bold uppercase hover:bg-blue-600 transition-colors">OK</button>
+                  class="h-9 px-3 bg-black text-white rounded-lg text-[11px] font-bold uppercase hover:bg-blue-600 transition-colors">OK</button>
         </div>
       </div>`;
   }).join('');
@@ -4617,7 +4617,7 @@ function renderPnlTotal() {
   if (!ventas.length) { 
     el.textContent = '$0'; el.className = 'text-3xl font-black mono tracking-tighter text-slate-400 transition-all duration-300'; 
     if(sub) sub.textContent = '0 ventas realizadas'; 
-    if(card) card.className = 'bg-slate-900 p-5 rounded-2xl border transition-all balance-neutral border-slate-700/60';
+    if(card) card.className = 'bg-black p-5 rounded-2xl border transition-all balance-neutral border-slate-700/60';
     return; 
   }
   
@@ -4628,7 +4628,7 @@ function renderPnlTotal() {
   el.className   = `text-3xl font-black mono tracking-tighter transition-all duration-300 ${esPos ? 'text-green-400' : (esNeg ? 'text-red-500' : 'text-yellow-500')}`;
   
   if (card) {
-    let cardStyle = 'bg-slate-900 p-5 rounded-2xl border transition-all ';
+    let cardStyle = 'bg-black p-5 rounded-2xl border transition-all ';
     if (esPos) cardStyle += 'balance-positive border-green-800/50';
     else if (esNeg) cardStyle += 'balance-negative border-red-800/50';
     else cardStyle += 'balance-neutral border-yellow-600/50';
@@ -4953,19 +4953,19 @@ function renderFiltroAniosSueldos() {
   const pastYears = anios.filter(a => a !== currentYear);
 
   let html = `<button onclick="suSelAnio('Todos')" id="su-btn-anio-Todos"
-          class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'Todos' === suFiltroPeriodo ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
+          class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'Todos' === suFiltroPeriodo ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
     Histórico
   </button>`;
   
   html += `
     <button onclick="suSelAnio('ultimo_mes')" id="su-btn-anio-ultimo_mes"
-            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'ultimo_mes' === suFiltroPeriodo ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
+            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'ultimo_mes' === suFiltroPeriodo ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
       Último Mes
     </button>`;
   
   html += `
     <button onclick="suSelAnio(${currentYear})" id="su-btn-anio-${currentYear}"
-            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${currentYear === suFiltroPeriodo ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
+            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${currentYear === suFiltroPeriodo ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
       ${currentYear}
     </button>`;
 
@@ -4973,7 +4973,7 @@ function renderFiltroAniosSueldos() {
     const isPastYear = pastYears.includes(Number(suFiltroPeriodo));
     html += `
       <select onchange="suSelAnio(Number(this.value))" id="su-select-otros-anios"
-              class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors outline-none cursor-pointer appearance-none ${isPastYear ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}"
+              class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors outline-none cursor-pointer appearance-none ${isPastYear ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}"
               style="padding-right: 2rem; background-position: right 0.5rem center;">
         <option value="" disabled ${!isPastYear ? 'selected' : ''}>OTROS AÑOS</option>
         ${pastYears.map(a => `<option value="${a}" ${a === Number(suFiltroPeriodo) ? 'selected' : ''}>${a}</option>`).join('')}
@@ -5525,7 +5525,7 @@ async function cargarClimaResistencia() {
                </div>
                
                <!-- Temperaturas (mt-auto empuja a una posición idéntica sobre la zona de insignias) -->
-               <div class="mt-auto py-1.5 px-2 bg-slate-900/80 rounded-xl w-full border border-slate-700/50 shrink-0 shadow-inner mb-3">
+               <div class="mt-auto py-1.5 px-2 bg-black/80 rounded-xl w-full border border-slate-700/50 shrink-0 shadow-inner mb-3">
                  <span class="text-base font-black mono text-white">${max}° <span class="text-slate-500 font-medium ml-1 text-sm">${min}°</span></span>
                </div>
                
@@ -6017,11 +6017,11 @@ function renderFiltroAniosTenis() {
   if (!anios.includes(curr)) anios.unshift(curr);
   const past = anios.filter(a => a !== curr);
 
-  let html = `<button onclick="teSelAnio('Todos')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'Todos' === teFiltroPeriodo ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">Histórico</button>`;
-  html += `<button onclick="teSelAnio(${curr})" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${curr === teFiltroPeriodo ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">${curr}</button>`;
+  let html = `<button onclick="teSelAnio('Todos')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'Todos' === teFiltroPeriodo ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">Histórico</button>`;
+  html += `<button onclick="teSelAnio(${curr})" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${curr === teFiltroPeriodo ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">${curr}</button>`;
   if (past.length) {
     const isPast = past.includes(Number(teFiltroPeriodo));
-    html += `<select onchange="teSelAnio(Number(this.value))" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors outline-none cursor-pointer appearance-none ${isPast ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}" style="padding-right:2rem;background-position:right 0.5rem center;">
+    html += `<select onchange="teSelAnio(Number(this.value))" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors outline-none cursor-pointer appearance-none ${isPast ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}" style="padding-right:2rem;background-position:right 0.5rem center;">
       <option value="" disabled ${!isPast ? 'selected' : ''}>OTROS AÑOS</option>
       ${past.map(a => `<option value="${a}" ${a === Number(teFiltroPeriodo) ? 'selected' : ''}>${a}</option>`).join('')}
     </select>`;
@@ -6509,7 +6509,7 @@ function setActividadFiltro(period) {
     const btn = document.getElementById('act-filtro-' + id);
     if (!btn) return;
     btn.className = "h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors " + 
-      (id === period ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-400 hover:bg-slate-700");
+      (id === period ? "bg-black text-white" : "bg-slate-100 text-slate-400 hover:bg-slate-700");
   });
 
   const btnCustom = document.getElementById('act-filtro-personalizado');
@@ -7125,7 +7125,7 @@ function renderFiltroTiempoNutricion() {
   const opciones = ['Hoy', 'Semana', 'Mes', 'Año'];
   let html = opciones.map(opt => `
     <button onclick="setFiltroNutricion('${opt}')" 
-            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${currentNutricionFiltro === opt ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
+            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${currentNutricionFiltro === opt ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
       ${opt}
     </button>
   `).join('');
@@ -8032,7 +8032,7 @@ async function procesarNutricionIA() {
 </script>
   <!-- Modal Clima -->
   <div id="modal-clima" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-[300] items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-700/80 rounded-2xl w-full max-w-6xl w-[96vw] overflow-hidden flex flex-col shadow-2xl relative">
+    <div class="bg-black border border-slate-700/80 rounded-2xl w-full max-w-6xl w-[96vw] overflow-hidden flex flex-col shadow-2xl relative">
       <div class="p-4 px-6 border-b border-slate-700/60 flex items-center justify-between bg-slate-800/50">
         <div class="flex items-center gap-3">
           <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></div>
