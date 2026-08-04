@@ -727,10 +727,10 @@
       <div class="flex items-center gap-2 flex-wrap">
         <span class="text-[10px] font-black text-white uppercase tracking-widest mr-1">Período:</span>
         <div id="actividad-filtros" class="flex gap-2 flex-wrap items-center">
-          <button id="act-filtro-hoy" onclick="setActividadFiltro('hoy')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors bg-black text-white">Hoy</button>
-          <button id="act-filtro-semana" onclick="setActividadFiltro('semana')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors bg-slate-100 text-slate-400 hover:bg-slate-700">Semana</button>
-          <button id="act-filtro-mes" onclick="setActividadFiltro('mes')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors bg-slate-100 text-slate-400 hover:bg-slate-700">Mes</button>
-          <button id="act-filtro-año" onclick="setActividadFiltro('año')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors bg-slate-100 text-slate-400 hover:bg-slate-700">Año</button>
+          <button id="act-filtro-hoy" onclick="setActividadFiltro('hoy')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors bg-white text-black">Hoy</button>
+          <button id="act-filtro-semana" onclick="setActividadFiltro('semana')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors bg-slate-800 text-slate-400 hover:bg-slate-700">Semana</button>
+          <button id="act-filtro-mes" onclick="setActividadFiltro('mes')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors bg-slate-800 text-slate-400 hover:bg-slate-700">Mes</button>
+          <button id="act-filtro-año" onclick="setActividadFiltro('año')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors bg-slate-800 text-slate-400 hover:bg-slate-700">Año</button>
           
           <div class="hidden xl:block w-px h-6 bg-slate-700/60 mx-1"></div>
           
@@ -2749,19 +2749,19 @@ function renderFiltroAniosFinanzas() {
   const pastYears = anios.filter(a => a !== currentYear);
   
   let html = `<button onclick="finanzasSelAnio('Todos')" id="fin-btn-anio-Todos"
-          class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'Todos' === finanzasFiltroPeriodo ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
+          class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'Todos' === finanzasFiltroPeriodo ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">
     Histórico
   </button>`;
   
   html += `
     <button onclick="finanzasSelAnio('mes_actual')" id="fin-btn-anio-mes_actual"
-            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'mes_actual' === finanzasFiltroPeriodo ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
+            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'mes_actual' === finanzasFiltroPeriodo ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">
       Mes Actual
     </button>`;
   
   html += `
     <button onclick="finanzasSelAnio(${currentYear})" id="fin-btn-anio-${currentYear}"
-            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${currentYear === finanzasFiltroPeriodo ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
+            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${currentYear === finanzasFiltroPeriodo ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">
       ${currentYear}
     </button>`;
 
@@ -2769,7 +2769,7 @@ function renderFiltroAniosFinanzas() {
     const isPastYear = pastYears.includes(Number(finanzasFiltroPeriodo));
     html += `
       <select onchange="finanzasSelAnio(Number(this.value))" id="fin-select-otros-anios"
-              class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors outline-none cursor-pointer appearance-none ${isPastYear ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}"
+              class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors outline-none cursor-pointer appearance-none ${isPastYear ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}"
               style="padding-right: 2rem; background-position: right 0.5rem center;">
         <option value="" disabled ${!isPastYear ? 'selected' : ''}>OTROS AÑOS</option>
         ${pastYears.map(a => `<option value="${a}" ${a === Number(finanzasFiltroPeriodo) ? 'selected' : ''}>${a}</option>`).join('')}
@@ -2780,7 +2780,7 @@ function renderFiltroAniosFinanzas() {
   html += `
     <div class="hidden xl:block w-px h-6 bg-slate-700/60 mx-1"></div>
     <button onclick="finanzasSelAnio('personalizado')" id="fin-btn-anio-personalizado"
-            class="h-8 px-3 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors flex items-center gap-1.5 ${'personalizado' === finanzasFiltroPeriodo ? 'bg-blue-600 text-white border-transparent' : 'text-slate-400 border border-slate-700 hover:bg-slate-800'}">
+            class="h-8 px-3 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors flex items-center gap-1.5 ${'personalizado' === finanzasFiltroPeriodo ? 'bg-white text-black border-transparent' : 'text-slate-400 border border-slate-700 hover:bg-slate-800'}">
       <i class="fas fa-calendar-alt"></i> Personalizado
     </button>
   `;
@@ -3702,7 +3702,7 @@ function abrirModalAnual() {
 
   document.getElementById('modal-years').innerHTML = anios.map(a => `
     <button onclick="seleccionarAnioModal(${a})" id="btn-anio-${a}"
-            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${a === modalAnioActivo ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
+            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${a === modalAnioActivo ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">
       ${a}
     </button>`).join('');
 
@@ -3717,7 +3717,7 @@ function seleccionarAnioModal(anio) {
   modalAnioActivo = anio;
   document.querySelectorAll('[id^="btn-anio-"]').forEach(btn => {
     const isActive = btn.id === `btn-anio-${anio}`;
-    btn.className = `h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${isActive ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}`;
+    btn.className = `h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${isActive ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`;
   });
   renderModalAnio(anio);
 }
@@ -4087,7 +4087,7 @@ function renderTablaAhorros() {
       return fmtARS(precioARS) + ' <span class="text-slate-500 text-[9px]">ARS</span>';
     };
     const tickerBadge = tipoRequiereTicker(a.tipo) && a.ticker
-      ? `<span class="ml-1 px-1.5 py-0.5 ${sinPrecio ? 'bg-amber-50 text-amber-400' : 'bg-slate-100 text-slate-400'} rounded text-[9px] font-black mono">${a.ticker.toUpperCase()}</span>` : '';
+      ? `<span class="ml-1 px-1.5 py-0.5 ${sinPrecio ? 'bg-amber-50 text-amber-400' : 'bg-slate-800 text-slate-400'} rounded text-[9px] font-black mono">${a.ticker.toUpperCase()}</span>` : '';
     return `
       <tr class="table-row border-b border-slate-800 fade-row" style="animation-delay:${i*0.03}s">
         <td class="px-5 py-3.5">
@@ -4953,19 +4953,19 @@ function renderFiltroAniosSueldos() {
   const pastYears = anios.filter(a => a !== currentYear);
 
   let html = `<button onclick="suSelAnio('Todos')" id="su-btn-anio-Todos"
-          class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'Todos' === suFiltroPeriodo ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
+          class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'Todos' === suFiltroPeriodo ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">
     Histórico
   </button>`;
   
   html += `
     <button onclick="suSelAnio('ultimo_mes')" id="su-btn-anio-ultimo_mes"
-            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'ultimo_mes' === suFiltroPeriodo ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
+            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'ultimo_mes' === suFiltroPeriodo ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">
       Último Mes
     </button>`;
   
   html += `
     <button onclick="suSelAnio(${currentYear})" id="su-btn-anio-${currentYear}"
-            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${currentYear === suFiltroPeriodo ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
+            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${currentYear === suFiltroPeriodo ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">
       ${currentYear}
     </button>`;
 
@@ -4973,7 +4973,7 @@ function renderFiltroAniosSueldos() {
     const isPastYear = pastYears.includes(Number(suFiltroPeriodo));
     html += `
       <select onchange="suSelAnio(Number(this.value))" id="su-select-otros-anios"
-              class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors outline-none cursor-pointer appearance-none ${isPastYear ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}"
+              class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors outline-none cursor-pointer appearance-none ${isPastYear ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}"
               style="padding-right: 2rem; background-position: right 0.5rem center;">
         <option value="" disabled ${!isPastYear ? 'selected' : ''}>OTROS AÑOS</option>
         ${pastYears.map(a => `<option value="${a}" ${a === Number(suFiltroPeriodo) ? 'selected' : ''}>${a}</option>`).join('')}
@@ -4984,7 +4984,7 @@ function renderFiltroAniosSueldos() {
   html += `
     <div class="hidden xl:block w-px h-6 bg-slate-700/60 mx-1"></div>
     <button onclick="suSelAnio('personalizado')" id="su-btn-anio-personalizado"
-            class="h-8 px-3 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors flex items-center gap-1.5 ${'personalizado' === suFiltroPeriodo ? 'bg-blue-600 text-white border-transparent' : 'text-slate-400 border border-slate-700 hover:bg-slate-800'}">
+            class="h-8 px-3 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors flex items-center gap-1.5 ${'personalizado' === suFiltroPeriodo ? 'bg-white text-black border-transparent' : 'text-slate-400 border border-slate-700 hover:bg-slate-800'}">
       <i class="fas fa-calendar-alt"></i> Personalizado
     </button>
   `;
@@ -6017,17 +6017,17 @@ function renderFiltroAniosTenis() {
   if (!anios.includes(curr)) anios.unshift(curr);
   const past = anios.filter(a => a !== curr);
 
-  let html = `<button onclick="teSelAnio('Todos')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'Todos' === teFiltroPeriodo ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">Histórico</button>`;
-  html += `<button onclick="teSelAnio(${curr})" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${curr === teFiltroPeriodo ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">${curr}</button>`;
+  let html = `<button onclick="teSelAnio('Todos')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'Todos' === teFiltroPeriodo ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">Histórico</button>`;
+  html += `<button onclick="teSelAnio(${curr})" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${curr === teFiltroPeriodo ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">${curr}</button>`;
   if (past.length) {
     const isPast = past.includes(Number(teFiltroPeriodo));
-    html += `<select onchange="teSelAnio(Number(this.value))" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors outline-none cursor-pointer appearance-none ${isPast ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}" style="padding-right:2rem;background-position:right 0.5rem center;">
+    html += `<select onchange="teSelAnio(Number(this.value))" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors outline-none cursor-pointer appearance-none ${isPast ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}" style="padding-right:2rem;background-position:right 0.5rem center;">
       <option value="" disabled ${!isPast ? 'selected' : ''}>OTROS AÑOS</option>
       ${past.map(a => `<option value="${a}" ${a === Number(teFiltroPeriodo) ? 'selected' : ''}>${a}</option>`).join('')}
     </select>`;
   }
   html += `<div class="hidden xl:block w-px h-6 bg-slate-700/60 mx-1"></div>
-    <button onclick="teSelAnio('personalizado')" class="h-8 px-3 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors flex items-center gap-1.5 ${'personalizado' === teFiltroPeriodo ? 'bg-amber-700 text-white border-transparent' : 'text-slate-400 border border-slate-700 hover:bg-slate-800'}"><i class="fas fa-calendar-alt"></i> Personalizado</button>`;
+    <button onclick="teSelAnio('personalizado')" class="h-8 px-3 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors flex items-center gap-1.5 ${'personalizado' === teFiltroPeriodo ? 'bg-white text-black border-transparent' : 'text-slate-400 border border-slate-700 hover:bg-slate-800'}"><i class="fas fa-calendar-alt"></i> Personalizado</button>`;
   document.getElementById('te-filtro-anios').innerHTML = html;
 }
 
@@ -6124,6 +6124,8 @@ async function iniciarCalendario() {
     locale: 'es',
     nextDayThreshold: '09:00:00',
     displayEventEnd: false, // Opcional, para que el texto sea más limpio
+    fixedWeekCount: false, // Filas dinámicas en vez de siempre 6
+    dayMaxEvents: true, // Límite de eventos para mantener misma altura de celdas
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
@@ -6509,13 +6511,13 @@ function setActividadFiltro(period) {
     const btn = document.getElementById('act-filtro-' + id);
     if (!btn) return;
     btn.className = "h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors " + 
-      (id === period ? "bg-black text-white" : "bg-slate-100 text-slate-400 hover:bg-slate-700");
+      (id === period ? "bg-white text-black" : "bg-slate-800 text-slate-400 hover:bg-slate-700");
   });
 
   const btnCustom = document.getElementById('act-filtro-personalizado');
   if (btnCustom) {
     btnCustom.className = "h-8 px-3 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors flex items-center gap-1.5 " + 
-      (period === 'personalizado' ? "bg-blue-600 text-white border-transparent" : "text-slate-400 border border-slate-700 hover:bg-slate-800");
+      (period === 'personalizado' ? "bg-white text-black border-transparent" : "text-slate-400 border border-slate-700 hover:bg-slate-800");
   }
 
   const customDates = document.getElementById('actividad-custom-dates');
@@ -7125,7 +7127,7 @@ function renderFiltroTiempoNutricion() {
   const opciones = ['Hoy', 'Semana', 'Mes', 'Año'];
   let html = opciones.map(opt => `
     <button onclick="setFiltroNutricion('${opt}')" 
-            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${currentNutricionFiltro === opt ? 'bg-black text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-700'}">
+            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${currentNutricionFiltro === opt ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">
       ${opt}
     </button>
   `).join('');
@@ -7133,7 +7135,7 @@ function renderFiltroTiempoNutricion() {
   html += `
     <div class="hidden xl:block w-px h-6 bg-slate-700/60 mx-1"></div>
     <button onclick="setFiltroNutricion('personalizado')" 
-            class="h-8 px-3 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors flex items-center gap-1.5 ${'personalizado' === currentNutricionFiltro ? 'bg-orange-600 text-white border-transparent' : 'text-slate-400 border border-slate-700 hover:bg-slate-800'}">
+            class="h-8 px-3 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors flex items-center gap-1.5 ${'personalizado' === currentNutricionFiltro ? 'bg-white text-black border-transparent' : 'text-slate-400 border border-slate-700 hover:bg-slate-800'}">
       <i class="fas fa-calendar-alt"></i> Personalizado
     </button>
   `;
