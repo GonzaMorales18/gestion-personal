@@ -61,8 +61,32 @@ function doGet(e) {
       .setMimeType(ContentService.MimeType.JSON);
     const rows = sheet.getDataRange().getDisplayValues();
     rows.shift();
-    const filtradas = rows.filter(r => r[0] && r[0].trim() !== '');
+    const filtradas = [];
+    rows.forEach((r, i) => {
+      if (r[0] && r[0].trim() !== '') {
+        r.push(i + 2); // rowIndex
+        filtradas.push(r);
+      }
+    });
     return ContentService.createTextOutput(JSON.stringify({ tenis: filtradas }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  // Hoja de partidos
+  if (e && e.parameter && e.parameter.sheet === 'partidos') {
+    const sheet = ss.getSheetByName('partidos');
+    if (!sheet) return ContentService.createTextOutput(JSON.stringify({ partidos: [] }))
+      .setMimeType(ContentService.MimeType.JSON);
+    const rows = sheet.getDataRange().getDisplayValues();
+    rows.shift();
+    const filtradas = [];
+    rows.forEach((r, i) => {
+      if (r[0] && r[0].trim() !== '') {
+        r.push(i + 2); // rowIndex
+        filtradas.push(r);
+      }
+    });
+    return ContentService.createTextOutput(JSON.stringify({ partidos: filtradas }))
       .setMimeType(ContentService.MimeType.JSON);
   }
 
@@ -73,7 +97,13 @@ function doGet(e) {
       .setMimeType(ContentService.MimeType.JSON);
     const rows     = sheet.getDataRange().getDisplayValues();
     rows.shift();
-    const filtradas = rows.filter(r => r[0] && r[0].trim() !== '');
+    const filtradas = [];
+    rows.forEach((r, i) => {
+      if (r[0] && r[0].trim() !== '') {
+        r.push(i + 2); // rowIndex
+        filtradas.push(r);
+      }
+    });
     return ContentService.createTextOutput(JSON.stringify({ sueldos: filtradas }))
       .setMimeType(ContentService.MimeType.JSON);
   }
@@ -275,6 +305,53 @@ function doPost(e) {
     return ok();
   }
 
+  // ── Tenis: editar ─────────────────────────────────────────────────────────
+  if (data.accion === 'editarTenis') {
+    let sheet = ss.getSheetByName('tenis');
+    if (sheet && data.rowIndex) {
+      sheet.getRange(data.rowIndex, 1, 1, data.data.length).setValues([data.data]);
+    }
+    return ok();
+  }
+
+  // ── Tenis: eliminar ───────────────────────────────────────────────────────
+  if (data.accion === 'eliminarTenis') {
+    let sheet = ss.getSheetByName('tenis');
+    if (sheet && data.rowIndex) {
+      sheet.deleteRow(data.rowIndex);
+    }
+    return ok();
+  }
+
+  // ── Partidos: guardar ────────────────────────────────────────────────────────
+  if (data.sheet === 'partidos' || data.accion === 'guardarPartido') {
+    let sheet = ss.getSheetByName('partidos');
+    if (!sheet) {
+      sheet = ss.insertSheet('partidos');
+      sheet.appendRow(['Fecha', 'Equipo', 'Torneo', 'Rival', 'Estadio', 'Goles Favor', 'Goles Contra']);
+    }
+    sheet.appendRow(data.data);
+    return ok();
+  }
+
+  // ── Partidos: editar ─────────────────────────────────────────────────────────
+  if (data.accion === 'editarPartido') {
+    let sheet = ss.getSheetByName('partidos');
+    if (sheet && data.rowIndex) {
+      sheet.getRange(data.rowIndex, 1, 1, data.data.length).setValues([data.data]);
+    }
+    return ok();
+  }
+
+  // ── Partidos: eliminar ───────────────────────────────────────────────────────
+  if (data.accion === 'eliminarPartido') {
+    let sheet = ss.getSheetByName('partidos');
+    if (sheet && data.rowIndex) {
+      sheet.deleteRow(data.rowIndex);
+    }
+    return ok();
+  }
+
   // ── Sueldos: guardar ──────────────────────────────────────────────────────
   if (data.accion === 'guardarSueldo') {
     let sheet = ss.getSheetByName('sueldos');
@@ -291,6 +368,32 @@ function doPost(e) {
       (data.difARS || 0) / 100,
       (data.difUSD || 0) / 100
     ]);
+    return ok();
+  }
+
+  // ── Sueldos: editar ───────────────────────────────────────────────────────
+  if (data.accion === 'editarSueldo') {
+    let sheet = ss.getSheetByName('sueldos');
+    if (sheet && data.rowIndex) {
+      sheet.getRange(data.rowIndex, 1, 1, 7).setValues([[
+        data.mes,
+        data.bruto,
+        data.neto,
+        data.brutoUSD,
+        data.netoUSD,
+        (data.difARS || 0) / 100,
+        (data.difUSD || 0) / 100
+      ]]);
+    }
+    return ok();
+  }
+
+  // ── Sueldos: eliminar ─────────────────────────────────────────────────────
+  if (data.accion === 'eliminarSueldo') {
+    let sheet = ss.getSheetByName('sueldos');
+    if (sheet && data.rowIndex) {
+      sheet.deleteRow(data.rowIndex);
+    }
     return ok();
   }
 
