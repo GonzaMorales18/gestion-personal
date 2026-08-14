@@ -196,13 +196,13 @@ newFile = newFile.replace(
 );
 
 newFile = newFile.replace(
-  "['inicio', 'actividad', 'nutricion', 'finanzas', 'ahorros', 'sueldos', 'tenis', 'calendario'].forEach(s => {",
-  "['inicio', 'actividad', 'nutricion', 'finanzas', 'ahorros', 'sueldos', 'tenis', 'partidos', 'calendario'].forEach(s => {"
+  "['inicio', 'actividad', 'finanzas', 'ahorros', 'sueldos', 'tenis', 'calendario'].forEach(s => {",
+  "['inicio', 'actividad', 'finanzas', 'ahorros', 'sueldos', 'tenis', 'partidos', 'calendario'].forEach(s => {"
 );
 
 newFile = newFile.replace(
-  "const validas = ['inicio','actividad','nutricion','finanzas','ahorros','sueldos','tenis','calendario'];",
-  "const validas = ['inicio','actividad','nutricion','finanzas','ahorros','sueldos','tenis','partidos','calendario'];"
+  "const validas = ['inicio','actividad','finanzas','ahorros','sueldos','tenis','calendario'];",
+  "const validas = ['inicio','actividad','finanzas','ahorros','sueldos','tenis','partidos','calendario'];"
 );
 
 newFile = newFile.replace(
