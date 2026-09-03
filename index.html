@@ -4686,6 +4686,7 @@ let sueldosData     = [];
 let sueldosIniciado = false;
 let suFiltroPeriodo = 'ultimo_mes';
 let chartSueldos    = null;
+let currentSueldoEditIndex = null;
 const SU_MESES_CORTOS = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 
 function toggleSueldosCustomDates() {
@@ -5113,8 +5114,8 @@ function renderGraficoSueldos() {
       labels: agrupados.map(a => a.label),
       datasets: [
         { label: 'Bruto USD', data: agrupados.map(a => a.brutoUSD),
-          borderColor: '#6366f1', backgroundColor: '#6366f120',
-          pointBackgroundColor: '#6366f1', borderWidth: 2.5, pointRadius: 5,
+          borderColor: '#22c55e', backgroundColor: '#22c55e20',
+          pointBackgroundColor: '#22c55e', borderWidth: 2.5, pointRadius: 5,
           tension: 0.35, fill: true }
       ]
     },
@@ -5131,7 +5132,41 @@ function renderGraficoSueldos() {
         },
         x: { ticks: { font: { size: 9, family: 'Space Grotesk', weight: 'bold' }, color: '#64748b' }, grid: { display: false } }
       }
-    }
+    },
+    plugins: [{
+      id: 'drawSegments',
+      beforeDraw(chart) {
+        if (!chart.chartArea) return;
+        const { ctx, chartArea: { top, bottom, right }, scales: { x } } = chart;
+        ctx.save();
+        
+        const getX = (label) => {
+          const idx = chart.data.labels.indexOf(label);
+          return idx !== -1 ? x.getPixelForValue(idx) : null;
+        };
+
+        const drawRect = (startLabel, endLabel, color, text) => {
+          const startX = getX(startLabel);
+          let endX = endLabel === 'FIN' ? right : getX(endLabel);
+          if (startX === null || endX === null) return;
+
+          ctx.fillStyle = color;
+          ctx.fillRect(startX, top, endX - startX, bottom - top);
+          
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+          ctx.font = 'bold 10px "Space Grotesk"';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'top';
+          ctx.fillText(text, startX + (endX - startX) / 2, top + 15);
+        };
+
+        drawRect('SEP-16', 'NOV-17', 'rgba(234, 179, 8, 0.08)', 'McDonalds');
+        drawRect('ABR-19', 'FEB-20', 'rgba(59, 130, 246, 0.08)', 'Alvarez&Asociados');
+        drawRect('ENE-22', 'FIN', 'rgba(236, 72, 153, 0.08)', 'BDO');
+
+        ctx.restore();
+      }
+    }]
   });
 }
 
