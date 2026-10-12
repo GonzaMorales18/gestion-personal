@@ -554,6 +554,23 @@
 
   <!-- SECCIÓN SALUD - ACTIVIDAD -->
   <main id="section-actividad" class="hidden p-4 md:p-8 max-w-[1400px] mx-auto w-full space-y-6">
+
+    <!-- Banner de aviso si los permisos de Google Health faltan o están desactualizados -->
+    <div id="act-health-auth-banner" class="hidden p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-amber-500/20 flex items-center justify-center shrink-0">
+          <i class="fas fa-shield-alt text-amber-400 text-sm"></i>
+        </div>
+        <div>
+          <h4 class="text-xs font-black text-white uppercase tracking-wider">Permisos de Google Health requeridos</h4>
+          <p class="text-[11px] text-slate-300 mt-0.5">Tu sesión de Google actual no tiene autorizada la nueva Google Health API. Tocá el botón para conectar y sincronizar tus datos recientes.</p>
+        </div>
+      </div>
+      <button onclick="reconectarGoogle()" class="shrink-0 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-black text-xs font-black uppercase tracking-wider rounded-xl transition-all shadow-md hover:scale-105 active:scale-95">
+        Autorizar Google Health
+      </button>
+    </div>
+
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
       
       <!-- Tarjeta Pasos -->
@@ -695,10 +712,10 @@
       </div>
       
       <!-- Indicador Fuente de Salud (Google Health API / Fit) -->
-      <div id="act-api-source-badge" class="hidden xl:flex items-center gap-2 ml-auto px-2.5 py-1 bg-slate-800/80 rounded-lg border border-slate-700/60 text-[10px] font-bold text-slate-300">
+      <div id="act-api-source-badge" class="hidden items-center gap-2 ml-auto px-2.5 py-1 bg-slate-800/80 rounded-lg border border-slate-700/60 text-[10px] font-bold text-slate-300">
         <span id="act-api-source-dot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
         <span id="act-api-source-text">Google Health API</span>
-        <button id="act-api-reconnect-btn" onclick="conectarGoogle()" class="hidden ml-1 px-1.5 py-0.5 rounded bg-blue-600/30 text-blue-400 hover:bg-blue-600 hover:text-white transition-colors text-[9px]">Reconectar</button>
+        <button id="act-api-reconnect-btn" onclick="reconectarGoogle()" class="hidden ml-1 px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500 hover:text-black font-black transition-colors text-[9px] uppercase tracking-wider">Autorizar</button>
       </div>
       
       <!-- Controles de fecha personalizada (ocultos por defecto) -->
@@ -2483,6 +2500,7 @@ function showSection(nombre) {
     actualizarTarjetaFinanzas();
   }
   if (nombre === 'actividad') {
+    if (typeof actualizarBadgeApiSalud === 'function') actualizarBadgeApiSalud();
     if ((!window.fitnessData.steps || window.fitnessData.steps.length === 0) && (typeof fetchHealthData === 'function' || typeof fetchGoogleFitness === 'function') && typeof gapi !== 'undefined' && gapi.client && gapi.client.getToken()) {
       if (typeof fetchHealthData === 'function') fetchHealthData();
       else fetchGoogleFitness();
@@ -6819,10 +6837,25 @@ function conectarGoogle(forzarConsentimiento = false) {
 }
 
 function reconectarGoogle() {
-  desconectarGoogle();
-  setTimeout(() => {
+  try {
+    const token = (typeof gapi !== 'undefined' && gapi.client) ? gapi.client.getToken() : null;
+    if (token && token.access_token && typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
+      google.accounts.oauth2.revoke(token.access_token, () => {});
+    }
+  } catch(e) {}
+  
+  if (typeof gapi !== 'undefined' && gapi.client) {
+    gapi.client.setToken('');
+  }
+  localStorage.removeItem('gcal_token');
+  localStorage.removeItem('gcal_auto_connect');
+  localStorage.removeItem('gcal_login_hint');
+  
+  if (tokenClient) {
+    tokenClient.requestAccessToken({ prompt: 'consent' });
+  } else if (typeof conectarGoogle === 'function') {
     conectarGoogle(true);
-  }, 400);
+  }
 }
 window.reconectarGoogle = reconectarGoogle;
 
@@ -7116,15 +7149,27 @@ function actualizarBadgeApiSalud() {
   const dot = document.getElementById('act-api-source-dot');
   const text = document.getElementById('act-api-source-text');
   const btnRecon = document.getElementById('act-api-reconnect-btn');
+  const banner = document.getElementById('act-health-auth-banner');
+
+  if (banner) {
+    if (window.healthScopeMissing) {
+      banner.classList.remove('hidden');
+    } else {
+      banner.classList.add('hidden');
+    }
+  }
+
   if (!badge || !dot || !text) return;
 
   if (window.healthApiSource === 'google_health') {
     badge.classList.remove('hidden');
+    badge.classList.add('flex');
     dot.className = 'w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]';
     text.textContent = 'Google Health API';
     if (btnRecon) btnRecon.classList.add('hidden');
   } else if (window.healthApiSource === 'google_fit') {
     badge.classList.remove('hidden');
+    badge.classList.add('flex');
     dot.className = 'w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]';
     text.textContent = 'Google Fit (Respaldo)';
     if (btnRecon) {
@@ -7137,6 +7182,7 @@ function actualizarBadgeApiSalud() {
     }
   } else {
     badge.classList.add('hidden');
+    badge.classList.remove('flex');
   }
 }
 
@@ -7260,9 +7306,10 @@ async function fetchGoogleHealth() {
   if (authErrors.length > 0) {
     const err = authErrors[0];
     console.warn('[Google Health API] Respuesta de la API:', err.status, err.error);
-    if (err.status === 403) {
+    if (err.status === 403 || err.status === 401) {
       console.info('%c👉 Para habilitar la Google Health API en tu proyecto de Google Cloud, visitá:\nhttps://console.cloud.google.com/apis/library/health.googleapis.com?project=153589356690', 'color: #38bdf8; font-weight: bold; font-size: 11px;');
       window.healthScopeMissing = true;
+      actualizarBadgeApiSalud();
     }
     return null;
   }
@@ -7555,6 +7602,7 @@ async function fetchHealthData() {
     if (healthResult) {
       window.fitnessData = healthResult;
       window.healthApiSource = 'google_health';
+      window.healthScopeMissing = false;
       console.info('[Salud] Sincronización exitosa con Google Health API v4');
       
       const lastWithData = [...window.fitnessData.steps].reverse().find(d => d.value > 0);
