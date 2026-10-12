@@ -6798,7 +6798,7 @@ async function initGapiClient() {
   }
 }
 
-function conectarGoogle() {
+function conectarGoogle(forzarConsentimiento = false) {
   if (CALENDAR_CLIENT_ID === 'YOUR_CLIENT_ID') {
     showToast('Falta configurar tu Client ID', 'error');
     return;
@@ -6808,8 +6808,8 @@ function conectarGoogle() {
     return;
   }
   
-  if (gapi.client.getToken() === null) {
-    tokenClient.requestAccessToken();
+  if (forzarConsentimiento || window.healthScopeMissing || gapi.client.getToken() === null) {
+    tokenClient.requestAccessToken({ prompt: 'consent' });
   } else {
     // Si ya hay token, refrescar datos
     fetchGoogleEvents();
@@ -6817,6 +6817,14 @@ function conectarGoogle() {
     else if (typeof fetchGoogleFitness === 'function') fetchGoogleFitness();
   }
 }
+
+function reconectarGoogle() {
+  desconectarGoogle();
+  setTimeout(() => {
+    conectarGoogle(true);
+  }, 400);
+}
+window.reconectarGoogle = reconectarGoogle;
 
 function desconectarGoogle() {
   const token = gapi.client.getToken();
@@ -7338,8 +7346,8 @@ async function fetchGoogleFitnessInternal() {
   const accessToken = token.access_token;
   
   const now = new Date();
-  const nowMillis = now.getTime();
   const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+  const endOfToday = startOfToday.getTime() + 86400000;
   const url = 'https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate';
   
   try {
@@ -7349,7 +7357,7 @@ async function fetchGoogleFitnessInternal() {
     };
     
     const chunks = [];
-    let currentChunkEnd = nowMillis;
+    let currentChunkEnd = endOfToday;
     
     for (let i = 0; i < 4; i++) {
       const chunkStartDate = new Date(startOfToday);
@@ -7382,7 +7390,7 @@ async function fetchGoogleFitnessInternal() {
 
       const bodyWeight = {
         aggregateBy: [
-          { dataTypeName: 'com.google.weight.summary' }
+          { dataTypeName: 'com.google.weight' }
         ],
         bucketByTime: { durationMillis: 86400000 },
         startTimeMillis: chunk.start,
@@ -7609,7 +7617,23 @@ async function diagnosticoGoogleHealth() {
   };
   
   console.group('=== DIAGNÓSTICO GOOGLE HEALTH API (health.googleapis.com/v4) ===');
-  console.info('1. Probando identidad de usuario (users/me/identity)...');
+  console.info('1. Verificando permisos (scopes) otorgados en el token actual...');
+  try {
+    const tInfoRes = await fetch(`https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${accessToken}`);
+    const tInfo = await tInfoRes.json();
+    console.info('Scopes actuales en el token:', tInfo.scope);
+    const hasHealthScope = tInfo.scope && tInfo.scope.includes('googlehealth');
+    if (!hasHealthScope) {
+      console.warn('⚠️ ATENCIÓN: El token en tu navegador NO tiene los permisos de Google Health todavía.');
+      console.info('%c👉 Para renovar tu sesión con los permisos de Google Health, ejecutá:\nreconectarGoogle()', 'color: #f59e0b; font-weight: bold;');
+    } else {
+      console.info('✅ El token cuenta con los permisos de Google Health.');
+    }
+  } catch(e) {
+    console.error('Error verificando tokeninfo:', e);
+  }
+  
+  console.info('2. Probando identidad de usuario (users/me/identity)...');
   try {
     const idRes = await fetch('https://health.googleapis.com/v4/users/me/identity', { headers });
     console.info(`Status Identity: ${idRes.status} ${idRes.statusText}`);
@@ -7619,7 +7643,7 @@ async function diagnosticoGoogleHealth() {
     console.error('Error identity:', e);
   }
   
-  console.info('2. Probando dailyRollUp (últimos 7 días)...');
+  console.info('3. Probando dailyRollUp (últimos 7 días)...');
   const now = new Date();
   const start7 = new Date(now);
   start7.setDate(start7.getDate() - 7);
