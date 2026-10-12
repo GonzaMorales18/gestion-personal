@@ -2463,7 +2463,14 @@ function showSection(nombre) {
   if (nombre === 'calendario') iniciarCalendario();
   if (nombre === 'inicio') {
     actualizarTarjetaFinanzas();
-      }
+  }
+  if (nombre === 'actividad') {
+    if ((!window.fitnessData.steps || window.fitnessData.steps.length === 0) && typeof fetchGoogleFitness === 'function' && typeof gapi !== 'undefined' && gapi.client && gapi.client.getToken()) {
+      fetchGoogleFitness();
+    } else {
+      setActividadFiltro(window.currentHealthFilter || 'hoy');
+    }
+  }
 }
 
 function toggleMenu() {
@@ -7069,15 +7076,14 @@ function filtrarActividadCustom() {
 }
 
 async function fetchGoogleFitness() {
-  const token = gapi.client.getToken();
-  if (!token) return;
+  const token = (typeof gapi !== 'undefined' && gapi.client) ? gapi.client.getToken() : null;
+  if (!token || !token.access_token) return;
   const accessToken = token.access_token;
   
   const now = new Date();
-  // Alinear endTimeMillis a la medianoche de mañana para que los buckets de 24h 
-  // coincidan exactamente con los días calendario en hora local.
-  const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-  const endTimeMillis = endOfToday.getTime();
+  const nowMillis = now.getTime();
+  // Medianoche de hoy en hora local (00:00:00.000)
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
   const url = 'https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate';
   
   try {
@@ -7086,16 +7092,50 @@ async function fetchGoogleFitness() {
       'Content-Type': 'application/json'
     };
     
+    // Configurar 4 bloques de 90 días para cubrir los 360 días del año.
+    // El bloque 0 (más reciente) termina en nowMillis (ahora mismo), NUNCA en el futuro para evitar HTTP 400.
+    // Los bloques anteriores van de medianoche a medianoche, perfectamente alineados día a día.
+    const chunks = [];
+    let currentChunkEnd = nowMillis;
+    
+    for (let i = 0; i < 4; i++) {
+      const chunkStartDate = new Date(startOfToday);
+      chunkStartDate.setDate(chunkStartDate.getDate() - ((i + 1) * 90));
+      const chunkStartTime = chunkStartDate.getTime();
+      
+      chunks.push({
+        start: chunkStartTime,
+        end: currentChunkEnd
+      });
+      
+      currentChunkEnd = chunkStartTime;
+    }
+    
+    // Función auxiliar para consultar con fallback automático de data sources específicos a data types genéricos
+    const fetchAggregateWithFallback = async (bodyPreferred, bodyFallback) => {
+      try {
+        const res = await fetch(url, { method: 'POST', headers, body: JSON.stringify(bodyPreferred) });
+        if (res.ok) {
+          return await res.json();
+        }
+        console.warn(`Google Fit aggregate preferido retornó ${res.status}, intentando fallback con generic data types...`);
+        const resFallback = await fetch(url, { method: 'POST', headers, body: JSON.stringify(bodyFallback) });
+        if (resFallback.ok) {
+          return await resFallback.json();
+        }
+        console.error('Google Fit aggregate fallback falló:', await resFallback.text());
+        return {};
+      } catch (err) {
+        console.error('Error al solicitar chunk de Google Fitness:', err);
+        return {};
+      }
+    };
+    
     const promisesActivity = [];
     const promisesWeight = [];
     
-    // Google Fit API tiene un límite de días por petición (suele fallar con > 90 días).
-    // Pedimos 4 bloques de 90 días para tener los 360 días del año.
-    for (let i = 0; i < 4; i++) {
-      const chunkEnd = endTimeMillis - (i * 90 * 24 * 60 * 60 * 1000);
-      const chunkStart = chunkEnd - (90 * 24 * 60 * 60 * 1000);
-      
-      const bodyActivity = {
+    chunks.forEach(chunk => {
+      const bodyActivityPreferred = {
         aggregateBy: [
           { dataSourceId: 'derived:com.google.step_count.delta:com.google.android.gms:estimated_steps' },
           { dataSourceId: 'derived:com.google.distance.delta:com.google.android.gms:pruned_distance' },
@@ -7103,8 +7143,20 @@ async function fetchGoogleFitness() {
           { dataTypeName: 'com.google.heart_minutes' }
         ],
         bucketByTime: { durationMillis: 86400000 },
-        startTimeMillis: chunkStart,
-        endTimeMillis: chunkEnd
+        startTimeMillis: chunk.start,
+        endTimeMillis: chunk.end
+      };
+
+      const bodyActivityFallback = {
+        aggregateBy: [
+          { dataTypeName: 'com.google.step_count.delta' },
+          { dataTypeName: 'com.google.distance.delta' },
+          { dataTypeName: 'com.google.calories.expended' },
+          { dataTypeName: 'com.google.heart_minutes' }
+        ],
+        bucketByTime: { durationMillis: 86400000 },
+        startTimeMillis: chunk.start,
+        endTimeMillis: chunk.end
       };
 
       const bodyWeight = {
@@ -7112,99 +7164,149 @@ async function fetchGoogleFitness() {
           { dataTypeName: 'com.google.weight' }
         ],
         bucketByTime: { durationMillis: 86400000 },
-        startTimeMillis: chunkStart,
-        endTimeMillis: chunkEnd
+        startTimeMillis: chunk.start,
+        endTimeMillis: chunk.end
       };
 
-      promisesActivity.push(fetch(url, { method: 'POST', headers, body: JSON.stringify(bodyActivity) }).then(async r => {
-        if (!r.ok) { console.error("Act Err:", await r.text()); return {}; }
-        return r.json();
-      }));
+      promisesActivity.push(fetchAggregateWithFallback(bodyActivityPreferred, bodyActivityFallback));
       
-      promisesWeight.push(fetch(url, { method: 'POST', headers, body: JSON.stringify(bodyWeight) }).then(async r => {
-        if (!r.ok) { console.error("Weight Err:", await r.text()); return {}; }
-        return r.json();
-      }));
-    }
+      promisesWeight.push(
+        fetch(url, { method: 'POST', headers, body: JSON.stringify(bodyWeight) })
+          .then(async r => {
+            if (!r.ok) {
+              console.error('Weight Err:', await r.text());
+              return {};
+            }
+            return r.json();
+          })
+          .catch(e => {
+            console.error('Weight fetch error:', e);
+            return {};
+          })
+      );
+    });
     
     const resultsActivity = await Promise.all(promisesActivity);
     const resultsWeight = await Promise.all(promisesWeight);
     
-    window.fitnessData = { steps: [], distance: [], weight: [], calories: [], activeMinutes: [] };
-    
-    // Unificar buckets de los 4 chunks (vienen ordenados del más reciente al más antiguo, así que invertimos o procesamos ordenando)
-    let allActivityBuckets = [];
-    let allWeightBuckets = [];
+    // Mapas para almacenar día a día unificados por clave de fecha (YYYY-MM-DD local)
+    const activityByDate = new Map();
+    const weightByDate = new Map();
     
     resultsActivity.forEach(res => {
-      if (res.bucket) allActivityBuckets = allActivityBuckets.concat(res.bucket);
-    });
-    resultsWeight.forEach(res => {
-      if (res.bucket) allWeightBuckets = allWeightBuckets.concat(res.bucket);
-    });
-    
-    // Ordenar cronológicamente ascendente por startTimeMillis
-    allActivityBuckets.sort((a, b) => parseInt(a.startTimeMillis) - parseInt(b.startTimeMillis));
-    allWeightBuckets.sort((a, b) => parseInt(a.startTimeMillis) - parseInt(b.startTimeMillis));
-    
-    // Process Activity
-    allActivityBuckets.forEach(b => {
-      const bDate = new Date(parseInt(b.startTimeMillis));
-      let daySteps = 0;
-      let dayDist = 0;
-      let dayCalories = 0;
-      let dayActiveMins = 0;
-      
-      if (b.dataset) {
-        b.dataset.forEach(ds => {
-          if (ds.point) {
-            ds.point.forEach(p => {
-              const typeStr = p.dataTypeName || (ds.dataSourceId ? ds.dataSourceId : '');
-              if (typeStr.includes('step_count')) {
-                p.value.forEach(v => daySteps += (v.intVal || v.fpVal || 0));
-              }
-              if (typeStr.includes('distance')) {
-                p.value.forEach(v => dayDist += (v.fpVal || v.intVal || 0));
-              }
-              if (typeStr.includes('calories.expended')) {
-                p.value.forEach(v => dayCalories += (v.fpVal || v.intVal || 0));
-              }
-              if (typeStr.includes('heart_minutes')) {
-                p.value.forEach(v => dayActiveMins += (v.fpVal || v.intVal || 0));
-              }
-            });
-          }
-        });
-      }
-      window.fitnessData.steps.push({ date: bDate, value: daySteps });
-      window.fitnessData.distance.push({ date: bDate, value: dayDist });
-      window.fitnessData.calories.push({ date: bDate, value: dayCalories });
-      window.fitnessData.activeMinutes.push({ date: bDate, value: dayActiveMins });
-    });
-    
-    // Process Weight
-    allWeightBuckets.forEach(b => {
-      const bDate = new Date(parseInt(b.startTimeMillis));
-      let dayWeight = null;
-      
-      if (b.dataset) {
-        b.dataset.forEach(ds => {
-          if (ds.point) {
-            ds.point.forEach(p => {
-              const typeStr = p.dataTypeName || (ds.dataSourceId ? ds.dataSourceId : '');
-              if (typeStr.includes('weight')) {
-                if (p.value && p.value.length > 0) {
-                   dayWeight = p.value[0].fpVal || p.value[0].intVal || dayWeight;
+      if (!res || !res.bucket) return;
+      res.bucket.forEach(b => {
+        const startMs = parseInt(b.startTimeMillis);
+        const endMs = parseInt(b.endTimeMillis);
+        // Usar punto medio para asociar con absoluta certeza al día local sin desvíos por huso o DST
+        const midMs = (startMs + endMs) / 2;
+        const dObj = new Date(midMs);
+        const dateKey = `${dObj.getFullYear()}-${String(dObj.getMonth() + 1).padStart(2, '0')}-${String(dObj.getDate()).padStart(2, '0')}`;
+        const dayNormalized = new Date(dObj.getFullYear(), dObj.getMonth(), dObj.getDate(), 0, 0, 0, 0);
+        
+        let daySteps = 0;
+        let dayDist = 0;
+        let dayCalories = 0;
+        let dayActiveMins = 0;
+        
+        if (b.dataset) {
+          b.dataset.forEach(ds => {
+            if (ds.point) {
+              ds.point.forEach(p => {
+                const typeStr = p.dataTypeName || (ds.dataSourceId ? ds.dataSourceId : '');
+                if (typeStr.includes('step_count')) {
+                  p.value.forEach(v => daySteps += (v.intVal || v.fpVal || 0));
                 }
-              }
-            });
-          }
-        });
-      }
-      window.fitnessData.weight.push({ date: bDate, value: dayWeight });
+                if (typeStr.includes('distance')) {
+                  p.value.forEach(v => dayDist += (v.fpVal || v.intVal || 0));
+                }
+                if (typeStr.includes('calories.expended')) {
+                  p.value.forEach(v => dayCalories += (v.fpVal || v.intVal || 0));
+                }
+                if (typeStr.includes('heart_minutes')) {
+                  p.value.forEach(v => dayActiveMins += (v.fpVal || v.intVal || 0));
+                }
+              });
+            }
+          });
+        }
+        
+        if (activityByDate.has(dateKey)) {
+          const prev = activityByDate.get(dateKey);
+          prev.steps = Math.max(prev.steps, daySteps);
+          prev.distance = Math.max(prev.distance, dayDist);
+          prev.calories = Math.max(prev.calories, dayCalories);
+          prev.activeMinutes = Math.max(prev.activeMinutes, dayActiveMins);
+        } else {
+          activityByDate.set(dateKey, {
+            date: dayNormalized,
+            steps: daySteps,
+            distance: dayDist,
+            calories: dayCalories,
+            activeMinutes: dayActiveMins
+          });
+        }
+      });
     });
     
-    setActividadFiltro(window.currentHealthFilter);
+    resultsWeight.forEach(res => {
+      if (!res || !res.bucket) return;
+      res.bucket.forEach(b => {
+        const startMs = parseInt(b.startTimeMillis);
+        const endMs = parseInt(b.endTimeMillis);
+        const midMs = (startMs + endMs) / 2;
+        const dObj = new Date(midMs);
+        const dateKey = `${dObj.getFullYear()}-${String(dObj.getMonth() + 1).padStart(2, '0')}-${String(dObj.getDate()).padStart(2, '0')}`;
+        const dayNormalized = new Date(dObj.getFullYear(), dObj.getMonth(), dObj.getDate(), 0, 0, 0, 0);
+        
+        let dayWeight = null;
+        if (b.dataset) {
+          b.dataset.forEach(ds => {
+            if (ds.point) {
+              ds.point.forEach(p => {
+                const typeStr = p.dataTypeName || (ds.dataSourceId ? ds.dataSourceId : '');
+                if (typeStr.includes('weight')) {
+                  if (p.value && p.value.length > 0) {
+                    dayWeight = p.value[0].fpVal || p.value[0].intVal || dayWeight;
+                  }
+                }
+              });
+            }
+          });
+        }
+        
+        if (dayWeight !== null && dayWeight > 0) {
+          weightByDate.set(dateKey, {
+            date: dayNormalized,
+            value: dayWeight
+          });
+        }
+      });
+    });
+    
+    // Crear series continuas día a día desde hace 360 días hasta HOY inclusive
+    window.fitnessData = { steps: [], distance: [], weight: [], calories: [], activeMinutes: [] };
+    
+    const iter = new Date(startOfToday);
+    iter.setDate(iter.getDate() - 360);
+    
+    while (iter <= startOfToday) {
+      const currentDay = new Date(iter);
+      const dateKey = `${currentDay.getFullYear()}-${String(currentDay.getMonth() + 1).padStart(2, '0')}-${String(currentDay.getDate()).padStart(2, '0')}`;
+      
+      const act = activityByDate.get(dateKey);
+      window.fitnessData.steps.push({ date: currentDay, value: act ? act.steps : 0 });
+      window.fitnessData.distance.push({ date: currentDay, value: act ? act.distance : 0 });
+      window.fitnessData.calories.push({ date: currentDay, value: act ? act.calories : 0 });
+      window.fitnessData.activeMinutes.push({ date: currentDay, value: act ? act.activeMinutes : 0 });
+      
+      const w = weightByDate.get(dateKey);
+      window.fitnessData.weight.push({ date: currentDay, value: w ? w.value : null });
+      
+      iter.setDate(iter.getDate() + 1);
+    }
+    
+    setActividadFiltro(window.currentHealthFilter || 'hoy');
     
   } catch (error) {
     console.error('Error fetching Google Fitness data:', error);
@@ -7223,18 +7325,27 @@ function renderHealthCard(type, period) {
   
   const isAvgMode = window.currentHealthMode === 'promedio';
   
+  const today = new Date();
+  
   if (period === 'hoy') {
-    const todayData = dataArray[dataArray.length - 1]; 
-    aggregatedValue = todayData.value;
-    if (type === 'weight' && aggregatedValue === null) {
-      const lastWeightEntry = [...dataArray].reverse().find(d => d.value !== null);
+    const todayData = dataArray.find(d => 
+      d.date.getFullYear() === today.getFullYear() &&
+      d.date.getMonth() === today.getMonth() &&
+      d.date.getDate() === today.getDate()
+    ) || dataArray[dataArray.length - 1]; 
+    aggregatedValue = todayData ? (todayData.value || 0) : 0;
+    if (type === 'weight' && (aggregatedValue === null || aggregatedValue === 0)) {
+      const lastWeightEntry = [...dataArray].reverse().find(d => d.value !== null && d.value > 0);
       aggregatedValue = lastWeightEntry ? lastWeightEntry.value : 0;
     }
     subtitle = type === 'weight' ? 'Último registro' : 'Hoy';
   } 
   else if (period === 'semana') {
     filtered = dataArray.slice(-7);
-    labels = filtered.map(d => d.date.toLocaleDateString('es-ES', {weekday:'short'}));
+    labels = filtered.map(d => {
+      const w = d.date.toLocaleDateString('es-ES', { weekday: 'short' }).replace('.', '');
+      return w.charAt(0).toUpperCase() + w.slice(1);
+    });
     values = filtered.map(d => d.value || 0);
     
     if (type === 'weight') {
@@ -7284,7 +7395,10 @@ function renderHealthCard(type, period) {
     values = labels.map(key => {
       const arr = monthlyGroups[key];
       if (arr.length === 0) return 0;
-      if (type === 'weight') return arr.reduce((a,b)=>a+b,0) / arr.length;
+      if (type === 'weight') {
+        const valids = arr.filter(v => v > 0);
+        return valids.length > 0 ? valids.reduce((a,b)=>a+b,0) / valids.length : 0;
+      }
       return isAvgMode ? arr.reduce((a,b)=>a+b,0) / arr.length : arr.reduce((a,b)=>a+b,0);
     });
     
@@ -7418,8 +7532,12 @@ function renderHealthCard(type, period) {
   }
 
   // SIEMPRE calcular y mostrar el dato de "hoy" para el Panel de Control (inicio)
-  const todayData = dataArray[dataArray.length - 1]; 
-  let hoyAggValue = todayData ? todayData.value : 0;
+  const todayEntry = dataArray.find(d => 
+    d.date.getFullYear() === today.getFullYear() &&
+    d.date.getMonth() === today.getMonth() &&
+    d.date.getDate() === today.getDate()
+  ) || dataArray[dataArray.length - 1]; 
+  let hoyAggValue = todayEntry ? todayEntry.value : 0;
   
   if (type === 'weight') {
     if (hoyAggValue === null || hoyAggValue === 0) {
