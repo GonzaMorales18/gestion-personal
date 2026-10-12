@@ -251,6 +251,17 @@
         <i class="fas fa-file-csv text-xs"></i>
         <span class="hidden md:inline">Exportar</span>
       </button>
+      <!-- Botones Google Auth -->
+      <button id="btn-conectar-google" onclick="conectarGoogle()" title="Conectar cuenta de Google"
+              class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-600/20 text-blue-400 hover:bg-blue-600 hover:text-white transition-colors text-[11px] font-bold uppercase tracking-wider">
+        <i class="fab fa-google text-xs"></i>
+        <span class="hidden md:inline">Conectar Google</span>
+      </button>
+      <button id="btn-desconectar-google" onclick="desconectarGoogle()" title="Desconectar cuenta de Google"
+              class="hidden items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-red-400 transition-colors text-[11px] font-bold uppercase tracking-wider">
+        <i class="fas fa-sign-out-alt text-xs"></i>
+        <span class="hidden md:inline">Desconectar</span>
+      </button>
       <button onclick="recargarDatos()" title="Actualizar datos"
               class="flex items-center gap-2 text-[11px] font-bold text-slate-400 hover:text-blue-400 transition-colors uppercase tracking-wider">
         <i id="icon-refresh" class="fas fa-sync-alt text-xs"></i>
@@ -7606,8 +7617,9 @@ window.fetchGoogleFitness = fetchGoogleFitness;
 async function diagnosticoGoogleHealth() {
   const token = (typeof gapi !== 'undefined' && gapi.client) ? gapi.client.getToken() : null;
   if (!token || !token.access_token) {
-    console.warn('[Diagnóstico Health] No hay token de Google. Conectá tu cuenta primero.');
-    return;
+    console.warn('[Diagnóstico Health] No hay token de Google activo. Solicitando conexión con Google...');
+    if (typeof conectarGoogle === 'function') conectarGoogle();
+    return 'Iniciando inicio de sesión con Google... Aceptá la ventana emergente y luego volvé a ejecutar diagnosticoGoogleHealth().';
   }
   const accessToken = token.access_token;
   const headers = {
