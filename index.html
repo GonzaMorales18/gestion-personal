@@ -7204,7 +7204,7 @@ async function fetchGoogleHealth() {
         const errText = await res.text();
         let parsed = null;
         try { parsed = JSON.parse(errText); } catch(e) {}
-        const reason = parsed?.error?.status || parsed?.error?.message || errText;
+        const reason = parsed?.error?.message || parsed?.error?.status || errText;
         return { ok: false, status: res.status, error: reason, dataType };
       }
 
@@ -7251,8 +7251,9 @@ async function fetchGoogleHealth() {
   const authErrors = results.filter(r => !r.ok && (r.status === 401 || r.status === 403));
   if (authErrors.length > 0) {
     const err = authErrors[0];
-    console.warn('[Google Health API] Error de autorización o servicio deshabilitado:', err.status, err.error);
-    if (String(err.error).includes('SCOPE') || err.status === 403) {
+    console.warn('[Google Health API] Respuesta de la API:', err.status, err.error);
+    if (err.status === 403) {
+      console.info('%c👉 Para habilitar la Google Health API en tu proyecto de Google Cloud, visitá:\nhttps://console.cloud.google.com/apis/library/health.googleapis.com?project=153589356690', 'color: #38bdf8; font-weight: bold; font-size: 11px;');
       window.healthScopeMissing = true;
     }
     return null;
@@ -7363,35 +7364,11 @@ async function fetchGoogleFitnessInternal() {
       currentChunkEnd = chunkStartTime;
     }
     
-    const fetchAggregateWithFallback = async (bodyPreferred, bodyFallback) => {
-      try {
-        const res = await fetch(url, { method: 'POST', headers, body: JSON.stringify(bodyPreferred) });
-        if (res.ok) return await res.json();
-        const resFallback = await fetch(url, { method: 'POST', headers, body: JSON.stringify(bodyFallback) });
-        if (resFallback.ok) return await resFallback.json();
-        return {};
-      } catch (err) {
-        return {};
-      }
-    };
-    
     const promisesActivity = [];
     const promisesWeight = [];
     
     chunks.forEach(chunk => {
-      const bodyActivityPreferred = {
-        aggregateBy: [
-          { dataSourceId: 'derived:com.google.step_count.delta:com.google.android.gms:estimated_steps' },
-          { dataSourceId: 'derived:com.google.distance.delta:com.google.android.gms:pruned_distance' },
-          { dataTypeName: 'com.google.calories.expended' },
-          { dataTypeName: 'com.google.heart_minutes' }
-        ],
-        bucketByTime: { durationMillis: 86400000 },
-        startTimeMillis: chunk.start,
-        endTimeMillis: chunk.end
-      };
-
-      const bodyActivityFallback = {
+      const bodyActivity = {
         aggregateBy: [
           { dataTypeName: 'com.google.step_count.delta' },
           { dataTypeName: 'com.google.distance.delta' },
@@ -7405,14 +7382,18 @@ async function fetchGoogleFitnessInternal() {
 
       const bodyWeight = {
         aggregateBy: [
-          { dataTypeName: 'com.google.weight' }
+          { dataTypeName: 'com.google.weight.summary' }
         ],
         bucketByTime: { durationMillis: 86400000 },
         startTimeMillis: chunk.start,
         endTimeMillis: chunk.end
       };
 
-      promisesActivity.push(fetchAggregateWithFallback(bodyActivityPreferred, bodyActivityFallback));
+      promisesActivity.push(
+        fetch(url, { method: 'POST', headers, body: JSON.stringify(bodyActivity) })
+          .then(async r => r.ok ? r.json() : {})
+          .catch(() => ({}))
+      );
       
       promisesWeight.push(
         fetch(url, { method: 'POST', headers, body: JSON.stringify(bodyWeight) })
