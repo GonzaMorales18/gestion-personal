@@ -554,23 +554,6 @@
 
   <!-- SECCIÓN SALUD - ACTIVIDAD -->
   <main id="section-actividad" class="hidden p-4 md:p-8 max-w-[1400px] mx-auto w-full space-y-6">
-
-    <!-- Banner de aviso si los permisos de Google Health faltan o están desactualizados -->
-    <div id="act-health-auth-banner" class="hidden p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-xl bg-amber-500/20 flex items-center justify-center shrink-0">
-          <i class="fas fa-shield-alt text-amber-400 text-sm"></i>
-        </div>
-        <div>
-          <h4 class="text-xs font-black text-white uppercase tracking-wider">Permisos de Google Health requeridos</h4>
-          <p class="text-[11px] text-slate-300 mt-0.5">Tu sesión de Google actual no tiene autorizada la nueva Google Health API. Tocá el botón para conectar y sincronizar tus datos recientes.</p>
-        </div>
-      </div>
-      <button onclick="reconectarGoogle()" class="shrink-0 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-black text-xs font-black uppercase tracking-wider rounded-xl transition-all shadow-md hover:scale-105 active:scale-95">
-        Autorizar Google Health
-      </button>
-    </div>
-
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
       
       <!-- Tarjeta Pasos -->
@@ -710,13 +693,7 @@
           <button id="act-modo-total" onclick="setActividadModo('total')" class="h-7 px-3 rounded text-[11px] font-black uppercase tracking-wider transition-colors text-slate-400 hover:text-white">Totales</button>
         </div>
       </div>
-      
-      <!-- Indicador Fuente de Salud (Google Health API / Fit) -->
-      <div id="act-api-source-badge" class="hidden items-center gap-2 ml-auto px-2.5 py-1 bg-slate-800/80 rounded-lg border border-slate-700/60 text-[10px] font-bold text-slate-300">
-        <span id="act-api-source-dot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
-        <span id="act-api-source-text">Google Health API</span>
-        <button id="act-api-reconnect-btn" onclick="reconectarGoogle()" class="hidden ml-1 px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500 hover:text-black font-black transition-colors text-[9px] uppercase tracking-wider">Autorizar</button>
-      </div>
+
       
       <!-- Controles de fecha personalizada (ocultos por defecto) -->
       <div id="actividad-custom-dates" class="hidden items-center gap-2 mt-2 xl:mt-0 xl:ml-auto">
@@ -2500,10 +2477,8 @@ function showSection(nombre) {
     actualizarTarjetaFinanzas();
   }
   if (nombre === 'actividad') {
-    if (typeof actualizarBadgeApiSalud === 'function') actualizarBadgeApiSalud();
-    if ((!window.fitnessData.steps || window.fitnessData.steps.length === 0) && (typeof fetchHealthData === 'function' || typeof fetchGoogleFitness === 'function') && typeof gapi !== 'undefined' && gapi.client && gapi.client.getToken()) {
-      if (typeof fetchHealthData === 'function') fetchHealthData();
-      else fetchGoogleFitness();
+    if ((!window.fitnessData.steps || window.fitnessData.steps.length === 0) && typeof fetchGoogleFitness === 'function' && typeof gapi !== 'undefined' && gapi.client && gapi.client.getToken()) {
+      fetchGoogleFitness();
     } else {
       setActividadFiltro(window.currentHealthFilter || 'hoy');
     }
@@ -2573,12 +2548,11 @@ async function recargarDatos() {
   icon.classList.remove('spin');
   showToast('Datos actualizados', 'ok');
   
-  // Refrescar Google (Calendar y Health) sin forzar popup
+  // Refrescar Google (Calendar y Fit) sin forzar popup
   if (typeof fetchGoogleEvents === 'function') {
     if (gapi.client && gapi.client.getToken() !== null) {
       fetchGoogleEvents();
-      if (typeof fetchHealthData === 'function') fetchHealthData();
-      else if (typeof fetchGoogleFitness === 'function') fetchGoogleFitness();
+      if (typeof fetchGoogleFitness === 'function') fetchGoogleFitness();
     } else if (localStorage.getItem('gcal_auto_connect') === 'true' && typeof tokenClient !== 'undefined' && tokenClient) {
       const loginHint = localStorage.getItem('gcal_login_hint');
       const tokenParams = { prompt: 'none' };
@@ -6671,7 +6645,7 @@ window.eliminarTenisUI = async function(rowIndex) {
 const CALENDAR_CLIENT_ID = '153589356690-gk27a6fhfn1tv19mdeqpac9pdfcvjfuc.apps.googleusercontent.com'; // <--- REEMPLAZAR AQUÍ
 const CALENDAR_API_KEY = 'AIzaSyAqO2e2L2cuqgVu1wYT5iIh8eYeDAgsnFI'; // <--- REEMPLAZAR AQUÍ
 const CALENDAR_DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
-const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly https://www.googleapis.com/auth/fitness.activity.read https://www.googleapis.com/auth/fitness.body.read https://www.googleapis.com/auth/fitness.location.read';
+const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/fitness.activity.read https://www.googleapis.com/auth/fitness.body.read https://www.googleapis.com/auth/fitness.location.read';
 
 let tokenClient;
 let gapiInited = false;
@@ -6745,7 +6719,6 @@ async function handleAuthResponse(resp) {
     expireTime: expireTime
   }));
   localStorage.setItem('gcal_auto_connect', 'true');
-  window.healthScopeMissing = false;
 
   try {
     const userResp = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
@@ -6767,8 +6740,7 @@ async function handleAuthResponse(resp) {
   if (alertEl) alertEl.classList.add('hidden');
   
   await fetchGoogleEvents();
-  if (typeof fetchHealthData === 'function') await fetchHealthData();
-  else if (typeof fetchGoogleFitness === 'function') await fetchGoogleFitness();
+  if (typeof fetchGoogleFitness === 'function') await fetchGoogleFitness();
 }
 
 async function initGapiClient() {
@@ -6796,8 +6768,7 @@ async function initGapiClient() {
           const alertEl = document.getElementById('calendar-alert');
           if (alertEl) alertEl.classList.add('hidden');
           fetchGoogleEvents();
-          if (typeof fetchHealthData === 'function') fetchHealthData();
-          else if (typeof fetchGoogleFitness === 'function') fetchGoogleFitness();
+          if (typeof fetchGoogleFitness === 'function') fetchGoogleFitness();
           return;
        } else {
           localStorage.removeItem('gcal_token');
@@ -6826,13 +6797,12 @@ function conectarGoogle(forzarConsentimiento = false) {
     return;
   }
   
-  if (forzarConsentimiento || window.healthScopeMissing || gapi.client.getToken() === null) {
+  if (forzarConsentimiento || gapi.client.getToken() === null) {
     tokenClient.requestAccessToken({ prompt: 'consent' });
   } else {
     // Si ya hay token, refrescar datos
     fetchGoogleEvents();
-    if (typeof fetchHealthData === 'function') fetchHealthData();
-    else if (typeof fetchGoogleFitness === 'function') fetchGoogleFitness();
+    if (typeof fetchGoogleFitness === 'function') fetchGoogleFitness();
   }
 }
 
@@ -7140,263 +7110,8 @@ function filtrarActividadCustom() {
   });
 }
 
-// ─── GESTIÓN DE FUENTE Y BADGE DE SALUD ───────────────────────────────────────
-window.healthApiSource = null; // 'google_health' | 'google_fit'
-window.healthScopeMissing = false;
-
-function actualizarBadgeApiSalud() {
-  const badge = document.getElementById('act-api-source-badge');
-  const dot = document.getElementById('act-api-source-dot');
-  const text = document.getElementById('act-api-source-text');
-  const btnRecon = document.getElementById('act-api-reconnect-btn');
-  const banner = document.getElementById('act-health-auth-banner');
-
-  if (banner) {
-    if (window.healthScopeMissing) {
-      banner.classList.remove('hidden');
-    } else {
-      banner.classList.add('hidden');
-    }
-  }
-
-  if (!badge || !dot || !text) return;
-
-  if (window.healthApiSource === 'google_health') {
-    badge.classList.remove('hidden');
-    badge.classList.add('flex');
-    dot.className = 'w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]';
-    text.textContent = 'Google Health API';
-    if (btnRecon) btnRecon.classList.add('hidden');
-  } else if (window.healthApiSource === 'google_fit') {
-    badge.classList.remove('hidden');
-    badge.classList.add('flex');
-    dot.className = 'w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]';
-    text.textContent = 'Google Fit (Respaldo)';
-    if (btnRecon) {
-      if (window.healthScopeMissing) {
-        btnRecon.classList.remove('hidden');
-        btnRecon.textContent = 'Autorizar Health API';
-      } else {
-        btnRecon.classList.add('hidden');
-      }
-    }
-  } else {
-    badge.classList.add('hidden');
-    badge.classList.remove('flex');
-  }
-}
-
-// ─── GOOGLE HEALTH API v4 (health.googleapis.com) ─────────────────────────────
-async function fetchGoogleHealth() {
-  const token = (typeof gapi !== 'undefined' && gapi.client) ? gapi.client.getToken() : null;
-  if (!token || !token.access_token) return null;
-  const accessToken = token.access_token;
-
-  const now = new Date();
-  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
-
-  // La API de Google Health maneja intervalos cerrados-abiertos [start, end).
-  // Por lo tanto, end = mañana a medianoche para incluir la totalidad del día de hoy.
-  const tomorrow = new Date(startOfToday);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-
-  const toCivilDate = (d) => ({
-    year: d.getFullYear(),
-    month: d.getMonth() + 1,
-    day: d.getDate()
-  });
-
-  // 1. Chunks para métricas de 90 días máximo (steps, distance, weight)
-  // 4 bloques cubren 360 días sin solapamiento
-  const chunks90d = [];
-  let currEnd90 = new Date(tomorrow);
-  for (let i = 0; i < 4; i++) {
-    const chunkStart = new Date(currEnd90);
-    chunkStart.setDate(chunkStart.getDate() - 90);
-    chunks90d.push({
-      start: new Date(chunkStart),
-      end: new Date(currEnd90)
-    });
-    currEnd90 = chunkStart;
-  }
-
-  // 2. Chunks para métricas de 14 días máximo (total-calories, active-minutes)
-  // 7 bloques de 13 días cubren 91 días (estrictamente <= 14 días por restricción de API)
-  const chunks14d = [];
-  let currEnd14 = new Date(tomorrow);
-  for (let i = 0; i < 7; i++) {
-    const chunkStart = new Date(currEnd14);
-    chunkStart.setDate(chunkStart.getDate() - 13);
-    chunks14d.push({
-      start: new Date(chunkStart),
-      end: new Date(currEnd14)
-    });
-    currEnd14 = chunkStart;
-  }
-
-  const queryRollUp = async (dataType, startD, endD) => {
-    const url = `https://health.googleapis.com/v4/users/me/dataTypes/${dataType}/dataPoints:dailyRollUp`;
-    const body = {
-      range: {
-        start: { date: toCivilDate(startD) },
-        end: { date: toCivilDate(endD) }
-      },
-      windowSizeDays: 1
-    };
-
-    try {
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-      });
-
-      if (!res.ok) {
-        const errText = await res.text();
-        let parsed = null;
-        try { parsed = JSON.parse(errText); } catch(e) {}
-        const reason = parsed?.error?.message || parsed?.error?.status || errText;
-        return { ok: false, status: res.status, error: reason, dataType };
-      }
-
-      const json = await res.json();
-      return { ok: true, points: json.rollupDataPoints || [], dataType };
-    } catch (networkErr) {
-      return { ok: false, status: 0, error: networkErr.message, dataType };
-    }
-  };
-
-  // Helper para limitar la concurrencia a un máximo de 4 peticiones en paralelo
-  const runWithConcurrency = async (taskList, concurrency = 4) => {
-    const results = [];
-    const executing = [];
-    for (const fn of taskList) {
-      const p = fn();
-      results.push(p);
-      const e = p.then(() => executing.splice(executing.indexOf(e), 1));
-      executing.push(e);
-      if (executing.length >= concurrency) {
-        await Promise.race(executing);
-      }
-    }
-    return Promise.all(results);
-  };
-
-  // 1. Sondeo rápido de prueba para evitar saturar la consola si la API no está autorizada
-  const testProbe = await queryRollUp('steps', chunks90d[0].start, chunks90d[0].end);
-  if (!testProbe.ok && (testProbe.status === 401 || testProbe.status === 403)) {
-    console.warn('[Google Health API] API no autorizada o en vista previa restringida (HTTP ' + testProbe.status + '). Utilizando Google Fit como fuente principal.');
-    window.healthScopeMissing = true;
-    actualizarBadgeApiSalud();
-    return null;
-  }
-
-  const tasks = [];
-  tasks.push(() => Promise.resolve(testProbe)); // Reutilizar el resultado de la prueba
-  for (let i = 1; i < chunks90d.length; i++) {
-    const c = chunks90d[i];
-    tasks.push(() => queryRollUp('steps', c.start, c.end));
-  }
-  ['distance', 'weight'].forEach(dataType => {
-    chunks90d.forEach(c => {
-      tasks.push(() => queryRollUp(dataType, c.start, c.end));
-    });
-  });
-
-  ['total-calories', 'active-minutes'].forEach(dataType => {
-    chunks14d.forEach(c => {
-      tasks.push(() => queryRollUp(dataType, c.start, c.end));
-    });
-  });
-
-  console.info('[Google Health API] Consultando datos diarios restantes...');
-  const results = await runWithConcurrency(tasks, 4);
-
-  // Verificar si hay errores 401 o 403
-  const authErrors = results.filter(r => !r.ok && (r.status === 401 || r.status === 403));
-  if (authErrors.length > 0) {
-    window.healthScopeMissing = true;
-    actualizarBadgeApiSalud();
-    return null;
-  }
-
-  const stepsByDate = new Map();
-  const distanceByDate = new Map();
-  const weightByDate = new Map();
-  const caloriesByDate = new Map();
-  const activeMinsByDate = new Map();
-
-  let totalPointsCount = 0;
-
-  results.forEach(res => {
-    if (!res.ok || !res.points) return;
-    totalPointsCount += res.points.length;
-
-    res.points.forEach(p => {
-      const cDate = p.civilStartTime?.date;
-      if (!cDate || !cDate.year || !cDate.month || !cDate.day) return;
-      const dateKey = `${cDate.year}-${String(cDate.month).padStart(2, '0')}-${String(cDate.day).padStart(2, '0')}`;
-
-      if (res.dataType === 'steps' && p.steps) {
-        const val = p.steps.countSum ? parseInt(p.steps.countSum, 10) : 0;
-        stepsByDate.set(dateKey, (stepsByDate.get(dateKey) || 0) + val);
-      } else if (res.dataType === 'distance' && p.distance) {
-        // millimetersSum a metros
-        const mm = p.distance.millimetersSum ? parseFloat(p.distance.millimetersSum) : 0;
-        const meters = mm / 1000;
-        distanceByDate.set(dateKey, (distanceByDate.get(dateKey) || 0) + meters);
-      } else if (res.dataType === 'weight' && p.weight) {
-        // weightGramsAvg a kg
-        if (p.weight.weightGramsAvg) {
-          const kg = p.weight.weightGramsAvg / 1000;
-          weightByDate.set(dateKey, kg);
-        }
-      } else if (res.dataType === 'total-calories' && p.totalCalories) {
-        const cal = p.totalCalories.kcalSum ? Math.round(p.totalCalories.kcalSum) : 0;
-        caloriesByDate.set(dateKey, (caloriesByDate.get(dateKey) || 0) + cal);
-      } else if (res.dataType === 'active-minutes' && p.activeMinutes) {
-        let mins = 0;
-        if (Array.isArray(p.activeMinutes.activeMinutesRollupByActivityLevel)) {
-          p.activeMinutes.activeMinutesRollupByActivityLevel.forEach(item => {
-            mins += parseInt(item.activeMinutesSum || 0, 10);
-          });
-        }
-        activeMinsByDate.set(dateKey, (activeMinsByDate.get(dateKey) || 0) + mins);
-      }
-    });
-  });
-
-  if (totalPointsCount === 0) {
-    console.info('[Google Health API] La llamada tuvo éxito pero no hay puntos registrados en Google Health aún.');
-    return null;
-  }
-
-  // Generar timeline continuo de 360 días hasta HOY inclusive
-  const healthData = { steps: [], distance: [], weight: [], calories: [], activeMinutes: [] };
-  const iter = new Date(startOfToday);
-  iter.setDate(iter.getDate() - 360);
-
-  while (iter <= startOfToday) {
-    const currentDay = new Date(iter);
-    const dateKey = `${currentDay.getFullYear()}-${String(currentDay.getMonth() + 1).padStart(2, '0')}-${String(currentDay.getDate()).padStart(2, '0')}`;
-
-    healthData.steps.push({ date: currentDay, value: stepsByDate.get(dateKey) || 0 });
-    healthData.distance.push({ date: currentDay, value: distanceByDate.get(dateKey) || 0 });
-    healthData.calories.push({ date: currentDay, value: caloriesByDate.get(dateKey) || 0 });
-    healthData.activeMinutes.push({ date: currentDay, value: activeMinsByDate.get(dateKey) || 0 });
-    healthData.weight.push({ date: currentDay, value: weightByDate.has(dateKey) ? weightByDate.get(dateKey) : null });
-
-    iter.setDate(iter.getDate() + 1);
-  }
-
-  return healthData;
-}
-
-// ─── GOOGLE FIT API (RESPALDO / FALLBACK) ──────────────────────────────────────
-async function fetchGoogleFitnessInternal() {
+// ─── GOOGLE FIT API ───────────────────────────────────────────────────────────
+async function fetchGoogleFitness() {
   const token = (typeof gapi !== 'undefined' && gapi.client) ? gapi.client.getToken() : null;
   if (!token || !token.access_token) return false;
   const accessToken = token.access_token;
@@ -7444,7 +7159,7 @@ async function fetchGoogleFitnessInternal() {
 
       const bodyWeight = {
         aggregateBy: [
-          { dataTypeName: 'com.google.weight.summary' }
+          { dataTypeName: 'com.google.weight' }
         ],
         bucketByTime: { durationMillis: 86400000 },
         startTimeMillis: chunk.start,
@@ -7467,7 +7182,11 @@ async function fetchGoogleFitnessInternal() {
       promisesWeight.push(
         fetch(url, { method: 'POST', headers, body: JSON.stringify(bodyWeight) })
           .then(async r => {
-            if (!r.ok) return {};
+            if (!r.ok) {
+              const errTxt = await r.text().catch(() => '');
+              console.warn('[Google Fit Weight Chunk] Error', r.status, errTxt);
+              return {};
+            }
             return r.json();
           })
           .catch(() => ({}))
@@ -7570,6 +7289,47 @@ async function fetchGoogleFitnessInternal() {
       });
     });
     
+    // Si dataset:aggregate no trajo puntos de peso, consultar directamente los dataSources de Google Fit
+    if (weightByDate.size === 0) {
+      try {
+        console.info('[Google Fit] dataset:aggregate no trajo peso. Buscando dataSources directos de peso...');
+        const dsRes = await fetch('https://www.googleapis.com/fitness/v1/users/me/dataSources', { headers });
+        if (dsRes.ok) {
+          const dsData = await dsRes.json();
+          const weightSources = (dsData.dataSource || []).filter(ds => 
+            (ds.dataType?.name || '').includes('weight') || (ds.dataStreamId || '').includes('weight')
+          );
+          console.info(`[Google Fit] ${weightSources.length} fuentes de peso encontradas en la cuenta`);
+          
+          const startNs = BigInt(startOfToday.getTime() - (360 * 86400000)) * 1000000n;
+          const endNs = BigInt(endOfToday) * 1000000n;
+          
+          for (const ws of weightSources) {
+            try {
+              const ptsRes = await fetch(`https://www.googleapis.com/fitness/v1/users/me/dataSources/${encodeURIComponent(ws.dataStreamId)}/datasets/${startNs}-${endNs}`, { headers });
+              if (ptsRes.ok) {
+                const ptsData = await ptsRes.json();
+                const pts = ptsData.point || [];
+                pts.forEach(pt => {
+                  const val = pt.value?.[0]?.fpVal || pt.value?.[0]?.intVal;
+                  if (val && val > 0) {
+                    const timeNs = pt.startTimeNanos || pt.endTimeNanos;
+                    const timeMs = Number(BigInt(timeNs) / 1000000n);
+                    const d = new Date(timeMs);
+                    const dateKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+                    const dayNormalized = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
+                    weightByDate.set(dateKey, { date: dayNormalized, value: val });
+                  }
+                });
+              }
+            } catch (err) {}
+          }
+        }
+      } catch (e) {
+        console.warn('[Google Fit] Error buscando fuentes directas de peso:', e);
+      }
+    }
+    
     window.fitnessData = { steps: [], distance: [], weight: [], calories: [], activeMinutes: [] };
     const iter = new Date(startOfToday);
     iter.setDate(iter.getDate() - 360);
@@ -7595,9 +7355,6 @@ async function fetchGoogleFitnessInternal() {
     if (lastWithData) {
       const diasSinDatos = Math.round((startOfToday - lastWithData.date) / 86400000);
       console.info(`[Google Fit] Último día con pasos: ${lastWithData.date.toLocaleDateString('es-ES')} (${diasSinDatos} días atrás)`);
-      if (diasSinDatos > 2 && typeof showToast === 'function') {
-        showToast(`Google Fit no tiene datos desde el ${lastWithData.date.toLocaleDateString('es-ES')}. Revisá la sincronización del celular.`, 'warning');
-      }
     }
     
     return true;
@@ -7607,150 +7364,25 @@ async function fetchGoogleFitnessInternal() {
   }
 }
 
-// ─── ORQUESTADOR PRINCIPAL DE SALUD ───────────────────────────────────────────
+// ─── SINCRONIZACIÓN DE ACTIVIDAD ──────────────────────────────────────────────
 async function fetchHealthData() {
   const token = (typeof gapi !== 'undefined' && gapi.client) ? gapi.client.getToken() : null;
   if (!token || !token.access_token) return;
   
   try {
-    // 1. Intentar primero con la moderna Google Health API (health.googleapis.com/v4)
-    const healthResult = await fetchGoogleHealth();
-    
-    if (healthResult) {
-      window.fitnessData = healthResult;
-      window.healthApiSource = 'google_health';
-      window.healthScopeMissing = false;
-      console.info('[Salud] Sincronización exitosa con Google Health API v4');
-      
-      const lastWithData = [...window.fitnessData.steps].reverse().find(d => d.value > 0);
-      window.fitLastSyncDate = lastWithData ? lastWithData.date : null;
-      if (lastWithData) {
-        const now = new Date();
-        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
-        const diasSinDatos = Math.round((startOfToday - lastWithData.date) / 86400000);
-        console.info(`[Google Health API] Último día con pasos: ${lastWithData.date.toLocaleDateString('es-ES')} (${diasSinDatos} días atrás)`);
-      }
-      
-      actualizarBadgeApiSalud();
+    const ok = await fetchGoogleFitness();
+    if (ok) {
       setActividadFiltro(window.currentHealthFilter || 'hoy');
-      return;
-    }
-    
-    // 2. Si Google Health API falló o no retornó datos, usar Google Fit como respaldo
-    console.warn('[Salud] Google Health API no disponible o sin datos. Usando Google Fit como respaldo...');
-    await fetchGoogleFitnessInternal();
-    window.healthApiSource = 'google_fit';
-    
-    actualizarBadgeApiSalud();
-    setActividadFiltro(window.currentHealthFilter || 'hoy');
-    
-    if (window.healthScopeMissing && typeof showToast === 'function') {
-      showToast('Reconectá tu cuenta de Google para autorizar la nueva API de Google Health', 'info');
     }
   } catch (err) {
     console.error('Error en fetchHealthData:', err);
-    try {
-      await fetchGoogleFitnessInternal();
-      window.healthApiSource = 'google_fit';
-      actualizarBadgeApiSalud();
-      setActividadFiltro(window.currentHealthFilter || 'hoy');
-    } catch(e) {}
   }
-}
-
-// Alias retrocompatible
-async function fetchGoogleFitness() {
-  return await fetchHealthData();
 }
 
 window.fetchHealthData = fetchHealthData;
-window.fetchGoogleHealth = fetchGoogleHealth;
 window.fetchGoogleFitness = fetchGoogleFitness;
 
-// ─── DIAGNÓSTICOS DE SALUD (CONSOLA) ───────────────────────────────────────────
-async function diagnosticoGoogleHealth() {
-  const token = (typeof gapi !== 'undefined' && gapi.client) ? gapi.client.getToken() : null;
-  if (!token || !token.access_token) {
-    console.warn('[Diagnóstico Health] No hay token de Google activo. Solicitando conexión con Google...');
-    if (typeof conectarGoogle === 'function') conectarGoogle();
-    return 'Iniciando inicio de sesión con Google... Aceptá la ventana emergente y luego volvé a ejecutar diagnosticoGoogleHealth().';
-  }
-  const accessToken = token.access_token;
-  const headers = {
-    'Authorization': `Bearer ${accessToken}`,
-    'Content-Type': 'application/json'
-  };
-  
-  console.group('=== DIAGNÓSTICO GOOGLE HEALTH API (health.googleapis.com/v4) ===');
-  console.info('1. Verificando permisos (scopes) otorgados en el token actual...');
-  try {
-    const tInfoRes = await fetch(`https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${accessToken}`);
-    const tInfo = await tInfoRes.json();
-    console.info('Scopes actuales en el token:', tInfo.scope);
-    const hasHealthScope = tInfo.scope && tInfo.scope.includes('googlehealth');
-    if (!hasHealthScope) {
-      console.warn('⚠️ ATENCIÓN: El token en tu navegador NO tiene los permisos de Google Health todavía.');
-      console.info('%c👉 Para renovar tu sesión con los permisos de Google Health, ejecutá:\nreconectarGoogle()', 'color: #f59e0b; font-weight: bold;');
-    } else {
-      console.info('✅ El token cuenta con los permisos de Google Health.');
-    }
-  } catch(e) {
-    console.error('Error verificando tokeninfo:', e);
-  }
-  
-  console.info('2. Probando identidad de usuario (users/me/identity)...');
-  try {
-    const idRes = await fetch('https://health.googleapis.com/v4/users/me/identity', { headers });
-    console.info(`Status Identity: ${idRes.status} ${idRes.statusText}`);
-    const idData = await idRes.json();
-    console.info('Identidad:', idData);
-  } catch (e) {
-    console.error('Error identity:', e);
-  }
-  
-  console.info('3. Probando dailyRollUp (últimos 7 días)...');
-  const now = new Date();
-  const start7 = new Date(now);
-  start7.setDate(start7.getDate() - 7);
-  const toCivil = (d) => ({ year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() });
-  
-  const testTypes = ['steps', 'distance', 'weight', 'total-calories', 'active-minutes'];
-  const resumen = [];
-  
-  for (const dt of testTypes) {
-    try {
-      const rollRes = await fetch(`https://health.googleapis.com/v4/users/me/dataTypes/${dt}/dataPoints:dailyRollUp`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-          range: {
-            start: { date: toCivil(start7) },
-            end: { date: toCivil(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)) }
-          },
-          windowSizeDays: 1
-        })
-      });
-      const txt = await rollRes.text();
-      let rollData = null;
-      try { rollData = JSON.parse(txt); } catch(e) {}
-      
-      const pts = rollData?.rollupDataPoints || [];
-      resumen.push({
-        dataType: dt,
-        http_status: rollRes.status,
-        puntos_obtenidos: pts.length,
-        detalle: pts.length > 0 ? JSON.stringify(pts[pts.length - 1]).slice(0, 80) + '...' : (rollRes.ok ? 'Sin datos' : txt.slice(0, 80))
-      });
-    } catch(err) {
-      resumen.push({ dataType: dt, http_status: 'error', puntos_obtenidos: 0, detalle: err.message });
-    }
-  }
-  
-  console.table(resumen);
-  console.groupEnd();
-  return resumen;
-}
-window.diagnosticoGoogleHealth = diagnosticoGoogleHealth;
+// ─── DIAGNÓSTICO GOOGLE FIT (CONSOLA) ──────────────────────────────────────────
 
 async function diagnosticoGoogleFit() {
   const token = (typeof gapi !== 'undefined' && gapi.client) ? gapi.client.getToken() : null;
@@ -7835,8 +7467,14 @@ function renderHealthCard(type, period) {
     
     if (type === 'weight') {
       const validWeights = values.filter(v => v > 0);
-      aggregatedValue = validWeights.length > 0 ? validWeights.reduce((a,b)=>a+b,0)/validWeights.length : 0;
-      subtitle = 'Promedio 7 días';
+      if (validWeights.length > 0) {
+        aggregatedValue = validWeights.reduce((a,b)=>a+b,0)/validWeights.length;
+        subtitle = 'Promedio 7 días';
+      } else {
+        const lastWeightEntry = [...dataArray].reverse().find(d => d.value !== null && d.value > 0);
+        aggregatedValue = lastWeightEntry ? lastWeightEntry.value : 0;
+        subtitle = 'Último registro';
+      }
     } else {
       if (isAvgMode) {
         const validValues = values.filter(v => v > 0);
@@ -7855,8 +7493,14 @@ function renderHealthCard(type, period) {
     
     if (type === 'weight') {
       const validWeights = values.filter(v => v > 0);
-      aggregatedValue = validWeights.length > 0 ? validWeights.reduce((a,b)=>a+b,0)/validWeights.length : 0;
-      subtitle = 'Promedio mensual';
+      if (validWeights.length > 0) {
+        aggregatedValue = validWeights.reduce((a,b)=>a+b,0)/validWeights.length;
+        subtitle = 'Promedio mensual';
+      } else {
+        const lastWeightEntry = [...dataArray].reverse().find(d => d.value !== null && d.value > 0);
+        aggregatedValue = lastWeightEntry ? lastWeightEntry.value : 0;
+        subtitle = 'Último registro';
+      }
     } else {
       if (isAvgMode) {
         const validValues = values.filter(v => v > 0);
@@ -7889,8 +7533,14 @@ function renderHealthCard(type, period) {
     
     if (type === 'weight') {
       const validWeights = dataArray.filter(v => (v.value || 0) > 0);
-      aggregatedValue = validWeights.length > 0 ? validWeights.reduce((a,b)=>a+(b.value||0),0)/validWeights.length : 0;
-      subtitle = 'Promedio anual';
+      if (validWeights.length > 0) {
+        aggregatedValue = validWeights.reduce((a,b)=>a+(b.value||0),0)/validWeights.length;
+        subtitle = 'Promedio anual';
+      } else {
+        const lastWeightEntry = [...dataArray].reverse().find(d => d.value !== null && d.value > 0);
+        aggregatedValue = lastWeightEntry ? lastWeightEntry.value : 0;
+        subtitle = 'Último registro';
+      }
     } else {
       if (isAvgMode) {
         const validValues = dataArray.filter(v => (v.value || 0) > 0);
@@ -7928,7 +7578,11 @@ function renderHealthCard(type, period) {
       values = labels.map(key => {
         const arr = monthlyGroups[key];
         if (arr.length === 0) return 0;
-        return type === 'weight' ? arr.reduce((a,b)=>a+b,0) / arr.length : (isAvgMode ? arr.reduce((a,b)=>a+b,0) / arr.length : arr.reduce((a,b)=>a+b,0));
+        if (type === 'weight') {
+          const valids = arr.filter(v => v > 0);
+          return valids.length > 0 ? valids.reduce((a,b)=>a+b,0) / valids.length : 0;
+        }
+        return isAvgMode ? arr.reduce((a,b)=>a+b,0) / arr.length : arr.reduce((a,b)=>a+b,0);
       });
     } else {
       // Mostrar por día
@@ -7938,8 +7592,14 @@ function renderHealthCard(type, period) {
     
     if (type === 'weight') {
       const validWeights = filtered.filter(v => (v.value || 0) > 0);
-      aggregatedValue = validWeights.length > 0 ? validWeights.reduce((a,b)=>a+(b.value||0),0)/validWeights.length : 0;
-      subtitle = 'Promedio (Pers.)';
+      if (validWeights.length > 0) {
+        aggregatedValue = validWeights.reduce((a,b)=>a+(b.value||0),0)/validWeights.length;
+        subtitle = 'Promedio (Pers.)';
+      } else {
+        const lastWeightEntry = [...dataArray].reverse().find(d => d.value !== null && d.value > 0);
+        aggregatedValue = lastWeightEntry ? lastWeightEntry.value : 0;
+        subtitle = 'Último registro';
+      }
     } else {
       if (isAvgMode) {
         const validValues = filtered.filter(v => (v.value || 0) > 0);
