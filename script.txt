@@ -449,6 +449,11 @@ function doPost(e) {
     return ok();
   }
 
+  // ── Domótica: Conector Smart Life / Tuya IoT Cloud API ────────────────────
+  if (data.accion === 'domoticaSmartLife') {
+    return ejecutarComandoTuyaSmartLife(data);
+  }
+
   // ── Finanzas: registrar movimiento nuevo ──────────────────────────────────
   // Validar campos obligatorios antes de guardar
   const monto    = parseFloat(data.monto);
@@ -486,9 +491,295 @@ function doPost(e) {
   return ok();
 }
 
+// ── EJECUTAR ESTA FUNCIÓN 1 SOLA VEZ DESDE EL EDITOR DE APPS SCRIPT PARA DAR PERMISO A UrlFetchApp ──
+function autorizarPermisosTuya() {
+  const resp = UrlFetchApp.fetch('https://openapi.tuyaus.com/v1.0/token?grant_type=1', { muteHttpExceptions: true });
+  Logger.log('Permiso de conexión externa concedido correctamente. HTTP Status: ' + resp.getResponseCode());
+}
+
+// ── Helper: Conector Oficial Tuya IoT Cloud (Smart Life) ──────────────────
+function ejecutarComandoTuyaSmartLife(data) {
+  try {
+    const cfg = data.config || {};
+    const clientId = (cfg.clientId || '').trim();
+    const secret   = (cfg.secret || '').trim();
+    const baseUrl  = (cfg.region || 'https://openapi.tuyaus.com').replace(/\/$/, '');
+
+    if (!clientId || !secret) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ result: 'error', msg: 'Faltan credenciales Tuya (Access ID / Secret)' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // Funciones criptográficas para firma Tuya v2.0 (HMAC-SHA256 + SHA256)
+    const sha256Hex = function(texto) {
+      return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, texto || '', Utilities.Charset.UTF_8)
+        .map(function(b) { return ('0' + (b & 0xFF).toString(16)).slice(-2); })
+        .join('');
+    };
+    const hmacSha256Upper = function(mensaje, clave) {
+      return Utilities.computeHmacSha256Signature(mensaje, clave)
+        .map(function(b) { return ('0' + (b & 0xFF).toString(16)).slice(-2); })
+        .join('')
+        .toUpperCase();
+    };
+
+    // 1. Obtener Access Token de Tuya
+    const tToken = String(Date.now());
+    const tokenPath = '/v1.0/token?grant_type=1';
+    const emptyBodyHash = sha256Hex('');
+    const strToSignToken = clientId + tToken + 'GET\n' + emptyBodyHash + '\n\n' + tokenPath;
+    const signToken = hmacSha256Upper(strToSignToken, secret);
+
+    const tokenResp = JSON.parse(UrlFetchApp.fetch(baseUrl + tokenPath, {
+      method: 'get',
+      headers: {
+        'client_id': clientId,
+        'sign': signToken,
+        't': tToken,
+        'sign_method': 'HMAC-SHA256'
+      },
+      muteHttpExceptions: true
+    }).getContentText());
+
+    if (!tokenResp.success || !tokenResp.result || !tokenResp.result.access_token) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ result: 'error', msg: 'Error autenticando en Tuya: ' + (tokenResp.msg || 'Revisar Access ID / Secret / Región'), detail: tokenResp }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    const accessToken = tokenResp.result.access_token;
+
+    // Helper para enviar peticiones autenticadas a Tuya OpenAPI
+    const tuyaRequest = function(method, path, bodyObj) {
+      const t = String(Date.now());
+      const bodyStr = bodyObj ? JSON.stringify(bodyObj) : '';
+      const contentHash = sha256Hex(bodyStr);
+      const stringToSign = [method.toUpperCase(), contentHash, '', path].join('\n');
+      const signStr = clientId + accessToken + t + stringToSign;
+      const sign = hmacSha256Upper(signStr, secret);
+
+      const options = {
+        method: method.toLowerCase(),
+        contentType: 'application/json',
+        headers: {
+          'client_id': clientId,
+          'access_token': accessToken,
+          'sign': sign,
+          't': t,
+          'sign_method': 'HMAC-SHA256'
+        },
+        muteHttpExceptions: true
+      };
+      if (bodyStr) options.payload = bodyStr;
+      return JSON.parse(UrlFetchApp.fetch(baseUrl + path, options).getContentText());
+    };
+
+    // Helper que detecta automáticamente el código DP real del dispositivo si el estándar falla
+    const sendSmartDeviceCommand = function(deviceId, preferredCode, value, fallbacks) {
+      let res = tuyaRequest('POST', '/v1.0/iot-03/devices/' + deviceId + '/commands', {
+        commands: [{ code: preferredCode, value: value }]
+      });
+      if (!res.success && fallbacks && fallbacks.length > 0) {
+        const statusRes = tuyaRequest('GET', '/v1.0/iot-03/devices/' + deviceId + '/status', null);
+        const availableCodes = (statusRes.result || []).map(function(d) { return d.code; });
+        for (let i = 0; i < fallbacks.length; i++) {
+          if (availableCodes.indexOf(fallbacks[i]) !== -1) {
+            res = tuyaRequest('POST', '/v1.0/iot-03/devices/' + deviceId + '/commands', {
+              commands: [{ code: fallbacks[i], value: value }]
+            });
+            if (res.success) break;
+          }
+        }
+      }
+      return res;
+    };
+
+    const disp = data.dispositivo || '';
+    const p    = data.payload || {};
+    let apiResult = null;
+
+    // SINCRONIZACIÓN / DIAGNÓSTICO DE ESTADO
+    if (p.action === 'status_sync') {
+      const checkPlug = cfg.plugId ? tuyaRequest('GET', '/v1.0/iot-03/devices/' + cfg.plugId + '/status', null) : null;
+      const checkVac  = cfg.vacId  ? tuyaRequest('GET', '/v1.0/iot-03/devices/' + cfg.vacId + '/status', null)  : null;
+      return ContentService
+        .createTextOutput(JSON.stringify({
+          result: 'success',
+          msg: 'Conexión Tuya Cloud verificada correctamente',
+          plugStatus: checkPlug,
+          vacStatus: checkVac
+        }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // A) ENCHUFE INTELIGENTE
+    if (disp.indexOf('Enchufe') !== -1 && cfg.plugId) {
+      if (typeof p.switch_1 === 'boolean') {
+        apiResult = sendSmartDeviceCommand(cfg.plugId, 'switch_1', p.switch_1, ['switch', 'switch_on', 'power']);
+      } else if (typeof p.countdown_1 === 'number') {
+        apiResult = sendSmartDeviceCommand(cfg.plugId, 'countdown_1', p.countdown_1, ['countdown']);
+      }
+    }
+
+    // B) ASPIRADORA ROBOT
+    else if (disp.indexOf('Aspiradora') !== -1 && cfg.vacId) {
+      if (p.command === 'start') {
+        apiResult = sendSmartDeviceCommand(cfg.vacId, 'power_go', true, ['switch_go', 'power', 'switch']);
+      } else if (p.command === 'pause') {
+        apiResult = sendSmartDeviceCommand(cfg.vacId, 'power_go', false, ['switch_go', 'power', 'switch']);
+      } else if (p.command === 'charge_go') {
+        apiResult = sendSmartDeviceCommand(cfg.vacId, 'switch_charge', true, ['charge_go']);
+        if (!apiResult.success) {
+          apiResult = sendSmartDeviceCommand(cfg.vacId, 'mode', 'chargego', []);
+        }
+      } else if (p.command === 'seek') {
+        apiResult = sendSmartDeviceCommand(cfg.vacId, 'seek', true, ['find']);
+      } else if (p.mode) {
+        apiResult = sendSmartDeviceCommand(cfg.vacId, 'mode', p.mode, []);
+      } else if (p.cistern) {
+        apiResult = sendSmartDeviceCommand(cfg.vacId, 'suction', p.cistern, ['fan_speed_enum', 'cistern']);
+      }
+    }
+
+    // C) AIRE ACONDICIONADO (Vía Controlador Infrarrojo IR)
+    else if (disp.indexOf('Aire Acondicionado') !== -1 && cfg.irHubId && cfg.acId) {
+      const modeMap = { cool: 0, heat: 1, auto: 2, fan: 3, dry: 4 };
+      const windMap = { auto: 0, low: 1, med: 2, high: 3 };
+      const irBody = {
+        power: p.power ? 1 : 0,
+        mode: (p.mode in modeMap) ? modeMap[p.mode] : 0,
+        temp: p.temp || 24,
+        wind: (p.fan in windMap) ? windMap[p.fan] : 0
+      };
+      apiResult = tuyaRequest(
+        'POST',
+        '/v2.0/infrareds/' + cfg.irHubId + '/air-conditioners/' + cfg.acId + '/scenes/command',
+        irBody
+      );
+    }
+
+    // D) TELEVISOR ANDROID TV (Vía Controlador Infrarrojo IR)
+    else if (disp.indexOf('TV') !== -1 && cfg.irHubId && cfg.tvId) {
+      const keysInfo = tuyaRequest('GET', '/v2.0/infrareds/' + cfg.irHubId + '/remotes/' + cfg.tvId + '/keys', null);
+      if (keysInfo && keysInfo.success && keysInfo.result && keysInfo.result.key_list) {
+        const keyList = keysInfo.result.key_list;
+        const keyMap = {
+          power:    ['power', 'switch', 'power_on', 'power_off'],
+          mute:     ['mute', 'silencio'],
+          vol_up:   ['volume_up', 'volume+', 'vol+', 'vol_up', 'volumeup', 'volup', 'sound+'],
+          vol_down: ['volume_down', 'volume-', 'vol-', 'vol_down', 'volumedown', 'voldown', 'sound-'],
+          home:     ['home', 'homepage', 'menu', 'smart', 'main', 'inicio'],
+          up:       ['up', 'navigate_up', 'up_arrow', 'cursor_up'],
+          down:     ['down', 'navigate_down', 'down_arrow', 'cursor_down'],
+          left:     ['left', 'navigate_left', 'left_arrow', 'cursor_left'],
+          right:    ['right', 'navigate_right', 'right_arrow', 'cursor_right'],
+          ok:       ['ok', 'enter', 'confirm', 'select', 'center'],
+          back:     ['back', 'return', 'exit'],
+          netflix:  ['netflix'],
+          youtube:  ['youtube']
+        };
+
+        const buscarTeclaIR = function(logicalKey) {
+          const candidates = keyMap[logicalKey] || [String(logicalKey || '').toLowerCase()];
+          for (let i = 0; i < keyList.length; i++) {
+            const kName = String(keyList[i].key_name || '').toLowerCase().trim();
+            const kCode = String(keyList[i].key || '').toLowerCase().trim();
+            if (candidates.indexOf(kName) !== -1 || candidates.indexOf(kCode) !== -1) {
+              return keyList[i];
+            }
+          }
+          return null; // ¡IMPORTANTE! Nunca devolver keyList[0] (Power) por defecto
+        };
+
+        const enviarTeclaUnica = function(matchedKey) {
+          return tuyaRequest('POST', '/v2.0/infrareds/' + cfg.irHubId + '/remotes/' + cfg.tvId + '/raw/command', {
+            category_id: keysInfo.result.category_id,
+            remote_index: keysInfo.result.remote_index,
+            key: matchedKey.key,
+            key_id: matchedKey.key_id
+          });
+        };
+
+        // Si viene una macro de secuencia IR (ej. abrir una app en Android TV desde la fila principal de Home)
+        if (Array.isArray(p.macro) && p.macro.length > 0) {
+          // Primero verificar si el control IR tiene botón directo para esa app (ej. netflix / youtube)
+          const directAppKey = p.app ? buscarTeclaIR(p.app) : null;
+          if (directAppKey) {
+            apiResult = enviarTeclaUnica(directAppKey);
+          } else {
+            const macroResults = [];
+            for (let m = 0; m < p.macro.length; m++) {
+              const step = p.macro[m];
+              const kObj = buscarTeclaIR(step.key);
+              if (kObj) {
+                macroResults.push(enviarTeclaUnica(kObj));
+                if (step.delayMs && m < p.macro.length - 1) {
+                  Utilities.sleep(step.delayMs);
+                }
+              }
+            }
+            apiResult = {
+              success: macroResults.length > 0,
+              macroExecuted: macroResults,
+              availableKeys: keyList.map(function(k) { return k.key_name || k.key; })
+            };
+          }
+        } else {
+          // Comando individual (power, vol_up, vol_down, mute, home, flechas, ok, back)
+          const matchedKey = buscarTeclaIR(p.key);
+          if (matchedKey) {
+            apiResult = enviarTeclaUnica(matchedKey);
+          } else {
+            const listaNombres = keyList.map(function(k) { return (k.key_name || k.key); }).join(', ');
+            apiResult = {
+              success: false,
+              code: 'KEY_NOT_FOUND',
+              msg: 'No existe la tecla "' + p.key + '" en este control IR. Teclas disponibles en Smart Life: ' + listaNombres
+            };
+          }
+        }
+      } else {
+        apiResult = keysInfo;
+      }
+    }
+
+    // E) ESCENAS RÁPIDAS (Multi-dispositivo)
+    else if (disp.indexOf('Escena') !== -1) {
+      const results = [];
+      if (p.scene === 'llegue_casa') {
+        if (cfg.plugId) results.push(sendSmartDeviceCommand(cfg.plugId, 'switch_1', true, ['switch']));
+        if (cfg.irHubId && cfg.acId) results.push(tuyaRequest('POST', '/v2.0/infrareds/' + cfg.irHubId + '/air-conditioners/' + cfg.acId + '/scenes/command', { power: 0, mode: 0, temp: 24, wind: 0 }));
+      } else if (p.scene === 'salir_casa') {
+        if (cfg.plugId) results.push(sendSmartDeviceCommand(cfg.plugId, 'switch_1', false, ['switch']));
+        if (cfg.irHubId && cfg.acId) results.push(tuyaRequest('POST', '/v2.0/infrareds/' + cfg.irHubId + '/air-conditioners/' + cfg.acId + '/scenes/command', { power: 0, mode: 0, temp: 24, wind: 0 }));
+        if (cfg.vacId) results.push(sendSmartDeviceCommand(cfg.vacId, 'power_go', true, ['switch_go', 'power']));
+      } else if (p.scene === 'modo_cine') {
+        if (cfg.plugId) results.push(sendSmartDeviceCommand(cfg.plugId, 'switch_1', true, ['switch']));
+        if (cfg.irHubId && cfg.acId) results.push(tuyaRequest('POST', '/v2.0/infrareds/' + cfg.irHubId + '/air-conditioners/' + cfg.acId + '/scenes/command', { power: 0, mode: 0, temp: 23, wind: 1 }));
+      } else if (p.scene === 'apagar_todo') {
+        if (cfg.plugId) results.push(sendSmartDeviceCommand(cfg.plugId, 'switch_1', false, ['switch']));
+        if (cfg.irHubId && cfg.acId) results.push(tuyaRequest('POST', '/v2.0/infrareds/' + cfg.irHubId + '/air-conditioners/' + cfg.acId + '/scenes/command', { power: 0, mode: 0, temp: 24, wind: 0 }));
+        if (cfg.vacId) results.push(sendSmartDeviceCommand(cfg.vacId, 'switch_charge', true, ['charge_go']));
+      }
+      apiResult = results;
+    }
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ result: 'success', tuya: apiResult }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ result: 'error', msg: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
 // Helper
 function ok() {
   return ContentService
     .createTextOutput(JSON.stringify({ result: 'success' }))
     .setMimeType(ContentService.MimeType.JSON);
 }
+

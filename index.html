@@ -207,6 +207,11 @@
       <i class="fas fa-calendar-alt w-6 text-sm"></i>
       <span class="font-bold text-sm uppercase tracking-wider">Calendario</span>
     </a>
+    <a href="#" onclick="showSection('domotica')" id="nav-domotica"
+       class="flex items-center px-6 py-3.5 text-slate-400 hover:bg-slate-800 border-l-4 border-transparent transition-colors">
+      <i class="fas fa-sliders-h w-6 text-sm"></i>
+      <span class="font-bold text-sm uppercase tracking-wider">Domótica</span>
+    </a>
 
     <!-- Grupo: Hobbies -->
     <div class="px-6 pt-5 pb-2 text-[9px] font-black text-slate-500 uppercase tracking-[0.25em]">Hobbies</div>
@@ -2035,6 +2040,590 @@
     </div>
   </main>
 
+  <!-- SECCIÓN DOMÓTICA (SMART LIFE / TUYA) -->
+  <main id="section-domotica" class="hidden p-4 md:p-8 max-w-[1400px] mx-auto w-full space-y-6">
+
+    <!-- Barra Superior: Estado Smart Life + Escenas Rápidas -->
+    <div class="bg-black rounded-2xl border border-slate-700/60 p-4 md:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      <div class="flex items-center gap-3.5">
+        <div class="w-10 h-10 rounded-xl bg-cyan-900/40 border border-cyan-500/30 flex items-center justify-center shrink-0">
+          <i class="fas fa-sliders-h text-cyan-400 text-sm"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <h2 class="text-sm font-black text-white uppercase tracking-[0.15em]">Centro de Control Smart Life</h2>
+            <span id="dom-api-badge" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/15 text-amber-400 border border-amber-500/30">
+              <span id="dom-api-dot" class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+              <span id="dom-api-status-text">Modo Interactivo Local</span>
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-0.5">Ecosistema Tuya / Smart Life — Aspiradora Robot, Enchufe Inteligente y Hub Infrarrojo (A/C + TV)</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2.5 flex-wrap">
+        <button onclick="sincronizarDomotica()" class="h-9 px-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-[11px] font-black uppercase tracking-wider transition-colors flex items-center gap-2">
+          <i id="dom-sync-icon" class="fas fa-sync-alt text-cyan-400 text-xs"></i>
+          <span>Sincronizar</span>
+        </button>
+        <button onclick="abrirModalConfigDomotica()" class="h-9 px-4 rounded-xl bg-cyan-600/20 hover:bg-cyan-600 text-cyan-300 hover:text-white border border-cyan-500/40 text-[11px] font-black uppercase tracking-wider transition-all flex items-center gap-2">
+          <i class="fas fa-cog text-xs"></i>
+          <span>Vincular Smart Life</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Escenas Rápidas (Tap-to-Run) -->
+    <div>
+      <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em] mb-3 ml-1">Escenas Rápidas (Tap-to-Run)</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <button onclick="ejecutarEscenaDomotica('tengo_calor')" class="group bg-black hover:bg-slate-900/80 rounded-2xl border border-slate-700/60 hover:border-cyan-500/50 p-4 text-left transition-all flex items-center gap-3.5">
+          <div class="w-10 h-10 rounded-xl bg-cyan-900/40 border border-cyan-500/30 flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
+            <i class="fas fa-snowflake text-cyan-400 text-sm"></i>
+          </div>
+          <div class="overflow-hidden">
+            <p class="text-xs font-black text-white uppercase tracking-wider truncate">Tengo Calor</p>
+            <p class="text-[10px] text-slate-400 truncate mt-0.5">A/C ON • 22°C Frío • Velocidad Alta</p>
+          </div>
+        </button>
+
+        <button onclick="ejecutarEscenaDomotica('salir_casa')" class="group bg-black hover:bg-slate-900/80 rounded-2xl border border-slate-700/60 hover:border-emerald-500/50 p-4 text-left transition-all flex items-center gap-3.5">
+          <div class="w-10 h-10 rounded-xl bg-emerald-900/40 border border-emerald-500/30 flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
+            <i class="fas fa-door-open text-emerald-400 text-sm"></i>
+          </div>
+          <div class="overflow-hidden">
+            <p class="text-xs font-black text-white uppercase tracking-wider truncate">Salir de Casa</p>
+            <p class="text-[10px] text-slate-400 truncate mt-0.5">Inicia limpieza de Aspiradora Robot</p>
+          </div>
+        </button>
+
+        <button onclick="ejecutarEscenaDomotica('modo_cine')" class="group bg-black hover:bg-slate-900/80 rounded-2xl border border-slate-700/60 hover:border-violet-500/50 p-4 text-left transition-all flex items-center gap-3.5">
+          <div class="w-10 h-10 rounded-xl bg-violet-900/40 border border-violet-500/30 flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
+            <i class="fas fa-film text-violet-400 text-sm"></i>
+          </div>
+          <div class="overflow-hidden">
+            <p class="text-xs font-black text-white uppercase tracking-wider truncate">Modo Cine</p>
+            <p class="text-[10px] text-slate-400 truncate mt-0.5">A/C 24°C Frío + TV ON en Stremio</p>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Grid Principal de Artefactos (2 columnas en desktop) -->
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+      <!-- 1. AIRE ACONDICIONADO (CONTROLADOR IR) -->
+      <div id="dom-card-ac" class="bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all">
+        <div id="dom-ac-glow" class="absolute inset-0 bg-gradient-to-br from-cyan-900/15 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none"></div>
+
+        <!-- Cabecera A/C -->
+        <div class="flex items-center justify-between mb-6 relative z-10">
+          <div class="flex items-center gap-3">
+            <div id="dom-ac-icon-box" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-colors">
+              <i id="dom-ac-icon" class="fas fa-snowflake text-slate-400 text-base"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-black text-white uppercase tracking-[0.18em]">Aire Acondicionado</span>
+                <span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">Hub IR</span>
+              </div>
+              <p id="dom-ac-subtitle" class="text-[11px] text-slate-400 mt-0.5">Apagado</p>
+            </div>
+          </div>
+
+          <button onclick="domToggleAC()" id="dom-ac-power-btn" title="Encender / Apagar Aire"
+                  class="w-11 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700 flex items-center justify-center transition-all active:scale-95">
+            <i class="fas fa-power-off text-sm"></i>
+          </button>
+        </div>
+
+        <!-- Display Central de Temperatura -->
+        <div class="bg-slate-900/70 rounded-2xl border border-slate-800 p-5 mb-5 relative z-10 flex items-center justify-between">
+          <button onclick="domCambiarTempAC(-1)" class="w-12 h-12 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white border border-slate-700 flex items-center justify-center text-lg font-black transition-all">
+            <i class="fas fa-minus text-xs"></i>
+          </button>
+
+          <div class="text-center">
+            <span class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 block mb-1">Temperatura Objetivo</span>
+            <div class="flex items-start justify-center">
+              <span id="dom-ac-temp" class="text-5xl font-black mono text-white tracking-tighter">24</span>
+              <span class="text-xl font-black mono text-cyan-400 mt-1 ml-0.5">°C</span>
+            </div>
+            <div class="flex items-center justify-center gap-2 mt-2">
+              <span id="dom-ac-mode-pill" class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">❄️ Frío</span>
+              <span id="dom-ac-fan-pill" class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">🌀 Fan: Auto</span>
+            </div>
+          </div>
+
+          <button onclick="domCambiarTempAC(1)" class="w-12 h-12 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white border border-slate-700 flex items-center justify-center text-lg font-black transition-all">
+            <i class="fas fa-plus text-xs"></i>
+          </button>
+        </div>
+
+        <!-- Accesos rápidos de temperatura -->
+        <div class="grid grid-cols-4 gap-2 mb-5 relative z-10">
+          <button onclick="domSetTempAC(18)" class="h-8 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[11px] font-bold mono text-slate-300 transition-colors">18°C</button>
+          <button onclick="domSetTempAC(22)" class="h-8 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[11px] font-bold mono text-slate-300 transition-colors">22°C</button>
+          <button onclick="domSetTempAC(24)" class="h-8 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[11px] font-bold mono text-slate-300 transition-colors">24°C</button>
+          <button onclick="domSetTempAC(26)" class="h-8 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[11px] font-bold mono text-slate-300 transition-colors">26°C</button>
+        </div>
+
+        <!-- Selector de Modo y Velocidad -->
+        <div class="space-y-4 relative z-10">
+          <div>
+            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-2">Modo de Operación</span>
+            <div class="grid grid-cols-5 gap-2">
+              <button onclick="domSetModoAC('cool')" id="dom-ac-mode-cool" class="py-2.5 px-2 rounded-xl border text-[10px] font-black uppercase tracking-wider flex flex-col items-center gap-1 transition-all">
+                <i class="fas fa-snowflake text-xs"></i><span>Frío</span>
+              </button>
+              <button onclick="domSetModoAC('heat')" id="dom-ac-mode-heat" class="py-2.5 px-2 rounded-xl border text-[10px] font-black uppercase tracking-wider flex flex-col items-center gap-1 transition-all">
+                <i class="fas fa-sun text-xs"></i><span>Calor</span>
+              </button>
+              <button onclick="domSetModoAC('auto')" id="dom-ac-mode-auto" class="py-2.5 px-2 rounded-xl border text-[10px] font-black uppercase tracking-wider flex flex-col items-center gap-1 transition-all">
+                <i class="fas fa-magic text-xs"></i><span>Auto</span>
+              </button>
+              <button onclick="domSetModoAC('fan')" id="dom-ac-mode-fan" class="py-2.5 px-2 rounded-xl border text-[10px] font-black uppercase tracking-wider flex flex-col items-center gap-1 transition-all">
+                <i class="fas fa-fan text-xs"></i><span>Vent.</span>
+              </button>
+              <button onclick="domSetModoAC('dry')" id="dom-ac-mode-dry" class="py-2.5 px-2 rounded-xl border text-[10px] font-black uppercase tracking-wider flex flex-col items-center gap-1 transition-all">
+                <i class="fas fa-tint-slash text-xs"></i><span>Seco</span>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-2">Velocidad de Turbina y Swing</span>
+            <div class="grid grid-cols-5 gap-2">
+              <button onclick="domSetFanAC('auto')" id="dom-ac-fan-auto" class="h-9 rounded-xl border text-[10px] font-black uppercase tracking-wider transition-all">Auto</button>
+              <button onclick="domSetFanAC('low')" id="dom-ac-fan-low" class="h-9 rounded-xl border text-[10px] font-black uppercase tracking-wider transition-all">Baja</button>
+              <button onclick="domSetFanAC('med')" id="dom-ac-fan-med" class="h-9 rounded-xl border text-[10px] font-black uppercase tracking-wider transition-all">Media</button>
+              <button onclick="domSetFanAC('high')" id="dom-ac-fan-high" class="h-9 rounded-xl border text-[10px] font-black uppercase tracking-wider transition-all">Alta</button>
+              <button onclick="domToggleSwingAC()" id="dom-ac-swing-btn" class="h-9 rounded-xl border text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1">
+                <i class="fas fa-arrows-alt-v text-[10px]"></i><span>Swing</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. ASPIRADORA ROBOT (SMART LIFE) -->
+      <div id="dom-card-vacuum" class="bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all">
+        <div id="dom-vac-glow" class="absolute inset-0 bg-gradient-to-br from-emerald-900/15 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none"></div>
+
+        <!-- Cabecera Aspiradora -->
+        <div class="flex items-center justify-between mb-6 relative z-10">
+          <div class="flex items-center gap-3">
+            <div id="dom-vac-icon-box" class="w-10 h-10 rounded-xl bg-emerald-900/40 border border-emerald-500/30 flex items-center justify-center transition-colors">
+              <i id="dom-vac-icon" class="fas fa-robot text-emerald-400 text-base"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-black text-white uppercase tracking-[0.18em]">Aspiradora Robot</span>
+                <span id="dom-vac-badge" class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">En Base</span>
+              </div>
+              <p id="dom-vac-subtitle" class="text-[11px] text-slate-400 mt-0.5">Carga completa — Lista para limpiar</p>
+            </div>
+          </div>
+
+          <!-- Batería -->
+          <div class="flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800">
+            <i id="dom-vac-bat-icon" class="fas fa-battery-full text-emerald-400 text-sm"></i>
+            <span id="dom-vac-battery" class="text-xs font-black mono text-white">100%</span>
+          </div>
+        </div>
+
+        <!-- Métricas de Sesión de Limpieza -->
+        <div class="grid grid-cols-3 gap-3 mb-5 relative z-10">
+          <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-3 text-center">
+            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Estado</span>
+            <span id="dom-vac-state-text" class="text-xs font-black text-emerald-400 uppercase mt-1 block">Cargada</span>
+          </div>
+          <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-3 text-center">
+            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Área Limpia</span>
+            <span id="dom-vac-area" class="text-sm font-black mono text-white mt-0.5 block">42 m²</span>
+          </div>
+          <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-3 text-center">
+            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Tiempo</span>
+            <span id="dom-vac-time" class="text-sm font-black mono text-white mt-0.5 block">38 min</span>
+          </div>
+        </div>
+
+        <!-- Botones Principales de Acción -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-5 relative z-10">
+          <button onclick="domAccionAspiradora('start')" id="dom-vac-btn-start" class="py-3 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95">
+            <i class="fas fa-play text-xs"></i>
+            <span id="dom-vac-btn-start-txt">Iniciar</span>
+          </button>
+          <button onclick="domAccionAspiradora('pause')" id="dom-vac-btn-pause" class="py-3 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95">
+            <i class="fas fa-pause text-xs text-amber-400"></i>
+            <span>Pausar</span>
+          </button>
+          <button onclick="domAccionAspiradora('dock')" id="dom-vac-btn-dock" class="py-3 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95">
+            <i class="fas fa-charging-station text-xs text-cyan-400"></i>
+            <span>A la Base</span>
+          </button>
+          <button onclick="domAccionAspiradora('locate')" class="py-3 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95">
+            <i class="fas fa-volume-up text-xs text-violet-400"></i>
+            <span>Buscar</span>
+          </button>
+        </div>
+
+        <!-- Modos de Limpieza y Potencia de Succión -->
+        <div class="space-y-4 relative z-10">
+          <div>
+            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-2">Modo de Limpieza</span>
+            <div class="grid grid-cols-4 gap-2">
+              <button onclick="domSetModoAspiradora('smart')" id="dom-vac-mode-smart" class="h-9 rounded-xl border text-[10px] font-black uppercase tracking-wider transition-all">Auto</button>
+              <button onclick="domSetModoAspiradora('wall_follow')" id="dom-vac-mode-wall_follow" class="h-9 rounded-xl border text-[10px] font-black uppercase tracking-wider transition-all">Bordes</button>
+              <button onclick="domSetModoAspiradora('spiral')" id="dom-vac-mode-spiral" class="h-9 rounded-xl border text-[10px] font-black uppercase tracking-wider transition-all">Punto Fijo</button>
+              <button onclick="domSetModoAspiradora('single')" id="dom-vac-mode-single" class="h-9 rounded-xl border text-[10px] font-black uppercase tracking-wider transition-all">Habitación</button>
+            </div>
+          </div>
+
+          <div>
+            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-2">Potencia de Succión</span>
+            <div class="grid grid-cols-3 gap-2">
+              <button onclick="domSetSuccionAspiradora('gentle')" id="dom-vac-suction-gentle" class="h-9 rounded-xl border text-[10px] font-black uppercase tracking-wider transition-all">Silencioso</button>
+              <button onclick="domSetSuccionAspiradora('normal')" id="dom-vac-suction-normal" class="h-9 rounded-xl border text-[10px] font-black uppercase tracking-wider transition-all">Estándar</button>
+              <button onclick="domSetSuccionAspiradora('strong')" id="dom-vac-suction-strong" class="h-9 rounded-xl border text-[10px] font-black uppercase tracking-wider transition-all">Turbo</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. ENCHUFE INTELIGENTE (SMART LIFE) -->
+      <div id="dom-card-plug" class="bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all">
+        <div id="dom-plug-glow" class="absolute inset-0 bg-gradient-to-br from-amber-900/15 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none"></div>
+
+        <!-- Cabecera Enchufe -->
+        <div class="flex items-center justify-between mb-6 relative z-10">
+          <div class="flex items-center gap-3">
+            <div id="dom-plug-icon-box" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-colors">
+              <i id="dom-plug-icon" class="fas fa-plug text-slate-400 text-base"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span id="dom-plug-title" class="text-xs font-black text-white uppercase tracking-[0.18em]">Enchufe Inteligente</span>
+                <span id="dom-plug-badge" class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">Apagado</span>
+              </div>
+              <p id="dom-plug-subtitle" class="text-[11px] text-slate-400 mt-0.5">Sin suministro activo</p>
+            </div>
+          </div>
+
+          <button onclick="domTogglePlug()" id="dom-plug-power-btn" title="Encender / Apagar Enchufe"
+                  class="w-11 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700 flex items-center justify-center transition-all active:scale-95">
+            <i class="fas fa-power-off text-sm"></i>
+          </button>
+        </div>
+
+        <!-- Botón Central Interactivo del Enchufe -->
+        <div class="bg-slate-900/70 rounded-2xl border border-slate-800 p-6 mb-5 relative z-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <button onclick="domTogglePlug()" id="dom-plug-big-btn"
+                    class="w-16 h-16 rounded-2xl bg-slate-800 border-2 border-slate-700 flex items-center justify-center transition-all active:scale-95 shadow-lg">
+              <i id="dom-plug-big-icon" class="fas fa-bolt text-2xl text-slate-500 transition-colors"></i>
+            </button>
+            <div>
+              <span class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 block">Estado del Relé</span>
+              <span id="dom-plug-state-big" class="text-2xl font-black mono text-white tracking-tight block mt-0.5">OFF</span>
+              <span id="dom-plug-timer-info" class="text-[10px] font-bold text-slate-400 block mt-1">Temporizador: Inactivo</span>
+            </div>
+          </div>
+
+          <div class="flex sm:flex-col items-end justify-between w-full sm:w-auto border-t sm:border-t-0 border-slate-800 pt-3 sm:pt-0">
+            <div class="text-left sm:text-right">
+              <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Tensión / Red</span>
+              <span class="text-sm font-black mono text-slate-200">220V ~ WiFi</span>
+            </div>
+            <div class="text-right mt-0 sm:mt-2">
+              <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Último cambio</span>
+              <span id="dom-plug-last-change" class="text-xs font-bold mono text-cyan-400">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Temporizador rápido (Countdown Smart Life) -->
+        <div class="relative z-10">
+          <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-2">Apagado / Encendido Programado (Countdown)</span>
+          <div class="grid grid-cols-4 gap-2">
+            <button onclick="domSetTimerPlug(30)" class="h-9 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[10px] font-black uppercase tracking-wider text-slate-300 transition-colors">30 min</button>
+            <button onclick="domSetTimerPlug(60)" class="h-9 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[10px] font-black uppercase tracking-wider text-slate-300 transition-colors">1 Hora</button>
+            <button onclick="domSetTimerPlug(120)" class="h-9 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[10px] font-black uppercase tracking-wider text-slate-300 transition-colors">2 Horas</button>
+            <button onclick="domSetTimerPlug(0)" class="h-9 rounded-xl bg-slate-900 hover:bg-red-950/50 border border-slate-800 hover:border-red-500/40 text-[10px] font-black uppercase tracking-wider text-slate-400 hover:text-red-300 transition-colors">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. TELEVISOR ANDROID TV (CONTROLADOR IR - SMART LIFE) -->
+      <div id="dom-card-tv" class="bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all">
+        <div id="dom-tv-glow" class="absolute inset-0 bg-gradient-to-br from-violet-900/15 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none"></div>
+
+        <!-- Cabecera TV -->
+        <div class="flex items-center justify-between mb-5 relative z-10">
+          <div class="flex items-center gap-3">
+            <div id="dom-tv-icon-box" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-colors">
+              <i id="dom-tv-icon" class="fas fa-tv text-slate-400 text-sm"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-black text-white uppercase tracking-[0.18em]">Android TV</span>
+                <span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">Hub IR</span>
+              </div>
+              <p id="dom-tv-subtitle" class="text-[11px] text-slate-400 mt-0.5">En espera — Control Infrarrojo</p>
+            </div>
+          </div>
+
+          <button onclick="domCmdTV('power')" id="dom-tv-power-btn" title="Encender / Apagar TV"
+                  class="w-11 h-11 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 flex items-center justify-center transition-all active:scale-95">
+            <i class="fas fa-power-off text-sm"></i>
+          </button>
+        </div>
+
+        <!-- Barra Superior: Botón Home (Arriba) + Volumen Compacto a la Derecha -->
+        <div class="flex items-center justify-between gap-3 bg-slate-900/70 rounded-2xl border border-slate-800 p-3 mb-5 relative z-10">
+          <button onclick="domCmdTV('home')" class="h-11 px-4 rounded-xl bg-violet-600/20 hover:bg-violet-600 active:scale-95 text-violet-300 hover:text-white border border-violet-500/40 text-xs font-black uppercase tracking-wider flex items-center gap-2.5 transition-all">
+            <i class="fas fa-home text-sm"></i>
+            <span>Inicio (Home)</span>
+          </button>
+
+          <!-- Control de Volumen compacto a la derecha -->
+          <div class="flex items-center gap-1.5 bg-black/60 px-2.5 py-1.5 rounded-xl border border-slate-800">
+            <button onclick="domCmdTV('mute')" id="dom-tv-mute-btn" title="Silenciar TV"
+                    class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 flex items-center justify-center transition-all active:scale-95">
+              <i id="dom-tv-mute-icon" class="fas fa-volume-mute text-[11px]"></i>
+            </button>
+            <button onclick="domCmdTV('vol_down')" title="Bajar Volumen"
+                    class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 flex items-center justify-center transition-all active:scale-95">
+              <i class="fas fa-minus text-[10px]"></i>
+            </button>
+            <div class="px-2 text-center min-w-[44px]">
+              <span class="text-[8px] font-black uppercase tracking-widest text-slate-500 block leading-none">VOL</span>
+              <span id="dom-tv-vol-val" class="text-xs font-black mono text-violet-400">18</span>
+            </div>
+            <button onclick="domCmdTV('vol_up')" title="Subir Volumen"
+                    class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 flex items-center justify-center transition-all active:scale-95">
+              <i class="fas fa-plus text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Panel de Aplicaciones Android TV -->
+        <div class="relative z-10">
+          <div class="flex items-center justify-between mb-2.5">
+            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Aplicaciones Android TV (Orden Fila Inicio)</span>
+            <span id="dom-tv-active-app-badge" class="text-[9px] font-bold text-violet-400 uppercase tracking-wider">Inicio</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            <!-- 1. Flow -->
+            <button onclick="domAbrirAppTV('flow')" id="dom-tv-app-flow" class="group h-14 px-2.5 rounded-xl bg-slate-900/90 hover:bg-emerald-950/40 border border-slate-800 hover:border-emerald-500/50 flex items-center gap-2.5 transition-all active:scale-95 text-left">
+              <div class="w-8 h-8 rounded-lg bg-emerald-600/20 border border-emerald-500/40 flex items-center justify-center shrink-0">
+                <i class="fas fa-play-circle text-emerald-400 text-xs"></i>
+              </div>
+              <div class="overflow-hidden">
+                <span class="text-[11px] font-black text-white uppercase tracking-wider block truncate">Flow</span>
+                <span class="text-[9px] text-slate-500 block truncate">1° • Inicio</span>
+              </div>
+            </button>
+
+            <!-- 2. YouTube -->
+            <button onclick="domAbrirAppTV('youtube')" id="dom-tv-app-youtube" class="group h-14 px-2.5 rounded-xl bg-slate-900/90 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-500/50 flex items-center gap-2.5 transition-all active:scale-95 text-left">
+              <div class="w-8 h-8 rounded-lg bg-rose-600/20 border border-rose-500/40 flex items-center justify-center shrink-0">
+                <i class="fab fa-youtube text-rose-500 text-xs"></i>
+              </div>
+              <div class="overflow-hidden">
+                <span class="text-[11px] font-black text-white uppercase tracking-wider block truncate">YouTube</span>
+                <span class="text-[9px] text-slate-500 block truncate">2° • +1 Der</span>
+              </div>
+            </button>
+
+            <!-- 3. Stremio -->
+            <button onclick="domAbrirAppTV('stremio')" id="dom-tv-app-stremio" class="group h-14 px-2.5 rounded-xl bg-slate-900/90 hover:bg-violet-950/40 border border-slate-800 hover:border-violet-500/50 flex items-center gap-2.5 transition-all active:scale-95 text-left">
+              <div class="w-8 h-8 rounded-lg bg-violet-600/20 border border-violet-500/40 flex items-center justify-center shrink-0">
+                <i class="fas fa-play text-violet-400 text-xs"></i>
+              </div>
+              <div class="overflow-hidden">
+                <span class="text-[11px] font-black text-white uppercase tracking-wider block truncate">Stremio</span>
+                <span class="text-[9px] text-slate-500 block truncate">3° • +2 Der</span>
+              </div>
+            </button>
+
+            <!-- 4. Disney+ -->
+            <button onclick="domAbrirAppTV('disney')" id="dom-tv-app-disney" class="group h-14 px-2.5 rounded-xl bg-slate-900/90 hover:bg-blue-950/40 border border-slate-800 hover:border-blue-500/50 flex items-center gap-2.5 transition-all active:scale-95 text-left">
+              <div class="w-8 h-8 rounded-lg bg-blue-600/20 border border-blue-500/40 flex items-center justify-center shrink-0">
+                <i class="fas fa-star text-blue-400 text-xs"></i>
+              </div>
+              <div class="overflow-hidden">
+                <span class="text-[11px] font-black text-white uppercase tracking-wider block truncate">Disney+</span>
+                <span class="text-[9px] text-slate-500 block truncate">4° • +3 Der</span>
+              </div>
+            </button>
+
+            <!-- 5. Paramount+ -->
+            <button onclick="domAbrirAppTV('paramount')" id="dom-tv-app-paramount" class="group h-14 px-2.5 rounded-xl bg-slate-900/90 hover:bg-sky-950/40 border border-slate-800 hover:border-sky-500/50 flex items-center gap-2.5 transition-all active:scale-95 text-left">
+              <div class="w-8 h-8 rounded-lg bg-sky-600/20 border border-sky-500/40 flex items-center justify-center shrink-0">
+                <i class="fas fa-mountain text-sky-400 text-xs"></i>
+              </div>
+              <div class="overflow-hidden">
+                <span class="text-[11px] font-black text-white uppercase tracking-wider block truncate">Paramount+</span>
+                <span class="text-[9px] text-slate-500 block truncate">5° • +4 Der</span>
+              </div>
+            </button>
+
+            <!-- 6. Netflix -->
+            <button onclick="domAbrirAppTV('netflix')" id="dom-tv-app-netflix" class="group h-14 px-2.5 rounded-xl bg-slate-900/90 hover:bg-red-950/40 border border-slate-800 hover:border-red-500/50 flex items-center gap-2.5 transition-all active:scale-95 text-left">
+              <div class="w-8 h-8 rounded-lg bg-red-600/20 border border-red-500/40 flex items-center justify-center shrink-0">
+                <span class="font-black text-red-500 text-xs mono">N</span>
+              </div>
+              <div class="overflow-hidden">
+                <span class="text-[11px] font-black text-white uppercase tracking-wider block truncate">Netflix</span>
+                <span class="text-[9px] text-slate-500 block truncate">6° • +5 Der</span>
+              </div>
+            </button>
+
+            <!-- 7. YouTube Music -->
+            <button onclick="domAbrirAppTV('ytmusic')" id="dom-tv-app-ytmusic" class="group h-14 px-2.5 rounded-xl bg-slate-900/90 hover:bg-pink-950/40 border border-slate-800 hover:border-pink-500/50 flex items-center gap-2.5 transition-all active:scale-95 text-left">
+              <div class="w-8 h-8 rounded-lg bg-pink-600/20 border border-pink-500/40 flex items-center justify-center shrink-0">
+                <i class="fas fa-compact-disc text-pink-400 text-xs"></i>
+              </div>
+              <div class="overflow-hidden">
+                <span class="text-[11px] font-black text-white uppercase tracking-wider block truncate">YT Music</span>
+                <span class="text-[9px] text-slate-500 block truncate">7° • +6 Der</span>
+              </div>
+            </button>
+
+            <!-- 8. Kick -->
+            <button onclick="domAbrirAppTV('kick')" id="dom-tv-app-kick" class="group h-14 px-2.5 rounded-xl bg-slate-900/90 hover:bg-lime-950/40 border border-slate-800 hover:border-lime-500/50 flex items-center gap-2.5 transition-all active:scale-95 text-left">
+              <div class="w-8 h-8 rounded-lg bg-lime-500/20 border border-lime-400/40 flex items-center justify-center shrink-0">
+                <span class="font-black text-lime-400 text-xs mono">K</span>
+              </div>
+              <div class="overflow-hidden">
+                <span class="text-[11px] font-black text-white uppercase tracking-wider block truncate">Kick</span>
+                <span class="text-[9px] text-slate-500 block truncate">8° • +7 Der</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Registro de Comandos enviados -->
+    <div class="bg-black rounded-2xl border border-slate-700/60 p-4 md:p-5">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2">
+          <i class="fas fa-terminal text-cyan-400 text-xs"></i>
+          <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Registro de Actividad Domótica</h3>
+        </div>
+        <button onclick="limpiarLogDomotica()" class="text-[10px] font-bold text-slate-500 hover:text-slate-300 uppercase tracking-wider transition-colors">Limpiar</button>
+      </div>
+      <div id="dom-activity-log" class="space-y-1.5 max-h-40 overflow-y-auto mono text-[11px] text-slate-400">
+        <div class="text-slate-500">Sistema domótico listo. Interactuá con cualquier artefacto para enviar órdenes.</div>
+      </div>
+    </div>
+
+  </main>
+
+</div>
+
+<!-- Modal Configuración Smart Life / Tuya Cloud -->
+<div id="modal-domotica-config" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[300] items-center justify-center p-4 overflow-y-auto">
+  <div class="bg-slate-900 border border-slate-700/80 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl my-auto">
+    <div class="px-6 py-4 border-b border-slate-700/80 flex items-center justify-between bg-slate-800/60">
+      <div class="flex items-center gap-2.5">
+        <i class="fas fa-sliders-h text-cyan-400 text-sm"></i>
+        <h3 class="text-sm font-black text-white uppercase tracking-wider">Vincular Smart Life (Tuya Cloud API)</h3>
+      </div>
+      <button onclick="cerrarModalConfigDomotica()" class="text-slate-400 hover:text-white transition-colors">
+        <i class="fas fa-times text-lg"></i>
+      </button>
+    </div>
+
+    <div class="p-6 space-y-5 max-h-[82vh] overflow-y-auto">
+      <div class="bg-cyan-950/30 border border-cyan-500/30 rounded-xl p-4 text-xs text-slate-300 space-y-1.5">
+        <p class="font-black text-cyan-300 uppercase tracking-wider text-[11px]"><i class="fas fa-info-circle mr-1"></i>¿Por qué usar Smart Life (Tuya) en lugar de Google Home?</p>
+        <p class="text-[11px] text-slate-300 leading-relaxed">
+          Google Home no permite controlar dispositivos de terceros desde una página web propia. En cambio, <strong>Smart Life funciona sobre Tuya Cloud</strong>, que tiene API oficial gratuita para enviar comandos directos a tu <strong>Aspiradora Robot</strong>, <strong>Enchufe Inteligente</strong> y <strong>Controlador IR (Aire Acondicionado y TV)</strong>.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="md:col-span-2">
+          <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Modo de Conexión</label>
+          <select id="dom-cfg-mode" class="w-full h-10 px-3 rounded-xl bg-black border border-slate-700 text-xs text-white font-bold outline-none focus:border-cyan-500">
+            <option value="local">Modo Interactivo Local (Simulación / Pruebas en pantalla)</option>
+            <option value="apps_script">Puente Google Apps Script (Recomendado — Sin bloqueo CORS)</option>
+            <option value="webhook">Webhook Directo (Home Assistant / IFTTT / Node-RED)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Tuya Access ID / Client ID <span class="text-slate-500 font-normal">(~20 caract.)</span></label>
+          <input id="dom-cfg-client-id" type="text" autocomplete="off" spellcheck="false" placeholder="Ej: 89x7a6bc..." class="w-full h-10 px-3 rounded-xl bg-black border border-slate-700 text-xs text-white mono outline-none focus:border-cyan-500">
+        </div>
+
+        <div>
+          <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Tuya Access Secret <span class="text-slate-500 font-normal">(32 caract. hex)</span></label>
+          <input id="dom-cfg-secret" type="text" autocomplete="off" spellcheck="false" placeholder="Pegá los 32 caracteres del ojito 👁️ en Tuya" class="w-full h-10 px-3 rounded-xl bg-black border border-slate-700 text-xs text-white mono outline-none focus:border-cyan-500">
+        </div>
+
+        <div>
+          <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Región Datacenter (Smart Life)</label>
+          <select id="dom-cfg-region" class="w-full h-10 px-3 rounded-xl bg-black border border-slate-700 text-xs text-white font-bold outline-none focus:border-cyan-500">
+            <option value="https://openapi.tuyaus.com">América (Western America - tuyaus.com)</option>
+            <option value="https://openapi-ueaz.tuyaus.com">América Este (Eastern America - tuyaus.com)</option>
+            <option value="https://openapi.tuyaeu.com">Europa Central (tuyaeu.com)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">URL Puente / Webhook (Opcional)</label>
+          <input id="dom-cfg-bridge-url" type="text" placeholder="Por defecto usa tu scriptURL actual" class="w-full h-10 px-3 rounded-xl bg-black border border-slate-700 text-xs text-white mono outline-none focus:border-cyan-500">
+        </div>
+      </div>
+
+      <div class="border-t border-slate-800 pt-4">
+        <h4 class="text-[10px] font-black text-cyan-400 uppercase tracking-widest mb-3">Device IDs de tus artefactos en Smart Life</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <div>
+            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">ID Controlador IR (Hub Infrarrojo)</label>
+            <input id="dom-cfg-ir-hub-id" type="text" placeholder="Device ID del IR Blaster" class="w-full h-9 px-3 rounded-lg bg-black border border-slate-700 text-xs text-white mono outline-none focus:border-cyan-500">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">ID Remoto Aire Acondicionado (IR)</label>
+            <input id="dom-cfg-ac-id" type="text" placeholder="Remote ID del Aire Acondicionado" class="w-full h-9 px-3 rounded-lg bg-black border border-slate-700 text-xs text-white mono outline-none focus:border-cyan-500">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">ID Remoto TV (IR)</label>
+            <input id="dom-cfg-tv-id" type="text" placeholder="Remote ID de la TV" class="w-full h-9 px-3 rounded-lg bg-black border border-slate-700 text-xs text-white mono outline-none focus:border-cyan-500">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">ID Aspiradora Robot</label>
+            <input id="dom-cfg-vac-id" type="text" placeholder="Device ID de la Aspiradora" class="w-full h-9 px-3 rounded-lg bg-black border border-slate-700 text-xs text-white mono outline-none focus:border-cyan-500">
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">ID Enchufe Inteligente</label>
+            <input id="dom-cfg-plug-id" type="text" placeholder="Device ID del Enchufe" class="w-full h-9 px-3 rounded-lg bg-black border border-slate-700 text-xs text-white mono outline-none focus:border-cyan-500">
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between pt-3 border-t border-slate-800 gap-3 flex-wrap">
+        <button onclick="copiarCodigoAppsScriptTuya()" type="button" class="h-9 px-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 text-[10px] font-black uppercase tracking-wider transition-colors flex items-center gap-1.5">
+          <i class="fas fa-copy"></i>
+          <span>Copiar conector para Google Apps Script</span>
+        </button>
+        <div class="flex items-center gap-2 ml-auto">
+          <button onclick="cerrarModalConfigDomotica()" type="button" class="h-9 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-bold uppercase tracking-wider transition-colors">
+            Cancelar
+          </button>
+          <button onclick="guardarConfigDomotica()" type="button" class="h-9 px-5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-[11px] font-black uppercase tracking-wider transition-colors flex items-center gap-1.5">
+            <i class="fas fa-save"></i>
+            <span>Guardar Configuración</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Modal todas las cotizaciones -->
@@ -2408,6 +2997,7 @@ const HEADER_MAP = {
   tenis:    { titulo: 'Tenis',    icono: 'fa-table-tennis'  },
   partidos: { titulo: 'Partidos', icono: 'fa-futbol' },
   calendario:{ titulo: 'Calendario', icono: 'fa-calendar-alt' },
+  domotica: { titulo: 'Domótica', icono: 'fa-sliders-h'      },
 };
 
 // ─── NAVEGACIÓN ───────────────────────────────────────────────────────────────
@@ -2421,10 +3011,11 @@ const MODULE_ACCENT = {
   tenis:     { nav: 'border-emerald-500 text-emerald-400 bg-emerald-600/10', icon: 'text-emerald-400' },
   partidos:  { nav: 'border-indigo-500 text-indigo-400 bg-indigo-600/10', icon: 'text-indigo-400' },
   calendario:{ nav: 'border-pink-500 text-pink-400 bg-pink-600/10',      icon: 'text-pink-400'   },
+  domotica:  { nav: 'border-cyan-500 text-cyan-400 bg-cyan-600/10',      icon: 'text-cyan-400'   },
 };
 
 function showSection(nombre) {
-  ['inicio', 'actividad', 'finanzas', 'ahorros', 'sueldos', 'tenis', 'partidos', 'calendario'].forEach(s => {
+  ['inicio', 'actividad', 'finanzas', 'ahorros', 'sueldos', 'tenis', 'partidos', 'calendario', 'domotica'].forEach(s => {
     const sec = document.getElementById('section-' + s);
     if (sec) {
       sec.classList.add('hidden');
@@ -2473,11 +3064,17 @@ function showSection(nombre) {
   if (nombre === 'tenis')   iniciarTenis();
   if (nombre === 'partidos') iniciarPartidos();
   if (nombre === 'calendario') iniciarCalendario();
+  if (nombre === 'domotica' && typeof iniciarDomotica === 'function') iniciarDomotica();
   if (nombre === 'inicio') {
     actualizarTarjetaFinanzas();
+    if (window.fitnessData && window.fitnessData.steps && window.fitnessData.steps.length > 0) {
+      ['steps', 'distance', 'weight', 'calories', 'activeMinutes'].forEach(type => {
+        renderHealthCard(type, window.currentHealthFilter || 'hoy');
+      });
+    }
   }
   if (nombre === 'actividad') {
-    if ((!window.fitnessData.steps || window.fitnessData.steps.length === 0) && typeof fetchGoogleFitness === 'function' && typeof gapi !== 'undefined' && gapi.client && gapi.client.getToken()) {
+    if ((!window.fitnessData.steps || window.fitnessData.steps.length === 0) && typeof fetchGoogleFitness === 'function' && typeof tieneTokenGoogleValido === 'function' && tieneTokenGoogleValido()) {
       fetchGoogleFitness();
     } else {
       setActividadFiltro(window.currentHealthFilter || 'hoy');
@@ -2494,6 +3091,13 @@ function toggleMenu() {
 async function cargarDatos(silencioso = false) {
   if (!silencioso) setStatus('loading');
   try {
+    if (typeof restaurarCacheFitness === 'function') {
+      restaurarCacheFitness();
+    }
+    if (typeof iniciarDomotica === 'function') {
+      iniciarDomotica();
+    }
+
     const finanzasReq = fetch(scriptURL).then(r => r.json()).then(data => {
       datosHistoricos = data.historico || [];
       fillSelect('categoria',   data.categorias);
@@ -2507,14 +3111,15 @@ async function cargarDatos(silencioso = false) {
       actualizarTarjetaFinanzas();
     });
     
-    const ahorrosReq  = iniciarAhorros().catch(e => console.warn('Error Ahorros:', e));
-    const sueldosReq  = iniciarSueldos().catch(e => console.warn('Error Sueldos:', e));
-    const tenisReq    = iniciarTenis().catch(e => console.warn('Error Tenis:', e));
-    const partidosReq = iniciarPartidos().catch(e => console.warn('Error Partidos:', e));
+    const ahorrosReq    = iniciarAhorros().catch(e => console.warn('Error Ahorros:', e));
+    const sueldosReq    = iniciarSueldos().catch(e => console.warn('Error Sueldos:', e));
+    const tenisReq      = iniciarTenis().catch(e => console.warn('Error Tenis:', e));
+    const partidosReq   = iniciarPartidos().catch(e => console.warn('Error Partidos:', e));
+    const calendarioReq = iniciarCalendario().catch(e => console.warn('Error Calendario:', e));
         
     checkGoogleApis();
 
-    await Promise.all([finanzasReq, ahorrosReq, sueldosReq, tenisReq, partidosReq]);
+    await Promise.all([finanzasReq, ahorrosReq, sueldosReq, tenisReq, partidosReq, calendarioReq]);
     
     setStatus('ok');
   } catch (e) {
@@ -2542,24 +3147,23 @@ function fillSelect(id, list) {
 
 async function recargarDatos() {
   const icon = document.getElementById('icon-refresh');
-  icon.classList.add('spin');
+  if (icon) icon.classList.add('spin');
+
+  // Verificar/conectar Google inmediatamente aprovechando el gesto del usuario
+  if (typeof asegurarConexionGoogle === 'function') {
+    asegurarConexionGoogle(false);
+  }
+
+  // Permitir recarga completa de todas las pestañas
+  ahorrosIniciado = false;
+  sueldosIniciado = false;
+  tenisIniciado = false;
+  partidosIniciado = false;
+
   await cargarDatos(true);
   await cargarClimaResistencia();
-  icon.classList.remove('spin');
+  if (icon) icon.classList.remove('spin');
   showToast('Datos actualizados', 'ok');
-  
-  // Refrescar Google (Calendar y Fit) sin forzar popup
-  if (typeof fetchGoogleEvents === 'function') {
-    if (gapi.client && gapi.client.getToken() !== null) {
-      fetchGoogleEvents();
-      if (typeof fetchGoogleFitness === 'function') fetchGoogleFitness();
-    } else if (localStorage.getItem('gcal_auto_connect') === 'true' && typeof tokenClient !== 'undefined' && tokenClient) {
-      const loginHint = localStorage.getItem('gcal_login_hint');
-      const tokenParams = { prompt: 'none' };
-      if (loginHint) tokenParams.login_hint = loginHint;
-      tokenClient.requestAccessToken(tokenParams);
-    }
-  }
 }
 
 // ─── EXPORTAR CSV ─────────────────────────────────────────────────────────────
@@ -6075,21 +6679,24 @@ function renderGraficosPartidos(filtrados) {
 
 
 window.onload = () => {
-  setTimeout(() => {
-    recargarDatos();
-  }, 5000);
-
   setFechaHoy();
   // FIX #12 — restaurar último módulo visitado
   let seccionInicial = 'inicio';
   try {
     const saved = localStorage.getItem('gp_last_section');
-    const validas = ['inicio','actividad','finanzas','ahorros','sueldos','tenis','calendario'];
+    const validas = ['inicio','actividad','finanzas','ahorros','sueldos','tenis','partidos','calendario','domotica'];
     if (saved && validas.includes(saved)) seccionInicial = saved;
   } catch(e) {}
   showSection(seccionInicial);
-  // Cargar datos (todo el fetch en background, actualiza UI automáticamente)
+  // Cargar datos y precargar todas las pestañas (incluyendo conexión automática con Google)
   cargarDatos();
+
+  // Verificar cada 10 minutos que siga conectado a Google (y si no está logueado, ejecutar el logueo automáticamente)
+  setInterval(() => {
+    if (typeof verificarConexionPeriodicaGoogle === 'function') {
+      verificarConexionPeriodicaGoogle();
+    }
+  }, 10 * 60 * 1000);
   
   // Flatpickr para filtros de fecha en DD/MM/YYYY
   flatpickr("#fecha-inicio", {
@@ -6654,7 +7261,10 @@ let calendarioIniciado = false;
 let fullCalendarInst = null;
 
 async function iniciarCalendario() {
-  if (calendarioIniciado) return;
+  if (calendarioIniciado) {
+    if (fullCalendarInst) setTimeout(() => fullCalendarInst.updateSize(), 50);
+    return;
+  }
   calendarioIniciado = true;
   
   // Render base empty calendar
@@ -6681,37 +7291,191 @@ async function iniciarCalendario() {
   // Try initializing API automatically
   checkGoogleApis();
   
-  if (gapiInited && gapi.client.getToken() !== null) {
+  if (tieneTokenGoogleValido()) {
     fetchGoogleEvents();
   }
 }
 
+function actualizarUIGoogleConectado(conectado) {
+  const btnC = document.getElementById('btn-conectar-google');
+  const btnD = document.getElementById('btn-desconectar-google');
+  const alertEl = document.getElementById('calendar-alert');
+  if (conectado) {
+    if (btnC) btnC.classList.add('hidden');
+    if (btnD) btnD.classList.remove('hidden');
+    if (alertEl) alertEl.classList.add('hidden');
+  } else {
+    if (btnC) btnC.classList.remove('hidden');
+    if (btnD) btnD.classList.add('hidden');
+    if (alertEl) alertEl.classList.remove('hidden');
+  }
+}
+
+function tieneTokenGoogleValido() {
+  if (!gapiInited || typeof gapi === 'undefined' || !gapi.client) return false;
+  const stored = localStorage.getItem('gcal_token');
+  if (stored) {
+    try {
+      const tokenData = JSON.parse(stored);
+      if (tokenData && tokenData.access_token && tokenData.expireTime > (Date.now() + 60 * 1000)) {
+        const currentToken = gapi.client.getToken();
+        if (!currentToken || currentToken.access_token !== tokenData.access_token) {
+          gapi.client.setToken({ access_token: tokenData.access_token });
+        }
+        return true;
+      } else {
+        localStorage.removeItem('gcal_token');
+        gapi.client.setToken(null);
+        return false;
+      }
+    } catch (e) {
+      localStorage.removeItem('gcal_token');
+    }
+  }
+  const currentToken = gapi.client.getToken();
+  return !!(currentToken && currentToken.access_token);
+}
+
+async function sincronizarDatosGoogle() {
+  if (!tieneTokenGoogleValido()) return;
+  await Promise.allSettled([
+    fetchGoogleEvents(),
+    typeof fetchGoogleFitness === 'function' ? fetchGoogleFitness() : Promise.resolve()
+  ]);
+}
+
+function solicitarTokenGoogle(forzarConsentimiento = false) {
+  if (!gapiInited || !gisInited || !tokenClient) {
+    checkGoogleApis();
+    return;
+  }
+  const now = Date.now();
+  if (window._googleAuthInProgress && (now - (window._googleAuthStartTime || 0)) < 12000) {
+    return;
+  }
+  window._googleAuthInProgress = true;
+  window._googleAuthStartTime = now;
+
+  const loginHint = localStorage.getItem('gcal_login_hint');
+  const tokenParams = { prompt: forzarConsentimiento ? 'consent' : '' };
+  if (loginHint && !forzarConsentimiento) {
+    tokenParams.login_hint = loginHint;
+  }
+  try {
+    tokenClient.requestAccessToken(tokenParams);
+  } catch (e) {
+    window._googleAuthInProgress = false;
+    console.warn('No se pudo abrir el modal de Google automáticamente:', e);
+  }
+}
+
+function invalidarYReconectarGoogle() {
+  localStorage.removeItem('gcal_token');
+  if (typeof gapi !== 'undefined' && gapi.client) {
+    gapi.client.setToken(null);
+  }
+  actualizarUIGoogleConectado(false);
+  if (localStorage.getItem('gcal_explicit_disconnect') !== 'true') {
+    solicitarTokenGoogle(false);
+  }
+}
+
+function asegurarConexionGoogle(esAutomatico = true) {
+  if (!gapiInited || !gisInited) {
+    checkGoogleApis();
+    return;
+  }
+  if (tieneTokenGoogleValido()) {
+    actualizarUIGoogleConectado(true);
+    sincronizarDatosGoogle();
+  } else {
+    actualizarUIGoogleConectado(false);
+    if (esAutomatico && localStorage.getItem('gcal_explicit_disconnect') === 'true') {
+      return;
+    }
+    solicitarTokenGoogle(false);
+  }
+}
+
+function verificarConexionPeriodicaGoogle() {
+  if (localStorage.getItem('gcal_explicit_disconnect') === 'true') return;
+  if (!gapiInited || !gisInited) {
+    checkGoogleApis();
+    return;
+  }
+  let requiereLogin = !tieneTokenGoogleValido();
+  if (!requiereLogin) {
+    const stored = localStorage.getItem('gcal_token');
+    if (stored) {
+      try {
+        const td = JSON.parse(stored);
+        // Si faltan menos de 12 minutos para que venza el token, renovarlo preventivamente
+        if (!td.expireTime || (td.expireTime - Date.now()) < 12 * 60 * 1000) {
+          requiereLogin = true;
+        }
+      } catch (e) {
+        requiereLogin = true;
+      }
+    }
+  }
+  if (requiereLogin) {
+    solicitarTokenGoogle(false);
+  } else {
+    sincronizarDatosGoogle();
+  }
+}
+
+// Si el navegador bloquea el popup automático al cargar sin clic previo, dispararlo en el primer clic del usuario
+document.addEventListener('click', (e) => {
+  if (e.target && e.target.closest && e.target.closest('#btn-desconectar-google, #btn-conectar-google')) return;
+  if (localStorage.getItem('gcal_explicit_disconnect') === 'true') return;
+  if (gapiInited && gisInited && !tieneTokenGoogleValido() && !window._googleAuthInProgress) {
+    solicitarTokenGoogle(false);
+  }
+}, { passive: true });
+
 function checkGoogleApis() {
-  if (gisInited) return;
-  if (typeof gapi !== 'undefined' && typeof google !== 'undefined') {
-    gapi.load('client', initGapiClient);
-    tokenClient = google.accounts.oauth2.initTokenClient({
-      client_id: CALENDAR_CLIENT_ID,
-      scope: GOOGLE_SCOPES,
-      callback: handleAuthResponse,
-    });
-    gisInited = true;
+  if (gisInited && gapiInited) return;
+  if (typeof gapi !== 'undefined' && typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
+    if (!gisInited) {
+      tokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: CALENDAR_CLIENT_ID,
+        scope: GOOGLE_SCOPES,
+        callback: handleAuthResponse,
+        error_callback: (err) => {
+          window._googleAuthInProgress = false;
+          console.warn('Estado modal Google Auth:', err);
+        }
+      });
+      gisInited = true;
+    }
+    if (!gapiInited && !window._gapiInitStarted) {
+      window._gapiInitStarted = true;
+      gapi.load('client', initGapiClient);
+    } else if (gapiInited) {
+      asegurarConexionGoogle(true);
+    }
   } else {
     if (!window._gcalCheckTimeout) {
       window._gcalCheckTimeout = setTimeout(() => {
         window._gcalCheckTimeout = null;
         checkGoogleApis();
-      }, 500);
+      }, 200);
     }
   }
 }
 
 async function handleAuthResponse(resp) {
+  window._googleAuthInProgress = false;
   if (resp.error !== undefined) {
     console.warn('Renovación silenciosa falló o el usuario canceló', resp.error);
     return;
   }
   
+  if (typeof gapi !== 'undefined' && gapi.client) {
+    gapi.client.setToken({ access_token: resp.access_token });
+  }
+
   // Guardar token por 50 minutos y activar auto-connect
   const expireTime = Date.now() + (50 * 60 * 1000);
   localStorage.setItem('gcal_token', JSON.stringify({
@@ -6719,6 +7483,12 @@ async function handleAuthResponse(resp) {
     expireTime: expireTime
   }));
   localStorage.setItem('gcal_auto_connect', 'true');
+  localStorage.removeItem('gcal_explicit_disconnect');
+
+  actualizarUIGoogleConectado(true);
+
+  // Sincronizar Calendar y Google Fit en paralelo de inmediato
+  sincronizarDatosGoogle();
 
   try {
     const userResp = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
@@ -6731,16 +7501,6 @@ async function handleAuthResponse(resp) {
   } catch(e) {
     console.error('Error fetching user info', e);
   }
-
-  const btnC = document.getElementById('btn-conectar-google');
-  if (btnC) btnC.classList.add('hidden');
-  const btnD = document.getElementById('btn-desconectar-google');
-  if (btnD) btnD.classList.remove('hidden');
-  const alertEl = document.getElementById('calendar-alert');
-  if (alertEl) alertEl.classList.add('hidden');
-  
-  await fetchGoogleEvents();
-  if (typeof fetchGoogleFitness === 'function') await fetchGoogleFitness();
 }
 
 async function initGapiClient() {
@@ -6753,36 +7513,9 @@ async function initGapiClient() {
       discoveryDocs: [CALENDAR_DISCOVERY_DOC],
     });
     gapiInited = true;
-    
-    const stored = localStorage.getItem('gcal_token');
-    const autoConnect = localStorage.getItem('gcal_auto_connect');
-    
-    if (stored) {
-       const tokenData = JSON.parse(stored);
-       if (tokenData.expireTime > Date.now()) {
-          gapi.client.setToken({access_token: tokenData.access_token});
-          const btnC = document.getElementById('btn-conectar-google');
-          if (btnC) btnC.classList.add('hidden');
-          const btnD = document.getElementById('btn-desconectar-google');
-          if (btnD) btnD.classList.remove('hidden');
-          const alertEl = document.getElementById('calendar-alert');
-          if (alertEl) alertEl.classList.add('hidden');
-          fetchGoogleEvents();
-          if (typeof fetchGoogleFitness === 'function') fetchGoogleFitness();
-          return;
-       } else {
-          localStorage.removeItem('gcal_token');
-       }
-    }
-    
-    // Intentar renovación silenciosa si autoConnect está activo
-    if (autoConnect === 'true' && tokenClient) {
-       const loginHint = localStorage.getItem('gcal_login_hint');
-       const tokenParams = { prompt: 'none' };
-       if (loginHint) tokenParams.login_hint = loginHint;
-       tokenClient.requestAccessToken(tokenParams);
-    }
+    asegurarConexionGoogle(true);
   } catch(e) {
+    window._gapiInitStarted = false;
     console.error("Error init GAPI", e);
   }
 }
@@ -6792,17 +7525,20 @@ function conectarGoogle(forzarConsentimiento = false) {
     showToast('Falta configurar tu Client ID', 'error');
     return;
   }
+  localStorage.removeItem('gcal_explicit_disconnect');
+  localStorage.setItem('gcal_auto_connect', 'true');
+
   if (!gapiInited || !gisInited) {
     showToast('APIs de Google cargando...', 'error');
+    checkGoogleApis();
     return;
   }
   
-  if (forzarConsentimiento || gapi.client.getToken() === null) {
-    tokenClient.requestAccessToken({ prompt: 'consent' });
+  if (forzarConsentimiento || !tieneTokenGoogleValido()) {
+    window._googleAuthInProgress = false;
+    solicitarTokenGoogle(forzarConsentimiento);
   } else {
-    // Si ya hay token, refrescar datos
-    fetchGoogleEvents();
-    if (typeof fetchGoogleFitness === 'function') fetchGoogleFitness();
+    sincronizarDatosGoogle();
   }
 }
 
@@ -6815,14 +7551,16 @@ function reconectarGoogle() {
   } catch(e) {}
   
   if (typeof gapi !== 'undefined' && gapi.client) {
-    gapi.client.setToken('');
+    gapi.client.setToken(null);
   }
   localStorage.removeItem('gcal_token');
-  localStorage.removeItem('gcal_auto_connect');
+  localStorage.removeItem('gcal_explicit_disconnect');
+  localStorage.setItem('gcal_auto_connect', 'true');
   localStorage.removeItem('gcal_login_hint');
   
+  window._googleAuthInProgress = false;
   if (tokenClient) {
-    tokenClient.requestAccessToken({ prompt: 'consent' });
+    solicitarTokenGoogle(true);
   } else if (typeof conectarGoogle === 'function') {
     conectarGoogle(true);
   }
@@ -6830,26 +7568,23 @@ function reconectarGoogle() {
 window.reconectarGoogle = reconectarGoogle;
 
 function desconectarGoogle() {
-  const token = gapi.client.getToken();
+  const token = (typeof gapi !== 'undefined' && gapi.client) ? gapi.client.getToken() : null;
   if (token !== null) {
-    google.accounts.oauth2.revoke(token.access_token);
-    gapi.client.setToken('');
-    localStorage.removeItem('gcal_token');
-    localStorage.removeItem('gcal_auto_connect');
-    localStorage.removeItem('gcal_login_hint');
-    const btnC = document.getElementById('btn-conectar-google');
-    if (btnC) btnC.classList.remove('hidden');
-    const btnD = document.getElementById('btn-desconectar-google');
-    if (btnD) btnD.classList.add('hidden');
-    const alertEl = document.getElementById('calendar-alert');
-    if (alertEl) alertEl.classList.remove('hidden');
-    if (fullCalendarInst) fullCalendarInst.removeAllEvents();
-    showToast('Desconectado', 'ok');
+    try { google.accounts.oauth2.revoke(token.access_token); } catch(e) {}
+    gapi.client.setToken(null);
   }
+  localStorage.removeItem('gcal_token');
+  localStorage.removeItem('gcal_auto_connect');
+  localStorage.removeItem('gcal_login_hint');
+  localStorage.setItem('gcal_explicit_disconnect', 'true');
+  actualizarUIGoogleConectado(false);
+  if (fullCalendarInst) fullCalendarInst.removeAllEvents();
+  showToast('Desconectado', 'ok');
 }
 
 async function fetchGoogleEvents() {
   try {
+    if (!tieneTokenGoogleValido()) return;
     showToast('Sincronizando servicios de Google...', 'ok');
     
     // Fetch last 3 months and next 1 year
@@ -6936,6 +7671,10 @@ async function fetchGoogleEvents() {
 
   } catch (err) {
     console.error(err);
+    if (err && (err.status === 401 || err.status === 403 || (err.result && err.result.error && (err.result.error.code === 401 || err.result.error.code === 403)))) {
+      invalidarYReconectarGoogle();
+      return;
+    }
     showToast('Error al buscar eventos', 'error');
   }
 }
@@ -7085,10 +7824,20 @@ function setActividadFiltro(period) {
 
   const customDates = document.getElementById('actividad-custom-dates');
   if (period === 'personalizado') {
-    customDates.classList.remove('hidden');
-    customDates.classList.add('flex', 'flex-wrap');
-    return; // Esperamos a que le den al botón Filtrar
-  } else {
+    if (customDates) {
+      customDates.classList.remove('hidden');
+      customDates.classList.add('flex', 'flex-wrap');
+    }
+    const fIni = document.getElementById('act-fecha-inicio')?.value;
+    const fFin = document.getElementById('act-fecha-fin')?.value;
+    if (!fIni || !fFin) {
+      // Asegurar que las tarjetas de Inicio igual se alimenten con los datos de hoy
+      ['steps', 'distance', 'weight', 'calories', 'activeMinutes'].forEach(type => {
+        renderHealthCard(type, 'hoy');
+      });
+      return; // Esperamos a que le den al botón Filtrar para el rango personalizado
+    }
+  } else if (customDates) {
     customDates.classList.add('hidden');
     customDates.classList.remove('flex', 'flex-wrap');
   }
@@ -7096,6 +7845,27 @@ function setActividadFiltro(period) {
   ['steps', 'distance', 'weight', 'calories', 'activeMinutes'].forEach(type => {
     renderHealthCard(type, period);
   });
+}
+
+function restaurarCacheFitness() {
+  try {
+    if (window.fitnessData && window.fitnessData.steps && window.fitnessData.steps.length > 0) return;
+    const raw = localStorage.getItem('gp_fitness_cache');
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    if (!parsed || !Array.isArray(parsed.steps) || parsed.steps.length === 0) return;
+    ['steps', 'distance', 'weight', 'calories', 'activeMinutes'].forEach(metric => {
+      if (Array.isArray(parsed[metric])) {
+        window.fitnessData[metric] = parsed[metric].map(item => ({
+          date: new Date(item.date),
+          value: item.value
+        }));
+      }
+    });
+    setActividadFiltro(window.currentHealthFilter || 'hoy');
+  } catch (e) {
+    console.warn('Error restaurando caché de fitness:', e);
+  }
 }
 
 function filtrarActividadCustom() {
@@ -7143,6 +7913,7 @@ async function fetchGoogleFitness() {
     
     const promisesActivity = [];
     const promisesWeight = [];
+    let huboNoAutorizado = false;
     
     chunks.forEach(chunk => {
       const bodyActivity = {
@@ -7170,6 +7941,7 @@ async function fetchGoogleFitness() {
         fetch(url, { method: 'POST', headers, body: JSON.stringify(bodyActivity) })
           .then(async r => {
             if (!r.ok) {
+              if (r.status === 401 || r.status === 403) huboNoAutorizado = true;
               const errTxt = await r.text().catch(() => '');
               console.warn('[Google Fit Activity Chunk] Error', r.status, errTxt);
               return {};
@@ -7183,6 +7955,7 @@ async function fetchGoogleFitness() {
         fetch(url, { method: 'POST', headers, body: JSON.stringify(bodyWeight) })
           .then(async r => {
             if (!r.ok) {
+              if (r.status === 401 || r.status === 403) huboNoAutorizado = true;
               const errTxt = await r.text().catch(() => '');
               console.warn('[Google Fit Weight Chunk] Error', r.status, errTxt);
               return {};
@@ -7195,6 +7968,13 @@ async function fetchGoogleFitness() {
     
     const resultsActivity = await Promise.all(promisesActivity);
     const resultsWeight = await Promise.all(promisesWeight);
+
+    if (huboNoAutorizado) {
+      if (typeof invalidarYReconectarGoogle === 'function') {
+        invalidarYReconectarGoogle();
+      }
+      return false;
+    }
     
     const activityByDate = new Map();
     const weightByDate = new Map();
@@ -7356,6 +8136,13 @@ async function fetchGoogleFitness() {
       const diasSinDatos = Math.round((startOfToday - lastWithData.date) / 86400000);
       console.info(`[Google Fit] Último día con pasos: ${lastWithData.date.toLocaleDateString('es-ES')} (${diasSinDatos} días atrás)`);
     }
+
+    try {
+      localStorage.setItem('gp_fitness_cache', JSON.stringify(window.fitnessData));
+    } catch (e) {}
+
+    // Actualizar inmediatamente las tarjetas de Salud en el Panel de Control (Inicio) y en Actividad
+    setActividadFiltro(window.currentHealthFilter || 'hoy');
     
     return true;
   } catch (error) {
@@ -7366,14 +8153,9 @@ async function fetchGoogleFitness() {
 
 // ─── SINCRONIZACIÓN DE ACTIVIDAD ──────────────────────────────────────────────
 async function fetchHealthData() {
-  const token = (typeof gapi !== 'undefined' && gapi.client) ? gapi.client.getToken() : null;
-  if (!token || !token.access_token) return;
-  
+  if (!tieneTokenGoogleValido()) return;
   try {
-    const ok = await fetchGoogleFitness();
-    if (ok) {
-      setActividadFiltro(window.currentHealthFilter || 'hoy');
-    }
+    await fetchGoogleFitness();
   } catch (err) {
     console.error('Error en fetchHealthData:', err);
   }
@@ -7866,6 +8648,917 @@ function drawHealthChart(type, labels, data, startPhysChangeIndex = -1) {
         }
       }
     }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ─── MÓDULO DOMÓTICA (SMART LIFE / TUYA) ──────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const DOMOTICA_STORAGE_KEY = 'gp_domotica_state_v1';
+const DOMOTICA_CONFIG_KEY  = 'gp_domotica_config_v1';
+
+let domoticaIniciado = false;
+let domPlugInterval = null;
+
+let domState = {
+  ac: {
+    power: false,
+    temp: 24,
+    mode: 'cool',   // cool, heat, auto, fan, dry
+    fan: 'auto',    // auto, low, med, high
+    swing: false
+  },
+  vacuum: {
+    status: 'docked', // docked, cleaning, paused, returning
+    battery: 100,
+    area: 42,
+    time: 38,
+    mode: 'smart',    // smart, wall_follow, spiral, single
+    suction: 'normal' // gentle, normal, strong
+  },
+  plug: {
+    power: false,
+    timerMinutes: 0,
+    timerEndTime: null,
+    lastChange: '—'
+  },
+  tv: {
+    power: false,
+    muted: false,
+    volume: 18,
+    activeApp: 'home' // home, netflix, disney, flow, stremio, youtube, ytmusic
+  }
+};
+
+let domConfig = {
+  mode: 'local', // local, apps_script, webhook
+  clientId: '',
+  secret: '',
+  region: 'https://openapi.tuyaus.com',
+  bridgeUrl: '',
+  irHubId: 'eb86e2bb1852d20afdipwv',
+  acId: 'eb0311313b24e86fd56bj5',
+  tvId: 'eb6262ae550cac599cs1iv',
+  vacId: 'ebcdc0dfb917071f14mpb7',
+  plugId: 'eb2e11982105f541d3wdql'
+};
+
+function iniciarDomotica() {
+  try {
+    const savedState = localStorage.getItem(DOMOTICA_STORAGE_KEY);
+    if (savedState) {
+      const parsed = JSON.parse(savedState);
+      domState = {
+        ac: { ...domState.ac, ...(parsed.ac || {}) },
+        vacuum: { ...domState.vacuum, ...(parsed.vacuum || {}) },
+        plug: { ...domState.plug, ...(parsed.plug || {}) },
+        tv: { ...domState.tv, ...(parsed.tv || {}) }
+      };
+      if (domState.vacuum.suction === 'max') {
+        domState.vacuum.suction = 'strong';
+      }
+    }
+    const savedCfg = localStorage.getItem(DOMOTICA_CONFIG_KEY);
+    if (savedCfg) {
+      domConfig = { ...domConfig, ...JSON.parse(savedCfg) };
+    }
+  } catch (e) {
+    console.warn('Error cargando estado de domótica:', e);
+  }
+
+  renderDomoticaUI();
+  iniciarTimerEnchufeDomotica();
+  domoticaIniciado = true;
+}
+
+function guardarEstadoDomotica() {
+  try {
+    localStorage.setItem(DOMOTICA_STORAGE_KEY, JSON.stringify(domState));
+  } catch (e) {}
+}
+
+function registrarLogDomotica(dispositivo, detalle, viaApi = false) {
+  const logEl = document.getElementById('dom-activity-log');
+  if (!logEl) return;
+  const hora = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  const tag = viaApi
+    ? `<span class="text-cyan-400 font-bold">[Tuya Cloud]</span>`
+    : `<span class="text-amber-400 font-bold">[Smart Life]</span>`;
+  const item = document.createElement('div');
+  item.className = 'flex items-center gap-2 py-0.5 border-b border-slate-800/60 text-[11px]';
+  item.innerHTML = `<span class="text-slate-500">[${hora}]</span> ${tag} <span class="text-white font-bold">${dispositivo}:</span> <span class="text-slate-300">${detalle}</span>`;
+  if (logEl.firstElementChild && logEl.firstElementChild.textContent.includes('Sistema domótico listo')) {
+    logEl.innerHTML = '';
+  }
+  logEl.prepend(item);
+}
+
+function limpiarLogDomotica() {
+  const logEl = document.getElementById('dom-activity-log');
+  if (logEl) {
+    logEl.innerHTML = '<div class="text-slate-500">Registro limpio.</div>';
+  }
+}
+
+async function enviarComandoSmartLife(dispositivo, accion, payload = {}) {
+  const usaApi = domConfig.mode !== 'local' && (domConfig.clientId || domConfig.bridgeUrl);
+  registrarLogDomotica(dispositivo, accion, usaApi);
+
+  if (domConfig.mode === 'local') return true;
+
+  const targetUrl = (domConfig.bridgeUrl && domConfig.bridgeUrl.trim() !== '') ? domConfig.bridgeUrl.trim() : scriptURL;
+
+  const hacerPeticion = async (regionUrl) => {
+    const resp = await fetch(targetUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        accion: 'domoticaSmartLife',
+        dispositivo,
+        comando: accion,
+        payload,
+        config: {
+          clientId: (domConfig.clientId || '').trim(),
+          secret: (domConfig.secret || '').trim(),
+          region: regionUrl,
+          irHubId: (domConfig.irHubId || '').trim(),
+          acId: (domConfig.acId || '').trim(),
+          tvId: (domConfig.tvId || '').trim(),
+          vacId: (domConfig.vacId || '').trim(),
+          plugId: (domConfig.plugId || '').trim()
+        }
+      })
+    });
+    return await resp.json();
+  };
+
+  try {
+    let data = await hacerPeticion(domConfig.region || 'https://openapi.tuyaus.com');
+
+    // Si devuelve "sign invalid", probar automáticamente los demás Data Centers de Tuya por si el proyecto está en otra región
+    if (data.result === 'error' && String(data.msg || '').toLowerCase().includes('sign invalid')) {
+      const regionesAlternativas = [
+        'https://openapi.tuyaus.com',
+        'https://openapi-ueaz.tuyaus.com',
+        'https://openapi.tuyaeu.com',
+        'https://openapi-weaz.tuyaeu.com',
+        'https://openapi.tuyacn.com',
+        'https://openapi.tuyain.com'
+      ].filter(r => r !== (domConfig.region || 'https://openapi.tuyaus.com'));
+
+      registrarLogDomotica('Auto-Diagnóstico', 'Probando regiones alternativas de Tuya Cloud...', true);
+      for (const reg of regionesAlternativas) {
+        const intento = await hacerPeticion(reg);
+        if (intento.result === 'success' || !String(intento.msg || '').toLowerCase().includes('sign invalid')) {
+          data = intento;
+          domConfig.region = reg;
+          try { localStorage.setItem(DOMOTICA_CONFIG_KEY, JSON.stringify(domConfig)); } catch (e) {}
+          registrarLogDomotica('Región Detectada', `<span class="text-emerald-400 font-bold">Data Center corregido automáticamente a ${reg} ✓</span>`, true);
+          break;
+        }
+      }
+    }
+
+    if (data.result === 'error') {
+      let msgCorto = data.msg || 'Error en puente Apps Script';
+      if (msgCorto.includes('script.external_request')) {
+        msgCorto = 'Falta autorizar UrlFetchApp en Google Apps Script';
+      } else if (msgCorto.toLowerCase().includes('sign invalid')) {
+        const secLen = (domConfig.secret || '').trim().length;
+        const idLen  = (domConfig.clientId || '').trim().length;
+        const secPreview = (domConfig.secret || '').trim().slice(0, 4);
+        registrarLogDomotica(
+          'Diagnóstico Claves',
+          `<span class="text-amber-300">Access ID: <b>${idLen} caract.</b> | Access Secret: <b>${secLen} caract.</b> (empieza con "${secPreview}..."). ` +
+          `El Access Secret de Tuya siempre tiene <b>32 caracteres</b>. Abrí "Vincular Smart Life" y verificá que el navegador no haya autocompletado tu contraseña en el campo Secret.</span>`,
+          true
+        );
+        msgCorto = `Sign Invalid (Secret tiene ${secLen} caract., debe tener 32)`;
+      }
+      registrarLogDomotica('Error Tuya/AppsScript', `<span class="text-rose-400 font-bold">${msgCorto}</span>`, true);
+      showToast(msgCorto, 'error');
+      return false;
+    }
+
+    if (data.tuya && data.tuya.success === false) {
+      const errTuya = `Código Tuya ${data.tuya.code}: ${data.tuya.msg || 'Comando rechazado'}`;
+      registrarLogDomotica('Aviso Tuya API', `<span class="text-amber-400 font-bold">${errTuya}</span>`, true);
+      showToast(errTuya, 'error');
+      return false;
+    }
+
+    // Si es una sincronización y vienen estados reales desde Tuya, actualizar UI
+    if (data.plugStatus && data.plugStatus.success && Array.isArray(data.plugStatus.result)) {
+      const sw = data.plugStatus.result.find(d => d.code === 'switch_1' || d.code === 'switch');
+      if (sw && typeof sw.value === 'boolean') {
+        domState.plug.power = sw.value;
+      }
+      guardarEstadoDomotica();
+      renderDomoticaUI();
+    }
+    if (data.vacStatus && data.vacStatus.success && Array.isArray(data.vacStatus.result)) {
+      const bat = data.vacStatus.result.find(d => d.code === 'electricity_left' || d.code === 'battery_percentage');
+      if (bat && typeof bat.value === 'number') {
+        domState.vacuum.battery = bat.value;
+      }
+      guardarEstadoDomotica();
+      renderDomoticaUI();
+    }
+
+    registrarLogDomotica('Respuesta Tuya', '<span class="text-emerald-400 font-bold">OK ✓ Comando ejecutado en la nube</span>', true);
+    return true;
+  } catch (e) {
+    console.warn('Error enviando comando domótico:', e);
+    registrarLogDomotica('Error Red', `<span class="text-rose-400">${e.message || e}</span>`, true);
+    return false;
+  }
+}
+
+function renderDomoticaUI() {
+  // Badge de conexión superior
+  const badge = document.getElementById('dom-api-badge');
+  const dot = document.getElementById('dom-api-dot');
+  const txt = document.getElementById('dom-api-status-text');
+  if (badge && dot && txt) {
+    const conectado = domConfig.mode !== 'local' && (domConfig.clientId || domConfig.bridgeUrl);
+    if (conectado) {
+      badge.className = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500/15 text-emerald-400 border border-emerald-500/30';
+      dot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse';
+      txt.textContent = domConfig.mode === 'apps_script' ? 'Conectado (Tuya Cloud)' : 'Conectado (Webhook)';
+    } else {
+      badge.className = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/15 text-amber-400 border border-amber-500/30';
+      dot.className = 'w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse';
+      txt.textContent = 'Modo Interactivo Local';
+    }
+  }
+
+  // 1. Render Aire Acondicionado (IR)
+  const ac = domState.ac;
+  const acCard = document.getElementById('dom-card-ac');
+  const acGlow = document.getElementById('dom-ac-glow');
+  const acIconBox = document.getElementById('dom-ac-icon-box');
+  const acIcon = document.getElementById('dom-ac-icon');
+  const acSub = document.getElementById('dom-ac-subtitle');
+  const acPowerBtn = document.getElementById('dom-ac-power-btn');
+  const acTemp = document.getElementById('dom-ac-temp');
+  const acModePill = document.getElementById('dom-ac-mode-pill');
+  const acFanPill = document.getElementById('dom-ac-fan-pill');
+
+  const modeLabels = {
+    cool: { txt: '❄️ Frío', name: 'Refrigeración', icon: 'fa-snowflake text-cyan-400' },
+    heat: { txt: '🔥 Calor', name: 'Calefacción', icon: 'fa-sun text-orange-400' },
+    auto: { txt: '🔄 Auto', name: 'Automático', icon: 'fa-magic text-emerald-400' },
+    fan:  { txt: '🌀 Vent.', name: 'Ventilación', icon: 'fa-fan text-sky-400' },
+    dry:  { txt: '💧 Seco', name: 'Deshumectación', icon: 'fa-tint-slash text-blue-400' }
+  };
+  const fanLabels = { auto: 'Auto', low: 'Baja', med: 'Media', high: 'Alta' };
+
+  if (acTemp) acTemp.textContent = ac.temp;
+  if (acModePill) acModePill.textContent = (modeLabels[ac.mode] || modeLabels.cool).txt;
+  if (acFanPill) acFanPill.textContent = `🌀 Fan: ${fanLabels[ac.fan] || 'Auto'}${ac.swing ? ' • Swing' : ''}`;
+
+  if (ac.power) {
+    if (acCard) acCard.className = 'bg-black rounded-2xl border border-cyan-500/50 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all shadow-lg shadow-cyan-950/30';
+    if (acGlow) acGlow.classList.replace('opacity-0', 'opacity-100');
+    if (acIconBox) acIconBox.className = 'w-10 h-10 rounded-xl bg-cyan-900/50 border border-cyan-500/40 flex items-center justify-center transition-colors';
+    if (acIcon) acIcon.className = `fas ${(modeLabels[ac.mode] || modeLabels.cool).icon} text-base`;
+    if (acSub) acSub.innerHTML = `<span class="text-cyan-400 font-bold">Encendido</span> — ${(modeLabels[ac.mode] || modeLabels.cool).name} a ${ac.temp}°C`;
+    if (acPowerBtn) acPowerBtn.className = 'w-11 h-11 rounded-xl bg-cyan-600 text-white border border-cyan-400/50 flex items-center justify-center transition-all active:scale-95 shadow-lg shadow-cyan-600/30';
+  } else {
+    if (acCard) acCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all';
+    if (acGlow) acGlow.classList.replace('opacity-100', 'opacity-0');
+    if (acIconBox) acIconBox.className = 'w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-colors';
+    if (acIcon) acIcon.className = 'fas fa-snowflake text-slate-500 text-base';
+    if (acSub) acSub.textContent = 'Apagado — Listo para enviar señal IR';
+    if (acPowerBtn) acPowerBtn.className = 'w-11 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700 flex items-center justify-center transition-all active:scale-95';
+  }
+
+  ['cool', 'heat', 'auto', 'fan', 'dry'].forEach(m => {
+    const btn = document.getElementById('dom-ac-mode-' + m);
+    if (!btn) return;
+    const active = ac.mode === m;
+    btn.className = `py-2.5 px-2 rounded-xl border text-[10px] font-black uppercase tracking-wider flex flex-col items-center gap-1 transition-all ${
+      active ? 'bg-cyan-600/25 border-cyan-400 text-cyan-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
+    }`;
+  });
+
+  ['auto', 'low', 'med', 'high'].forEach(f => {
+    const btn = document.getElementById('dom-ac-fan-' + f);
+    if (!btn) return;
+    const active = ac.fan === f;
+    btn.className = `h-9 rounded-xl border text-[10px] font-black uppercase tracking-wider transition-all ${
+      active ? 'bg-cyan-600/25 border-cyan-400 text-cyan-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
+    }`;
+  });
+
+  const swingBtn = document.getElementById('dom-ac-swing-btn');
+  if (swingBtn) {
+    swingBtn.className = `h-9 rounded-xl border text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1 ${
+      ac.swing ? 'bg-cyan-600/25 border-cyan-400 text-cyan-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
+    }`;
+  }
+
+  // 2. Render Aspiradora Robot
+  const vac = domState.vacuum;
+  const vacCard = document.getElementById('dom-card-vacuum');
+  const vacGlow = document.getElementById('dom-vac-glow');
+  const vacBadge = document.getElementById('dom-vac-badge');
+  const vacSub = document.getElementById('dom-vac-subtitle');
+  const vacStateTxt = document.getElementById('dom-vac-state-text');
+  const vacBat = document.getElementById('dom-vac-battery');
+  const vacArea = document.getElementById('dom-vac-area');
+  const vacTime = document.getElementById('dom-vac-time');
+
+  const vacStatusMap = {
+    docked:    { badge: 'En Base', state: 'Cargada', sub: 'En base de carga — Lista para aspirar', color: 'text-emerald-400', active: false },
+    cleaning:  { badge: 'Limpiando', state: 'Aspirando', sub: 'Limpieza en progreso por la casa', color: 'text-cyan-400', active: true },
+    paused:    { badge: 'En Pausa', state: 'Pausada', sub: 'Recorrido en pausa temporal', color: 'text-amber-400', active: false },
+    returning: { badge: 'Volviendo', state: 'A la Base', sub: 'Regresando al cargador automáticamente', color: 'text-violet-400', active: true }
+  };
+  const vInfo = vacStatusMap[vac.status] || vacStatusMap.docked;
+
+  if (vacBadge) vacBadge.textContent = vInfo.badge;
+  if (vacSub) vacSub.textContent = vInfo.sub;
+  if (vacStateTxt) {
+    vacStateTxt.textContent = vInfo.state;
+    vacStateTxt.className = `text-xs font-black uppercase mt-1 block ${vInfo.color}`;
+  }
+  if (vacBat) vacBat.textContent = `${vac.battery}%`;
+  if (vacArea) vacArea.textContent = `${vac.area} m²`;
+  if (vacTime) vacTime.textContent = `${vac.time} min`;
+
+  if (vInfo.active) {
+    if (vacCard) vacCard.className = 'bg-black rounded-2xl border border-emerald-500/50 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all shadow-lg shadow-emerald-950/30';
+    if (vacGlow) vacGlow.classList.replace('opacity-0', 'opacity-100');
+  } else {
+    if (vacCard) vacCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all';
+    if (vacGlow) vacGlow.classList.replace('opacity-100', 'opacity-0');
+  }
+
+  ['smart', 'wall_follow', 'spiral', 'single'].forEach(m => {
+    const btn = document.getElementById('dom-vac-mode-' + m);
+    if (!btn) return;
+    const active = vac.mode === m;
+    btn.className = `h-9 rounded-xl border text-[10px] font-black uppercase tracking-wider transition-all ${
+      active ? 'bg-emerald-600/25 border-emerald-400 text-emerald-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
+    }`;
+  });
+
+  ['gentle', 'normal', 'strong'].forEach(s => {
+    const btn = document.getElementById('dom-vac-suction-' + s);
+    if (!btn) return;
+    const active = vac.suction === s;
+    btn.className = `h-9 rounded-xl border text-[10px] font-black uppercase tracking-wider transition-all ${
+      active ? 'bg-emerald-600/25 border-emerald-400 text-emerald-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
+    }`;
+  });
+
+  // 3. Render Enchufe Inteligente
+  const plug = domState.plug;
+  const plugCard = document.getElementById('dom-card-plug');
+  const plugGlow = document.getElementById('dom-plug-glow');
+  const plugIconBox = document.getElementById('dom-plug-icon-box');
+  const plugIcon = document.getElementById('dom-plug-icon');
+  const plugBadge = document.getElementById('dom-plug-badge');
+  const plugSub = document.getElementById('dom-plug-subtitle');
+  const plugPowerBtn = document.getElementById('dom-plug-power-btn');
+  const plugBigBtn = document.getElementById('dom-plug-big-btn');
+  const plugBigIcon = document.getElementById('dom-plug-big-icon');
+  const plugStateBig = document.getElementById('dom-plug-state-big');
+  const plugLast = document.getElementById('dom-plug-last-change');
+  const plugTimerInfo = document.getElementById('dom-plug-timer-info');
+
+  if (plugLast) plugLast.textContent = plug.lastChange || '—';
+  if (plugTimerInfo) {
+    plugTimerInfo.textContent = plug.timerMinutes > 0
+      ? `Temporizador activo: ${plug.timerMinutes} min restantes`
+      : 'Temporizador: Inactivo';
+  }
+
+  if (plug.power) {
+    if (plugCard) plugCard.className = 'bg-black rounded-2xl border border-amber-500/50 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all shadow-lg shadow-amber-950/30';
+    if (plugGlow) plugGlow.classList.replace('opacity-0', 'opacity-100');
+    if (plugIconBox) plugIconBox.className = 'w-10 h-10 rounded-xl bg-amber-900/50 border border-amber-500/40 flex items-center justify-center transition-colors';
+    if (plugIcon) plugIcon.className = 'fas fa-plug text-amber-400 text-base';
+    if (plugBadge) {
+      plugBadge.className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40';
+      plugBadge.textContent = 'Encendido';
+    }
+    if (plugSub) plugSub.innerHTML = '<span class="text-amber-400 font-bold">Suministro activo</span> — Corriente habilitada';
+    if (plugPowerBtn) plugPowerBtn.className = 'w-11 h-11 rounded-xl bg-amber-500 text-black border border-amber-300 flex items-center justify-center transition-all active:scale-95 shadow-lg shadow-amber-500/30';
+    if (plugBigBtn) plugBigBtn.className = 'w-16 h-16 rounded-2xl bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center transition-all active:scale-95 shadow-lg shadow-amber-500/20';
+    if (plugBigIcon) plugBigIcon.className = 'fas fa-bolt text-2xl text-amber-400 transition-colors';
+    if (plugStateBig) {
+      plugStateBig.textContent = 'ENCENDIDO';
+      plugStateBig.className = 'text-2xl font-black mono text-amber-400 tracking-tight block mt-0.5';
+    }
+  } else {
+    if (plugCard) plugCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all';
+    if (plugGlow) plugGlow.classList.replace('opacity-100', 'opacity-0');
+    if (plugIconBox) plugIconBox.className = 'w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-colors';
+    if (plugIcon) plugIcon.className = 'fas fa-plug text-slate-500 text-base';
+    if (plugBadge) {
+      plugBadge.className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700';
+      plugBadge.textContent = 'Apagado';
+    }
+    if (plugSub) plugSub.textContent = 'Sin suministro activo';
+    if (plugPowerBtn) plugPowerBtn.className = 'w-11 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700 flex items-center justify-center transition-all active:scale-95';
+    if (plugBigBtn) plugBigBtn.className = 'w-16 h-16 rounded-2xl bg-slate-800 border-2 border-slate-700 flex items-center justify-center transition-all active:scale-95 shadow-lg';
+    if (plugBigIcon) plugBigIcon.className = 'fas fa-bolt text-2xl text-slate-500 transition-colors';
+    if (plugStateBig) {
+      plugStateBig.textContent = 'APAGADO';
+      plugStateBig.className = 'text-2xl font-black mono text-slate-400 tracking-tight block mt-0.5';
+    }
+  }
+
+  // 4. Render Televisor Android TV (IR)
+  const tv = domState.tv;
+  const tvCard = document.getElementById('dom-card-tv');
+  const tvGlow = document.getElementById('dom-tv-glow');
+  const tvIconBox = document.getElementById('dom-tv-icon-box');
+  const tvIcon = document.getElementById('dom-tv-icon');
+  const tvSub = document.getElementById('dom-tv-subtitle');
+  const tvVol = document.getElementById('dom-tv-vol-val');
+  const tvMuteBtn = document.getElementById('dom-tv-mute-btn');
+  const tvAppBadge = document.getElementById('dom-tv-active-app-badge');
+
+  const appLabels = {
+    home: 'Pantalla de Inicio',
+    flow: 'Flow',
+    youtube: 'YouTube',
+    stremio: 'Stremio',
+    disney: 'Disney+',
+    paramount: 'Paramount+',
+    netflix: 'Netflix',
+    ytmusic: 'YouTube Music',
+    kick: 'Kick'
+  };
+  const nombreAppActiva = appLabels[tv.activeApp] || 'Pantalla de Inicio';
+
+  if (tvVol) tvVol.textContent = tv.muted ? 'MUTE' : tv.volume;
+  if (tvAppBadge) tvAppBadge.textContent = tv.power ? `Activa: ${nombreAppActiva}` : 'En espera';
+  if (tvMuteBtn) {
+    tvMuteBtn.className = tv.muted
+      ? 'w-8 h-8 rounded-lg bg-amber-500/25 text-amber-300 border border-amber-400 flex items-center justify-center transition-all active:scale-95'
+      : 'w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 flex items-center justify-center transition-all active:scale-95';
+  }
+
+  ['flow', 'youtube', 'stremio', 'disney', 'paramount', 'netflix', 'ytmusic', 'kick'].forEach(appKey => {
+    const btn = document.getElementById('dom-tv-app-' + appKey);
+    if (!btn) return;
+    const isActiva = tv.power && tv.activeApp === appKey;
+    btn.className = isActiva
+      ? 'group h-14 px-2.5 rounded-xl bg-violet-950/50 border border-violet-400 flex items-center gap-2.5 transition-all active:scale-95 text-left shadow-md shadow-violet-950/40'
+      : 'group h-14 px-2.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-violet-500/40 flex items-center gap-2.5 transition-all active:scale-95 text-left';
+  });
+
+  if (tv.power) {
+    if (tvCard) tvCard.className = 'bg-black rounded-2xl border border-violet-500/50 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all shadow-lg shadow-violet-950/30';
+    if (tvGlow) tvGlow.classList.replace('opacity-0', 'opacity-100');
+    if (tvIconBox) tvIconBox.className = 'w-10 h-10 rounded-xl bg-violet-900/50 border border-violet-500/40 flex items-center justify-center transition-colors';
+    if (tvIcon) tvIcon.className = 'fas fa-tv text-violet-400 text-sm';
+    if (tvSub) tvSub.innerHTML = `<span class="text-violet-400 font-bold">Encendido</span> — ${nombreAppActiva} • Vol ${tv.muted ? 'Silenciado' : tv.volume}`;
+  } else {
+    if (tvCard) tvCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all';
+    if (tvGlow) tvGlow.classList.replace('opacity-100', 'opacity-0');
+    if (tvIconBox) tvIconBox.className = 'w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-colors';
+    if (tvIcon) tvIcon.className = 'fas fa-tv text-slate-500 text-sm';
+    if (tvSub) tvSub.textContent = 'En espera — Android TV (Hub IR)';
+  }
+}
+
+// ─── Controles Aire Acondicionado (IR) ────────────────────────────────────────
+function domToggleAC() {
+  domState.ac.power = !domState.ac.power;
+  guardarEstadoDomotica();
+  renderDomoticaUI();
+  // En este equipo IR, el pulso de "Apagar" (power: false / 0) actúa como Power Toggle (prende y apaga)
+  enviarComandoSmartLife(
+    'Aire Acondicionado (IR)',
+    domState.ac.power ? `Encender (vía pulso Apagar IR — ${domState.ac.temp}°C)` : 'Apagar (vía pulso Apagar IR)',
+    { ...domState.ac, power: false }
+  );
+  showToast(domState.ac.power ? `Aire encendido (${domState.ac.temp}°C)` : 'Aire apagado', 'ok');
+}
+
+function domCambiarTempAC(delta) {
+  const nueva = Math.max(16, Math.min(30, (domState.ac.temp || 24) + delta));
+  domState.ac.temp = nueva;
+  domState.ac.power = true;
+  guardarEstadoDomotica();
+  renderDomoticaUI();
+  enviarComandoSmartLife('Aire Acondicionado (IR)', `Temperatura ajustada a ${nueva}°C`, { ...domState.ac });
+}
+
+function domSetTempAC(temp) {
+  domState.ac.temp = temp;
+  domState.ac.power = true;
+  guardarEstadoDomotica();
+  renderDomoticaUI();
+  enviarComandoSmartLife('Aire Acondicionado (IR)', `Temperatura fijada en ${temp}°C`, { ...domState.ac });
+  showToast(`Aire en ${temp}°C`, 'ok');
+}
+
+function domSetModoAC(modo) {
+  domState.ac.mode = modo;
+  domState.ac.power = true;
+  guardarEstadoDomotica();
+  renderDomoticaUI();
+  enviarComandoSmartLife('Aire Acondicionado (IR)', `Modo cambiado a ${modo.toUpperCase()}`, { ...domState.ac });
+}
+
+function domSetFanAC(fan) {
+  domState.ac.fan = fan;
+  domState.ac.power = true;
+  guardarEstadoDomotica();
+  renderDomoticaUI();
+  enviarComandoSmartLife('Aire Acondicionado (IR)', `Velocidad de turbina: ${fan.toUpperCase()}`, { ...domState.ac });
+}
+
+function domToggleSwingAC() {
+  domState.ac.swing = !domState.ac.swing;
+  domState.ac.power = true;
+  guardarEstadoDomotica();
+  renderDomoticaUI();
+  enviarComandoSmartLife('Aire Acondicionado (IR)', `Swing (Oscilación): ${domState.ac.swing ? 'ON' : 'OFF'}`, { ...domState.ac });
+}
+
+// ─── Controles Aspiradora Robot ───────────────────────────────────────────────
+function domAccionAspiradora(accion) {
+  if (accion === 'start') {
+    domState.vacuum.status = 'cleaning';
+    enviarComandoSmartLife('Aspiradora Robot', `Iniciar limpieza (${domState.vacuum.mode})`, { command: 'start', mode: domState.vacuum.mode });
+    showToast('Aspiradora iniciando limpieza', 'ok');
+  } else if (accion === 'pause') {
+    domState.vacuum.status = 'paused';
+    enviarComandoSmartLife('Aspiradora Robot', 'Pausar limpieza', { command: 'pause' });
+    showToast('Aspiradora en pausa', 'ok');
+  } else if (accion === 'dock') {
+    domState.vacuum.status = 'returning';
+    enviarComandoSmartLife('Aspiradora Robot', 'Volver a la base de carga', { command: 'charge_go' });
+    showToast('Aspiradora volviendo a la base', 'ok');
+    setTimeout(() => {
+      if (domState.vacuum.status === 'returning') {
+        domState.vacuum.status = 'docked';
+        domState.vacuum.battery = 100;
+        guardarEstadoDomotica();
+        renderDomoticaUI();
+      }
+    }, 4000);
+  } else if (accion === 'locate') {
+    enviarComandoSmartLife('Aspiradora Robot', 'Emitir sonido de localización (Seek)', { command: 'seek' });
+    showToast('Buscando aspiradora (sonido emitido)', 'ok');
+  }
+  guardarEstadoDomotica();
+  renderDomoticaUI();
+}
+
+function domSetModoAspiradora(modo) {
+  domState.vacuum.mode = modo;
+  guardarEstadoDomotica();
+  renderDomoticaUI();
+  enviarComandoSmartLife('Aspiradora Robot', `Modo de limpieza: ${modo}`, { mode: modo });
+}
+
+function domSetSuccionAspiradora(succion) {
+  domState.vacuum.suction = succion;
+  guardarEstadoDomotica();
+  renderDomoticaUI();
+  enviarComandoSmartLife('Aspiradora Robot', `Potencia de succión: ${succion}`, { cistern: succion });
+}
+
+// ─── Controles Enchufe Inteligente ────────────────────────────────────────────
+function domTogglePlug() {
+  domState.plug.power = !domState.plug.power;
+  domState.plug.lastChange = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+  guardarEstadoDomotica();
+  renderDomoticaUI();
+  enviarComandoSmartLife('Enchufe Inteligente', domState.plug.power ? 'Encender (ON)' : 'Apagar (OFF)', { switch_1: domState.plug.power });
+  showToast(domState.plug.power ? 'Enchufe encendido' : 'Enchufe apagado', 'ok');
+}
+
+function domSetTimerPlug(minutos) {
+  domState.plug.timerMinutes = minutos;
+  domState.plug.timerEndTime = minutos > 0 ? (Date.now() + minutos * 60000) : null;
+  guardarEstadoDomotica();
+  renderDomoticaUI();
+  if (minutos > 0) {
+    enviarComandoSmartLife('Enchufe Inteligente', `Temporizador programado en ${minutos} min`, { countdown_1: minutos * 60 });
+    showToast(`Temporizador de enchufe: ${minutos} min`, 'ok');
+  } else {
+    enviarComandoSmartLife('Enchufe Inteligente', 'Temporizador cancelado', { countdown_1: 0 });
+    showToast('Temporizador cancelado', 'ok');
+  }
+}
+
+function iniciarTimerEnchufeDomotica() {
+  if (domPlugInterval) clearInterval(domPlugInterval);
+  domPlugInterval = setInterval(() => {
+    if (domState.plug.timerEndTime && Date.now() >= domState.plug.timerEndTime) {
+      domState.plug.power = !domState.plug.power;
+      domState.plug.timerMinutes = 0;
+      domState.plug.timerEndTime = null;
+      domState.plug.lastChange = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+      guardarEstadoDomotica();
+      renderDomoticaUI();
+      registrarLogDomotica('Enchufe Inteligente', 'Temporizador finalizado — Cambio automático de estado');
+    }
+  }, 15000);
+}
+
+// ─── Controles Televisor Android TV (IR) ──────────────────────────────────────
+function domCmdTV(cmd) {
+  let descripcion = cmd;
+  // Mapeo directo al key_name real de Tuya IR para que nunca caiga en fallback a Power
+  const tuyaKeyAlias = {
+    power: 'power',
+    home: 'home',
+    mute: 'mute',
+    vol_up: 'volume+',
+    vol_down: 'volume-'
+  };
+  const keyToSend = tuyaKeyAlias[cmd] || cmd;
+
+  if (cmd === 'power') {
+    domState.tv.power = !domState.tv.power;
+    descripcion = domState.tv.power ? 'Encender Android TV (Power IR)' : 'Apagar Android TV (Power IR)';
+    showToast(domState.tv.power ? 'TV encendida' : 'TV apagada', 'ok');
+  } else if (cmd === 'home') {
+    domState.tv.power = true;
+    domState.tv.activeApp = 'home';
+    descripcion = 'Volver a Pantalla de Inicio (Home Android TV)';
+    showToast('Pantalla de Inicio (Android TV)', 'ok');
+  } else if (cmd === 'mute') {
+    domState.tv.power = true;
+    domState.tv.muted = !domState.tv.muted;
+    descripcion = domState.tv.muted ? 'Silenciar (Mute)' : 'Activar sonido';
+  } else if (cmd === 'vol_up') {
+    domState.tv.power = true;
+    domState.tv.muted = false;
+    domState.tv.volume = Math.min(100, domState.tv.volume + 1);
+    descripcion = `Subir volumen (${domState.tv.volume})`;
+  } else if (cmd === 'vol_down') {
+    domState.tv.power = true;
+    domState.tv.muted = false;
+    domState.tv.volume = Math.max(0, domState.tv.volume - 1);
+    descripcion = `Bajar volumen (${domState.tv.volume})`;
+  } else {
+    domState.tv.power = true;
+    descripcion = `Tecla IR: ${cmd.toUpperCase()}`;
+  }
+
+  guardarEstadoDomotica();
+  renderDomoticaUI();
+  enviarComandoSmartLife('TV (Control IR)', descripcion, { key: keyToSend });
+}
+
+async function domAbrirAppTV(appKey, silentToast = false) {
+  // Orden exacto de tu fila de Inicio en Android TV:
+  // 1° Flow (0), 2° YouTube (1), 3° Stremio (2), 4° Disney+ (3), 5° Paramount+ (4), 6° Netflix (5), 7° YouTube Music (6), 8° Kick (7)
+  const appsConfig = {
+    flow:      { nombre: 'Flow',          pasosDerecha: 0 },
+    youtube:   { nombre: 'YouTube',       pasosDerecha: 1 },
+    stremio:   { nombre: 'Stremio',       pasosDerecha: 2 },
+    disney:    { nombre: 'Disney+',       pasosDerecha: 3 },
+    paramount: { nombre: 'Paramount+',    pasosDerecha: 4 },
+    netflix:   { nombre: 'Netflix',       pasosDerecha: 5 },
+    ytmusic:   { nombre: 'YouTube Music', pasosDerecha: 6 },
+    kick:      { nombre: 'Kick',          pasosDerecha: 7 }
+  };
+  const info = appsConfig[appKey] || { nombre: appKey, pasosDerecha: 0 };
+
+  domState.tv.power = true;
+  domState.tv.activeApp = appKey;
+  guardarEstadoDomotica();
+  renderDomoticaUI();
+
+  if (!silentToast) {
+    showToast(`Abriendo ${info.nombre} en Android TV...`, 'ok');
+  }
+
+  // Secuencia IR en Android TV: Home -> Derecha N veces -> OK
+  await enviarComandoSmartLife('TV (Control IR)', `Macro Android TV (${info.nombre}): Paso 1 — Ir a Inicio (Home)`, { key: 'home' });
+
+  let delayAcumulado = 1100;
+  for (let i = 0; i < info.pasosDerecha; i++) {
+    setTimeout(() => {
+      enviarComandoSmartLife('TV (Control IR)', `Macro Android TV (${info.nombre}): Desplazar a la derecha (${i + 1}/${info.pasosDerecha})`, { key: 'right' });
+    }, delayAcumulado);
+    delayAcumulado += 450;
+  }
+
+  setTimeout(() => {
+    enviarComandoSmartLife('TV (Control IR)', `Macro Android TV (${info.nombre}): Confirmar apertura (OK)`, { key: 'ok' });
+  }, delayAcumulado + 250);
+}
+
+// ─── Escenas Rápidas (Tap-to-Run) ─────────────────────────────────────────────
+async function ejecutarEscenaDomotica(escena) {
+  if (escena === 'tengo_calor') {
+    domState.ac.power = true;
+    domState.ac.temp = 22;
+    domState.ac.mode = 'cool';
+    domState.ac.fan = 'high';
+    guardarEstadoDomotica();
+    renderDomoticaUI();
+    showToast('Tengo Calor: A/C en 22°C Frío (Alta)', 'ok');
+    // Envía pulso de encendido (power: false en este equipo IR) y luego fija 22°C Frío Velocidad Alta
+    await enviarComandoSmartLife('Aire Acondicionado (IR)', 'Escena "Tengo Calor": Encender A/C (22°C Frío • Alta)', {
+      ...domState.ac,
+      power: false
+    });
+    setTimeout(() => {
+      enviarComandoSmartLife('Aire Acondicionado (IR)', 'Escena "Tengo Calor": Fijar 22°C Frío • Turbina Alta', {
+        ...domState.ac,
+        power: true
+      });
+    }, 900);
+  } else if (escena === 'salir_casa') {
+    // Solo inicia la aspiradora robot; NO envía pulsos IR al Aire ni a la TV para no encenderlos si ya estaban apagados
+    domState.vacuum.status = 'cleaning';
+    guardarEstadoDomotica();
+    renderDomoticaUI();
+    showToast('Salir de Casa: Aspiradora iniciada', 'ok');
+    await enviarComandoSmartLife('Aspiradora Robot', 'Escena "Salir de Casa": Iniciar limpieza automática', {
+      command: 'start',
+      mode: domState.vacuum.mode
+    });
+  } else if (escena === 'modo_cine') {
+    domState.ac.power = true;
+    domState.ac.temp = 24;
+    domState.ac.mode = 'cool';
+    domState.tv.power = true;
+    domState.tv.activeApp = 'stremio';
+    guardarEstadoDomotica();
+    renderDomoticaUI();
+    showToast('Modo Cine: A/C 24°C Frío + TV en Stremio', 'ok');
+    // 1. Prender Aire en 24°C Frío (usando pulso power: false y ajuste 24°C)
+    await enviarComandoSmartLife('Aire Acondicionado (IR)', 'Escena "Modo Cine": Encender A/C en 24°C Frío', {
+      ...domState.ac,
+      power: false
+    });
+    setTimeout(() => {
+      enviarComandoSmartLife('Aire Acondicionado (IR)', 'Escena "Modo Cine": Fijar A/C 24°C Frío', {
+        ...domState.ac,
+        power: true
+      });
+    }, 900);
+    // 2. Prender TV y luego ejecutar la macro para abrir Stremio
+    await enviarComandoSmartLife('TV (Control IR)', 'Escena "Modo Cine": Encender Android TV', { key: 'power' });
+    setTimeout(() => {
+      domAbrirAppTV('stremio', true);
+    }, 4500);
+  }
+}
+
+function sincronizarDomotica() {
+  const icon = document.getElementById('dom-sync-icon');
+  if (icon) icon.classList.add('spin');
+  enviarComandoSmartLife('Sistema', 'Sincronización de estado de dispositivos solicitada', { action: 'status_sync' });
+  setTimeout(() => {
+    if (icon) icon.classList.remove('spin');
+    renderDomoticaUI();
+    showToast('Estado domótico actualizado', 'ok');
+  }, 600);
+}
+
+// ─── Modal de Configuración Smart Life (Tuya Cloud) ───────────────────────────
+function abrirModalConfigDomotica() {
+  document.getElementById('dom-cfg-mode').value = domConfig.mode || 'local';
+  document.getElementById('dom-cfg-client-id').value = domConfig.clientId || '';
+  document.getElementById('dom-cfg-secret').value = domConfig.secret || '';
+  document.getElementById('dom-cfg-region').value = domConfig.region || 'https://openapi.tuyaus.com';
+  document.getElementById('dom-cfg-bridge-url').value = domConfig.bridgeUrl || '';
+  document.getElementById('dom-cfg-ir-hub-id').value = domConfig.irHubId || '';
+  document.getElementById('dom-cfg-ac-id').value = domConfig.acId || '';
+  document.getElementById('dom-cfg-tv-id').value = domConfig.tvId || '';
+  document.getElementById('dom-cfg-vac-id').value = domConfig.vacId || '';
+  document.getElementById('dom-cfg-plug-id').value = domConfig.plugId || '';
+
+  const modal = document.getElementById('modal-domotica-config');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+}
+
+function cerrarModalConfigDomotica() {
+  const modal = document.getElementById('modal-domotica-config');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+}
+
+function guardarConfigDomotica() {
+  domConfig = {
+    mode: document.getElementById('dom-cfg-mode').value,
+    clientId: document.getElementById('dom-cfg-client-id').value.trim(),
+    secret: document.getElementById('dom-cfg-secret').value.trim(),
+    region: document.getElementById('dom-cfg-region').value,
+    bridgeUrl: document.getElementById('dom-cfg-bridge-url').value.trim(),
+    irHubId: document.getElementById('dom-cfg-ir-hub-id').value.trim(),
+    acId: document.getElementById('dom-cfg-ac-id').value.trim(),
+    tvId: document.getElementById('dom-cfg-tv-id').value.trim(),
+    vacId: document.getElementById('dom-cfg-vac-id').value.trim(),
+    plugId: document.getElementById('dom-cfg-plug-id').value.trim()
+  };
+  try {
+    localStorage.setItem(DOMOTICA_CONFIG_KEY, JSON.stringify(domConfig));
+  } catch (e) {}
+  cerrarModalConfigDomotica();
+  renderDomoticaUI();
+  registrarLogDomotica('Configuración', `Modo actualizado a: ${domConfig.mode.toUpperCase()}`, domConfig.mode !== 'local');
+  showToast('Configuración de Smart Life guardada ✓', 'ok');
+}
+
+function copiarCodigoAppsScriptTuya() {
+  const snippet = `// 1) Pegar dentro de doPost(e) en tu Google Apps Script:
+if (data.accion === 'domoticaSmartLife') {
+  return ejecutarComandoTuyaSmartLife(data);
+}
+
+// 2) Pegar al final de tu archivo de Google Apps Script (ya está incluido en script.txt):
+function ejecutarComandoTuyaSmartLife(data) {
+  try {
+    const cfg = data.config || {};
+    const clientId = (cfg.clientId || '').trim();
+    const secret   = (cfg.secret || '').trim();
+    const baseUrl  = (cfg.region || 'https://openapi.tuyaus.com').replace(/\\/$/, '');
+    if (!clientId || !secret) {
+      return ContentService.createTextOutput(JSON.stringify({ result: 'error', msg: 'Faltan credenciales Tuya' })).setMimeType(ContentService.MimeType.JSON);
+    }
+    const sha256Hex = (txt) => Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, txt || '', Utilities.Charset.UTF_8)
+      .map(b => ('0' + (b & 0xFF).toString(16)).slice(-2)).join('');
+    const hmacSha256Upper = (msg, key) => Utilities.computeHmacSha256Signature(msg, key)
+      .map(b => ('0' + (b & 0xFF).toString(16)).slice(-2)).join('').toUpperCase();
+
+    const tToken = String(Date.now());
+    const tokenPath = '/v1.0/token?grant_type=1';
+    const strToSignToken = clientId + tToken + 'GET\\n' + sha256Hex('') + '\\n\\n' + tokenPath;
+    const tokenResp = JSON.parse(UrlFetchApp.fetch(baseUrl + tokenPath, {
+      method: 'get',
+      headers: { client_id: clientId, sign: hmacSha256Upper(strToSignToken, secret), t: tToken, sign_method: 'HMAC-SHA256' },
+      muteHttpExceptions: true
+    }).getContentText());
+
+    if (!tokenResp.success || !tokenResp.result) {
+      return ContentService.createTextOutput(JSON.stringify({ result: 'error', detail: tokenResp })).setMimeType(ContentService.MimeType.JSON);
+    }
+    const accessToken = tokenResp.result.access_token;
+
+    const tuyaRequest = (method, path, bodyObj) => {
+      const t = String(Date.now());
+      const bodyStr = bodyObj ? JSON.stringify(bodyObj) : '';
+      const stringToSign = [method.toUpperCase(), sha256Hex(bodyStr), '', path].join('\\n');
+      const sign = hmacSha256Upper(clientId + accessToken + t + stringToSign, secret);
+      const opts = {
+        method: method.toLowerCase(),
+        contentType: 'application/json',
+        headers: { client_id: clientId, access_token: accessToken, sign: sign, t: t, sign_method: 'HMAC-SHA256' },
+        muteHttpExceptions: true
+      };
+      if (bodyStr) opts.payload = bodyStr;
+      return JSON.parse(UrlFetchApp.fetch(baseUrl + path, opts).getContentText());
+    };
+
+    const disp = data.dispositivo || '';
+    const p = data.payload || {};
+    let apiResult = null;
+
+    if (disp.indexOf('Enchufe') !== -1 && cfg.plugId) {
+      const cmds = [];
+      if (typeof p.switch_1 === 'boolean') cmds.push({ code: 'switch_1', value: p.switch_1 });
+      if (typeof p.countdown_1 === 'number') cmds.push({ code: 'countdown_1', value: p.countdown_1 });
+      if (cmds.length) apiResult = tuyaRequest('POST', '/v1.0/iot-03/devices/' + cfg.plugId + '/commands', { commands: cmds });
+    } else if (disp.indexOf('Aspiradora') !== -1 && cfg.vacId) {
+      const cmds = [];
+      if (p.command === 'start') { cmds.push({ code: 'power_go', value: true }); if (p.mode) cmds.push({ code: 'mode', value: p.mode }); }
+      else if (p.command === 'pause') cmds.push({ code: 'power_go', value: false });
+      else if (p.command === 'charge_go') cmds.push({ code: 'mode', value: 'chargego' });
+      else if (p.command === 'seek') cmds.push({ code: 'seek', value: true });
+      if (p.mode && !p.command) cmds.push({ code: 'mode', value: p.mode });
+      if (p.cistern) cmds.push({ code: 'suction', value: p.cistern });
+      if (cmds.length) apiResult = tuyaRequest('POST', '/v1.0/iot-03/devices/' + cfg.vacId + '/commands', { commands: cmds });
+    } else if (disp.indexOf('Aire Acondicionado') !== -1 && cfg.irHubId && cfg.acId) {
+      const modeMap = { cool: 0, heat: 1, auto: 2, fan: 3, dry: 4 };
+      const windMap = { auto: 0, low: 1, med: 2, high: 3 };
+      apiResult = tuyaRequest('POST', '/v2.0/infrareds/' + cfg.irHubId + '/air-conditioners/' + cfg.acId + '/scenes/command', {
+        power: p.power ? 1 : 0, mode: (p.mode in modeMap) ? modeMap[p.mode] : 0, temp: p.temp || 24, wind: (p.fan in windMap) ? windMap[p.fan] : 0
+      });
+    } else if (disp.indexOf('TV') !== -1 && cfg.irHubId && cfg.tvId) {
+      apiResult = tuyaRequest('POST', '/v1.0/iot-03/devices/' + cfg.tvId + '/commands', { commands: [{ code: p.key || 'power', value: true }] });
+    }
+    return ContentService.createTextOutput(JSON.stringify({ result: 'success', tuya: apiResult })).setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ result: 'error', msg: err.toString() })).setMimeType(ContentService.MimeType.JSON);
+  }
+}`;
+  navigator.clipboard.writeText(snippet).then(() => {
+    showToast('Código puente para Apps Script copiado al portapapeles ✓', 'ok');
+  }).catch(() => {
+    showToast('No se pudo copiar automáticamente', 'error');
   });
 }
 
