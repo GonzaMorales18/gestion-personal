@@ -500,10 +500,20 @@ function autorizarPermisosTuya() {
 // ── Helper: Conector Oficial Tuya IoT Cloud (Smart Life) ──────────────────
 function ejecutarComandoTuyaSmartLife(data) {
   try {
-    const cfg = data.config || {};
-    const clientId = (cfg.clientId || '').trim();
-    const secret   = (cfg.secret || '').trim();
-    const baseUrl  = (cfg.region || 'https://openapi.tuyaus.com').replace(/\/$/, '');
+    const rawCfg = data.config || {};
+    const cfg = {
+      clientId: (rawCfg.clientId || 'gp9psjr3j88nhwuwh58p').trim(),
+      secret:   (rawCfg.secret   || 'ab08644803484d6594e2a3f2138ca780').trim(),
+      region:   (rawCfg.region   || 'https://openapi.tuyaus.com').replace(/\/$/, ''),
+      irHubId:  (rawCfg.irHubId  || 'eb86e2bb1852d20afdipwv').trim(),
+      acId:     (rawCfg.acId     || 'eb0311313b24e86fd56bj5').trim(),
+      tvId:     (rawCfg.tvId     || 'eb6262ae550cac599cs1iv').trim(),
+      vacId:    (rawCfg.vacId    || 'ebcdc0dfb917071f14mpb7').trim(),
+      plugId:   (rawCfg.plugId   || 'eb2e11982105f541d3wdql').trim()
+    };
+    const clientId = cfg.clientId;
+    const secret   = cfg.secret;
+    const baseUrl  = cfg.region;
 
     if (!clientId || !secret) {
       return ContentService

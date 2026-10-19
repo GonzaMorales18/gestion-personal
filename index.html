@@ -256,18 +256,18 @@
         <i class="fas fa-file-csv text-xs"></i>
         <span class="hidden md:inline">Exportar</span>
       </button>
-      <!-- Botones Google Auth -->
-      <button id="btn-conectar-google" onclick="conectarGoogle()" title="Conectar cuenta de Google"
+      <!-- Botones Conexión Unificada (Google + Smart Life) -->
+      <button id="btn-conectar-google" onclick="conectarServicios()" title="Conectar Google y Smart Life"
               class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-600/20 text-blue-400 hover:bg-blue-600 hover:text-white transition-colors text-[11px] font-bold uppercase tracking-wider">
-        <i class="fab fa-google text-xs"></i>
-        <span class="hidden md:inline">Conectar Google</span>
+        <i class="fas fa-plug text-xs"></i>
+        <span id="btn-conectar-label" class="hidden md:inline">Conectar</span>
       </button>
-      <button id="btn-desconectar-google" onclick="desconectarGoogle()" title="Desconectar cuenta de Google"
+      <button id="btn-desconectar-google" onclick="desconectarServicios()" title="Desconectar servicios"
               class="hidden items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-red-400 transition-colors text-[11px] font-bold uppercase tracking-wider">
         <i class="fas fa-sign-out-alt text-xs"></i>
         <span class="hidden md:inline">Desconectar</span>
       </button>
-      <button onclick="recargarDatos()" title="Actualizar datos"
+      <button onclick="recargarDatos()" title="Actualizar datos y sincronizar dispositivos"
               class="flex items-center gap-2 text-[11px] font-bold text-slate-400 hover:text-blue-400 transition-colors uppercase tracking-wider">
         <i id="icon-refresh" class="fas fa-sync-alt text-xs"></i>
         <span class="hidden md:inline">Actualizar</span>
@@ -2043,36 +2043,6 @@
   <!-- SECCIÓN DOMÓTICA (SMART LIFE / TUYA) -->
   <main id="section-domotica" class="hidden p-4 md:p-8 max-w-[1400px] mx-auto w-full space-y-6">
 
-    <!-- Barra Superior: Estado Smart Life + Escenas Rápidas -->
-    <div class="bg-black rounded-2xl border border-slate-700/60 p-4 md:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-      <div class="flex items-center gap-3.5">
-        <div class="w-10 h-10 rounded-xl bg-cyan-900/40 border border-cyan-500/30 flex items-center justify-center shrink-0">
-          <i class="fas fa-sliders-h text-cyan-400 text-sm"></i>
-        </div>
-        <div>
-          <div class="flex items-center gap-2.5 flex-wrap">
-            <h2 class="text-sm font-black text-white uppercase tracking-[0.15em]">Centro de Control Smart Life</h2>
-            <span id="dom-api-badge" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/15 text-amber-400 border border-amber-500/30">
-              <span id="dom-api-dot" class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
-              <span id="dom-api-status-text">Modo Interactivo Local</span>
-            </span>
-          </div>
-          <p class="text-[11px] text-slate-400 mt-0.5">Ecosistema Tuya / Smart Life — Aspiradora Robot, Enchufe Inteligente y Hub Infrarrojo (A/C + TV)</p>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-2.5 flex-wrap">
-        <button onclick="sincronizarDomotica()" class="h-9 px-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-[11px] font-black uppercase tracking-wider transition-colors flex items-center gap-2">
-          <i id="dom-sync-icon" class="fas fa-sync-alt text-cyan-400 text-xs"></i>
-          <span>Sincronizar</span>
-        </button>
-        <button onclick="abrirModalConfigDomotica()" class="h-9 px-4 rounded-xl bg-cyan-600/20 hover:bg-cyan-600 text-cyan-300 hover:text-white border border-cyan-500/40 text-[11px] font-black uppercase tracking-wider transition-all flex items-center gap-2">
-          <i class="fas fa-cog text-xs"></i>
-          <span>Vincular Smart Life</span>
-        </button>
-      </div>
-    </div>
-
     <!-- Escenas Rápidas (Tap-to-Run) -->
     <div>
       <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em] mb-3 ml-1">Escenas Rápidas (Tap-to-Run)</h3>
@@ -2132,7 +2102,7 @@
           </div>
 
           <button onclick="domToggleAC()" id="dom-ac-power-btn" title="Encender / Apagar Aire"
-                  class="w-11 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700 flex items-center justify-center transition-all active:scale-95">
+                  class="w-11 h-11 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 flex items-center justify-center transition-all active:scale-95">
             <i class="fas fa-power-off text-sm"></i>
           </button>
         </div>
@@ -2225,10 +2195,17 @@
             </div>
           </div>
 
-          <!-- Batería -->
-          <div class="flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800">
-            <i id="dom-vac-bat-icon" class="fas fa-battery-full text-emerald-400 text-sm"></i>
-            <span id="dom-vac-battery" class="text-xs font-black mono text-white">100%</span>
+          <div class="flex items-center gap-2">
+            <!-- Batería -->
+            <div class="flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800 h-11">
+              <i id="dom-vac-bat-icon" class="fas fa-battery-full text-emerald-400 text-sm"></i>
+              <span id="dom-vac-battery" class="text-xs font-black mono text-white">100%</span>
+            </div>
+
+            <button onclick="domToggleAspiradoraPower()" id="dom-vac-power-btn" title="Iniciar / Pausar Aspiradora"
+                    class="w-11 h-11 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 flex items-center justify-center transition-all active:scale-95">
+              <i class="fas fa-power-off text-sm"></i>
+            </button>
           </div>
         </div>
 
@@ -2250,8 +2227,8 @@
 
         <!-- Botones Principales de Acción -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-5 relative z-10">
-          <button onclick="domAccionAspiradora('start')" id="dom-vac-btn-start" class="py-3 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95">
-            <i class="fas fa-play text-xs"></i>
+          <button onclick="domAccionAspiradora('start')" id="dom-vac-btn-start" class="py-3 px-3 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95">
+            <i class="fas fa-power-off text-xs"></i>
             <span id="dom-vac-btn-start-txt">Iniciar</span>
           </button>
           <button onclick="domAccionAspiradora('pause')" id="dom-vac-btn-pause" class="py-3 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95">
@@ -2311,7 +2288,7 @@
           </div>
 
           <button onclick="domTogglePlug()" id="dom-plug-power-btn" title="Encender / Apagar Enchufe"
-                  class="w-11 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700 flex items-center justify-center transition-all active:scale-95">
+                  class="w-11 h-11 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 flex items-center justify-center transition-all active:scale-95">
             <i class="fas fa-power-off text-sm"></i>
           </button>
         </div>
@@ -2320,8 +2297,8 @@
         <div class="bg-slate-900/70 rounded-2xl border border-slate-800 p-6 mb-5 relative z-10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div class="flex items-center gap-4">
             <button onclick="domTogglePlug()" id="dom-plug-big-btn"
-                    class="w-16 h-16 rounded-2xl bg-slate-800 border-2 border-slate-700 flex items-center justify-center transition-all active:scale-95 shadow-lg">
-              <i id="dom-plug-big-icon" class="fas fa-bolt text-2xl text-slate-500 transition-colors"></i>
+                    class="w-16 h-16 rounded-2xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border-2 border-red-500/40 flex items-center justify-center transition-all active:scale-95 shadow-lg">
+              <i id="dom-plug-big-icon" class="fas fa-power-off text-2xl transition-colors"></i>
             </button>
             <div>
               <span class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 block">Estado del Relé</span>
@@ -3154,6 +3131,11 @@ async function recargarDatos() {
     asegurarConexionGoogle(false);
   }
 
+  // Sincronizar estado de dispositivos Smart Life / Tuya Cloud
+  if (typeof sincronizarDomotica === 'function') {
+    sincronizarDomotica(true);
+  }
+
   // Permitir recarga completa de todas las pestañas
   ahorrosIniciado = false;
   sueldosIniciado = false;
@@ -3163,7 +3145,7 @@ async function recargarDatos() {
   await cargarDatos(true);
   await cargarClimaResistencia();
   if (icon) icon.classList.remove('spin');
-  showToast('Datos actualizados', 'ok');
+  showToast('Datos y dispositivos actualizados', 'ok');
 }
 
 // ─── EXPORTAR CSV ─────────────────────────────────────────────────────────────
@@ -7296,18 +7278,62 @@ async function iniciarCalendario() {
   }
 }
 
-function actualizarUIGoogleConectado(conectado) {
+function estaSmartLifeConectado() {
+  if (typeof domConfig === 'undefined' || !domConfig) return true;
+  return domConfig.mode !== 'local' && Boolean((domConfig.clientId && domConfig.clientId.trim()) || (domConfig.bridgeUrl && domConfig.bridgeUrl.trim()));
+}
+
+function actualizarUIGoogleConectado(conectadoGoogle) {
   const btnC = document.getElementById('btn-conectar-google');
   const btnD = document.getElementById('btn-desconectar-google');
+  const lblC = document.getElementById('btn-conectar-label');
   const alertEl = document.getElementById('calendar-alert');
-  if (conectado) {
+
+  const googleOk = typeof conectadoGoogle === 'boolean' ? conectadoGoogle : (typeof tieneTokenGoogleValido === 'function' && tieneTokenGoogleValido());
+  const smartLifeOk = estaSmartLifeConectado();
+  const todoConectado = googleOk && smartLifeOk;
+
+  if (googleOk) {
+    if (alertEl) alertEl.classList.add('hidden');
+  } else {
+    if (alertEl) alertEl.classList.remove('hidden');
+  }
+
+  if (todoConectado) {
     if (btnC) btnC.classList.add('hidden');
     if (btnD) btnD.classList.remove('hidden');
-    if (alertEl) alertEl.classList.add('hidden');
   } else {
     if (btnC) btnC.classList.remove('hidden');
     if (btnD) btnD.classList.add('hidden');
-    if (alertEl) alertEl.classList.remove('hidden');
+    if (lblC) {
+      if (!googleOk && !smartLifeOk) lblC.textContent = 'Conectar';
+      else if (!googleOk) lblC.textContent = 'Conectar Google';
+      else lblC.textContent = 'Conectar Smart Life';
+    }
+  }
+}
+
+function conectarServicios() {
+  const googleOk = typeof tieneTokenGoogleValido === 'function' && tieneTokenGoogleValido();
+  const smartLifeOk = estaSmartLifeConectado();
+
+  // Si ambos ya están conectados, no permitir reconectar nada y ocultar el botón
+  if (googleOk && smartLifeOk) {
+    actualizarUIGoogleConectado(true);
+    return;
+  }
+
+  if (!smartLifeOk && typeof abrirModalConfigDomotica === 'function') {
+    abrirModalConfigDomotica();
+  }
+  if (!googleOk && typeof conectarGoogle === 'function') {
+    conectarGoogle(false);
+  }
+}
+
+function desconectarServicios() {
+  if (typeof desconectarGoogle === 'function') {
+    desconectarGoogle();
   }
 }
 
@@ -8692,9 +8718,9 @@ let domState = {
 };
 
 let domConfig = {
-  mode: 'local', // local, apps_script, webhook
-  clientId: '',
-  secret: '',
+  mode: 'apps_script', // local, apps_script, webhook
+  clientId: 'gp9psjr3j88nhwuwh58p',
+  secret: 'ab08644803484d6594e2a3f2138ca780',
   region: 'https://openapi.tuyaus.com',
   bridgeUrl: '',
   irHubId: 'eb86e2bb1852d20afdipwv',
@@ -8721,7 +8747,20 @@ function iniciarDomotica() {
     }
     const savedCfg = localStorage.getItem(DOMOTICA_CONFIG_KEY);
     if (savedCfg) {
-      domConfig = { ...domConfig, ...JSON.parse(savedCfg) };
+      const parsedCfg = JSON.parse(savedCfg);
+      domConfig = {
+        ...domConfig,
+        ...parsedCfg,
+        mode: (parsedCfg.mode && parsedCfg.mode !== 'local') ? parsedCfg.mode : domConfig.mode,
+        clientId: (parsedCfg.clientId && parsedCfg.clientId.trim()) ? parsedCfg.clientId.trim() : domConfig.clientId,
+        secret: (parsedCfg.secret && parsedCfg.secret.trim()) ? parsedCfg.secret.trim() : domConfig.secret,
+        region: (parsedCfg.region && parsedCfg.region.trim()) ? parsedCfg.region.trim() : domConfig.region,
+        irHubId: (parsedCfg.irHubId && parsedCfg.irHubId.trim()) ? parsedCfg.irHubId.trim() : domConfig.irHubId,
+        acId: (parsedCfg.acId && parsedCfg.acId.trim()) ? parsedCfg.acId.trim() : domConfig.acId,
+        tvId: (parsedCfg.tvId && parsedCfg.tvId.trim()) ? parsedCfg.tvId.trim() : domConfig.tvId,
+        vacId: (parsedCfg.vacId && parsedCfg.vacId.trim()) ? parsedCfg.vacId.trim() : domConfig.vacId,
+        plugId: (parsedCfg.plugId && parsedCfg.plugId.trim()) ? parsedCfg.plugId.trim() : domConfig.plugId
+      };
     }
   } catch (e) {
     console.warn('Error cargando estado de domótica:', e);
@@ -8876,22 +8915,12 @@ async function enviarComandoSmartLife(dispositivo, accion, payload = {}) {
 }
 
 function renderDomoticaUI() {
-  // Badge de conexión superior
-  const badge = document.getElementById('dom-api-badge');
-  const dot = document.getElementById('dom-api-dot');
-  const txt = document.getElementById('dom-api-status-text');
-  if (badge && dot && txt) {
-    const conectado = domConfig.mode !== 'local' && (domConfig.clientId || domConfig.bridgeUrl);
-    if (conectado) {
-      badge.className = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500/15 text-emerald-400 border border-emerald-500/30';
-      dot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse';
-      txt.textContent = domConfig.mode === 'apps_script' ? 'Conectado (Tuya Cloud)' : 'Conectado (Webhook)';
-    } else {
-      badge.className = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/15 text-amber-400 border border-amber-500/30';
-      dot.className = 'w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse';
-      txt.textContent = 'Modo Interactivo Local';
-    }
+  if (typeof actualizarUIGoogleConectado === 'function') {
+    actualizarUIGoogleConectado();
   }
+
+  const redPowerOffClass = 'w-11 h-11 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 flex items-center justify-center transition-all active:scale-95';
+  const redPowerOnClass  = 'w-11 h-11 rounded-xl bg-red-600 hover:bg-red-500 text-white border border-red-400/50 flex items-center justify-center transition-all active:scale-95 shadow-lg shadow-red-600/30';
 
   // 1. Render Aire Acondicionado (IR)
   const ac = domState.ac;
@@ -8924,14 +8953,14 @@ function renderDomoticaUI() {
     if (acIconBox) acIconBox.className = 'w-10 h-10 rounded-xl bg-cyan-900/50 border border-cyan-500/40 flex items-center justify-center transition-colors';
     if (acIcon) acIcon.className = `fas ${(modeLabels[ac.mode] || modeLabels.cool).icon} text-base`;
     if (acSub) acSub.innerHTML = `<span class="text-cyan-400 font-bold">Encendido</span> — ${(modeLabels[ac.mode] || modeLabels.cool).name} a ${ac.temp}°C`;
-    if (acPowerBtn) acPowerBtn.className = 'w-11 h-11 rounded-xl bg-cyan-600 text-white border border-cyan-400/50 flex items-center justify-center transition-all active:scale-95 shadow-lg shadow-cyan-600/30';
+    if (acPowerBtn) acPowerBtn.className = redPowerOnClass;
   } else {
     if (acCard) acCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all';
     if (acGlow) acGlow.classList.replace('opacity-100', 'opacity-0');
     if (acIconBox) acIconBox.className = 'w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-colors';
     if (acIcon) acIcon.className = 'fas fa-snowflake text-slate-500 text-base';
     if (acSub) acSub.textContent = 'Apagado — Listo para enviar señal IR';
-    if (acPowerBtn) acPowerBtn.className = 'w-11 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700 flex items-center justify-center transition-all active:scale-95';
+    if (acPowerBtn) acPowerBtn.className = redPowerOffClass;
   }
 
   ['cool', 'heat', 'auto', 'fan', 'dry'].forEach(m => {
@@ -8969,6 +8998,8 @@ function renderDomoticaUI() {
   const vacBat = document.getElementById('dom-vac-battery');
   const vacArea = document.getElementById('dom-vac-area');
   const vacTime = document.getElementById('dom-vac-time');
+  const vacPowerBtn = document.getElementById('dom-vac-power-btn');
+  const vacStartBtn = document.getElementById('dom-vac-btn-start');
 
   const vacStatusMap = {
     docked:    { badge: 'En Base', state: 'Cargada', sub: 'En base de carga — Lista para aspirar', color: 'text-emerald-400', active: false },
@@ -8991,9 +9022,13 @@ function renderDomoticaUI() {
   if (vInfo.active) {
     if (vacCard) vacCard.className = 'bg-black rounded-2xl border border-emerald-500/50 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all shadow-lg shadow-emerald-950/30';
     if (vacGlow) vacGlow.classList.replace('opacity-0', 'opacity-100');
+    if (vacPowerBtn) vacPowerBtn.className = redPowerOnClass;
+    if (vacStartBtn) vacStartBtn.className = 'py-3 px-3 rounded-xl bg-red-600 hover:bg-red-500 text-white border border-red-400/50 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 shadow-lg shadow-red-600/30';
   } else {
     if (vacCard) vacCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all';
     if (vacGlow) vacGlow.classList.replace('opacity-100', 'opacity-0');
+    if (vacPowerBtn) vacPowerBtn.className = redPowerOffClass;
+    if (vacStartBtn) vacStartBtn.className = 'py-3 px-3 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95';
   }
 
   ['smart', 'wall_follow', 'spiral', 'single'].forEach(m => {
@@ -9046,9 +9081,9 @@ function renderDomoticaUI() {
       plugBadge.textContent = 'Encendido';
     }
     if (plugSub) plugSub.innerHTML = '<span class="text-amber-400 font-bold">Suministro activo</span> — Corriente habilitada';
-    if (plugPowerBtn) plugPowerBtn.className = 'w-11 h-11 rounded-xl bg-amber-500 text-black border border-amber-300 flex items-center justify-center transition-all active:scale-95 shadow-lg shadow-amber-500/30';
-    if (plugBigBtn) plugBigBtn.className = 'w-16 h-16 rounded-2xl bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center transition-all active:scale-95 shadow-lg shadow-amber-500/20';
-    if (plugBigIcon) plugBigIcon.className = 'fas fa-bolt text-2xl text-amber-400 transition-colors';
+    if (plugPowerBtn) plugPowerBtn.className = redPowerOnClass;
+    if (plugBigBtn) plugBigBtn.className = 'w-16 h-16 rounded-2xl bg-red-600 hover:bg-red-500 text-white border-2 border-red-400 flex items-center justify-center transition-all active:scale-95 shadow-lg shadow-red-600/30';
+    if (plugBigIcon) plugBigIcon.className = 'fas fa-power-off text-2xl text-white transition-colors';
     if (plugStateBig) {
       plugStateBig.textContent = 'ENCENDIDO';
       plugStateBig.className = 'text-2xl font-black mono text-amber-400 tracking-tight block mt-0.5';
@@ -9063,9 +9098,9 @@ function renderDomoticaUI() {
       plugBadge.textContent = 'Apagado';
     }
     if (plugSub) plugSub.textContent = 'Sin suministro activo';
-    if (plugPowerBtn) plugPowerBtn.className = 'w-11 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 border border-slate-700 flex items-center justify-center transition-all active:scale-95';
-    if (plugBigBtn) plugBigBtn.className = 'w-16 h-16 rounded-2xl bg-slate-800 border-2 border-slate-700 flex items-center justify-center transition-all active:scale-95 shadow-lg';
-    if (plugBigIcon) plugBigIcon.className = 'fas fa-bolt text-2xl text-slate-500 transition-colors';
+    if (plugPowerBtn) plugPowerBtn.className = redPowerOffClass;
+    if (plugBigBtn) plugBigBtn.className = 'w-16 h-16 rounded-2xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border-2 border-red-500/40 flex items-center justify-center transition-all active:scale-95 shadow-lg';
+    if (plugBigIcon) plugBigIcon.className = 'fas fa-power-off text-2xl transition-colors';
     if (plugStateBig) {
       plugStateBig.textContent = 'APAGADO';
       plugStateBig.className = 'text-2xl font-black mono text-slate-400 tracking-tight block mt-0.5';
@@ -9082,6 +9117,7 @@ function renderDomoticaUI() {
   const tvVol = document.getElementById('dom-tv-vol-val');
   const tvMuteBtn = document.getElementById('dom-tv-mute-btn');
   const tvAppBadge = document.getElementById('dom-tv-active-app-badge');
+  const tvPowerBtn = document.getElementById('dom-tv-power-btn');
 
   const appLabels = {
     home: 'Pantalla de Inicio',
@@ -9119,12 +9155,14 @@ function renderDomoticaUI() {
     if (tvIconBox) tvIconBox.className = 'w-10 h-10 rounded-xl bg-violet-900/50 border border-violet-500/40 flex items-center justify-center transition-colors';
     if (tvIcon) tvIcon.className = 'fas fa-tv text-violet-400 text-sm';
     if (tvSub) tvSub.innerHTML = `<span class="text-violet-400 font-bold">Encendido</span> — ${nombreAppActiva} • Vol ${tv.muted ? 'Silenciado' : tv.volume}`;
+    if (tvPowerBtn) tvPowerBtn.className = redPowerOnClass;
   } else {
     if (tvCard) tvCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all';
     if (tvGlow) tvGlow.classList.replace('opacity-100', 'opacity-0');
     if (tvIconBox) tvIconBox.className = 'w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-colors';
     if (tvIcon) tvIcon.className = 'fas fa-tv text-slate-500 text-sm';
     if (tvSub) tvSub.textContent = 'En espera — Android TV (Hub IR)';
+    if (tvPowerBtn) tvPowerBtn.className = redPowerOffClass;
   }
 }
 
@@ -9185,6 +9223,11 @@ function domToggleSwingAC() {
 }
 
 // ─── Controles Aspiradora Robot ───────────────────────────────────────────────
+function domToggleAspiradoraPower() {
+  const estaActiva = domState.vacuum.status === 'cleaning' || domState.vacuum.status === 'returning';
+  domAccionAspiradora(estaActiva ? 'pause' : 'start');
+}
+
 function domAccionAspiradora(accion) {
   if (accion === 'start') {
     domState.vacuum.status = 'cleaning';
@@ -9412,14 +9455,14 @@ async function ejecutarEscenaDomotica(escena) {
   }
 }
 
-function sincronizarDomotica() {
+function sincronizarDomotica(silencioso = false) {
   const icon = document.getElementById('dom-sync-icon');
   if (icon) icon.classList.add('spin');
   enviarComandoSmartLife('Sistema', 'Sincronización de estado de dispositivos solicitada', { action: 'status_sync' });
   setTimeout(() => {
     if (icon) icon.classList.remove('spin');
     renderDomoticaUI();
-    showToast('Estado domótico actualizado', 'ok');
+    if (!silencioso) showToast('Estado domótico actualizado', 'ok');
   }, 600);
 }
 
@@ -9469,6 +9512,7 @@ function guardarConfigDomotica() {
   } catch (e) {}
   cerrarModalConfigDomotica();
   renderDomoticaUI();
+  if (typeof actualizarUIGoogleConectado === 'function') actualizarUIGoogleConectado();
   registrarLogDomotica('Configuración', `Modo actualizado a: ${domConfig.mode.toUpperCase()}`, domConfig.mode !== 'local');
   showToast('Configuración de Smart Life guardada ✓', 'ok');
 }
