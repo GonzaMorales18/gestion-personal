@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
 <style>
   * { box-sizing: border-box; }
   body { font-family: 'Space Grotesk', sans-serif; }
@@ -125,20 +126,209 @@
     box-shadow: 0 1px 8px rgba(0,0,0,0.3);
   }
   
-  /* FullCalendar Custom CSS */
-  .fc-theme-standard .fc-scrollgrid { border-color: #334155 !important; }
-  .fc-theme-standard th, .fc-theme-standard td { border-color: #334155 !important; }
-  .fc .fc-button-primary { background-color: #db2777 !important; border-color: #db2777 !important; text-transform: uppercase; font-weight: bold; letter-spacing: 0.1em; font-size: 11px; }
-  .fc .fc-button-primary:hover { background-color: #be185d !important; border-color: #be185d !important; }
-  .fc .fc-button-primary:disabled { background-color: #831843 !important; border-color: #831843 !important; }
-  .fc .fc-col-header-cell-cushion { color: #94a3b8 !important; text-transform: uppercase; font-size: 11px; font-weight: 900; letter-spacing: 0.1em; padding: 10px 0; }
-  .fc .fc-daygrid-day-number { color: #cbd5e1 !important; font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: bold; }
-  .fc .fc-event { border: none !important; border-radius: 4px; padding: 2px 4px; font-size: 10px; font-weight: 700; }
-  .fc .fc-day-today { background-color: #1e293b !important; }
-  .fc-header-toolbar { margin-bottom: 1.5em !important; }
-  .fc-toolbar-title { color: #f8fafc !important; font-weight: 900 !important; text-transform: uppercase !important; letter-spacing: 0.05em !important; font-size: 1.25rem !important; }
+  /* FullCalendar Custom CSS — Modern Card Style (Listas & Domótica) */
+  .fc-theme-standard .fc-scrollgrid { border: none !important; background: transparent !important; }
+  .fc-theme-standard .fc-scrollgrid-section > td,
+  .fc-theme-standard .fc-scrollgrid-section > th,
+  .fc-theme-standard .fc-scrollgrid-section-sticky > *,
+  .fc .fc-scrollgrid-section-header > *,
+  .fc .fc-col-header,
+  .fc .fc-daygrid-body,
+  .fc .fc-scrollgrid-sync-table {
+    border: none !important;
+    background: transparent !important;
+  }
+  .fc .fc-scrollgrid-sync-table,
+  .fc .fc-col-header { border-collapse: separate !important; border-spacing: 6px !important; }
+  .fc-theme-standard th.fc-col-header-cell {
+    background: rgba(15, 23, 42, 0.7) !important;
+    border: 1px solid rgba(51, 65, 85, 0.5) !important;
+    border-radius: 12px !important;
+  }
+  .fc-theme-standard td.fc-daygrid-day {
+    background: rgba(15, 23, 42, 0.45) !important;
+    border: 1px solid rgba(51, 65, 85, 0.55) !important;
+    border-radius: 14px !important;
+    transition: all 0.2s ease;
+    overflow: hidden;
+    vertical-align: top !important;
+  }
+  .fc-theme-standard td.fc-daygrid-day:hover {
+    background: rgba(30, 41, 59, 0.75) !important;
+    border-color: rgba(236, 72, 153, 0.45) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.5);
+  }
+  .fc-theme-standard td.fc-day-other {
+    background: rgba(15, 23, 42, 0.18) !important;
+    border-color: rgba(30, 41, 59, 0.4) !important;
+    opacity: 0.45;
+  }
+  .fc .fc-day-today {
+    background: linear-gradient(135deg, rgba(219, 39, 119, 0.16), rgba(15, 23, 42, 0.8)) !important;
+    border: 1px solid rgba(236, 72, 153, 0.65) !important;
+    box-shadow: 0 4px 18px -4px rgba(219, 39, 119, 0.25);
+  }
+  .fc .fc-day-today .fc-daygrid-day-number {
+    background: #db2777;
+    color: #ffffff !important;
+    border-radius: 7px;
+    padding: 1px 6px !important;
+    margin: 2px;
+    box-shadow: 0 2px 8px rgba(219, 39, 119, 0.4);
+  }
+  .fc .fc-daygrid-day-top {
+    padding: 3px 5px 1px 5px !important;
+    margin-bottom: 0 !important;
+  }
+  .fc .fc-button-group {
+    gap: 6px;
+  }
+  .fc .fc-button-primary {
+    background-color: #0f172a !important;
+    border: 1px solid #334155 !important;
+    border-radius: 11px !important;
+    color: #cbd5e1 !important;
+    text-transform: uppercase;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    font-size: 10px;
+    padding: 7px 13px !important;
+    transition: all 0.18s ease;
+    box-shadow: none !important;
+  }
+  .fc .fc-button-primary:hover {
+    background-color: #1e293b !important;
+    border-color: #ec4899 !important;
+    color: #ffffff !important;
+  }
+  .fc .fc-button-primary:not(:disabled).fc-button-active,
+  .fc .fc-button-primary:not(:disabled):active {
+    background-color: #db2777 !important;
+    border-color: #ec4899 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px -2px rgba(219, 39, 119, 0.45) !important;
+  }
+  .fc .fc-button-primary:disabled {
+    background-color: rgba(15, 23, 42, 0.5) !important;
+    border-color: #1e293b !important;
+    color: #64748b !important;
+    opacity: 0.6;
+  }
+  .fc .fc-col-header-cell-cushion {
+    color: #94a3b8 !important;
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    padding: 8px 0 !important;
+  }
+  .fc .fc-daygrid-day-number {
+    color: #e2e8f0 !important;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 2px 5px !important;
+    line-height: 1.2 !important;
+  }
+  #fullcalendar-container .fc-daygrid-day-frame {
+    height: 175px !important;
+    min-height: 175px !important;
+    max-height: 175px !important;
+    padding-bottom: 4px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    overflow: hidden !important;
+  }
+  #fullcalendar-container .fc-daygrid-day-events {
+    margin-top: 2px !important;
+    margin-bottom: 0 !important;
+    min-height: 0 !important;
+    padding: 0 3px 2px 3px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+    flex: 1 1 auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+  #fullcalendar-container .fc-daygrid-day-events::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+  #fullcalendar-container .fc-daygrid-day-events::before,
+  #fullcalendar-container .fc-daygrid-day-events::after {
+    display: none !important;
+  }
+  #fullcalendar-container .fc-daygrid-event-harness,
+  #fullcalendar-container .fc-daygrid-event-harness-abs,
+  #fullcalendar-container .fc-daygrid-event-harness[style],
+  #fullcalendar-container .fc-daygrid-event-harness-abs[style] {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    margin: 0 !important;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+    transform: none !important;
+    flex-shrink: 0 !important;
+  }
+  #fullcalendar-container .fc-daygrid-bg-harness {
+    display: none !important;
+  }
+  #fullcalendar-container .fc-event,
+  #fullcalendar-container .fc-daygrid-dot-event,
+  #fullcalendar-container .fc-daygrid-block-event {
+    border: none !important;
+    border-radius: 5px !important;
+    padding: 2px 5px !important;
+    margin: 0 !important;
+    font-size: 9.5px !important;
+    font-weight: 700 !important;
+    line-height: 1.15 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+  #fullcalendar-container .fc-daygrid-event-dot {
+    margin: 0 4px 0 0 !important;
+    border-width: 3px !important;
+  }
+  #fullcalendar-container .fc-event-time,
+  #fullcalendar-container .fc-event-title {
+    padding: 0 !important;
+    line-height: 1.15 !important;
+  }
+  #fullcalendar-container .fc-event:hover {
+    transform: scale(1.01);
+    filter: brightness(1.1);
+  }
+  #fullcalendar-container .fc-daygrid-day-bottom {
+    display: none !important;
+  }
+  .fc-theme-standard .fc-popover {
+    background: #0f172a !important;
+    border: 1px solid #334155 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.7) !important;
+  }
+  .fc-theme-standard .fc-popover-header {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+    font-weight: 800;
+    font-size: 11px;
+    border-radius: 13px 13px 0 0;
+  }
+  .fc-header-toolbar { margin-bottom: 1.25em !important; flex-wrap: wrap; gap: 8px; }
+  .fc-toolbar-title { color: #f8fafc !important; font-weight: 900 !important; text-transform: uppercase !important; letter-spacing: 0.08em !important; font-size: 1.15rem !important; }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://apis.google.com/js/api.js" async defer></script>
 </head>
@@ -146,10 +336,15 @@
 
 <!-- Modal Global de Edición -->
 <div id="globalEditModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
-  <div class="bg-slate-900 border border-slate-700/60 rounded-2xl w-full max-w-2xl overflow-hidden relative mt-auto mb-auto">
-    <div class="px-6 py-4 border-b border-slate-700/80 flex justify-between items-center bg-slate-800/50">
-      <h2 id="globalEditModalTitle" class="text-sm font-black text-white uppercase tracking-wider">Editar Registro</h2>
-      <button onclick="closeEditModal()" class="text-slate-400 hover:text-white transition-colors"><i class="fas fa-times text-xl"></i></button>
+  <div class="bg-black border border-slate-700/80 rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden relative mt-auto mb-auto">
+    <div class="px-6 py-4 border-b border-slate-700/80 flex justify-between items-center bg-slate-900/60">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center">
+          <i class="fas fa-pen text-slate-300 text-xs"></i>
+        </div>
+        <h2 id="globalEditModalTitle" class="text-sm font-black text-white uppercase tracking-wider">Editar Registro</h2>
+      </div>
+      <button onclick="closeEditModal()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors"><i class="fas fa-times text-sm"></i></button>
     </div>
     <div id="globalEditModalBody" class="p-0">
       <!-- El formulario se inyecta aquí temporalmente -->
@@ -200,12 +395,17 @@
       <span class="font-bold text-sm uppercase tracking-wider">Sueldos</span>
     </a>
 
-    <!-- Grupo: Productividad -->
-    <div class="px-6 pt-5 pb-2 text-[9px] font-black text-slate-500 uppercase tracking-[0.25em]">Productividad</div>
+    <!-- Grupo: Agenda & Hogar -->
+    <div class="px-6 pt-5 pb-2 text-[9px] font-black text-slate-500 uppercase tracking-[0.25em]">Agenda &amp; Hogar</div>
     <a href="#" onclick="showSection('calendario')" id="nav-calendario"
        class="flex items-center px-6 py-3.5 text-slate-400 hover:bg-slate-800 border-l-4 border-transparent transition-colors">
       <i class="fas fa-calendar-alt w-6 text-sm"></i>
       <span class="font-bold text-sm uppercase tracking-wider">Calendario</span>
+    </a>
+    <a href="#" onclick="showSection('listas')" id="nav-listas"
+       class="flex items-center px-6 py-3.5 text-slate-400 hover:bg-slate-800 border-l-4 border-transparent transition-colors">
+      <i class="fas fa-list-check w-6 text-sm"></i>
+      <span class="font-bold text-sm uppercase tracking-wider">Listas</span>
     </a>
     <a href="#" onclick="showSection('domotica')" id="nav-domotica"
        class="flex items-center px-6 py-3.5 text-slate-400 hover:bg-slate-800 border-l-4 border-transparent transition-colors">
@@ -435,10 +635,10 @@
 
         </div>
 
-        <!-- Sección PRODUCTIVIDAD (Movida para reducir margen) -->
+        <!-- Sección AGENDA & HOGAR (Movida para reducir margen) -->
         <div class="mt-8">
-          <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em] mb-4 ml-1">Productividad</h3>
-          <div class="group bg-black rounded-2xl border border-slate-700/60 p-6 relative overflow-hidden flex flex-col w-full">
+          <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em] mb-4 ml-1">Agenda &amp; Hogar</h3>
+          <div onclick="showSection('calendario')" class="group bg-black rounded-2xl border border-slate-700/60 p-6 relative overflow-hidden flex flex-col w-full cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
             <!-- Fondo decorativo sutil -->
             <div class="absolute inset-0 bg-gradient-to-br from-pink-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
 
@@ -450,7 +650,7 @@
                 </div>
                 <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Calendario</span>
               </div>
-              <div onclick="showSection('calendario')" class="flex items-center gap-1 text-slate-500 hover:text-pink-400 transition-colors cursor-pointer">
+              <div class="flex items-center gap-1 text-slate-500 group-hover:text-pink-400 transition-colors">
                 <span class="text-[9px] font-bold uppercase tracking-widest hidden sm:block">Ver más</span>
                 <i class="fas fa-arrow-right text-[10px]"></i>
               </div>
@@ -464,91 +664,119 @@
 
       </div>
       
-      <!-- Sección SALUD -->
-      <div class="xl:col-span-2">
-        <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em] mb-4 ml-1">Salud</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          
-          <!-- Tarjeta Caminata (Inicio) -->
-          <div onclick="showSection('actividad')" class="group bg-black rounded-2xl border border-slate-700/60 p-4 xl:p-5 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
-            <div class="absolute inset-0 bg-gradient-to-br from-teal-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+      <!-- Sección SALUD + MIS TAREAS (Columna Derecha) -->
+      <div class="xl:col-span-2 flex flex-col justify-between">
+        <div>
+          <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em] mb-4 ml-1">Salud</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            
+            <!-- Tarjeta Caminata (Inicio) -->
+            <div onclick="showSection('actividad')" class="group bg-black rounded-2xl border border-slate-700/60 p-4 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between">
+              <div class="absolute inset-0 bg-gradient-to-br from-teal-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+              <div class="flex items-center justify-between mb-4 relative z-10">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-xl bg-teal-900/50 flex items-center justify-center shrink-0">
+                    <i class="fas fa-shoe-prints text-teal-500 text-[11px]"></i>
+                  </div>
+                  <span class="text-[9px] font-black text-white uppercase tracking-[0.16em]">Pasos</span>
+                </div>
+                <i class="fas fa-arrow-right text-[9px] text-slate-500 group-hover:text-teal-400 transition-colors"></i>
+              </div>
+              <div class="relative z-10">
+                <div class="flex items-baseline flex-wrap">
+                  <h3 id="inicio-health-steps" class="text-2xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+                  <span class="text-[10px] font-bold text-slate-400 ml-1">pasos</span>
+                </div>
+                <div class="my-3 border-t border-slate-700/60"></div>
+                <span id="inicio-health-steps-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block truncate">Obj: 10.000 pasos</span>
+              </div>
+            </div>
+
+            <!-- Tarjeta Recorrido (Inicio) -->
+            <div onclick="showSection('actividad')" class="group bg-black rounded-2xl border border-slate-700/60 p-4 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between">
+              <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+              <div class="flex items-center justify-between mb-4 relative z-10">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-xl bg-emerald-900/50 flex items-center justify-center shrink-0">
+                    <i class="fas fa-route text-emerald-500 text-[11px]"></i>
+                  </div>
+                  <span class="text-[9px] font-black text-white uppercase tracking-[0.16em]">Distancia</span>
+                </div>
+                <i class="fas fa-arrow-right text-[9px] text-slate-500 group-hover:text-emerald-400 transition-colors"></i>
+              </div>
+              <div class="relative z-10">
+                <div class="flex items-baseline flex-wrap">
+                  <h3 id="inicio-health-distance" class="text-2xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+                  <span class="text-[10px] font-bold text-slate-400 ml-1">km</span>
+                </div>
+                <div class="my-3 border-t border-slate-700/60"></div>
+                <span id="inicio-health-distance-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block truncate">Obj: 8 km</span>
+              </div>
+            </div>
+
+            <!-- Tarjeta Corporal (Inicio) -->
+            <div onclick="showSection('actividad')" class="group bg-black rounded-2xl border border-slate-700/60 p-4 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between">
+              <div class="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+              <div class="flex items-center justify-between mb-4 relative z-10">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-xl bg-blue-900/50 flex items-center justify-center shrink-0">
+                    <i class="fas fa-weight text-blue-500 text-[11px]"></i>
+                  </div>
+                  <span class="text-[9px] font-black text-white uppercase tracking-[0.16em]">Peso</span>
+                </div>
+                <i class="fas fa-arrow-right text-[9px] text-slate-500 group-hover:text-blue-400 transition-colors"></i>
+              </div>
+              <div class="relative z-10">
+                <div class="flex items-baseline flex-wrap">
+                  <h3 id="inicio-health-weight" class="text-2xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+                  <span class="text-[10px] font-bold text-slate-400 ml-1">kg</span>
+                </div>
+                <div class="my-3 border-t border-slate-700/60"></div>
+                <span id="inicio-health-weight-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block truncate">Obj: 75 kg</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tarjeta MIS TAREAS (Vencimientos / Tareas con horario de Google Tasks) -->
+        <div class="mt-8">
+          <div class="hidden xl:block h-[15px] mb-4"></div>
+          <div onclick="showSection('listas')" class="group bg-black rounded-2xl border border-slate-700/60 p-6 relative overflow-hidden flex flex-col w-full cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-amber-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
+
+            <!-- Cabecera de la tarjeta -->
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-xl bg-teal-900/50 flex items-center justify-center">
-                  <i class="fas fa-shoe-prints text-teal-500 text-xs"></i>
+                <div class="w-8 h-8 rounded-xl bg-amber-900/50 flex items-center justify-center">
+                  <i class="fas fa-clock text-amber-400 text-xs"></i>
                 </div>
-                <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Pasos</span>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Mis Tareas</span>
+                  <span id="inicio-mis-tareas-badge" class="text-[9px] font-black text-amber-400 bg-amber-500/10 border border-amber-500/30 px-1.5 py-0.5 rounded mono">0</span>
+                </div>
               </div>
-              <div class="flex items-center gap-1 text-slate-500 group-hover:text-teal-400 transition-colors">
+              <div class="flex items-center gap-1 text-slate-500 group-hover:text-amber-400 transition-colors">
                 <span class="text-[9px] font-bold uppercase tracking-widest hidden sm:block">Ver más</span>
                 <i class="fas fa-arrow-right text-[10px]"></i>
               </div>
             </div>
-            <div class="relative z-10">
-              <div class="flex items-baseline">
-                <h3 id="inicio-health-steps" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
-                <span class="text-xs font-bold text-slate-400 ml-1.5">pasos</span>
+
+            <!-- Contenedor de tareas (altura idéntica a las columnas del calendario: h-[260px]) -->
+            <div class="bg-slate-800/30 rounded-xl p-3 border border-slate-700/50 flex flex-col h-[260px] overflow-hidden relative z-10">
+              <div id="inicio-mis-tareas-list" class="flex-1 space-y-2 overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full pr-1">
+                <div class="text-[11px] text-slate-500 font-bold uppercase tracking-widest text-center mt-8">Sincronizando tareas...</div>
               </div>
-              <div class="mt-1.5 inline-flex items-center gap-1">
-                <span id="inicio-health-steps-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block mt-0.5">Obj Diario: 10.000 pasos</span>
+
+              <!-- Input rápido para agregar tarea a "Mis tareas" desde Inicio -->
+              <div onclick="event.stopPropagation()" class="mt-2.5 pt-2 border-t border-slate-700/50 flex items-center gap-2">
+                <i class="fas fa-plus text-[10px] text-amber-400"></i>
+                <input id="inicio-mis-tareas-input" type="text" placeholder="Agregar recordatorio a Mis tareas..."
+                       onkeydown="if(event.key==='Enter'){event.preventDefault(); agregarTareaRapidaDesdeInicio(this);}"
+                       class="w-full bg-transparent text-[11px] text-slate-200 placeholder-slate-500 outline-none">
               </div>
             </div>
           </div>
-
-          <!-- Tarjeta Recorrido (Inicio) -->
-          <div onclick="showSection('actividad')" class="group bg-black rounded-2xl border border-slate-700/60 p-4 xl:p-5 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
-            <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
-            <div class="flex items-center justify-between mb-5 relative z-10">
-              <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-xl bg-emerald-900/50 flex items-center justify-center">
-                  <i class="fas fa-route text-emerald-500 text-xs"></i>
-                </div>
-                <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Distancia</span>
-              </div>
-              <div class="flex items-center gap-1 text-slate-500 group-hover:text-emerald-400 transition-colors">
-                <span class="text-[9px] font-bold uppercase tracking-widest hidden sm:block">Ver más</span>
-                <i class="fas fa-arrow-right text-[10px]"></i>
-              </div>
-            </div>
-            <div class="relative z-10">
-              <div class="flex items-baseline">
-                <h3 id="inicio-health-distance" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
-                <span class="text-xs font-bold text-slate-400 ml-1">km</span>
-              </div>
-              <div class="mt-1.5 inline-flex items-center gap-1">
-                <span id="inicio-health-distance-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block mt-0.5">Obj Diario: 8 km</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Tarjeta Corporal (Inicio) -->
-          <div onclick="showSection('actividad')" class="group bg-black rounded-2xl border border-slate-700/60 p-4 xl:p-5 relative overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
-            <div class="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
-            <div class="flex items-center justify-between mb-5 relative z-10">
-              <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-xl bg-blue-900/50 flex items-center justify-center">
-                  <i class="fas fa-weight text-blue-500 text-xs"></i>
-                </div>
-                <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Peso</span>
-              </div>
-              <div class="flex items-center gap-1 text-slate-500 group-hover:text-blue-400 transition-colors">
-                <span class="text-[9px] font-bold uppercase tracking-widest hidden sm:block">Ver más</span>
-                <i class="fas fa-arrow-right text-[10px]"></i>
-              </div>
-            </div>
-            <div class="relative z-10">
-              <div class="flex items-baseline">
-                <h3 id="inicio-health-weight" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
-                <span class="text-xs font-bold text-slate-400 ml-1">kg</span>
-              </div>
-              <div class="mt-1.5 inline-flex items-center gap-1">
-                <span id="inicio-health-weight-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block mt-0.5">Obj Diario: 75 kg</span>
-              </div>
-            </div>
-          </div>
-
-
-
         </div>
       </div>
       
@@ -678,14 +906,14 @@
       <div class="flex items-center gap-2 flex-wrap">
         <span class="text-[10px] font-black text-white uppercase tracking-widest mr-1">Período:</span>
         <div id="actividad-filtros" class="flex gap-2 flex-wrap items-center">
-          <button id="act-filtro-hoy" onclick="setActividadFiltro('hoy')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors bg-white text-black">Hoy</button>
-          <button id="act-filtro-semana" onclick="setActividadFiltro('semana')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors bg-slate-800 text-slate-400 hover:bg-slate-700">Semana</button>
-          <button id="act-filtro-mes" onclick="setActividadFiltro('mes')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors bg-slate-800 text-slate-400 hover:bg-slate-700">Mes</button>
-          <button id="act-filtro-año" onclick="setActividadFiltro('año')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors bg-slate-800 text-slate-400 hover:bg-slate-700">Año</button>
+          <button id="act-filtro-hoy" onclick="setActividadFiltro('hoy')" class="h-8 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all bg-teal-500 text-black shadow-lg shadow-teal-500/20">Hoy</button>
+          <button id="act-filtro-semana" onclick="setActividadFiltro('semana')" class="h-8 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all bg-slate-900 border border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-white">Semana</button>
+          <button id="act-filtro-mes" onclick="setActividadFiltro('mes')" class="h-8 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all bg-slate-900 border border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-white">Mes</button>
+          <button id="act-filtro-año" onclick="setActividadFiltro('año')" class="h-8 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all bg-slate-900 border border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-white">Año</button>
           
           <div class="hidden xl:block w-px h-6 bg-slate-700/60 mx-1"></div>
           
-          <button id="act-filtro-personalizado" onclick="setActividadFiltro('personalizado')" class="h-8 px-3 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors flex items-center gap-1.5 text-slate-400 border border-slate-700 hover:bg-slate-800">
+          <button id="act-filtro-personalizado" onclick="setActividadFiltro('personalizado')" class="h-8 px-3.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5 bg-slate-900 text-slate-400 border border-slate-800 hover:bg-slate-800 hover:text-white">
             <i class="fas fa-calendar-alt"></i> Personalizado
           </button>
         </div>
@@ -780,8 +1008,13 @@
       <!-- Columna izquierda: Formulario -->
       <div class="lg:col-span-4">
         <section class="bg-black rounded-2xl shadow-lg border border-slate-700/60 overflow-hidden sticky top-24">
-          <div class="bg-slate-800 px-6 py-4 border-b border-slate-700/60 flex items-center justify-between">
-            <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Registrar Movimiento</h3>
+          <div class="bg-slate-900/70 px-6 py-4 border-b border-slate-700/60 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <div class="w-7 h-7 rounded-xl bg-blue-900/50 border border-blue-500/30 flex items-center justify-center">
+                <i class="fas fa-wallet text-blue-400 text-xs"></i>
+              </div>
+              <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Registrar Movimiento</h3>
+            </div>
             <span id="form-status" class="text-[10px] font-bold text-slate-500 uppercase tracking-widest"></span>
           </div>
           <!-- Tabs Finanzas -->
@@ -1093,15 +1326,23 @@
 
         <!-- Gráfico de Tendencia de Balance -->
         <div id="chartBalanceTrendContainer" class="bg-black p-6 rounded-2xl border border-slate-700/60 mt-5 mb-5 hidden">
-          <p class="text-[9px] font-black text-white uppercase tracking-widest mb-4">Evolución de Balance Mensual</p>
+          <div class="flex items-center gap-2.5 mb-4">
+            <div class="w-7 h-7 rounded-xl bg-blue-900/50 flex items-center justify-center">
+              <i class="fas fa-chart-column text-blue-400 text-xs"></i>
+            </div>
+            <h4 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Evolución de Balance Mensual</h4>
+          </div>
           <canvas id="chartBalanceTrend" class="max-h-[260px]"></canvas>
         </div>
 
         <!-- Historial de movimientos -->
         <div class="bg-black rounded-2xl border border-slate-700/60 overflow-hidden">
           <div class="px-6 py-4 border-b border-slate-700/60 flex items-center justify-between">
-            <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Historial de Movimientos</h3>
-            <span id="historial-count" class="text-[10px] font-bold text-slate-500 mono">0 registros</span>
+            <div class="flex items-center gap-2.5">
+              <i class="fas fa-list-ul text-blue-400 text-xs"></i>
+              <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Historial de Movimientos</h3>
+            </div>
+            <span id="historial-count" class="text-[10px] font-bold text-slate-400 mono bg-slate-900 px-3 py-1 rounded-full border border-slate-700/80">0 registros</span>
           </div>
 
           <!-- Buscador y Filtros -->
@@ -1171,8 +1412,13 @@
       <!-- Formulario con tabs Compra / Venta -->
       <div class="lg:col-span-4">
         <section class="bg-black rounded-2xl shadow-lg border border-slate-700/60 overflow-hidden sticky top-24">
-          <div class="bg-slate-800 px-6 py-4 border-b border-slate-700/60 flex items-center justify-between">
-            <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Registrar Ahorro</h3>
+          <div class="bg-slate-900/70 px-6 py-4 border-b border-slate-700/60 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <div class="w-7 h-7 rounded-xl bg-violet-900/50 border border-violet-500/30 flex items-center justify-center">
+                <i class="fas fa-piggy-bank text-violet-400 text-xs"></i>
+              </div>
+              <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Registrar Ahorro</h3>
+            </div>
           </div>
           <!-- Tabs -->
           <div class="flex border-b border-slate-700/60">
@@ -1310,33 +1556,33 @@
         <!-- Tarjetas resumen -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
-            <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="absolute inset-0 bg-gradient-to-br from-violet-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-xl bg-green-900/50 flex items-center justify-center">
-                  <i class="fas fa-wallet text-green-500 text-xs"></i>
+                <div class="w-8 h-8 rounded-xl bg-violet-900/50 flex items-center justify-center">
+                  <i class="fas fa-wallet text-violet-400 text-xs"></i>
                 </div>
-                <span class="text-[10px] font-black text-green-400 uppercase tracking-[0.2em]">Total en ARS</span>
+                <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Total en ARS</span>
               </div>
             </div>
             <div class="relative z-10">
-              <h4 id="ah-total-ars" class="text-3xl font-black text-green-300 mono tracking-tighter transition-all duration-300">$—</h4>
-              <p id="ah-ars-sub" class="text-[10px] text-green-400/70 mt-1.5">—</p>
+              <h4 id="ah-total-ars" class="text-3xl font-black text-white mono tracking-tighter transition-all duration-300">$—</h4>
+              <p id="ah-ars-sub" class="text-[10px] text-violet-400 font-bold mt-1.5">—</p>
             </div>
           </div>
           <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
-            <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-xl bg-green-900/50 flex items-center justify-center">
-                  <i class="fas fa-dollar-sign text-green-500 text-xs"></i>
+                <div class="w-8 h-8 rounded-xl bg-emerald-900/50 flex items-center justify-center">
+                  <i class="fas fa-dollar-sign text-emerald-400 text-xs"></i>
                 </div>
-                <span class="text-[10px] font-black text-green-400 uppercase tracking-[0.2em]">Total en USD</span>
+                <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Total en USD</span>
               </div>
             </div>
             <div class="relative z-10">
-              <h4 id="ah-total-usd" class="text-3xl font-black text-green-300 mono tracking-tighter transition-all duration-300">U$S —</h4>
-              <p id="ah-usd-sub" class="text-[10px] text-green-400/70 mt-1.5">—</p>
+              <h4 id="ah-total-usd" class="text-3xl font-black text-emerald-300 mono tracking-tighter transition-all duration-300">U$S —</h4>
+              <p id="ah-usd-sub" class="text-[10px] text-emerald-400/80 font-bold mt-1.5">—</p>
             </div>
           </div>
           <div id="card-ah-pnl" class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
@@ -1375,10 +1621,14 @@
         <!-- Tabla portfolio -->
         <div class="bg-black rounded-2xl border border-slate-700/60 overflow-hidden">
           <div class="px-6 py-4 border-b border-slate-700/60 flex items-center justify-between">
-            <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Mis Activos</h3>
+            <div class="flex items-center gap-2.5">
+              <i class="fas fa-Briefcase text-violet-400 text-xs hidden"></i>
+              <i class="fas fa-layer-group text-violet-400 text-xs"></i>
+              <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Mis Activos</h3>
+            </div>
             <button onclick="actualizarCotizacionesAhorros(true)" id="btn-refrescar-ah"
-                    class="flex items-center gap-1.5 text-[11px] font-bold text-slate-400 hover:text-blue-500 transition-colors uppercase tracking-wider">
-              <i id="icon-refresh-ah" class="fas fa-sync-alt text-xs"></i> Actualizar precios
+                    class="h-8 px-3 rounded-xl bg-slate-900 border border-slate-700/80 flex items-center gap-1.5 text-[10px] font-black text-slate-300 hover:text-violet-300 hover:border-violet-500/50 transition-all uppercase tracking-wider">
+              <i id="icon-refresh-ah" class="fas fa-sync-alt text-[10px]"></i> Actualizar precios
             </button>
           </div>
           <div class="overflow-x-auto">
@@ -1418,8 +1668,11 @@
         <!-- Historial de operaciones (compras y ventas) -->
         <div class="bg-black rounded-2xl border border-slate-700/60 overflow-hidden">
           <div class="px-6 py-4 border-b border-slate-700/60 flex items-center justify-between">
-            <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Historial de Operaciones</h3>
-            <span id="ah-ops-count" class="text-[10px] font-bold text-slate-500 mono">— operaciones</span>
+            <div class="flex items-center gap-2.5">
+              <i class="fas fa-clock-rotate-left text-violet-400 text-xs"></i>
+              <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Historial de Operaciones</h3>
+            </div>
+            <span id="ah-ops-count" class="text-[10px] font-bold text-slate-400 mono bg-slate-900 px-3 py-1 rounded-full border border-slate-700/80">— operaciones</span>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-sm">
@@ -1459,7 +1712,10 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
       <div class="lg:col-span-4">
         <section class="bg-black rounded-2xl shadow-lg border border-slate-700/60 overflow-hidden sticky top-24">
-          <div class="bg-slate-800 px-6 py-4 border-b border-slate-700/60">
+          <div class="bg-slate-900/70 px-6 py-4 border-b border-slate-700/60 flex items-center gap-2.5">
+            <div class="w-7 h-7 rounded-xl bg-yellow-900/50 border border-yellow-500/30 flex items-center justify-center">
+              <i class="fas fa-money-bill-wave text-yellow-400 text-xs"></i>
+            </div>
             <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Registrar Sueldo</h3>
           </div>
         <div id="sueldosFormContainer">
@@ -1544,33 +1800,33 @@
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
-            <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="absolute inset-0 bg-gradient-to-br from-yellow-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-xl bg-green-900/50 flex items-center justify-center">
-                  <i class="fas fa-money-bill-wave text-green-500 text-xs"></i>
+                <div class="w-8 h-8 rounded-xl bg-yellow-900/50 flex items-center justify-center">
+                  <i class="fas fa-money-bill-wave text-yellow-400 text-xs"></i>
                 </div>
-                <span class="text-[10px] font-black text-green-400 uppercase tracking-[0.2em]">TOTAL NETO ARS</span>
+                <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Total Neto ARS</span>
               </div>
             </div>
             <div class="relative z-10">
-              <h4 id="su-ultimo-neto" class="text-3xl font-black text-green-300 mono tracking-tighter transition-all duration-300">$—</h4>
-              <p id="su-ultimo-mes" class="text-[10px] text-green-400/70 mt-1.5">—</p>
+              <h4 id="su-ultimo-neto" class="text-3xl font-black text-white mono tracking-tighter transition-all duration-300">$—</h4>
+              <p id="su-ultimo-mes" class="text-[10px] text-yellow-400 font-bold mt-1.5">—</p>
             </div>
           </div>
           <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
-            <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex items-center justify-between mb-5 relative z-10">
               <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-xl bg-green-900/50 flex items-center justify-center">
-                  <i class="fas fa-dollar-sign text-green-500 text-xs"></i>
+                <div class="w-8 h-8 rounded-xl bg-emerald-900/50 flex items-center justify-center">
+                  <i class="fas fa-dollar-sign text-emerald-400 text-xs"></i>
                 </div>
-                <span class="text-[10px] font-black text-green-400 uppercase tracking-[0.2em]">TOTAL NETO USD</span>
+                <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Total Neto USD</span>
               </div>
             </div>
             <div class="relative z-10">
-              <h4 id="su-ultimo-neto-usd" class="text-3xl font-black text-green-300 mono tracking-tighter transition-all duration-300">U$S —</h4>
-              <p id="su-ultimo-mes-usd" class="text-[10px] text-green-400/70 mt-1.5">—</p>
+              <h4 id="su-ultimo-neto-usd" class="text-3xl font-black text-emerald-300 mono tracking-tighter transition-all duration-300">U$S —</h4>
+              <p id="su-ultimo-mes-usd" class="text-[10px] text-emerald-400/80 font-bold mt-1.5">—</p>
             </div>
           </div>
           <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
@@ -1580,12 +1836,12 @@
                 <div class="w-8 h-8 rounded-xl bg-slate-800 flex items-center justify-center">
                   <i class="fas fa-list-ol text-slate-400 text-xs"></i>
                 </div>
-                <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Registros totales</span>
+                <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Registros Totales</span>
               </div>
             </div>
             <div class="relative z-10">
               <h4 id="su-total-registros" class="text-3xl font-black text-white mono tracking-tighter transition-all duration-300">—</h4>
-              <p id="su-tiempo-total" class="text-[10px] text-slate-400 mt-1.5">—</p>
+              <p id="su-tiempo-total" class="text-[10px] text-slate-400 font-bold mt-1.5">—</p>
             </div>
           </div>
         </div>
@@ -1598,22 +1854,30 @@
           
           <!-- Controles de fecha personalizada (ocultos por defecto) -->
           <div id="sueldos-custom-dates" class="hidden items-center gap-2 mt-2 xl:mt-0 xl:ml-2">
-            <input type="text" id="su-fecha-inicio" placeholder="Desde" class="w-24 h-8 px-3 bg-slate-800 border border-slate-700 rounded-lg text-[11px] font-bold text-white outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50">
+            <input type="text" id="su-fecha-inicio" placeholder="Desde" class="w-24 h-8 px-3 bg-slate-800 border border-slate-700 rounded-lg text-[11px] font-bold text-white outline-none focus:ring-2 focus:ring-yellow-500/30 focus:border-yellow-500/50">
             <span class="text-slate-500 font-bold">-</span>
-            <input type="text" id="su-fecha-fin" placeholder="Hasta" class="w-24 h-8 px-3 bg-slate-800 border border-slate-700 rounded-lg text-[11px] font-bold text-white outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50">
-            <button onclick="renderTablaSueldos();renderGraficoSueldos();renderResumenSueldos();" class="h-8 px-4 bg-slate-800 hover:bg-blue-600 border border-slate-700 rounded-lg text-[11px] font-black text-white uppercase tracking-wider transition-colors">
+            <input type="text" id="su-fecha-fin" placeholder="Hasta" class="w-24 h-8 px-3 bg-slate-800 border border-slate-700 rounded-lg text-[11px] font-bold text-white outline-none focus:ring-2 focus:ring-yellow-500/30 focus:border-yellow-500/50">
+            <button onclick="renderTablaSueldos();renderGraficoSueldos();renderResumenSueldos();" class="h-8 px-4 bg-slate-800 hover:bg-yellow-500 hover:text-black border border-slate-700 rounded-xl text-[11px] font-black text-white uppercase tracking-wider transition-colors">
               Filtrar
             </button>
           </div>
         </div>
         <div id="sueldos-chart-container" class="bg-black p-6 rounded-2xl border border-slate-700/60">
-          <p class="text-[9px] font-black text-white uppercase tracking-widest mb-4">Evolución del Sueldo</p>
+          <div class="flex items-center gap-2.5 mb-4">
+            <div class="w-7 h-7 rounded-xl bg-yellow-900/50 flex items-center justify-center">
+              <i class="fas fa-chart-line text-yellow-400 text-xs"></i>
+            </div>
+            <h4 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Evolución del Sueldo (USD)</h4>
+          </div>
           <canvas id="chartSueldos" class="max-h-[260px]"></canvas>
         </div>
         <div class="bg-black rounded-2xl border border-slate-700/60 overflow-hidden">
           <div class="px-6 py-4 border-b border-slate-700/60 flex items-center justify-between">
-            <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Historial de Sueldos</h3>
-            <span id="su-count" class="text-[10px] font-bold text-slate-500 mono">— registros</span>
+            <div class="flex items-center gap-2.5">
+              <i class="fas fa-table-list text-yellow-400 text-xs"></i>
+              <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Historial de Sueldos</h3>
+            </div>
+            <span id="su-count" class="text-[10px] font-bold text-slate-400 mono bg-slate-900 px-3 py-1 rounded-full border border-slate-700/80">— registros</span>
           </div>
           <!-- Buscador -->
           <div class="px-6 py-3 border-b border-slate-800 bg-slate-800/50">
@@ -1655,7 +1919,10 @@
       <!-- Columna Izquierda: Formulario -->
       <div class="lg:col-span-4">
         <section class="bg-black rounded-2xl shadow-lg border border-slate-700/60 overflow-hidden sticky top-24">
-          <div class="bg-slate-800 px-6 py-4 border-b border-slate-700/60">
+          <div class="bg-slate-900/70 px-6 py-4 border-b border-slate-700/60 flex items-center gap-2.5">
+            <div class="w-7 h-7 rounded-xl bg-emerald-900/50 border border-emerald-500/30 flex items-center justify-center">
+              <i class="fas fa-table-tennis text-emerald-400 text-xs"></i>
+            </div>
             <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Registrar Partido</h3>
           </div>
         <div id="tenisFormContainer">
@@ -1665,12 +1932,12 @@
               <div class="space-y-1.5">
                 <label class="text-[10px] font-bold text-white uppercase ml-1">Fecha</label>
                 <input type="text" id="te-fecha" required
-                       class="w-full h-11 px-4 bg-slate-800 border border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 text-sm font-bold text-white mono">
+                       class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/60 text-sm font-bold text-white mono">
               </div>
               <div class="space-y-1.5">
                 <label class="text-[10px] font-bold text-white uppercase ml-1">Categoría</label>
                 <input type="text" id="te-categoria" placeholder="Ej: Libres C" required list="te-cat-list"
-                       class="w-full h-11 px-4 bg-slate-800 border border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 text-sm text-white">
+                       class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/60 text-sm text-white">
                 <datalist id="te-cat-list">
                   <option value="Libres A"></option>
                   <option value="Libres B"></option>
@@ -1685,12 +1952,12 @@
               <div class="space-y-1.5">
                 <label class="text-[10px] font-bold text-white uppercase ml-1">Torneo</label>
                 <input type="text" id="te-torneo" placeholder="Ej: Master 2026" required
-                       class="w-full h-11 px-4 bg-slate-800 border border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 text-sm text-white">
+                       class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/60 text-sm text-white">
               </div>
               <div class="space-y-1.5">
                 <label class="text-[10px] font-bold text-white uppercase ml-1">Instancia</label>
                 <select id="te-instancia" required
-                        class="w-full h-11 px-4 bg-slate-800 border border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 text-sm text-white font-bold">
+                        class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/60 text-sm text-white font-bold">
                   <option value="Final">Final</option>
                   <option value="Semifinal">Semifinal</option>
                   <option value="4tos">4tos</option>
@@ -1704,7 +1971,7 @@
             <div class="space-y-1.5">
               <label class="text-[10px] font-bold text-white uppercase ml-1">Rival</label>
               <input type="text" id="te-rival" placeholder="Nombre del rival" required
-                     class="w-full h-11 px-4 bg-slate-800 border border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 text-sm text-white">
+                     class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/60 text-sm text-white">
             </div>
 
             <!-- Sets -->
@@ -1715,35 +1982,35 @@
                 <div class="flex items-center justify-center gap-3">
                   <span class="text-[10px] font-bold text-slate-500 uppercase w-8 text-right">Set 1</span>
                   <input type="number" id="te-s1-yo" placeholder="Yo" min="0" required
-                         class="w-16 h-10 text-center bg-slate-800 border border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 text-sm font-bold text-white mono">
+                         class="w-16 h-10 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/60 text-sm font-bold text-white mono">
                   <span class="text-slate-500 font-bold">-</span>
                   <input type="number" id="te-s1-ri" placeholder="Riv" min="0" required
-                         class="w-16 h-10 text-center bg-slate-800 border border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 text-sm font-bold text-white mono">
+                         class="w-16 h-10 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/60 text-sm font-bold text-white mono">
                 </div>
                 <!-- Set 2 -->
                 <div class="flex items-center justify-center gap-3">
                   <span class="text-[10px] font-bold text-slate-500 uppercase w-8 text-right">Set 2</span>
                   <input type="number" id="te-s2-yo" placeholder="Yo" min="0"
-                         class="w-16 h-10 text-center bg-slate-800 border border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 text-sm font-bold text-white mono">
+                         class="w-16 h-10 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/60 text-sm font-bold text-white mono">
                   <span class="text-slate-500 font-bold">-</span>
                   <input type="number" id="te-s2-ri" placeholder="Riv" min="0"
-                         class="w-16 h-10 text-center bg-slate-800 border border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 text-sm font-bold text-white mono">
+                         class="w-16 h-10 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/60 text-sm font-bold text-white mono">
                 </div>
                 <!-- Set 3 -->
                 <div class="flex items-center justify-center gap-3">
                   <span class="text-[10px] font-bold text-slate-500 uppercase w-8 text-right">Set 3</span>
                   <input type="number" id="te-s3-yo" placeholder="Yo" min="0"
-                         class="w-16 h-10 text-center bg-slate-800 border border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 text-sm font-bold text-white mono"
+                         class="w-16 h-10 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/60 text-sm font-bold text-white mono"
                          title="Super Tie-break u otro set">
                   <span class="text-slate-500 font-bold">-</span>
                   <input type="number" id="te-s3-ri" placeholder="Riv" min="0"
-                         class="w-16 h-10 text-center bg-slate-800 border border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 text-sm font-bold text-white mono">
+                         class="w-16 h-10 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/60 text-sm font-bold text-white mono">
                 </div>
               </div>
             </div>
 
             <button type="submit" id="btn-guardar-tenis"
-                    class="w-full bg-amber-700 hover:opacity-90 text-white font-black py-4 rounded-xl border border-white/20 active:scale-95 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest mt-4">
+                    class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-4 rounded-xl border border-emerald-400/30 shadow-lg shadow-emerald-600/20 active:scale-95 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest mt-4">
               <i class="fas fa-save"></i><span>Registrar</span>
             </button>
           </form>
@@ -1754,40 +2021,80 @@
       <!-- Columna Derecha: Dashboard -->
       <div class="lg:col-span-8 space-y-5">
 
-        <!-- Resumen Tarjetas -->
+        <!-- Resumen Tarjetas (KPIs Unificados) -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="bg-black p-4 rounded-2xl border border-slate-700/60 flex flex-col justify-center text-center">
-            <p class="text-[9px] font-bold text-white uppercase tracking-widest mb-1">Partidos Jugados</p>
-            <h4 id="te-res-partidos" class="text-2xl font-black text-white mono tracking-tighter">0</h4>
+          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="flex items-center gap-2.5 mb-4 relative z-10">
+              <div class="w-8 h-8 rounded-xl bg-emerald-900/50 flex items-center justify-center shrink-0">
+                <i class="fas fa-table-tennis text-emerald-400 text-xs"></i>
+              </div>
+              <span class="text-[10px] font-black text-white uppercase tracking-[0.18em]">Partidos</span>
+            </div>
+            <h4 id="te-res-partidos" class="text-3xl font-black text-white mono tracking-tighter relative z-10">0</h4>
           </div>
-          <div class="bg-green-900/20 p-4 rounded-2xl border border-green-800/50 flex flex-col justify-center text-center">
-            <p class="text-[9px] font-bold text-green-400 uppercase tracking-widest mb-1">Victorias</p>
-            <h4 id="te-res-vic" class="text-2xl font-black text-green-300 mono tracking-tighter">0</h4>
+
+          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="flex items-center gap-2.5 mb-4 relative z-10">
+              <div class="w-8 h-8 rounded-xl bg-green-900/50 flex items-center justify-center shrink-0">
+                <i class="fas fa-check text-green-400 text-xs"></i>
+              </div>
+              <span class="text-[10px] font-black text-green-400 uppercase tracking-[0.18em]">Victorias</span>
+            </div>
+            <h4 id="te-res-vic" class="text-3xl font-black text-green-300 mono tracking-tighter relative z-10">0</h4>
           </div>
-          <div class="bg-red-900/20 p-4 rounded-2xl border border-red-800/50 flex flex-col justify-center text-center">
-            <p class="text-[9px] font-bold text-red-400 uppercase tracking-widest mb-1">Derrotas</p>
-            <h4 id="te-res-der" class="text-2xl font-black text-red-300 mono tracking-tighter">0</h4>
+
+          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-red-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="flex items-center gap-2.5 mb-4 relative z-10">
+              <div class="w-8 h-8 rounded-xl bg-red-900/50 flex items-center justify-center shrink-0">
+                <i class="fas fa-times text-red-400 text-xs"></i>
+              </div>
+              <span class="text-[10px] font-black text-red-400 uppercase tracking-[0.18em]">Derrotas</span>
+            </div>
+            <h4 id="te-res-der" class="text-3xl font-black text-red-300 mono tracking-tighter relative z-10">0</h4>
           </div>
-          <div class="bg-amber-900/20 p-4 rounded-2xl border border-amber-800/50 flex flex-col justify-center text-center">
-            <p class="text-[9px] font-bold text-amber-400 uppercase tracking-widest mb-1">Efectividad</p>
-            <h4 id="te-res-efec" class="text-2xl font-black text-amber-300 mono tracking-tighter">0%</h4>
+
+          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="flex items-center gap-2.5 mb-4 relative z-10">
+              <div class="w-8 h-8 rounded-xl bg-emerald-900/50 flex items-center justify-center shrink-0">
+                <i class="fas fa-bullseye text-emerald-400 text-xs"></i>
+              </div>
+              <span class="text-[10px] font-black text-emerald-400 uppercase tracking-[0.18em]">Efectividad</span>
+            </div>
+            <h4 id="te-res-efec" class="text-3xl font-black text-emerald-300 mono tracking-tighter relative z-10">0%</h4>
           </div>
           
-          <div class="col-span-2 bg-black p-4 rounded-2xl border border-slate-700/60 flex items-center justify-between">
-            <div>
-              <p class="text-[9px] font-bold text-white uppercase tracking-widest mb-1">Torneos Jugados</p>
-              <h4 id="te-res-tor-jug" class="text-2xl font-black text-white mono tracking-tighter">0</h4>
+          <div class="col-span-2 group bg-black p-5 rounded-2xl border border-slate-700/60 flex items-center justify-between relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-slate-800/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="relative z-10">
+              <div class="flex items-center gap-2.5 mb-2">
+                <div class="w-7 h-7 rounded-xl bg-slate-800 flex items-center justify-center">
+                  <i class="fas fa-flag-checkered text-slate-400 text-xs"></i>
+                </div>
+                <p class="text-[10px] font-black text-white uppercase tracking-[0.18em]">Torneos Jugados</p>
+              </div>
+              <h4 id="te-res-tor-jug" class="text-3xl font-black text-white mono tracking-tighter">0</h4>
             </div>
-            <i class="fas fa-trophy text-slate-600 text-3xl"></i>
+            <i class="fas fa-trophy text-slate-800 text-4xl relative z-10"></i>
           </div>
-          <div class="col-span-2 bg-amber-900/20 p-4 rounded-2xl border border-amber-800/50 flex items-center justify-between">
-            <div>
-              <p class="text-[9px] font-bold text-amber-400 uppercase tracking-widest mb-1">Torneos Ganados</p>
-              <h4 id="te-res-tor-gan" class="text-2xl font-black text-amber-300 mono tracking-tighter">0</h4>
+
+          <div class="col-span-2 group bg-black p-5 rounded-2xl border border-slate-700/60 flex items-center justify-between relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="relative z-10">
+              <div class="flex items-center gap-2.5 mb-2">
+                <div class="w-7 h-7 rounded-xl bg-emerald-900/50 flex items-center justify-center">
+                  <i class="fas fa-trophy text-emerald-400 text-xs"></i>
+                </div>
+                <p class="text-[10px] font-black text-emerald-400 uppercase tracking-[0.18em]">Torneos Ganados</p>
+              </div>
+              <h4 id="te-res-tor-gan" class="text-3xl font-black text-emerald-300 mono tracking-tighter">0</h4>
             </div>
-            <div class="text-right">
-              <p class="text-[9px] font-bold text-amber-400 uppercase tracking-widest">Eficiencia</p>
-              <p id="te-res-tor-efec" class="text-sm font-black text-amber-300 mono">0%</p>
+            <div class="text-right relative z-10">
+              <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Eficiencia</p>
+              <span id="te-res-tor-efec" class="text-sm font-black text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-1 rounded-lg mono">0%</span>
             </div>
           </div>
         </div>
@@ -1799,10 +2106,10 @@
             <div id="te-filtro-anios" class="flex gap-2 flex-wrap"></div>
           </div>
           <div id="te-custom-dates" class="hidden items-center gap-2 mt-2 xl:mt-0 xl:ml-2">
-            <input type="text" id="te-fecha-inicio" placeholder="Desde" class="w-24 h-8 px-3 bg-slate-800 border border-slate-700 rounded-lg text-[11px] font-bold text-white outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50">
+            <input type="text" id="te-fecha-inicio" placeholder="Desde" class="w-24 h-8 px-3 bg-slate-900 border border-slate-700 rounded-xl text-[11px] font-bold text-white outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/50">
             <span class="text-slate-500 font-bold">-</span>
-            <input type="text" id="te-fecha-fin" placeholder="Hasta" class="w-24 h-8 px-3 bg-slate-800 border border-slate-700 rounded-lg text-[11px] font-bold text-white outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50">
-            <button onclick="renderTenis()" class="h-8 px-4 bg-slate-800 hover:bg-amber-700 border border-slate-700 rounded-lg text-[11px] font-black text-white uppercase tracking-wider transition-colors">
+            <input type="text" id="te-fecha-fin" placeholder="Hasta" class="w-24 h-8 px-3 bg-slate-900 border border-slate-700 rounded-xl text-[11px] font-bold text-white outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/50">
+            <button onclick="renderTenis()" class="h-8 px-4 bg-slate-900 hover:bg-emerald-600 border border-slate-700 rounded-xl text-[11px] font-black text-white uppercase tracking-wider transition-colors">
               Filtrar
             </button>
           </div>
@@ -1811,11 +2118,21 @@
         <!-- Gráficos Tenis -->
         <div class="space-y-5">
           <div class="bg-black p-6 rounded-2xl border border-slate-700/60">
-            <p class="text-[9px] font-black text-white uppercase tracking-widest mb-4">Evolución de Instancia Máxima por Torneo</p>
+            <div class="flex items-center gap-2.5 mb-4">
+              <div class="w-7 h-7 rounded-xl bg-emerald-900/50 flex items-center justify-center">
+                <i class="fas fa-chart-line text-emerald-400 text-xs"></i>
+              </div>
+              <h4 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Evolución de Instancia Máxima por Torneo</h4>
+            </div>
             <canvas id="chartTenisTrend" class="max-h-[260px]"></canvas>
           </div>
           <div class="bg-black p-6 rounded-2xl border border-slate-700/60">
-            <p class="text-[9px] font-black text-white uppercase tracking-widest mb-4">Cantidad de Torneos por Instancia Alcanzada</p>
+            <div class="flex items-center gap-2.5 mb-4">
+              <div class="w-7 h-7 rounded-xl bg-emerald-900/50 flex items-center justify-center">
+                <i class="fas fa-chart-bar text-emerald-400 text-xs"></i>
+              </div>
+              <h4 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Cantidad de Torneos por Instancia Alcanzada</h4>
+            </div>
             <canvas id="chartTenisBar" class="max-h-[260px]"></canvas>
           </div>
         </div>
@@ -1823,9 +2140,21 @@
         <!-- Tabla de Partidos -->
         <div class="bg-black rounded-2xl border border-slate-700/60 overflow-hidden">
           <div class="px-6 py-4 border-b border-slate-700/60 flex flex-wrap gap-4 items-center justify-between">
-            <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Historial de Partidos</h3>
+            <div class="flex items-center gap-2.5">
+              <i class="fas fa-table-tennis text-emerald-400 text-xs"></i>
+              <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Historial de Partidos</h3>
+            </div>
             <div class="flex items-center gap-3">
-              <span id="te-count" class="text-[10px] font-bold text-slate-500 mono bg-slate-800 px-3 py-1 rounded-full border border-slate-700">0 partidos</span>
+              <span id="te-count" class="text-[10px] font-bold text-slate-400 mono bg-slate-900 px-3 py-1 rounded-full border border-slate-700/80">0 partidos</span>
+            </div>
+          </div>
+          <!-- Buscador Tenis -->
+          <div class="px-6 py-3 border-b border-slate-800 bg-slate-800/50">
+            <div class="relative">
+              <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+              <input type="text" id="te-buscador" placeholder="Buscar por torneo, rival, categoría o instancia..."
+                     oninput="renderTenis()"
+                     class="w-full h-9 pl-8 pr-4 bg-black border border-slate-700 rounded-xl text-[12px] outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/50 text-white">
             </div>
           </div>
           <div class="overflow-x-auto">
@@ -1860,7 +2189,10 @@
       <!-- Columna Izquierda: Formulario -->
       <div class="lg:col-span-4">
         <section class="bg-black rounded-2xl shadow-lg border border-slate-700/60 overflow-hidden sticky top-24">
-          <div class="bg-slate-800 px-6 py-4 border-b border-slate-700/60">
+          <div class="bg-slate-900/70 px-6 py-4 border-b border-slate-700/60 flex items-center gap-2.5">
+            <div class="w-7 h-7 rounded-xl bg-indigo-900/50 border border-indigo-500/30 flex items-center justify-center">
+              <i class="fas fa-futbol text-indigo-400 text-xs"></i>
+            </div>
             <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Registrar Partido</h3>
           </div>
         <div id="partidosFormContainer">
@@ -1870,12 +2202,12 @@
               <div class="space-y-1.5">
                 <label class="text-[10px] font-bold text-white uppercase ml-1">Fecha</label>
                 <input type="date" id="pa-fecha" required
-                       class="w-full h-11 px-4 bg-slate-800 border border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 text-sm font-bold text-white mono">
+                       class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/60 text-sm font-bold text-white mono">
               </div>
               <div class="space-y-1.5">
                 <label class="text-[10px] font-bold text-white uppercase ml-1">Equipo</label>
                 <input type="text" id="pa-equipo" value="Boca Juniors" required list="pa-eq-list"
-                       class="w-full h-11 px-4 bg-slate-800 border border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 text-sm text-white">
+                       class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/60 text-sm text-white">
                 <datalist id="pa-eq-list">
                   <option value="Boca Juniors"></option>
                   <option value="Selección Argentina"></option>
@@ -1888,12 +2220,12 @@
               <div class="space-y-1.5">
                 <label class="text-[10px] font-bold text-white uppercase ml-1">Torneo e inst.</label>
                 <input type="text" id="pa-torneo" placeholder="Ej: Liga / Copa Lib." required
-                       class="w-full h-11 px-4 bg-slate-800 border border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 text-sm text-white">
+                       class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/60 text-sm text-white">
               </div>
               <div class="space-y-1.5">
                 <label class="text-[10px] font-bold text-white uppercase ml-1">Rival</label>
                 <input type="text" id="pa-rival" placeholder="Ej: River Plate" required
-                       class="w-full h-11 px-4 bg-slate-800 border border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 text-sm text-white">
+                       class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/60 text-sm text-white">
               </div>
             </div>
 
@@ -1901,7 +2233,7 @@
             <div class="space-y-1.5">
               <label class="text-[10px] font-bold text-white uppercase ml-1">Dónde se jugó</label>
               <input type="text" id="pa-estadio" placeholder="Ej: La Bombonera" required
-                     class="w-full h-11 px-4 bg-slate-800 border border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 text-sm text-white">
+                     class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/60 text-sm text-white">
             </div>
 
             <!-- Resultado -->
@@ -1911,19 +2243,19 @@
                 <div class="flex flex-col items-center">
                   <span class="text-[10px] font-bold text-slate-500 uppercase mb-1">Mi Eq.</span>
                   <input type="number" id="pa-goles-favor" placeholder="0" min="0" required
-                         class="w-16 h-12 text-center bg-slate-800 border border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 text-lg font-black text-white mono">
+                         class="w-16 h-12 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/60 text-lg font-black text-white mono">
                 </div>
                 <span class="text-slate-500 font-bold text-xl">-</span>
                 <div class="flex flex-col items-center">
                   <span class="text-[10px] font-bold text-slate-500 uppercase mb-1">Rival</span>
                   <input type="number" id="pa-goles-contra" placeholder="0" min="0" required
-                         class="w-16 h-12 text-center bg-slate-800 border border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 text-lg font-black text-white mono">
+                         class="w-16 h-12 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/60 text-lg font-black text-white mono">
                 </div>
               </div>
             </div>
 
             <button type="submit" id="btn-guardar-partidos"
-                    class="w-full bg-indigo-700 hover:opacity-90 text-white font-black py-4 rounded-xl border border-white/20 active:scale-95 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest mt-4">
+                    class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-4 rounded-xl border border-indigo-400/30 shadow-lg shadow-indigo-600/20 active:scale-95 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest mt-4">
               <i class="fas fa-save"></i><span>Registrar</span>
             </button>
           </form>
@@ -1934,38 +2266,78 @@
       <!-- Columna Derecha: Dashboard -->
       <div class="lg:col-span-8 space-y-5">
 
-        <!-- Resumen Tarjetas -->
+        <!-- Resumen Tarjetas (KPIs Unificados) -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="bg-black p-4 rounded-2xl border border-slate-700/60 flex flex-col justify-center text-center">
-            <p class="text-[9px] font-bold text-white uppercase tracking-widest mb-1">Partidos Vistos</p>
-            <h4 id="pa-res-partidos" class="text-2xl font-black text-white mono tracking-tighter">0</h4>
+          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-indigo-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="flex items-center gap-2.5 mb-4 relative z-10">
+              <div class="w-8 h-8 rounded-xl bg-indigo-900/50 flex items-center justify-center shrink-0">
+                <i class="fas fa-futbol text-indigo-400 text-xs"></i>
+              </div>
+              <span class="text-[10px] font-black text-white uppercase tracking-[0.18em]">Partidos</span>
+            </div>
+            <h4 id="pa-res-partidos" class="text-3xl font-black text-white mono tracking-tighter relative z-10">0</h4>
           </div>
-          <div class="bg-green-900/20 p-4 rounded-2xl border border-green-800/50 flex flex-col justify-center text-center">
-            <p class="text-[9px] font-bold text-green-400 uppercase tracking-widest mb-1">Victorias</p>
-            <h4 id="pa-res-vic" class="text-2xl font-black text-green-300 mono tracking-tighter">0</h4>
+
+          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-green-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="flex items-center gap-2.5 mb-4 relative z-10">
+              <div class="w-8 h-8 rounded-xl bg-green-900/50 flex items-center justify-center shrink-0">
+                <i class="fas fa-check text-green-400 text-xs"></i>
+              </div>
+              <span class="text-[10px] font-black text-green-400 uppercase tracking-[0.18em]">Victorias</span>
+            </div>
+            <h4 id="pa-res-vic" class="text-3xl font-black text-green-300 mono tracking-tighter relative z-10">0</h4>
           </div>
-          <div class="bg-slate-900/50 p-4 rounded-2xl border border-slate-700/50 flex flex-col justify-center text-center">
-            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Empates</p>
-            <h4 id="pa-res-emp" class="text-2xl font-black text-slate-300 mono tracking-tighter">0</h4>
+
+          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-slate-700/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="flex items-center gap-2.5 mb-4 relative z-10">
+              <div class="w-8 h-8 rounded-xl bg-slate-800 flex items-center justify-center shrink-0">
+                <i class="fas fa-equals text-slate-400 text-xs"></i>
+              </div>
+              <span class="text-[10px] font-black text-slate-300 uppercase tracking-[0.18em]">Empates</span>
+            </div>
+            <h4 id="pa-res-emp" class="text-3xl font-black text-slate-300 mono tracking-tighter relative z-10">0</h4>
           </div>
-          <div class="bg-red-900/20 p-4 rounded-2xl border border-red-800/50 flex flex-col justify-center text-center">
-            <p class="text-[9px] font-bold text-red-400 uppercase tracking-widest mb-1">Derrotas</p>
-            <h4 id="pa-res-der" class="text-2xl font-black text-red-300 mono tracking-tighter">0</h4>
+
+          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-red-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="flex items-center gap-2.5 mb-4 relative z-10">
+              <div class="w-8 h-8 rounded-xl bg-red-900/50 flex items-center justify-center shrink-0">
+                <i class="fas fa-times text-red-400 text-xs"></i>
+              </div>
+              <span class="text-[10px] font-black text-red-400 uppercase tracking-[0.18em]">Derrotas</span>
+            </div>
+            <h4 id="pa-res-der" class="text-3xl font-black text-red-300 mono tracking-tighter relative z-10">0</h4>
           </div>
           
-          <div class="col-span-2 bg-indigo-900/20 p-4 rounded-2xl border border-indigo-800/50 flex items-center justify-between">
-            <div>
-              <p class="text-[9px] font-bold text-indigo-400 uppercase tracking-widest mb-1">Efectividad (Pts)</p>
-              <h4 id="pa-res-efec" class="text-2xl font-black text-indigo-300 mono tracking-tighter">0%</h4>
+          <div class="col-span-2 group bg-black p-5 rounded-2xl border border-slate-700/60 flex items-center justify-between relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-indigo-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="relative z-10">
+              <div class="flex items-center gap-2.5 mb-2">
+                <div class="w-7 h-7 rounded-xl bg-indigo-900/50 flex items-center justify-center">
+                  <i class="fas fa-bullseye text-indigo-400 text-xs"></i>
+                </div>
+                <p class="text-[10px] font-black text-indigo-400 uppercase tracking-[0.18em]">Efectividad (Pts)</p>
+              </div>
+              <h4 id="pa-res-efec" class="text-3xl font-black text-indigo-300 mono tracking-tighter">0%</h4>
             </div>
-            <i class="fas fa-percent text-indigo-600/50 text-3xl"></i>
+            <i class="fas fa-percent text-indigo-900/60 text-4xl relative z-10"></i>
           </div>
-          <div class="col-span-2 bg-black p-4 rounded-2xl border border-slate-700/60 flex items-center justify-between">
-            <div>
-              <p class="text-[9px] font-bold text-white uppercase tracking-widest mb-1">Goles a Favor / Contra</p>
-              <h4 class="text-2xl font-black text-white mono tracking-tighter"><span id="pa-res-gf" class="text-green-400">0</span> - <span id="pa-res-gc" class="text-red-400">0</span></h4>
+
+          <div class="col-span-2 group bg-black p-5 rounded-2xl border border-slate-700/60 flex items-center justify-between relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+            <div class="absolute inset-0 bg-gradient-to-br from-slate-800/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="relative z-10">
+              <div class="flex items-center gap-2.5 mb-2">
+                <div class="w-7 h-7 rounded-xl bg-slate-800 flex items-center justify-center">
+                  <i class="fas fa-futbol text-slate-400 text-xs"></i>
+                </div>
+                <p class="text-[10px] font-black text-white uppercase tracking-[0.18em]">Goles a Favor / Contra</p>
+              </div>
+              <h4 class="text-3xl font-black text-white mono tracking-tighter"><span id="pa-res-gf" class="text-green-400">0</span> <span class="text-slate-600">-</span> <span id="pa-res-gc" class="text-red-400">0</span></h4>
             </div>
-            <i class="fas fa-futbol text-slate-600 text-3xl"></i>
+            <i class="fas fa-futbol text-slate-800 text-4xl relative z-10"></i>
           </div>
         </div>
 
@@ -1973,16 +2345,16 @@
         <div class="bg-black p-4 rounded-2xl border border-slate-700/60 flex flex-col xl:flex-row gap-3 xl:items-center justify-between">
           <div class="flex items-center gap-2 flex-wrap">
             <span class="text-[10px] font-black text-white uppercase tracking-widest mr-1">Filtros:</span>
-            <select id="pa-filtro-equipo" onchange="renderPartidos()" class="bg-slate-800 border border-slate-700 text-white text-[11px] rounded-lg px-2 py-1 outline-none">
+            <select id="pa-filtro-equipo" onchange="renderPartidos()" class="h-8 bg-slate-900 border border-slate-700/80 text-white text-[11px] font-bold rounded-xl px-3 outline-none focus:border-indigo-500">
               <option value="Todos">Todos los equipos</option>
             </select>
-            <div id="pa-filtro-anios" class="flex gap-2 flex-wrap ml-2"></div>
+            <div id="pa-filtro-anios" class="flex gap-2 flex-wrap ml-1"></div>
           </div>
           <div id="pa-custom-dates" class="hidden items-center gap-2 mt-2 xl:mt-0 xl:ml-2">
-            <input type="text" id="pa-fecha-inicio" placeholder="Desde" class="w-24 h-8 px-3 bg-slate-800 border border-slate-700 rounded-lg text-[11px] font-bold text-white outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50">
+            <input type="text" id="pa-fecha-inicio" placeholder="Desde" class="w-24 h-8 px-3 bg-slate-900 border border-slate-700 rounded-xl text-[11px] font-bold text-white outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50">
             <span class="text-slate-500 font-bold">-</span>
-            <input type="text" id="pa-fecha-fin" placeholder="Hasta" class="w-24 h-8 px-3 bg-slate-800 border border-slate-700 rounded-lg text-[11px] font-bold text-white outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50">
-            <button onclick="renderPartidos()" class="h-8 px-4 bg-slate-800 hover:bg-sky-700 border border-slate-700 rounded-lg text-[11px] font-black text-white uppercase tracking-wider transition-colors">
+            <input type="text" id="pa-fecha-fin" placeholder="Hasta" class="w-24 h-8 px-3 bg-slate-900 border border-slate-700 rounded-xl text-[11px] font-bold text-white outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50">
+            <button onclick="renderPartidos()" class="h-8 px-4 bg-slate-900 hover:bg-indigo-600 border border-slate-700 rounded-xl text-[11px] font-black text-white uppercase tracking-wider transition-colors">
               Filtrar
             </button>
           </div>
@@ -1991,11 +2363,21 @@
         <!-- Gráficos Partidos -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
           <div class="bg-black p-6 rounded-2xl border border-slate-700/60">
-            <p class="text-[9px] font-black text-white uppercase tracking-widest mb-4">Cantidad de Partidos por Estadio</p>
+            <div class="flex items-center gap-2.5 mb-4">
+              <div class="w-7 h-7 rounded-xl bg-indigo-900/50 flex items-center justify-center">
+                <i class="fas fa-location-dot text-indigo-400 text-xs"></i>
+              </div>
+              <h4 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Partidos por Estadio</h4>
+            </div>
             <canvas id="chartPartidosEstadios" class="max-h-[260px]"></canvas>
           </div>
           <div class="bg-black p-6 rounded-2xl border border-slate-700/60">
-            <p class="text-[9px] font-black text-white uppercase tracking-widest mb-4">Partidos Vistos por Año</p>
+            <div class="flex items-center gap-2.5 mb-4">
+              <div class="w-7 h-7 rounded-xl bg-indigo-900/50 flex items-center justify-center">
+                <i class="fas fa-chart-line text-indigo-400 text-xs"></i>
+              </div>
+              <h4 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Partidos Vistos por Año</h4>
+            </div>
             <canvas id="chartPartidosPorAnio" class="max-h-[260px]"></canvas>
           </div>
         </div>
@@ -2003,9 +2385,21 @@
         <!-- Tabla de Partidos -->
         <div class="bg-black rounded-2xl border border-slate-700/60 overflow-hidden">
           <div class="px-6 py-4 border-b border-slate-700/60 flex flex-wrap gap-4 items-center justify-between">
-            <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Historial de Partidos</h3>
+            <div class="flex items-center gap-2.5">
+              <i class="fas fa-futbol text-indigo-400 text-xs"></i>
+              <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Historial de Partidos</h3>
+            </div>
             <div class="flex items-center gap-3">
-              <span id="pa-count" class="text-[10px] font-bold text-slate-500 mono bg-slate-800 px-3 py-1 rounded-full border border-slate-700">0 partidos</span>
+              <span id="pa-count" class="text-[10px] font-bold text-slate-400 mono bg-slate-900 px-3 py-1 rounded-full border border-slate-700/80">0 partidos</span>
+            </div>
+          </div>
+          <!-- Buscador Partidos -->
+          <div class="px-6 py-3 border-b border-slate-800 bg-slate-800/50">
+            <div class="relative">
+              <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+              <input type="text" id="pa-buscador" placeholder="Buscar por rival, torneo, estadio o equipo..."
+                     oninput="renderPartidos()"
+                     class="w-full h-9 pl-8 pr-4 bg-black border border-slate-700 rounded-xl text-[12px] outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 text-white">
             </div>
           </div>
           <div class="overflow-x-auto">
@@ -2038,6 +2432,126 @@
     <div class="bg-black rounded-2xl border border-slate-700/60 p-4 md:p-6 overflow-hidden">
       <div id="fullcalendar-container" class="min-h-[600px]"></div>
     </div>
+  </main>
+
+  <!-- SECCIÓN LISTAS (GOOGLE TASKS API) -->
+  <main id="section-listas" class="hidden p-4 md:p-8 max-w-[1400px] mx-auto w-full space-y-6">
+
+    <!-- Fila Superior Limpia: Buscador a la izquierda y Crear nueva lista a la derecha -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+      <!-- Izquierda: Buscador de listas -->
+      <div class="lg:col-span-5">
+        <div class="relative">
+          <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+          <input id="keep-search-input" type="text" oninput="filtrarKeepUI()" placeholder="Buscar en tus listas..."
+                 class="w-full h-12 pl-10 pr-9 bg-black border border-slate-700/70 rounded-2xl text-xs font-bold text-white placeholder-slate-500 outline-none focus:border-amber-500/70 transition-colors">
+          <button id="keep-search-clear" onclick="limpiarBusquedaKeep()" class="hidden absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors">
+            <i class="fas fa-times text-xs"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Derecha: Crear nueva lista -->
+      <div class="lg:col-span-7">
+        <div id="keep-composer-card" class="bg-black rounded-2xl border border-slate-700/70 overflow-hidden transition-all duration-200">
+          <!-- Vista colapsada -->
+          <div id="keep-composer-collapsed" onclick="expandirComposerKeep()" class="h-12 px-5 flex items-center justify-between cursor-text hover:bg-slate-900/70 transition-colors">
+            <div class="flex items-center gap-3">
+              <i class="fas fa-plus text-amber-400 text-xs"></i>
+              <span class="text-xs font-bold text-slate-400 tracking-wide">Crear nueva lista...</span>
+            </div>
+            <i class="fas fa-list-check text-slate-500 text-xs"></i>
+          </div>
+
+          <!-- Vista expandida -->
+          <div id="keep-composer-expanded" class="hidden p-5 space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <input id="keep-new-title" type="text" placeholder="Nombre de la nueva lista..."
+                     class="w-full bg-transparent text-sm font-black text-white placeholder-slate-500 outline-none tracking-wide">
+              <button type="button" id="keep-new-pin-btn" onclick="toggleNewKeepPin()" title="Fijar lista"
+                      class="w-8 h-8 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-slate-800 flex items-center justify-center transition-colors shrink-0">
+                <i class="fas fa-thumbtack text-xs"></i>
+              </button>
+            </div>
+
+            <!-- Ítems iniciales opcionales -->
+            <div class="space-y-2">
+              <div id="keep-new-items-list" class="space-y-1.5 max-h-60 overflow-y-auto pr-1"></div>
+              <div class="flex items-center gap-2.5 pt-1 border-t border-slate-800/80">
+                <i class="fas fa-plus text-slate-500 text-xs ml-1"></i>
+                <input id="keep-new-item-input" type="text" placeholder="Agregar ítem (Enter)..."
+                       onkeydown="handleNewKeepItemKey(event)"
+                       class="flex-1 bg-transparent text-xs font-medium text-slate-200 placeholder-slate-500 outline-none py-1">
+                <button type="button" onclick="agregarItemComposerKeep()" class="text-[10px] font-black uppercase tracking-wider text-amber-400 hover:text-amber-300 px-2 py-1">
+                  Sumar
+                </button>
+              </div>
+            </div>
+
+            <!-- Barra inferior del creador: Colores de tarjeta y Guardar -->
+            <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-3 flex-wrap">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <button type="button" onclick="setNewKeepColor('default')" data-keep-color="default" class="keep-color-dot w-5 h-5 rounded-full bg-slate-900 border-2 border-white transition-transform hover:scale-110" title="Por defecto"></button>
+                <button type="button" onclick="setNewKeepColor('amber')" data-keep-color="amber" class="keep-color-dot w-5 h-5 rounded-full bg-amber-950 border border-amber-500/50 transition-transform hover:scale-110" title="Ámbar"></button>
+                <button type="button" onclick="setNewKeepColor('emerald')" data-keep-color="emerald" class="keep-color-dot w-5 h-5 rounded-full bg-emerald-950 border border-emerald-500/50 transition-transform hover:scale-110" title="Verde"></button>
+                <button type="button" onclick="setNewKeepColor('cyan')" data-keep-color="cyan" class="keep-color-dot w-5 h-5 rounded-full bg-cyan-950 border border-cyan-500/50 transition-transform hover:scale-110" title="Cian"></button>
+                <button type="button" onclick="setNewKeepColor('blue')" data-keep-color="blue" class="keep-color-dot w-5 h-5 rounded-full bg-blue-950 border border-blue-500/50 transition-transform hover:scale-110" title="Azul"></button>
+                <button type="button" onclick="setNewKeepColor('violet')" data-keep-color="violet" class="keep-color-dot w-5 h-5 rounded-full bg-violet-950 border border-violet-500/50 transition-transform hover:scale-110" title="Violeta"></button>
+                <button type="button" onclick="setNewKeepColor('rose')" data-keep-color="rose" class="keep-color-dot w-5 h-5 rounded-full bg-rose-950 border border-rose-500/50 transition-transform hover:scale-110" title="Rosa"></button>
+              </div>
+
+              <div class="flex items-center gap-2 ml-auto">
+                <button type="button" onclick="cerrarComposerKeep(false)" class="h-8 px-3.5 rounded-xl text-[11px] font-bold text-slate-400 hover:text-white uppercase tracking-wider transition-colors">
+                  Cancelar
+                </button>
+                <button type="button" id="btn-crear-lista-tasks" onclick="guardarNuevaKeepNote()" class="h-8 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-black text-[11px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5 shadow-lg shadow-amber-500/20">
+                  <i class="fas fa-check text-[10px]"></i><span>Crear Lista</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenido Principal: Izquierda "Mis Tareas" (fija) | Derecha tus listas creadas -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- Columna Izquierda Fija: Mis Tareas (Vencimientos / Calendario) -->
+      <div id="keep-mis-tareas-col" class="lg:col-span-4 space-y-3 lg:sticky lg:top-6">
+        <h3 class="text-[10px] font-black text-amber-400 uppercase tracking-[0.22em] ml-1 flex items-center gap-2">
+          <i class="fas fa-clock text-[10px]"></i><span>Mis Tareas (Agenda)</span>
+        </h3>
+        <div id="keep-mis-tareas-fixed-slot"></div>
+      </div>
+
+      <!-- Columna Derecha: Listas Creadas (Fijadas y Otras Listas) -->
+      <div class="lg:col-span-8 space-y-6">
+        <!-- Sección: FIJADAS -->
+        <div id="keep-pinned-section" class="hidden space-y-3">
+          <h3 class="text-[10px] font-black text-amber-400 uppercase tracking-[0.22em] ml-1 flex items-center gap-2">
+            <i class="fas fa-thumbtack text-[10px]"></i><span>Listas Fijadas</span>
+          </h3>
+          <div id="keep-pinned-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start"></div>
+        </div>
+
+        <!-- Sección: OTRAS LISTAS -->
+        <div id="keep-others-section" class="space-y-3">
+          <h3 id="keep-others-heading" class="hidden text-[10px] font-black text-slate-400 uppercase tracking-[0.22em] ml-1">Otras Listas</h3>
+          <div id="keep-others-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Estado Vacío -->
+    <div id="keep-empty-state" class="hidden py-16 text-center space-y-3">
+      <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mx-auto text-amber-400">
+        <i class="fas fa-list-check text-2xl"></i>
+      </div>
+      <p class="text-sm font-black text-white uppercase tracking-wider">No hay listas para mostrar</p>
+    </div>
+
   </main>
 
   <!-- SECCIÓN DOMÓTICA (SMART LIFE / TUYA) -->
@@ -2502,16 +3016,100 @@
 
 </div>
 
+<!-- Modal Edición de Lista (Google Tasks) -->
+<div id="modal-keep-edit" onclick="if(event.target===this) guardarYCerrarModalKeep()" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[310] items-center justify-center p-4 overflow-y-auto">
+  <div id="modal-keep-card" class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl my-auto transition-colors duration-200">
+    <!-- Cabecera Modal -->
+    <div class="px-6 pt-5 pb-3 flex items-start justify-between gap-3">
+      <input id="keep-edit-title" type="text" placeholder="Nombre de la lista en Google Tasks"
+             class="w-full bg-transparent text-base font-black text-white placeholder-slate-500 outline-none tracking-wide">
+      <div class="flex items-center gap-1 shrink-0">
+        <button type="button" id="keep-edit-pin-btn" onclick="toggleEditKeepPin()" title="Fijar lista"
+                class="w-8 h-8 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-white/10 flex items-center justify-center transition-colors">
+          <i class="fas fa-thumbtack text-xs"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Cuerpo Modal -->
+    <div class="px-6 py-2 max-h-[65vh] overflow-y-auto space-y-3">
+      <div id="keep-edit-list-wrapper" class="space-y-2">
+        <!-- Items pendientes -->
+        <div id="keep-edit-unchecked-list" class="space-y-1.5"></div>
+
+        <!-- Input para nuevo ítem dentro del modal -->
+        <div class="flex items-center gap-2.5 py-2 border-t border-white/10">
+          <i class="fas fa-plus text-amber-400 text-xs ml-1"></i>
+          <input id="keep-edit-new-item" type="text" placeholder="Agregar nuevo ítem a Google Tasks (Enter)..."
+                 onkeydown="handleEditKeepItemKey(event)"
+                 class="flex-1 bg-transparent text-xs font-medium text-white placeholder-slate-400 outline-none">
+          <button type="button" onclick="agregarItemModalKeep()" class="text-[10px] font-black uppercase tracking-wider text-amber-400 hover:text-amber-300 px-2 py-1">
+            Agregar
+          </button>
+        </div>
+
+        <!-- Items completados -->
+        <div id="keep-edit-checked-section" class="hidden pt-2 border-t border-white/10 space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span id="keep-edit-checked-count" class="text-[10px] font-black uppercase tracking-wider text-slate-400">0 elementos completados</span>
+            <button type="button" onclick="limpiarCompletadosModalKeep()" class="text-[10px] font-bold text-slate-400 hover:text-rose-400 uppercase tracking-wider transition-colors">
+              Borrar completados
+            </button>
+          </div>
+          <div id="keep-edit-checked-list" class="space-y-1"></div>
+        </div>
+      </div>
+
+      <!-- Categoría visual y metadatos -->
+      <div class="pt-2 flex items-center justify-between gap-2 border-t border-white/10">
+        <div class="flex items-center gap-2 flex-1">
+          <i class="fas fa-tag text-slate-400 text-[10px]"></i>
+          <input id="keep-edit-label" type="text" placeholder="Categoría visual (ej: Compras, Hogar)..."
+                 class="bg-transparent text-[11px] font-bold text-slate-200 placeholder-slate-400 outline-none flex-1">
+        </div>
+        <span id="keep-edit-updated" class="text-[10px] text-slate-400 mono"></span>
+      </div>
+    </div>
+
+    <!-- Footer Modal: Paleta de colores, Eliminar y Guardar -->
+    <div class="px-6 py-3.5 bg-black/30 border-t border-white/10 flex items-center justify-between gap-3 flex-wrap">
+      <div class="flex items-center gap-1.5 flex-wrap">
+        <button type="button" onclick="setEditKeepColor('default')" data-edit-color="default" class="keep-edit-color-dot w-5 h-5 rounded-full bg-slate-900 border border-slate-500 transition-transform hover:scale-110"></button>
+        <button type="button" onclick="setEditKeepColor('amber')" data-edit-color="amber" class="keep-edit-color-dot w-5 h-5 rounded-full bg-amber-950 border border-amber-500/60 transition-transform hover:scale-110"></button>
+        <button type="button" onclick="setEditKeepColor('emerald')" data-edit-color="emerald" class="keep-edit-color-dot w-5 h-5 rounded-full bg-emerald-950 border border-emerald-500/60 transition-transform hover:scale-110"></button>
+        <button type="button" onclick="setEditKeepColor('cyan')" data-edit-color="cyan" class="keep-edit-color-dot w-5 h-5 rounded-full bg-cyan-950 border border-cyan-500/60 transition-transform hover:scale-110"></button>
+        <button type="button" onclick="setEditKeepColor('blue')" data-edit-color="blue" class="keep-edit-color-dot w-5 h-5 rounded-full bg-blue-950 border border-blue-500/60 transition-transform hover:scale-110"></button>
+        <button type="button" onclick="setEditKeepColor('violet')" data-edit-color="violet" class="keep-edit-color-dot w-5 h-5 rounded-full bg-violet-950 border border-violet-500/60 transition-transform hover:scale-110"></button>
+        <button type="button" onclick="setEditKeepColor('rose')" data-edit-color="rose" class="keep-edit-color-dot w-5 h-5 rounded-full bg-rose-950 border border-rose-500/60 transition-transform hover:scale-110"></button>
+
+        <div class="w-px h-4 bg-white/15 mx-1"></div>
+
+        <button type="button" onclick="eliminarKeepActual()" title="Eliminar lista de Google Tasks"
+                class="h-7 px-2.5 rounded-lg hover:bg-rose-500/20 text-slate-300 hover:text-rose-400 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider transition-colors">
+          <i class="fas fa-trash-alt text-xs"></i><span>Eliminar Lista</span>
+        </button>
+      </div>
+
+      <button type="button" onclick="guardarYCerrarModalKeep()"
+              class="h-8 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-black text-[11px] font-black uppercase tracking-wider transition-all ml-auto">
+        Listo
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- Modal Configuración Smart Life / Tuya Cloud -->
 <div id="modal-domotica-config" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[300] items-center justify-center p-4 overflow-y-auto">
-  <div class="bg-slate-900 border border-slate-700/80 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl my-auto">
-    <div class="px-6 py-4 border-b border-slate-700/80 flex items-center justify-between bg-slate-800/60">
+  <div class="bg-black border border-slate-700/80 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl my-auto">
+    <div class="px-6 py-4 border-b border-slate-700/80 flex items-center justify-between bg-slate-900/60">
       <div class="flex items-center gap-2.5">
-        <i class="fas fa-sliders-h text-cyan-400 text-sm"></i>
+        <div class="w-8 h-8 rounded-xl bg-cyan-950/60 border border-cyan-500/30 flex items-center justify-center">
+          <i class="fas fa-sliders-h text-cyan-400 text-xs"></i>
+        </div>
         <h3 class="text-sm font-black text-white uppercase tracking-wider">Vincular Smart Life (Tuya Cloud API)</h3>
       </div>
-      <button onclick="cerrarModalConfigDomotica()" class="text-slate-400 hover:text-white transition-colors">
-        <i class="fas fa-times text-lg"></i>
+      <button onclick="cerrarModalConfigDomotica()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors">
+        <i class="fas fa-times text-sm"></i>
       </button>
     </div>
 
@@ -2604,21 +3202,26 @@
 </div>
 
 <!-- Modal todas las cotizaciones -->
-<div id="modal-cotizaciones" class="hidden fixed inset-0 bg-black/70 z-[300] flex items-center justify-center p-4">
-  <div class="bg-black rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
-    <div class="px-6 py-4 border-b border-slate-700/60 flex items-center justify-between">
-      <div>
-        <h3 class="font-black text-white text-sm uppercase tracking-wider">Cotizaciones</h3>
-        <p class="text-[11px] text-slate-400 mt-0.5" id="modal-cotizaciones-subtitle"></p>
+<div id="modal-cotizaciones" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[300] flex items-center justify-center p-4">
+  <div class="bg-black border border-slate-700/80 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
+    <div class="px-6 py-4 border-b border-slate-700/80 bg-slate-900/60 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-xl bg-violet-900/50 border border-violet-500/30 flex items-center justify-center">
+          <i class="fas fa-exchange-alt text-violet-400 text-xs"></i>
+        </div>
+        <div>
+          <h3 class="font-black text-white text-sm uppercase tracking-wider">Cotizaciones</h3>
+          <p class="text-[10px] text-slate-400 mt-0.5" id="modal-cotizaciones-subtitle"></p>
+        </div>
       </div>
-      <button onclick="cerrarModalCotizaciones()" class="text-slate-500 hover:text-slate-400 transition-colors text-xl">
-        <i class="fas fa-times"></i>
+      <button onclick="cerrarModalCotizaciones()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors">
+        <i class="fas fa-times text-sm"></i>
       </button>
     </div>
     <div id="modal-cotizaciones-lista" class="px-6 py-2 max-h-[60vh] overflow-y-auto"></div>
     <div class="px-6 py-4 border-t border-slate-700/60 flex justify-end">
       <button onclick="cerrarModalCotizaciones()"
-              class="h-9 px-5 bg-slate-800 text-slate-500 rounded-lg text-[11px] font-bold uppercase hover:bg-slate-700 transition-colors">
+              class="h-9 px-5 bg-slate-800 text-slate-300 rounded-xl text-[11px] font-bold uppercase hover:bg-slate-700 transition-colors">
         Cerrar
       </button>
     </div>
@@ -2626,21 +3229,26 @@
 </div>
 
 <!-- Modal tickers sin precio -->
-<div id="modal-fallidos" class="hidden fixed inset-0 bg-black/70 z-[200] flex items-center justify-center p-4">
-  <div class="bg-black rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-    <div class="px-6 py-4 border-b border-slate-700/60 flex items-center justify-between">
-      <div>
-        <h3 class="font-black text-white text-sm uppercase tracking-wider">Precios no encontrados</h3>
-        <p class="text-[11px] text-slate-400 mt-0.5">Ingresá el precio manualmente en ARS</p>
+<div id="modal-fallidos" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex items-center justify-center p-4">
+  <div class="bg-black border border-slate-700/80 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+    <div class="px-6 py-4 border-b border-slate-700/80 bg-slate-900/60 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-xl bg-amber-900/50 border border-amber-500/30 flex items-center justify-center">
+          <i class="fas fa-triangle-exclamation text-amber-400 text-xs"></i>
+        </div>
+        <div>
+          <h3 class="font-black text-white text-sm uppercase tracking-wider">Precios no encontrados</h3>
+          <p class="text-[10px] text-slate-400 mt-0.5">Ingresá el precio manualmente en ARS</p>
+        </div>
       </div>
-      <button onclick="cerrarModalFallidos()" class="text-slate-500 hover:text-slate-400 transition-colors text-xl">
-        <i class="fas fa-times"></i>
+      <button onclick="cerrarModalFallidos()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors">
+        <i class="fas fa-times text-sm"></i>
       </button>
     </div>
     <div id="modal-fallidos-lista" class="px-6 py-2 max-h-80 overflow-y-auto"></div>
     <div class="px-6 py-4 border-t border-slate-700/60 flex justify-end">
       <button onclick="cerrarModalFallidos()"
-              class="h-9 px-5 bg-slate-800 text-slate-500 rounded-lg text-[11px] font-bold uppercase hover:bg-slate-700 transition-colors">
+              class="h-9 px-5 bg-slate-800 text-slate-300 rounded-xl text-[11px] font-bold uppercase hover:bg-slate-700 transition-colors">
         Cerrar
       </button>
     </div>
@@ -2974,6 +3582,7 @@ const HEADER_MAP = {
   tenis:    { titulo: 'Tenis',    icono: 'fa-table-tennis'  },
   partidos: { titulo: 'Partidos', icono: 'fa-futbol' },
   calendario:{ titulo: 'Calendario', icono: 'fa-calendar-alt' },
+  listas:   { titulo: 'Listas', icono: 'fa-list-check' },
   domotica: { titulo: 'Domótica', icono: 'fa-sliders-h'      },
 };
 
@@ -2988,11 +3597,12 @@ const MODULE_ACCENT = {
   tenis:     { nav: 'border-emerald-500 text-emerald-400 bg-emerald-600/10', icon: 'text-emerald-400' },
   partidos:  { nav: 'border-indigo-500 text-indigo-400 bg-indigo-600/10', icon: 'text-indigo-400' },
   calendario:{ nav: 'border-pink-500 text-pink-400 bg-pink-600/10',      icon: 'text-pink-400'   },
+  listas:    { nav: 'border-amber-500 text-amber-400 bg-amber-500/10',   icon: 'text-amber-400'  },
   domotica:  { nav: 'border-cyan-500 text-cyan-400 bg-cyan-600/10',      icon: 'text-cyan-400'   },
 };
 
 function showSection(nombre) {
-  ['inicio', 'actividad', 'finanzas', 'ahorros', 'sueldos', 'tenis', 'partidos', 'calendario', 'domotica'].forEach(s => {
+  ['inicio', 'actividad', 'finanzas', 'ahorros', 'sueldos', 'tenis', 'partidos', 'calendario', 'listas', 'domotica'].forEach(s => {
     const sec = document.getElementById('section-' + s);
     if (sec) {
       sec.classList.add('hidden');
@@ -3041,6 +3651,7 @@ function showSection(nombre) {
   if (nombre === 'tenis')   iniciarTenis();
   if (nombre === 'partidos') iniciarPartidos();
   if (nombre === 'calendario') iniciarCalendario();
+  if (nombre === 'listas' && typeof iniciarKeep === 'function') iniciarKeep();
   if (nombre === 'domotica' && typeof iniciarDomotica === 'function') iniciarDomotica();
   if (nombre === 'inicio') {
     actualizarTarjetaFinanzas();
@@ -3073,6 +3684,9 @@ async function cargarDatos(silencioso = false) {
     }
     if (typeof iniciarDomotica === 'function') {
       iniciarDomotica();
+    }
+    if (typeof iniciarKeep === 'function') {
+      iniciarKeep();
     }
 
     const finanzasReq = fetch(scriptURL).then(r => r.json()).then(data => {
@@ -3134,6 +3748,11 @@ async function recargarDatos() {
   // Sincronizar estado de dispositivos Smart Life / Tuya Cloud
   if (typeof sincronizarDomotica === 'function') {
     sincronizarDomotica(true);
+  }
+
+  // Sincronizar listas de Google Tasks
+  if (typeof sincronizarGoogleKeepYTasks === 'function') {
+    sincronizarGoogleKeepYTasks(true);
   }
 
   // Permitir recarga completa de todas las pestañas
@@ -3270,20 +3889,22 @@ function renderFiltroAniosFinanzas() {
   if (!anios.includes(currentYear)) anios.unshift(currentYear);
   const pastYears = anios.filter(a => a !== currentYear);
   
+  const activeCls = 'bg-blue-600 text-white shadow-lg shadow-blue-600/25 border border-blue-500';
+  const inactiveCls = 'bg-slate-900 border border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-white';
   let html = `<button onclick="finanzasSelAnio('Todos')" id="fin-btn-anio-Todos"
-          class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'Todos' === finanzasFiltroPeriodo ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">
+          class="h-8 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${'Todos' === finanzasFiltroPeriodo ? activeCls : inactiveCls}">
     Histórico
   </button>`;
   
   html += `
     <button onclick="finanzasSelAnio('mes_actual')" id="fin-btn-anio-mes_actual"
-            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'mes_actual' === finanzasFiltroPeriodo ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">
+            class="h-8 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${'mes_actual' === finanzasFiltroPeriodo ? activeCls : inactiveCls}">
       Mes Actual
     </button>`;
   
   html += `
     <button onclick="finanzasSelAnio(${currentYear})" id="fin-btn-anio-${currentYear}"
-            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${currentYear === finanzasFiltroPeriodo ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">
+            class="h-8 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${currentYear === finanzasFiltroPeriodo ? activeCls : inactiveCls}">
       ${currentYear}
     </button>`;
 
@@ -3291,7 +3912,7 @@ function renderFiltroAniosFinanzas() {
     const isPastYear = pastYears.includes(Number(finanzasFiltroPeriodo));
     html += `
       <select onchange="finanzasSelAnio(Number(this.value))" id="fin-select-otros-anios"
-              class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors outline-none cursor-pointer appearance-none ${isPastYear ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}"
+              class="h-8 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all outline-none cursor-pointer appearance-none ${isPastYear ? activeCls : inactiveCls}"
               style="padding-right: 2rem; background-position: right 0.5rem center;">
         <option value="" disabled ${!isPastYear ? 'selected' : ''}>OTROS AÑOS</option>
         ${pastYears.map(a => `<option value="${a}" ${a === Number(finanzasFiltroPeriodo) ? 'selected' : ''}>${a}</option>`).join('')}
@@ -3302,7 +3923,7 @@ function renderFiltroAniosFinanzas() {
   html += `
     <div class="hidden xl:block w-px h-6 bg-slate-700/60 mx-1"></div>
     <button onclick="finanzasSelAnio('personalizado')" id="fin-btn-anio-personalizado"
-            class="h-8 px-3 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors flex items-center gap-1.5 ${'personalizado' === finanzasFiltroPeriodo ? 'bg-white text-black border-transparent' : 'text-slate-400 border border-slate-700 hover:bg-slate-800'}">
+            class="h-8 px-3.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${'personalizado' === finanzasFiltroPeriodo ? activeCls : inactiveCls}">
       <i class="fas fa-calendar-alt"></i> Personalizado
     </button>
   `;
@@ -5475,20 +6096,22 @@ function renderFiltroAniosSueldos() {
   if (!anios.includes(currentYear)) anios.unshift(currentYear);
   const pastYears = anios.filter(a => a !== currentYear);
 
+  const activeCls = 'bg-yellow-500 text-black shadow-lg shadow-yellow-500/20 border border-yellow-400';
+  const inactiveCls = 'bg-slate-900 border border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-white';
   let html = `<button onclick="suSelAnio('Todos')" id="su-btn-anio-Todos"
-          class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'Todos' === suFiltroPeriodo ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">
+          class="h-8 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${'Todos' === suFiltroPeriodo ? activeCls : inactiveCls}">
     Histórico
   </button>`;
   
   html += `
     <button onclick="suSelAnio('ultimo_mes')" id="su-btn-anio-ultimo_mes"
-            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'ultimo_mes' === suFiltroPeriodo ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">
+            class="h-8 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${'ultimo_mes' === suFiltroPeriodo ? activeCls : inactiveCls}">
       Último Mes
     </button>`;
   
   html += `
     <button onclick="suSelAnio(${currentYear})" id="su-btn-anio-${currentYear}"
-            class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${currentYear === suFiltroPeriodo ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">
+            class="h-8 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${currentYear === suFiltroPeriodo ? activeCls : inactiveCls}">
       ${currentYear}
     </button>`;
 
@@ -5496,7 +6119,7 @@ function renderFiltroAniosSueldos() {
     const isPastYear = pastYears.includes(Number(suFiltroPeriodo));
     html += `
       <select onchange="suSelAnio(Number(this.value))" id="su-select-otros-anios"
-              class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors outline-none cursor-pointer appearance-none ${isPastYear ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}"
+              class="h-8 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all outline-none cursor-pointer appearance-none ${isPastYear ? activeCls : inactiveCls}"
               style="padding-right: 2rem; background-position: right 0.5rem center;">
         <option value="" disabled ${!isPastYear ? 'selected' : ''}>OTROS AÑOS</option>
         ${pastYears.map(a => `<option value="${a}" ${a === Number(suFiltroPeriodo) ? 'selected' : ''}>${a}</option>`).join('')}
@@ -5507,7 +6130,7 @@ function renderFiltroAniosSueldos() {
   html += `
     <div class="hidden xl:block w-px h-6 bg-slate-700/60 mx-1"></div>
     <button onclick="suSelAnio('personalizado')" id="su-btn-anio-personalizado"
-            class="h-8 px-3 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors flex items-center gap-1.5 ${'personalizado' === suFiltroPeriodo ? 'bg-white text-black border-transparent' : 'text-slate-400 border border-slate-700 hover:bg-slate-800'}">
+            class="h-8 px-3.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${'personalizado' === suFiltroPeriodo ? activeCls : inactiveCls}">
       <i class="fas fa-calendar-alt"></i> Personalizado
     </button>
   `;
@@ -6449,14 +7072,16 @@ function renderFiltroAniosPartidos() {
   if (!container) return;
   const aniosSet = new Set(partidosData.map(r => parsePartidosYear(r.fecha)).filter(Boolean));
   const anios = Array.from(aniosSet).sort((a,b)=>b-a);
+  const activeCls = 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/25 border border-indigo-500';
+  const inactiveCls = 'bg-slate-900 border border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-white';
   
-  let html = `<button onclick="paFiltroPeriodo='Todos'; renderPartidos()" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${paFiltroPeriodo==='Todos' ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">Histórico</button>`;
+  let html = `<button onclick="paFiltroPeriodo='Todos'; renderPartidos()" class="h-8 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${paFiltroPeriodo==='Todos' ? activeCls : inactiveCls}">Histórico</button>`;
   
   anios.forEach(y => {
-    html += `<button onclick="paFiltroPeriodo='${y}'; renderPartidos()" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${paFiltroPeriodo===String(y) ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">${y}</button>`;
+    html += `<button onclick="paFiltroPeriodo='${y}'; renderPartidos()" class="h-8 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${paFiltroPeriodo===String(y) ? activeCls : inactiveCls}">${y}</button>`;
   });
   
-  html += `<button onclick="paFiltroPeriodo='personalizado'; renderPartidos()" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${paFiltroPeriodo==='personalizado' ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">Personalizado</button>`;
+  html += `<button onclick="paFiltroPeriodo='personalizado'; renderPartidos()" class="h-8 px-3.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${paFiltroPeriodo==='personalizado' ? activeCls : inactiveCls}"><i class="fas fa-calendar-alt"></i> Personalizado</button>`;
   
   container.innerHTML = html;
 }
@@ -6521,13 +7146,21 @@ function renderPartidos() {
 
   renderGraficosPartidos(filtrados);
 
-  // Tabla
-  document.getElementById('pa-count').textContent = `${jugados} partidos`;
+  // Tabla (con filtro de búsqueda de texto)
+  const qPa = (document.getElementById('pa-buscador')?.value || '').toLowerCase().trim();
+  const tablaFilas = !qPa ? filtrados : filtrados.filter(r =>
+    (r.rival || '').toLowerCase().includes(qPa) ||
+    (r.torneo || '').toLowerCase().includes(qPa) ||
+    (r.estadio || '').toLowerCase().includes(qPa) ||
+    (r.equipo || '').toLowerCase().includes(qPa) ||
+    (r.fecha || '').toLowerCase().includes(qPa)
+  );
+  document.getElementById('pa-count').textContent = `${tablaFilas.length} partidos`;
   const tbody = document.getElementById('pa-tbody');
-  if (!jugados) {
-    tbody.innerHTML = '<tr><td colspan="7" class="text-center py-10 text-slate-500 text-sm"><i class="fas fa-futbol text-2xl mb-2 block"></i>Sin registros</td></tr>';
+  if (!tablaFilas.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="text-center py-10 text-slate-500 text-sm"><i class="fas fa-futbol text-2xl mb-2 block"></i>Sin registros</td></tr>';
   } else {
-    tbody.innerHTML = filtrados.map(r => {
+    tbody.innerHTML = tablaFilas.map(r => {
       let badge = '';
       if (r.resultado === 'V') badge = `<span class="bg-green-500/20 text-green-400 border border-green-500/30 px-2 py-0.5 rounded text-[10px] font-black uppercase">V</span>`;
       else if (r.resultado === 'E') badge = `<span class="bg-slate-500/20 text-slate-400 border border-slate-500/30 px-2 py-0.5 rounded text-[10px] font-black uppercase">E</span>`;
@@ -6666,7 +7299,7 @@ window.onload = () => {
   let seccionInicial = 'inicio';
   try {
     const saved = localStorage.getItem('gp_last_section');
-    const validas = ['inicio','actividad','finanzas','ahorros','sueldos','tenis','partidos','calendario','domotica'];
+    const validas = ['inicio','actividad','finanzas','ahorros','sueldos','tenis','partidos','calendario','listas','domotica'];
     if (saved && validas.includes(saved)) seccionInicial = saved;
   } catch(e) {}
   showSection(seccionInicial);
@@ -6918,13 +7551,21 @@ function renderTenis() {
 
   renderGraficosTenis(filtrados);
 
-  // Tabla
-  document.getElementById('te-count').textContent = `${jugados} partidos`;
+  // Tabla (con filtro de búsqueda de texto)
+  const qTe = (document.getElementById('te-buscador')?.value || '').toLowerCase().trim();
+  const tablaTenisFilas = !qTe ? filtrados : filtrados.filter(r =>
+    (r.torneo || '').toLowerCase().includes(qTe) ||
+    (r.rival || '').toLowerCase().includes(qTe) ||
+    (r.categoria || '').toLowerCase().includes(qTe) ||
+    (r.instancia || '').toLowerCase().includes(qTe) ||
+    (r.fecha || '').toLowerCase().includes(qTe)
+  );
+  document.getElementById('te-count').textContent = `${tablaTenisFilas.length} partidos`;
   const tbody = document.getElementById('te-tabla');
-  if (!jugados) {
-    tbody.innerHTML = '<tr><td colspan="7" class="text-center py-10 text-slate-500 text-sm"><i class="fas fa-inbox text-2xl mb-2 block"></i>Sin registros</td></tr>';
+  if (!tablaTenisFilas.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="text-center py-10 text-slate-500 text-sm"><i class="fas fa-inbox text-2xl mb-2 block"></i>Sin registros</td></tr>';
   } else {
-    tbody.innerHTML = filtrados.map(r => {
+    tbody.innerHTML = tablaTenisFilas.map(r => {
       const isWin = r.ganado;
       const badgeW = isWin 
         ? `<span class="bg-green-500/20 text-green-400 border border-green-500/30 px-2 py-0.5 rounded text-[10px] font-black uppercase"><i class="fas fa-check mr-1"></i> V</span>` 
@@ -6997,10 +7638,10 @@ function renderGraficosTenis(filtrados) {
       datasets: [{
         label: 'Instancia',
         data: dataTrend,
-        borderColor: '#d97706', // amber-600
-        backgroundColor: 'rgba(217, 119, 6, 0.1)',
-        borderWidth: 2,
-        pointBackgroundColor: '#f59e0b', // amber-500
+        borderColor: '#10b981', // emerald-500
+        backgroundColor: 'rgba(16, 185, 129, 0.12)',
+        borderWidth: 2.5,
+        pointBackgroundColor: '#34d399', // emerald-400
         pointBorderColor: '#1e293b',
         pointBorderWidth: 2,
         pointRadius: 4,
@@ -7052,8 +7693,8 @@ function renderGraficosTenis(filtrados) {
       datasets: [{
         label: 'Torneos',
         data: dataBar,
-        backgroundColor: '#d97706',
-        borderRadius: 4,
+        backgroundColor: '#10b981',
+        borderRadius: 6,
         barPercentage: 0.6
       }]
     },
@@ -7089,18 +7730,20 @@ function renderFiltroAniosTenis() {
   const curr = new Date().getFullYear();
   if (!anios.includes(curr)) anios.unshift(curr);
   const past = anios.filter(a => a !== curr);
+  const activeCls = 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20 border border-emerald-400';
+  const inactiveCls = 'bg-slate-900 border border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-white';
 
-  let html = `<button onclick="teSelAnio('Todos')" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${'Todos' === teFiltroPeriodo ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">Histórico</button>`;
-  html += `<button onclick="teSelAnio(${curr})" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors ${curr === teFiltroPeriodo ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">${curr}</button>`;
+  let html = `<button onclick="teSelAnio('Todos')" class="h-8 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${'Todos' === teFiltroPeriodo ? activeCls : inactiveCls}">Histórico</button>`;
+  html += `<button onclick="teSelAnio(${curr})" class="h-8 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${curr === teFiltroPeriodo ? activeCls : inactiveCls}">${curr}</button>`;
   if (past.length) {
     const isPast = past.includes(Number(teFiltroPeriodo));
-    html += `<select onchange="teSelAnio(Number(this.value))" class="h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors outline-none cursor-pointer appearance-none ${isPast ? 'bg-white text-black' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}" style="padding-right:2rem;background-position:right 0.5rem center;">
+    html += `<select onchange="teSelAnio(Number(this.value))" class="h-8 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all outline-none cursor-pointer appearance-none ${isPast ? activeCls : inactiveCls}" style="padding-right:2rem;background-position:right 0.5rem center;">
       <option value="" disabled ${!isPast ? 'selected' : ''}>OTROS AÑOS</option>
       ${past.map(a => `<option value="${a}" ${a === Number(teFiltroPeriodo) ? 'selected' : ''}>${a}</option>`).join('')}
     </select>`;
   }
   html += `<div class="hidden xl:block w-px h-6 bg-slate-700/60 mx-1"></div>
-    <button onclick="teSelAnio('personalizado')" class="h-8 px-3 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors flex items-center gap-1.5 ${'personalizado' === teFiltroPeriodo ? 'bg-white text-black border-transparent' : 'text-slate-400 border border-slate-700 hover:bg-slate-800'}"><i class="fas fa-calendar-alt"></i> Personalizado</button>`;
+    <button onclick="teSelAnio('personalizado')" class="h-8 px-3.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${'personalizado' === teFiltroPeriodo ? activeCls : inactiveCls}"><i class="fas fa-calendar-alt"></i> Personalizado</button>`;
   document.getElementById('te-filtro-anios').innerHTML = html;
 }
 
@@ -7234,7 +7877,7 @@ window.eliminarTenisUI = async function(rowIndex) {
 const CALENDAR_CLIENT_ID = '153589356690-gk27a6fhfn1tv19mdeqpac9pdfcvjfuc.apps.googleusercontent.com'; // <--- REEMPLAZAR AQUÍ
 const CALENDAR_API_KEY = 'AIzaSyAqO2e2L2cuqgVu1wYT5iIh8eYeDAgsnFI'; // <--- REEMPLAZAR AQUÍ
 const CALENDAR_DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
-const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/fitness.activity.read https://www.googleapis.com/auth/fitness.body.read https://www.googleapis.com/auth/fitness.location.read';
+const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/fitness.activity.read https://www.googleapis.com/auth/fitness.body.read https://www.googleapis.com/auth/fitness.location.read https://www.googleapis.com/auth/tasks';
 
 let tokenClient;
 let gapiInited = false;
@@ -7254,10 +7897,21 @@ async function iniciarCalendario() {
   fullCalendarInst = new FullCalendar.Calendar(calendarEl, {
     initialView: 'dayGridMonth',
     locale: 'es',
+    height: 'auto',
     nextDayThreshold: '09:00:00',
-    displayEventEnd: false, // Opcional, para que el texto sea más limpio
-    fixedWeekCount: false, // Filas dinámicas en vez de siempre 6
-    dayMaxEvents: true, // Límite de eventos para mantener misma altura de celdas
+    displayEventEnd: false,
+    fixedWeekCount: false,
+    dayMaxEvents: false, // Mostrar todos los eventos con scroll interno dentro de cada tarjeta
+    dayMaxEventRows: false,
+    eventDidMount: function(info) {
+      // Eliminar cualquier margin-top inline que FullCalendar inyecte en el harness
+      if (info.el && info.el.parentElement) {
+        info.el.parentElement.style.setProperty('margin-top', '0px', 'important');
+        info.el.parentElement.style.setProperty('margin-bottom', '0px', 'important');
+        info.el.parentElement.style.setProperty('top', 'auto', 'important');
+        info.el.parentElement.style.setProperty('position', 'relative', 'important');
+      }
+    },
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
@@ -7366,7 +8020,8 @@ async function sincronizarDatosGoogle() {
   if (!tieneTokenGoogleValido()) return;
   await Promise.allSettled([
     fetchGoogleEvents(),
-    typeof fetchGoogleFitness === 'function' ? fetchGoogleFitness() : Promise.resolve()
+    typeof fetchGoogleFitness === 'function' ? fetchGoogleFitness() : Promise.resolve(),
+    typeof sincronizarGoogleKeepYTasks === 'function' ? sincronizarGoogleKeepYTasks(true) : Promise.resolve()
   ]);
 }
 
@@ -7673,12 +8328,18 @@ async function fetchGoogleEvents() {
         else if (ev.colorId === '5') color = '#eab308'; // Yellow
       }
       
+      // Si un evento con horario cruza la medianoche o dura hasta otro día,
+      // forzamos end = start en la vista mensual para que FullCalendar no reserve carriles invisibles multi-día
+      const isAllDay = !ev.start.dateTime;
+      const startVal = ev.start.dateTime || ev.start.date;
+      const endVal = isAllDay ? (ev.end.dateTime || ev.end.date) : startVal;
+
       return {
         id: ev.id,
         title: ev.summary,
-        start: ev.start.dateTime || ev.start.date,
-        end: ev.end.dateTime || ev.end.date,
-        allDay: !ev.start.dateTime,
+        start: startVal,
+        end: endVal,
+        allDay: isAllDay,
         backgroundColor: color,
         borderColor: color,
         url: ev.htmlLink,
@@ -7838,14 +8499,14 @@ function setActividadFiltro(period) {
   ids.forEach(id => {
     const btn = document.getElementById('act-filtro-' + id);
     if (!btn) return;
-    btn.className = "h-8 px-4 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors " + 
-      (id === period ? "bg-white text-black" : "bg-slate-800 text-slate-400 hover:bg-slate-700");
+    btn.className = "h-8 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all " + 
+      (id === period ? "bg-teal-500 text-black shadow-lg shadow-teal-500/20" : "bg-slate-900 border border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-white");
   });
 
   const btnCustom = document.getElementById('act-filtro-personalizado');
   if (btnCustom) {
-    btnCustom.className = "h-8 px-3 rounded-lg text-[11px] font-black uppercase tracking-wider transition-colors flex items-center gap-1.5 " + 
-      (period === 'personalizado' ? "bg-white text-black border-transparent" : "text-slate-400 border border-slate-700 hover:bg-slate-800");
+    btnCustom.className = "h-8 px-3.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5 " + 
+      (period === 'personalizado' ? "bg-teal-500 text-black border-transparent shadow-lg shadow-teal-500/20" : "bg-slate-900 text-slate-400 border border-slate-800 hover:bg-slate-800 hover:text-white");
   }
 
   const customDates = document.getElementById('actividad-custom-dates');
@@ -9604,6 +10265,1297 @@ function ejecutarComandoTuyaSmartLife(data) {
   }).catch(() => {
     showToast('No se pudo copiar automáticamente', 'error');
   });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ─── MÓDULO LISTAS (100% GOOGLE TASKS API + MIGRADOR DESDE KEEP) ──────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const TASKS_META_STORAGE_KEY = 'gp_tasks_meta_v2'; // Guarda preferencias visuales por lista (color, fijada, etiqueta)
+const TASKS_CACHE_STORAGE_KEY = 'gp_tasks_cache_v2'; // Caché instantáneo de las listas reales de Google Tasks
+let keepIniciado = false;
+let keepNotes = []; // Cada elemento representa una TaskList real de Google Tasks
+let keepMetaMap = {}; // { [taskListId]: { color, pinned, label } }
+let keepFilterLabel = 'ALL';
+
+// Estado del compositor superior ("Crear nueva lista en Google Tasks...")
+let newKeepDraft = {
+  pinned: true,
+  color: 'amber',
+  items: []
+};
+
+// Estado del modal de edición
+let editingKeepId = null;
+let editingKeepCopy = null;
+
+const KEEP_COLOR_THEMES = {
+  default: { bg: 'bg-black',          modalBg: 'bg-slate-900',    border: 'border-slate-700/70 hover:border-slate-500',     accent: 'text-amber-400',   badge: 'bg-slate-800 text-slate-300 border-slate-700' },
+  amber:   { bg: 'bg-amber-950/35',   modalBg: 'bg-amber-950',    border: 'border-amber-500/40 hover:border-amber-400',     accent: 'text-amber-300',   badge: 'bg-amber-900/50 text-amber-200 border-amber-500/40' },
+  emerald: { bg: 'bg-emerald-950/35', modalBg: 'bg-emerald-950',  border: 'border-emerald-500/40 hover:border-emerald-400', accent: 'text-emerald-300', badge: 'bg-emerald-900/50 text-emerald-200 border-emerald-500/40' },
+  cyan:    { bg: 'bg-cyan-950/35',    modalBg: 'bg-cyan-950',     border: 'border-cyan-500/40 hover:border-cyan-400',       accent: 'text-cyan-300',    badge: 'bg-cyan-900/50 text-cyan-200 border-cyan-500/40' },
+  blue:    { bg: 'bg-blue-950/35',    modalBg: 'bg-blue-950',     border: 'border-blue-500/40 hover:border-blue-400',       accent: 'text-blue-300',    badge: 'bg-blue-900/50 text-blue-200 border-blue-500/40' },
+  violet:  { bg: 'bg-violet-950/35',  modalBg: 'bg-violet-950',   border: 'border-violet-500/40 hover:border-violet-400',   accent: 'text-violet-300',  badge: 'bg-violet-900/50 text-violet-200 border-violet-500/40' },
+  rose:    { bg: 'bg-rose-950/35',    modalBg: 'bg-rose-950',     border: 'border-rose-500/40 hover:border-rose-400',       accent: 'text-rose-300',    badge: 'bg-rose-900/50 text-rose-200 border-rose-500/40' }
+};
+
+function getGoogleAccessToken() {
+  const tokenObj = (typeof gapi !== 'undefined' && gapi.client) ? gapi.client.getToken() : null;
+  if (tokenObj && tokenObj.access_token) return tokenObj.access_token;
+  try {
+    const stored = JSON.parse(localStorage.getItem('gcal_token') || 'null');
+    if (stored && stored.access_token) return stored.access_token;
+  } catch (e) {}
+  return null;
+}
+
+function cargarPreferenciasTasksLocal() {
+  try {
+    // Limpiar la llave vieja con listas semilla si existía
+    localStorage.removeItem('gp_keep_notes_v1');
+    const rawMeta = localStorage.getItem(TASKS_META_STORAGE_KEY);
+    if (rawMeta) keepMetaMap = JSON.parse(rawMeta) || {};
+    const rawCache = localStorage.getItem(TASKS_CACHE_STORAGE_KEY);
+    if (rawCache) {
+      const parsed = JSON.parse(rawCache);
+      if (Array.isArray(parsed)) keepNotes = parsed;
+    }
+  } catch (e) {
+    console.warn('Error leyendo caché de Google Tasks:', e);
+  }
+}
+
+function guardarPreferenciasTasksLocal() {
+  try {
+    localStorage.setItem(TASKS_META_STORAGE_KEY, JSON.stringify(keepMetaMap));
+    localStorage.setItem(TASKS_CACHE_STORAGE_KEY, JSON.stringify(keepNotes));
+  } catch (e) {}
+}
+
+async function iniciarKeep() {
+  if (!keepIniciado) {
+    keepIniciado = true;
+    cargarPreferenciasTasksLocal();
+    renderKeepUI();
+  } else {
+    renderKeepUI();
+  }
+  if (typeof tieneTokenGoogleValido === 'function' && tieneTokenGoogleValido()) {
+    sincronizarGoogleKeepYTasks(true);
+  }
+}
+
+// ─── Sincronización 100% con Google Tasks API ─────────────────────────────────
+async function sincronizarGoogleKeepYTasks(silencioso = false) {
+  const icon = document.getElementById('keep-sync-icon');
+  const statusDot = document.getElementById('keep-status-dot');
+  const statusTxt = document.getElementById('keep-status-text');
+
+  if (typeof tieneTokenGoogleValido === 'function' && !tieneTokenGoogleValido()) {
+    if (!silencioso) {
+      showToast('Conectando con tu cuenta de Google...', 'ok');
+      if (typeof conectarGoogle === 'function') conectarGoogle(true);
+    }
+    return;
+  }
+
+  const accessToken = getGoogleAccessToken();
+  if (!accessToken) return;
+
+  if (icon) icon.classList.add('spin');
+  if (statusTxt) statusTxt.textContent = 'Sincronizando tus listas desde Google Tasks API...';
+
+  try {
+    const listsResp = await fetch('https://tasks.googleapis.com/tasks/v1/users/@me/lists?maxResults=100', {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+
+    if (listsResp.status === 401 || listsResp.status === 403) {
+      if (icon) icon.classList.remove('spin');
+      if (statusDot) statusDot.className = 'w-2 h-2 rounded-full bg-rose-500';
+      if (statusTxt) statusTxt.textContent = 'Se requiere autorizar el permiso de Google Tasks en tu cuenta';
+      if (!silencioso && typeof reconectarGoogle === 'function') {
+        showToast('Autorizando acceso a Google Tasks...', 'ok');
+        reconectarGoogle();
+      }
+      return;
+    }
+
+    if (!listsResp.ok) {
+      throw new Error(`HTTP ${listsResp.status}`);
+    }
+
+    const listsData = await listsResp.json();
+    const taskLists = listsData.items || [];
+
+    const fetchedLists = await Promise.all(taskLists.map(async (tl, index) => {
+      const tasksResp = await fetch(`https://tasks.googleapis.com/tasks/v1/lists/${encodeURIComponent(tl.id)}/tasks?showCompleted=true&showHidden=true&maxResults=100`, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+      const tasksData = tasksResp.ok ? await tasksResp.json() : { items: [] };
+      const rawTasks = (tasksData.items || [])
+        .filter(t => t.title && t.title.trim() !== '')
+        .sort((a, b) => String(a.position || '').localeCompare(String(b.position || '')));
+
+      const mappedItems = rawTasks.map(t => ({
+        id: t.id,
+        googleTaskId: t.id,
+        text: t.title,
+        checked: t.status === 'completed',
+        due: t.due || null,
+        notes: t.notes || ''
+      }));
+
+      const savedMeta = keepMetaMap[tl.id] || {};
+      const defaultColors = ['blue', 'amber', 'emerald', 'cyan', 'violet', 'rose'];
+
+      return {
+        id: tl.id,
+        googleTaskListId: tl.id,
+        title: tl.title || 'Mis tareas',
+        color: savedMeta.color || defaultColors[index % defaultColors.length],
+        pinned: typeof savedMeta.pinned === 'boolean' ? savedMeta.pinned : true,
+        label: savedMeta.label || '',
+        updatedAt: tl.updated || new Date().toISOString(),
+        items: mappedItems
+      };
+    }));
+
+    keepNotes = fetchedLists;
+    guardarPreferenciasTasksLocal();
+    renderKeepUI();
+
+    if (statusDot) statusDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+    if (statusTxt) {
+      statusTxt.textContent = `Sincronizado en vivo con Google Tasks (${keepNotes.length} ${keepNotes.length === 1 ? 'lista activa' : 'listas activas'} en tu cuenta)`;
+    }
+    if (!silencioso) {
+      showToast('Listas de Google Tasks sincronizadas ✓', 'ok');
+    }
+  } catch (err) {
+    console.warn('Error consultando Google Tasks API:', err);
+    if (statusDot) statusDot.className = 'w-2 h-2 rounded-full bg-amber-400';
+    if (statusTxt) statusTxt.textContent = 'No se pudo conectar con Google Tasks API. Verificá que Google Tasks API esté habilitada en Google Cloud.';
+    if (!silencioso) {
+      showToast('Error al sincronizar con Google Tasks', 'error');
+    }
+  } finally {
+    if (icon) icon.classList.remove('spin');
+  }
+}
+
+// ─── Operaciones CRUD contra Google Tasks API ─────────────────────────────────
+async function apiCreateTaskList(title) {
+  const accessToken = getGoogleAccessToken();
+  if (!accessToken) throw new Error('Sin sesión activa de Google');
+  const resp = await fetch('https://tasks.googleapis.com/tasks/v1/users/@me/lists', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ title: title.trim() })
+  });
+  if (!resp.ok) throw new Error(`No se pudo crear la lista (${resp.status})`);
+  return await resp.json();
+}
+
+async function apiRenameTaskList(taskListId, newTitle) {
+  const accessToken = getGoogleAccessToken();
+  if (!accessToken || !taskListId) return;
+  await fetch(`https://tasks.googleapis.com/tasks/v1/users/@me/lists/${encodeURIComponent(taskListId)}`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ title: newTitle.trim() })
+  });
+}
+
+async function apiDeleteTaskList(taskListId) {
+  const accessToken = getGoogleAccessToken();
+  if (!accessToken || !taskListId) return false;
+  const resp = await fetch(`https://tasks.googleapis.com/tasks/v1/users/@me/lists/${encodeURIComponent(taskListId)}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${accessToken}` }
+  });
+  return resp.ok || resp.status === 204;
+}
+
+async function syncKeepItemWithGoogleApi(note, item, action = 'update') {
+  if (!note || !note.googleTaskListId) return null;
+  const accessToken = getGoogleAccessToken();
+  if (!accessToken) return null;
+
+  try {
+    const baseUrl = `https://tasks.googleapis.com/tasks/v1/lists/${encodeURIComponent(note.googleTaskListId)}/tasks`;
+    if (action === 'create') {
+      const resp = await fetch(baseUrl, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title: item.text,
+          status: item.checked ? 'completed' : 'needsAction'
+        })
+      });
+      if (resp.ok) {
+        const created = await resp.json();
+        item.id = created.id;
+        item.googleTaskId = created.id;
+        guardarPreferenciasTasksLocal();
+        return created;
+      }
+    } else if (action === 'update' && item.googleTaskId) {
+      await fetch(`${baseUrl}/${encodeURIComponent(item.googleTaskId)}`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title: item.text,
+          status: item.checked ? 'completed' : 'needsAction'
+        })
+      });
+    } else if (action === 'delete' && item.googleTaskId) {
+      await fetch(`${baseUrl}/${encodeURIComponent(item.googleTaskId)}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+    }
+  } catch (e) {
+    console.warn('Error sincronizando ítem con Google Tasks API:', e);
+  }
+  return null;
+}
+
+// ─── Renderizado Principal de Listas ──────────────────────────────────────────
+function escapeHtmlKeep(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function obtenerListaMisTareas() {
+  if (!Array.isArray(keepNotes) || keepNotes.length === 0) return null;
+  const exact = keepNotes.find(n => {
+    const t = String(n.title || '').trim().toLowerCase();
+    return t === 'mis tareas' || t === 'my tasks' || t === 'tareas';
+  });
+  return exact || keepNotes[0];
+}
+
+function formatearVencimientoTask(dueIso, notesStr) {
+  if (!dueIso && !notesStr) return null;
+  if (dueIso) {
+    try {
+      const datePart = String(dueIso).split('T')[0];
+      const parts = datePart.split('-');
+      if (parts.length === 3) {
+        const dueDate = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]), 12, 0, 0);
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0, 0);
+        const diffDays = Math.round((dueDate - today) / 86400000);
+
+        const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+        let label = `${dueDate.getDate()} ${meses[dueDate.getMonth()]}`;
+        let style = 'bg-slate-800 text-slate-300 border-slate-700';
+
+        if (diffDays < 0) {
+          label = `Vencida • ${label}`;
+          style = 'bg-rose-500/15 text-rose-400 border-rose-500/30';
+        } else if (diffDays === 0) {
+          label = 'Hoy';
+          style = 'bg-amber-500/20 text-amber-300 border-amber-500/40';
+        } else if (diffDays === 1) {
+          label = 'Mañana';
+          style = 'bg-pink-500/15 text-pink-300 border-pink-500/30';
+        }
+        return { label, style };
+      }
+    } catch (e) {}
+  }
+  return null;
+}
+
+function renderInicioMisTareas() {
+  const listEl = document.getElementById('inicio-mis-tareas-list');
+  const badgeEl = document.getElementById('inicio-mis-tareas-badge');
+  if (!listEl) return;
+
+  const misTareasList = obtenerListaMisTareas();
+  if (!misTareasList) {
+    if (badgeEl) badgeEl.textContent = '0';
+    listEl.innerHTML = '<p class="text-[9px] text-slate-600 font-bold uppercase tracking-widest mt-2">Sin tareas programadas</p>';
+    return;
+  }
+
+  const items = Array.isArray(misTareasList.items) ? misTareasList.items : [];
+  const unchecked = [...items.filter(i => !i.checked)].sort((a, b) => {
+    if (a.due && b.due) return String(a.due).localeCompare(String(b.due));
+    if (a.due) return -1;
+    if (b.due) return 1;
+    return 0;
+  });
+  const checked = items.filter(i => i.checked);
+
+  if (badgeEl) badgeEl.textContent = String(unchecked.length);
+
+  if (unchecked.length === 0 && checked.length === 0) {
+    listEl.innerHTML = '<p class="text-[9px] text-slate-600 font-bold uppercase tracking-widest mt-2">Todo al día • Sin tareas pendientes</p>';
+    return;
+  }
+
+  const pendingHTML = unchecked.map(item => {
+    const dueInfo = formatearVencimientoTask(item.due, item.notes);
+    const dueBadge = dueInfo
+      ? `<span class="text-[9px] font-bold px-1.5 py-0.5 rounded border shrink-0 mono ${dueInfo.style}">${escapeHtmlKeep(dueInfo.label)}</span>`
+      : '';
+    return `
+      <div class="bg-slate-800/80 hover:bg-slate-800 rounded-lg p-2.5 border-l-2 border-amber-500 flex items-center justify-between gap-2 transition-colors group/task">
+        <label onclick="event.stopPropagation()" class="flex items-start gap-2.5 cursor-pointer select-none flex-1 min-w-0">
+          <input type="checkbox" onchange="toggleKeepCardItem('${misTareasList.id}', '${item.id}')"
+                 class="mt-0.5 w-3.5 h-3.5 rounded border-slate-500 bg-transparent text-amber-500 focus:ring-0 cursor-pointer accent-amber-500 shrink-0">
+          <span class="text-[11px] font-bold text-white leading-snug break-words group-hover/task:text-amber-200 transition-colors">${escapeHtmlKeep(item.text)}</span>
+        </label>
+        ${dueBadge}
+      </div>
+    `;
+  }).join('');
+
+  const completedHTML = checked.length > 0 ? `
+    <div class="pt-2 mt-2 border-t border-slate-700/40 space-y-1">
+      <p class="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-1">Completadas (${checked.length})</p>
+      ${checked.slice(0, 3).map(item => `
+        <label onclick="event.stopPropagation()" class="flex items-center gap-2 py-0.5 px-1 cursor-pointer select-none opacity-55 hover:opacity-90 transition-opacity">
+          <input type="checkbox" checked onchange="toggleKeepCardItem('${misTareasList.id}', '${item.id}')"
+                 class="w-3 h-3 rounded border-slate-600 bg-transparent text-amber-500 focus:ring-0 cursor-pointer accent-amber-500 shrink-0">
+          <span class="text-[10px] text-slate-400 line-through truncate">${escapeHtmlKeep(item.text)}</span>
+        </label>
+      `).join('')}
+    </div>
+  ` : '';
+
+  listEl.innerHTML = (pendingHTML || '<p class="text-[9px] text-slate-500 font-bold uppercase tracking-widest py-1">Sin tareas pendientes</p>') + completedHTML;
+}
+
+async function agregarTareaRapidaDesdeInicio(inputEl) {
+  const txt = (inputEl ? inputEl.value : '').trim();
+  if (!txt) return;
+  const misTareasList = obtenerListaMisTareas();
+  if (!misTareasList) {
+    showToast('Sincronizando listas con Google Tasks...', 'ok');
+    if (typeof sincronizarGoogleKeepYTasks === 'function') await sincronizarGoogleKeepYTasks(false);
+    return;
+  }
+  await agregarItemRapidoEnCard(misTareasList.id, inputEl);
+}
+
+function renderKeepUI() {
+  renderInicioMisTareas();
+  const searchInput = document.getElementById('keep-search-input');
+  const clearBtn = document.getElementById('keep-search-clear');
+  const query = (searchInput ? searchInput.value : '').trim().toLowerCase();
+
+  if (clearBtn) {
+    if (query.length > 0) clearBtn.classList.remove('hidden');
+    else clearBtn.classList.add('hidden');
+  }
+
+  renderKeepLabelsBar();
+
+  const misTareasRef = obtenerListaMisTareas();
+  const misTareasSlot = document.getElementById('keep-mis-tareas-fixed-slot');
+  const misTareasCol = document.getElementById('keep-mis-tareas-col');
+
+  if (misTareasSlot) {
+    if (misTareasRef) {
+      if (misTareasCol) misTareasCol.classList.remove('hidden');
+      misTareasSlot.innerHTML = renderKeepCardHTML(misTareasRef, true);
+    } else {
+      misTareasSlot.innerHTML = '<div class="bg-slate-900/40 rounded-2xl border border-slate-800 p-5 text-center text-xs text-slate-500 font-bold uppercase tracking-widest">Sincronizando Mis Tareas...</div>';
+    }
+  }
+
+  const visibles = keepNotes.filter(n => {
+    if (!n) return false;
+    if (misTareasRef && n.id === misTareasRef.id) return false;
+    if (keepFilterLabel !== 'ALL' && String(n.label || '').toLowerCase() !== keepFilterLabel.toLowerCase()) return false;
+    if (query) {
+      const matchTitle = String(n.title || '').toLowerCase().includes(query);
+      const matchLabel = String(n.label || '').toLowerCase().includes(query);
+      const matchItems = Array.isArray(n.items) && n.items.some(it => String(it.text || '').toLowerCase().includes(query));
+      return matchTitle || matchLabel || matchItems;
+    }
+    return true;
+  });
+
+  const badgeEl = document.getElementById('keep-count-badge');
+  if (badgeEl) {
+    badgeEl.textContent = `${visibles.length} ${visibles.length === 1 ? 'lista' : 'listas'}`;
+  }
+
+  const pinnedNotes = visibles.filter(n => n.pinned);
+  const otherNotes = visibles.filter(n => !n.pinned);
+
+  const pinnedSec = document.getElementById('keep-pinned-section');
+  const pinnedGrid = document.getElementById('keep-pinned-grid');
+  const othersSec = document.getElementById('keep-others-section');
+  const othersHeading = document.getElementById('keep-others-heading');
+  const othersGrid = document.getElementById('keep-others-grid');
+  const emptyState = document.getElementById('keep-empty-state');
+
+  if (!pinnedGrid || !othersGrid) return;
+
+  if (visibles.length === 0 && !misTareasRef) {
+    if (pinnedSec) pinnedSec.classList.add('hidden');
+    if (othersSec) othersSec.classList.add('hidden');
+    if (emptyState) emptyState.classList.remove('hidden');
+    return;
+  }
+
+  if (emptyState) emptyState.classList.add('hidden');
+
+  if (pinnedNotes.length > 0) {
+    pinnedSec.classList.remove('hidden');
+    pinnedGrid.innerHTML = pinnedNotes.map(renderKeepCardHTML).join('');
+  } else {
+    pinnedSec.classList.add('hidden');
+    pinnedGrid.innerHTML = '';
+  }
+
+  if (otherNotes.length > 0) {
+    othersSec.classList.remove('hidden');
+    if (othersHeading) {
+      if (pinnedNotes.length > 0) othersHeading.classList.remove('hidden');
+      else othersHeading.classList.add('hidden');
+    }
+    othersGrid.innerHTML = otherNotes.map(renderKeepCardHTML).join('');
+  } else {
+    othersSec.classList.add('hidden');
+    othersGrid.innerHTML = '';
+  }
+}
+
+function renderKeepLabelsBar() {
+  const bar = document.getElementById('keep-labels-bar');
+  if (!bar) return;
+
+  const labelsSet = new Set();
+  keepNotes.forEach(n => {
+    if (n && n.label && n.label.trim()) {
+      labelsSet.add(n.label.trim());
+    }
+  });
+
+  const labels = Array.from(labelsSet);
+  if (labels.length === 0) {
+    bar.innerHTML = '';
+    return;
+  }
+
+  const pills = [
+    `<button onclick="setKeepFilterLabel('ALL')" class="h-7 px-3 rounded-full text-[10px] font-black uppercase tracking-wider transition-all shrink-0 border ${
+      keepFilterLabel === 'ALL'
+        ? 'bg-amber-500 text-black border-amber-400'
+        : 'bg-slate-900 text-slate-400 border-slate-800 hover:border-slate-600 hover:text-white'
+    }">Todas</button>`
+  ];
+
+  labels.forEach(lbl => {
+    const active = keepFilterLabel.toLowerCase() === lbl.toLowerCase();
+    pills.push(
+      `<button onclick="setKeepFilterLabel('${escapeHtmlKeep(lbl)}')" class="h-7 px-3 rounded-full text-[10px] font-black uppercase tracking-wider transition-all shrink-0 border flex items-center gap-1.5 ${
+        active
+          ? 'bg-amber-500 text-black border-amber-400'
+          : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-amber-500/40 hover:text-amber-300'
+      }"><i class="fas fa-tag text-[8px]"></i><span>${escapeHtmlKeep(lbl)}</span></button>`
+    );
+  });
+
+  bar.innerHTML = pills.join('');
+}
+
+function renderKeepCardHTML(note, isMisTareasFixed = false) {
+  const theme = isMisTareasFixed
+    ? KEEP_COLOR_THEMES.amber
+    : (KEEP_COLOR_THEMES[note.color] || KEEP_COLOR_THEMES.default);
+  const items = Array.isArray(note.items) ? note.items : [];
+  const rawUnchecked = items.filter(i => !i.checked);
+  const unchecked = isMisTareasFixed
+    ? [...rawUnchecked].sort((a, b) => {
+        if (a.due && b.due) return String(a.due).localeCompare(String(b.due));
+        if (a.due) return -1;
+        if (b.due) return 1;
+        return 0;
+      })
+    : rawUnchecked;
+  const checked = items.filter(i => i.checked);
+
+  const maxVisible = isMisTareasFixed ? 18 : 10;
+  const uncheckedHTML = unchecked.length > 0
+    ? unchecked.slice(0, maxVisible).map(item => {
+        const dueInfo = isMisTareasFixed ? formatearVencimientoTask(item.due, item.notes) : null;
+        const dueBadge = dueInfo
+          ? `<span class="text-[9px] font-bold px-1.5 py-0.5 rounded border shrink-0 mono ${dueInfo.style}">${escapeHtmlKeep(dueInfo.label)}</span>`
+          : '';
+        return `
+      <label onclick="event.stopPropagation()" class="flex items-start justify-between gap-2 py-1 group/item cursor-pointer select-none">
+        <div class="flex items-start gap-2.5 min-w-0 flex-1">
+          <input type="checkbox" onchange="toggleKeepCardItem('${note.id}', '${item.id}')"
+                 class="mt-0.5 w-3.5 h-3.5 rounded border-slate-500 bg-transparent text-amber-500 focus:ring-0 cursor-pointer accent-amber-500 shrink-0">
+          <span class="text-xs text-slate-100 leading-snug break-words group-hover/item:text-white transition-colors">${escapeHtmlKeep(item.text)}</span>
+        </div>
+        ${dueBadge}
+      </label>
+    `;
+      }).join('')
+    : `<p class="text-[11px] text-slate-500 italic py-1">Sin ítems pendientes</p>`;
+
+  const moreUnchecked = unchecked.length > 10
+    ? `<p class="text-[10px] font-bold text-amber-400/90 pt-1">+ ${unchecked.length - 10} pendientes más (clic para ver todos)...</p>`
+    : '';
+
+  const checkedHTML = checked.length > 0 ? `
+    <div class="mt-2.5 pt-2 border-t border-white/10 space-y-1">
+      <div class="flex items-center justify-between mb-1">
+        <p class="text-[10px] font-black uppercase tracking-wider text-slate-400">
+          <i class="fas fa-check-double mr-1 text-[9px]"></i>${checked.length} ${checked.length === 1 ? 'completado' : 'completados'}
+        </p>
+      </div>
+      ${checked.slice(0, 4).map(item => `
+        <label onclick="event.stopPropagation()" class="flex items-start gap-2.5 py-0.5 cursor-pointer select-none opacity-60 hover:opacity-90 transition-opacity">
+          <input type="checkbox" checked onchange="toggleKeepCardItem('${note.id}', '${item.id}')"
+                 class="mt-0.5 w-3.5 h-3.5 rounded border-slate-600 bg-transparent text-amber-500 focus:ring-0 cursor-pointer accent-amber-500 shrink-0">
+          <span class="text-xs text-slate-400 line-through leading-snug break-words">${escapeHtmlKeep(item.text)}</span>
+        </label>
+      `).join('')}
+      ${checked.length > 4 ? `<p class="text-[10px] text-slate-500">+ ${checked.length - 4} completados más</p>` : ''}
+    </div>
+  ` : '';
+
+  const quickAddHTML = `
+    <div onclick="event.stopPropagation()" class="mt-2.5 pt-2 border-t border-white/10 flex items-center gap-2">
+      <i class="fas fa-plus text-[10px] text-amber-400"></i>
+      <input type="text" placeholder="Agregar ítem a Google Tasks..."
+             onkeydown="if(event.key==='Enter'){event.preventDefault(); agregarItemRapidoEnCard('${note.id}', this);}"
+             class="w-full bg-transparent text-[11px] text-slate-200 placeholder-slate-500 outline-none">
+    </div>
+  `;
+
+  const labelBadge = note.label
+    ? `<span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${theme.badge}">${escapeHtmlKeep(note.label)}</span>`
+    : '';
+
+  return `
+    <div onclick="abrirModalKeepEdit('${note.id}')"
+         class="group ${theme.bg} rounded-2xl border ${theme.border} p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl cursor-pointer flex flex-col justify-between relative">
+      <div>
+        <!-- Cabecera de la tarjeta -->
+        <div class="flex items-start justify-between gap-2 mb-3">
+          <div>
+            <h4 class="text-sm font-black text-white tracking-wide leading-snug break-words">${escapeHtmlKeep(note.title || 'Sin título')}</h4>
+            <span class="text-[9px] font-bold text-slate-400 mono">${unchecked.length} pendientes</span>
+          </div>
+          ${isMisTareasFixed ? `
+          <span class="text-[9px] font-black uppercase tracking-wider px-2 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1 shrink-0">
+            <i class="fas fa-lock text-[8px]"></i><span>Fija</span>
+          </span>
+          ` : `
+          <button type="button" onclick="event.stopPropagation(); togglePinKeepNote('${note.id}')" title="${note.pinned ? 'Desfijar' : 'Fijar'}"
+                  class="w-7 h-7 rounded-lg flex items-center justify-center transition-all shrink-0 ${
+                    note.pinned
+                      ? 'text-amber-400 bg-amber-500/15'
+                      : 'text-slate-500 opacity-0 group-hover:opacity-100 hover:text-white hover:bg-white/10'
+                  }">
+            <i class="fas fa-thumbtack text-xs"></i>
+          </button>
+          `}
+        </div>
+
+        <div class="space-y-0.5">${uncheckedHTML}${moreUnchecked}${checkedHTML}${quickAddHTML}</div>
+      </div>
+
+      <!-- Footer de la tarjeta -->
+      <div class="mt-4 pt-2.5 border-t border-white/5 flex items-center justify-between gap-2">
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-500/15 text-blue-300 border border-blue-500/30">
+            <i class="fas fa-check-circle mr-1"></i>Tasks
+          </span>
+          ${labelBadge}
+        </div>
+
+        <div onclick="event.stopPropagation()" class="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+          <button type="button" onclick="cambiarColorRapidoKeep('${note.id}')" title="Cambiar color de tarjeta"
+                  class="w-7 h-7 rounded-lg hover:bg-white/10 text-slate-400 hover:text-amber-300 flex items-center justify-center transition-colors">
+            <i class="fas fa-palette text-[11px]"></i>
+          </button>
+          <button type="button" onclick="eliminarKeepNote('${note.id}')" title="Eliminar lista de Google Tasks"
+                  class="w-7 h-7 rounded-lg hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 flex items-center justify-center transition-colors">
+            <i class="fas fa-trash-alt text-[11px]"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ─── Interacciones rápidas en las tarjetas ──────────────────────────────────
+function actualizarMetaLista(taskListId, changes) {
+  keepMetaMap[taskListId] = { ...(keepMetaMap[taskListId] || {}), ...changes };
+  guardarPreferenciasTasksLocal();
+}
+
+function toggleKeepCardItem(noteId, itemId) {
+  const note = keepNotes.find(n => n.id === noteId);
+  if (!note || !Array.isArray(note.items)) return;
+  const item = note.items.find(i => i.id === itemId);
+  if (!item) return;
+
+  item.checked = !item.checked;
+  note.updatedAt = new Date().toISOString();
+  guardarPreferenciasTasksLocal();
+  renderKeepUI();
+  syncKeepItemWithGoogleApi(note, item, 'update');
+}
+
+async function agregarItemRapidoEnCard(noteId, inputEl) {
+  const txt = (inputEl ? inputEl.value : '').trim();
+  if (!txt) return;
+  const note = keepNotes.find(n => n.id === noteId);
+  if (!note) return;
+  if (!Array.isArray(note.items)) note.items = [];
+
+  const newItem = {
+    id: 'temp_' + Date.now(),
+    text: txt,
+    checked: false
+  };
+  note.items.unshift(newItem);
+  note.updatedAt = new Date().toISOString();
+  inputEl.value = '';
+
+  guardarPreferenciasTasksLocal();
+  renderKeepUI();
+  await syncKeepItemWithGoogleApi(note, newItem, 'create');
+  renderKeepUI();
+}
+
+function togglePinKeepNote(noteId) {
+  const note = keepNotes.find(n => n.id === noteId);
+  if (!note) return;
+  note.pinned = !note.pinned;
+  actualizarMetaLista(noteId, { pinned: note.pinned });
+  renderKeepUI();
+}
+
+function cambiarColorRapidoKeep(noteId) {
+  const note = keepNotes.find(n => n.id === noteId);
+  if (!note) return;
+  const keys = Object.keys(KEEP_COLOR_THEMES);
+  const idx = keys.indexOf(note.color || 'default');
+  note.color = keys[(idx + 1) % keys.length];
+  actualizarMetaLista(noteId, { color: note.color });
+  renderKeepUI();
+}
+
+async function eliminarKeepNote(noteId) {
+  const note = keepNotes.find(n => n.id === noteId);
+  if (!note) return;
+  if (!confirm(`¿Seguro que querés eliminar la lista "${note.title}" de tu cuenta de Google Tasks?`)) return;
+
+  const ok = await apiDeleteTaskList(note.googleTaskListId || note.id);
+  if (!ok) {
+    showToast('No se pudo eliminar en Google Tasks (la lista principal por defecto no puede borrarse)', 'error');
+    return;
+  }
+  keepNotes = keepNotes.filter(n => n.id !== noteId);
+  delete keepMetaMap[noteId];
+  guardarPreferenciasTasksLocal();
+  renderKeepUI();
+  showToast('Lista eliminada de Google Tasks ✓', 'ok');
+}
+
+function setKeepFilterLabel(label) {
+  keepFilterLabel = label;
+  renderKeepUI();
+}
+
+function filtrarKeepUI() {
+  renderKeepUI();
+}
+
+function limpiarBusquedaKeep() {
+  const inp = document.getElementById('keep-search-input');
+  if (inp) inp.value = '';
+  renderKeepUI();
+}
+
+// ─── Compositor de Nueva Lista en Google Tasks ──────────────────────────────
+function expandirComposerKeep() {
+  document.getElementById('keep-composer-collapsed').classList.add('hidden');
+  document.getElementById('keep-composer-expanded').classList.remove('hidden');
+  actualizarVistaComposerKeep();
+  setTimeout(() => {
+    const titleEl = document.getElementById('keep-new-title');
+    if (titleEl) titleEl.focus();
+  }, 40);
+}
+
+function cerrarComposerKeep(guardar = false) {
+  if (guardar) {
+    guardarNuevaKeepNote();
+    return;
+  }
+  newKeepDraft = { pinned: true, color: 'amber', items: [] };
+  const titleEl = document.getElementById('keep-new-title');
+  const itemInp = document.getElementById('keep-new-item-input');
+  const labelInp = document.getElementById('keep-new-label');
+  if (titleEl) titleEl.value = '';
+  if (itemInp) itemInp.value = '';
+  if (labelInp) labelInp.value = '';
+
+  document.getElementById('keep-composer-expanded').classList.add('hidden');
+  document.getElementById('keep-composer-collapsed').classList.remove('hidden');
+  actualizarVistaComposerKeep();
+}
+
+function toggleNewKeepPin() {
+  newKeepDraft.pinned = !newKeepDraft.pinned;
+  actualizarVistaComposerKeep();
+}
+
+function setNewKeepColor(colorKey) {
+  newKeepDraft.color = colorKey;
+  actualizarVistaComposerKeep();
+}
+
+function actualizarVistaComposerKeep() {
+  const pinBtn = document.getElementById('keep-new-pin-btn');
+  const card = document.getElementById('keep-composer-card');
+
+  const theme = KEEP_COLOR_THEMES[newKeepDraft.color] || KEEP_COLOR_THEMES.default;
+  if (card) {
+    card.className = `${theme.bg} rounded-2xl border ${theme.border} overflow-hidden transition-all duration-200`;
+  }
+
+  if (pinBtn) {
+    pinBtn.className = `w-8 h-8 rounded-lg flex items-center justify-center transition-colors shrink-0 ${
+      newKeepDraft.pinned ? 'text-amber-400 bg-amber-500/20' : 'text-slate-400 hover:text-amber-400 hover:bg-slate-800'
+    }`;
+  }
+
+  document.querySelectorAll('.keep-color-dot').forEach(btn => {
+    const c = btn.getAttribute('data-keep-color');
+    if (c === newKeepDraft.color) {
+      btn.classList.add('ring-2', 'ring-white', 'scale-110');
+    } else {
+      btn.classList.remove('ring-2', 'ring-white', 'scale-110');
+    }
+  });
+
+  renderNewKeepItemsDraft();
+}
+
+function renderNewKeepItemsDraft() {
+  const container = document.getElementById('keep-new-items-list');
+  if (!container) return;
+  container.innerHTML = newKeepDraft.items.map((it, idx) => `
+    <div class="flex items-center gap-2.5 py-1 px-1 rounded-lg hover:bg-white/5">
+      <input type="checkbox" ${it.checked ? 'checked' : ''} onchange="newKeepDraft.items[${idx}].checked = this.checked; renderNewKeepItemsDraft()"
+             class="w-3.5 h-3.5 rounded border-slate-500 bg-transparent text-amber-500 accent-amber-500 cursor-pointer">
+      <input type="text" value="${escapeHtmlKeep(it.text)}" oninput="newKeepDraft.items[${idx}].text = this.value"
+             class="flex-1 bg-transparent text-xs text-white outline-none ${it.checked ? 'line-through text-slate-400' : ''}">
+      <button type="button" onclick="newKeepDraft.items.splice(${idx}, 1); renderNewKeepItemsDraft()" class="text-slate-500 hover:text-rose-400 px-1">
+        <i class="fas fa-times text-[10px]"></i>
+      </button>
+    </div>
+  `).join('');
+}
+
+function handleNewKeepItemKey(e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    agregarItemComposerKeep();
+  }
+}
+
+function agregarItemComposerKeep() {
+  const inp = document.getElementById('keep-new-item-input');
+  if (!inp) return;
+  const val = inp.value.trim();
+  if (!val) return;
+  newKeepDraft.items.push({
+    id: 'draft_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+    text: val,
+    checked: false
+  });
+  inp.value = '';
+  renderNewKeepItemsDraft();
+  inp.focus();
+}
+
+async function guardarNuevaKeepNote() {
+  const pendingItemInp = document.getElementById('keep-new-item-input');
+  if (pendingItemInp && pendingItemInp.value.trim() !== '') {
+    agregarItemComposerKeep();
+  }
+
+  const title = (document.getElementById('keep-new-title')?.value || '').trim();
+  const label = (document.getElementById('keep-new-label')?.value || '').trim();
+
+  if (!title && newKeepDraft.items.length === 0) {
+    cerrarComposerKeep(false);
+    return;
+  }
+
+  const finalTitle = title || 'Nueva Lista';
+  const btn = document.getElementById('btn-crear-lista-tasks');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-circle-notch spin text-[10px]"></i><span>Creando...</span>';
+  }
+
+  try {
+    const createdList = await apiCreateTaskList(finalTitle);
+    const listId = createdList.id;
+
+    actualizarMetaLista(listId, {
+      color: newKeepDraft.color || 'amber',
+      pinned: Boolean(newKeepDraft.pinned),
+      label: label
+    });
+
+    const newNoteObj = {
+      id: listId,
+      googleTaskListId: listId,
+      title: createdList.title || finalTitle,
+      color: newKeepDraft.color || 'amber',
+      pinned: Boolean(newKeepDraft.pinned),
+      label: label,
+      updatedAt: new Date().toISOString(),
+      items: []
+    };
+
+    for (const draftItem of newKeepDraft.items) {
+      const itemObj = { id: draftItem.id, text: draftItem.text, checked: draftItem.checked };
+      await syncKeepItemWithGoogleApi(newNoteObj, itemObj, 'create');
+      newNoteObj.items.push(itemObj);
+    }
+
+    keepNotes.unshift(newNoteObj);
+    guardarPreferenciasTasksLocal();
+    cerrarComposerKeep(false);
+    renderKeepUI();
+    showToast(`Lista "${finalTitle}" creada en Google Tasks ✓`, 'ok');
+  } catch (err) {
+    console.error(err);
+    showToast('Error creando la lista en Google Tasks. Verificá tu conexión con Google.', 'error');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-check text-[10px]"></i><span>Crear en Tasks</span>';
+    }
+  }
+}
+
+// ─── Modal de Edición de Lista (Google Tasks) ───────────────────────────────
+function abrirModalKeepEdit(noteId) {
+  const note = keepNotes.find(n => n.id === noteId);
+  if (!note) return;
+
+  editingKeepId = noteId;
+  editingKeepCopy = JSON.parse(JSON.stringify(note));
+  if (!Array.isArray(editingKeepCopy.items)) editingKeepCopy.items = [];
+
+  document.getElementById('keep-edit-title').value = editingKeepCopy.title || '';
+  document.getElementById('keep-edit-label').value = editingKeepCopy.label || '';
+
+  const updatedDate = editingKeepCopy.updatedAt ? new Date(editingKeepCopy.updatedAt) : new Date();
+  const updatedEl = document.getElementById('keep-edit-updated');
+  if (updatedEl) {
+    updatedEl.textContent = `Sincronizado: ${updatedDate.toLocaleDateString('es-AR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}`;
+  }
+
+  renderModalKeepEditContent();
+
+  const modal = document.getElementById('modal-keep-edit');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+}
+
+function renderModalKeepEditContent() {
+  if (!editingKeepCopy) return;
+  const theme = KEEP_COLOR_THEMES[editingKeepCopy.color] || KEEP_COLOR_THEMES.default;
+  const card = document.getElementById('modal-keep-card');
+  if (card) {
+    card.className = `${theme.modalBg} border ${theme.border} rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl my-auto transition-colors duration-200`;
+  }
+
+  const pinBtn = document.getElementById('keep-edit-pin-btn');
+  if (pinBtn) {
+    pinBtn.className = `w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
+      editingKeepCopy.pinned ? 'text-amber-400 bg-amber-500/20' : 'text-slate-400 hover:text-amber-400 hover:bg-white/10'
+    }`;
+  }
+
+  const uncheckedEl = document.getElementById('keep-edit-unchecked-list');
+  const checkedSec = document.getElementById('keep-edit-checked-section');
+  const checkedCount = document.getElementById('keep-edit-checked-count');
+  const checkedEl = document.getElementById('keep-edit-checked-list');
+
+  const unchecked = editingKeepCopy.items.filter(i => !i.checked);
+  const checked = editingKeepCopy.items.filter(i => i.checked);
+
+  if (uncheckedEl) {
+    uncheckedEl.innerHTML = unchecked.map(item => `
+      <div class="flex items-center gap-2.5 py-1 px-2 rounded-lg hover:bg-white/5 group">
+        <input type="checkbox" onchange="toggleItemEnModalKeep('${item.id}')"
+               class="w-4 h-4 rounded border-slate-400 bg-transparent text-amber-500 accent-amber-500 cursor-pointer shrink-0">
+        <input type="text" value="${escapeHtmlKeep(item.text)}"
+               onchange="actualizarTextoItemModalKeep('${item.id}', this.value)"
+               class="flex-1 bg-transparent text-xs text-white outline-none">
+        <button type="button" onclick="eliminarItemEnModalKeep('${item.id}')" class="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-rose-400 px-1 transition-opacity">
+          <i class="fas fa-times text-xs"></i>
+        </button>
+      </div>
+    `).join('');
+  }
+
+  if (checked.length > 0) {
+    checkedSec.classList.remove('hidden');
+    checkedCount.textContent = `${checked.length} ${checked.length === 1 ? 'elemento completado' : 'elementos completados'}`;
+    checkedEl.innerHTML = checked.map(item => `
+      <div class="flex items-center gap-2.5 py-1 px-2 rounded-lg hover:bg-white/5 group opacity-70">
+        <input type="checkbox" checked onchange="toggleItemEnModalKeep('${item.id}')"
+               class="w-4 h-4 rounded border-slate-500 bg-transparent text-amber-500 accent-amber-500 cursor-pointer shrink-0">
+        <input type="text" value="${escapeHtmlKeep(item.text)}"
+               onchange="actualizarTextoItemModalKeep('${item.id}', this.value)"
+               class="flex-1 bg-transparent text-xs text-slate-300 line-through outline-none">
+        <button type="button" onclick="eliminarItemEnModalKeep('${item.id}')" class="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-rose-400 px-1 transition-opacity">
+          <i class="fas fa-times text-xs"></i>
+        </button>
+      </div>
+    `).join('');
+  } else {
+    checkedSec.classList.add('hidden');
+    checkedEl.innerHTML = '';
+  }
+
+  document.querySelectorAll('.keep-edit-color-dot').forEach(btn => {
+    const c = btn.getAttribute('data-edit-color');
+    if (c === editingKeepCopy.color) btn.classList.add('ring-2', 'ring-white', 'scale-110');
+    else btn.classList.remove('ring-2', 'ring-white', 'scale-110');
+  });
+}
+
+function toggleItemEnModalKeep(itemId) {
+  if (!editingKeepCopy) return;
+  const item = editingKeepCopy.items.find(i => i.id === itemId);
+  if (!item) return;
+  item.checked = !item.checked;
+  renderModalKeepEditContent();
+  syncKeepItemWithGoogleApi(editingKeepCopy, item, 'update');
+}
+
+function actualizarTextoItemModalKeep(itemId, nuevoTexto) {
+  if (!editingKeepCopy) return;
+  const item = editingKeepCopy.items.find(i => i.id === itemId);
+  if (item) {
+    item.text = nuevoTexto;
+    syncKeepItemWithGoogleApi(editingKeepCopy, item, 'update');
+  }
+}
+
+function eliminarItemEnModalKeep(itemId) {
+  if (!editingKeepCopy) return;
+  const item = editingKeepCopy.items.find(i => i.id === itemId);
+  if (item) syncKeepItemWithGoogleApi(editingKeepCopy, item, 'delete');
+  editingKeepCopy.items = editingKeepCopy.items.filter(i => i.id !== itemId);
+  renderModalKeepEditContent();
+}
+
+function handleEditKeepItemKey(e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    agregarItemModalKeep();
+  }
+}
+
+async function agregarItemModalKeep() {
+  if (!editingKeepCopy) return;
+  const inp = document.getElementById('keep-edit-new-item');
+  if (!inp) return;
+  const val = inp.value.trim();
+  if (!val) return;
+  const newItem = {
+    id: 'it_' + Date.now(),
+    text: val,
+    checked: false
+  };
+  editingKeepCopy.items.unshift(newItem);
+  inp.value = '';
+  renderModalKeepEditContent();
+  inp.focus();
+  await syncKeepItemWithGoogleApi(editingKeepCopy, newItem, 'create');
+  renderModalKeepEditContent();
+}
+
+async function limpiarCompletadosModalKeep() {
+  if (!editingKeepCopy) return;
+  const completados = editingKeepCopy.items.filter(i => i.checked);
+  editingKeepCopy.items = editingKeepCopy.items.filter(i => !i.checked);
+  renderModalKeepEditContent();
+  for (const item of completados) {
+    await syncKeepItemWithGoogleApi(editingKeepCopy, item, 'delete');
+  }
+}
+
+function toggleEditKeepPin() {
+  if (!editingKeepCopy) return;
+  editingKeepCopy.pinned = !editingKeepCopy.pinned;
+  renderModalKeepEditContent();
+}
+
+function setEditKeepColor(colorKey) {
+  if (!editingKeepCopy) return;
+  editingKeepCopy.color = colorKey;
+  renderModalKeepEditContent();
+}
+
+function eliminarKeepActual() {
+  if (!editingKeepId) return;
+  const idToDelete = editingKeepId;
+  cerrarModalKeepSinGuardar();
+  eliminarKeepNote(idToDelete);
+}
+
+function cerrarModalKeepSinGuardar() {
+  editingKeepId = null;
+  editingKeepCopy = null;
+  const modal = document.getElementById('modal-keep-edit');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+}
+
+async function guardarYCerrarModalKeep() {
+  if (!editingKeepId || !editingKeepCopy) {
+    cerrarModalKeepSinGuardar();
+    return;
+  }
+
+  const pendingInp = document.getElementById('keep-edit-new-item');
+  if (pendingInp && pendingInp.value.trim() !== '') {
+    await agregarItemModalKeep();
+  }
+
+  const newTitle = (document.getElementById('keep-edit-title').value || '').trim() || 'Sin título';
+  const prevTitle = editingKeepCopy.title;
+  editingKeepCopy.title = newTitle;
+  editingKeepCopy.label = (document.getElementById('keep-edit-label').value || '').trim();
+  editingKeepCopy.updatedAt = new Date().toISOString();
+
+  if (newTitle !== prevTitle) {
+    apiRenameTaskList(editingKeepCopy.googleTaskListId || editingKeepId, newTitle);
+  }
+
+  actualizarMetaLista(editingKeepId, {
+    color: editingKeepCopy.color,
+    pinned: editingKeepCopy.pinned,
+    label: editingKeepCopy.label
+  });
+
+  const idx = keepNotes.findIndex(n => n.id === editingKeepId);
+  if (idx >= 0) {
+    keepNotes[idx] = editingKeepCopy;
+  }
+
+  guardarPreferenciasTasksLocal();
+  cerrarModalKeepSinGuardar();
+  renderKeepUI();
+}
+
+// ─── Módulo Migrador Automático de Keep a Google Tasks ─────────────────────
+function abrirModalImportarKeep() {
+  const progBox = document.getElementById('keep-migrate-progress-box');
+  if (progBox) progBox.classList.add('hidden');
+  const modal = document.getElementById('modal-keep-import');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+}
+
+function cerrarModalImportarKeep() {
+  const modal = document.getElementById('modal-keep-import');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+}
+
+async function crearListaEnTasksConItems(title, itemsArray, color = 'amber', label = '') {
+  const progBox = document.getElementById('keep-migrate-progress-box');
+  const statusTxt = document.getElementById('keep-migrate-status-txt');
+  const counterEl = document.getElementById('keep-migrate-counter');
+  const barEl = document.getElementById('keep-migrate-bar');
+  const runBtn = document.getElementById('btn-run-migrate');
+
+  if (progBox) progBox.classList.remove('hidden');
+  if (runBtn) runBtn.disabled = true;
+  if (statusTxt) statusTxt.innerHTML = `<i class="fas fa-circle-notch spin"></i><span>Creando lista "${escapeHtmlKeep(title)}" en Google Tasks...</span>`;
+  if (counterEl) counterEl.textContent = `0/${itemsArray.length}`;
+  if (barEl) barEl.style.width = '5%';
+
+  const createdList = await apiCreateTaskList(title);
+  const listId = createdList.id;
+
+  actualizarMetaLista(listId, { color, pinned: true, label });
+
+  const newNoteObj = {
+    id: listId,
+    googleTaskListId: listId,
+    title: createdList.title || title,
+    color,
+    pinned: true,
+    label,
+    updatedAt: new Date().toISOString(),
+    items: []
+  };
+
+  // Subir cada ítem a Google Tasks API (invertido para que en Tasks queden en el mismo orden de arriba hacia abajo)
+  const total = itemsArray.length;
+  for (let i = 0; i < total; i++) {
+    const rawItem = itemsArray[i];
+    if (statusTxt) statusTxt.innerHTML = `<i class="fas fa-circle-notch spin"></i><span>Cargando ítems en Google Tasks...</span>`;
+    if (counterEl) counterEl.textContent = `${i + 1}/${total}`;
+    if (barEl) barEl.style.width = `${Math.round(((i + 1) / total) * 100)}%`;
+
+    const itemObj = {
+      id: `mig_${Date.now()}_${i}`,
+      text: rawItem.text,
+      checked: Boolean(rawItem.checked)
+    };
+    await syncKeepItemWithGoogleApi(newNoteObj, itemObj, 'create');
+    newNoteObj.items.push(itemObj);
+  }
+
+  keepNotes.unshift(newNoteObj);
+  guardarPreferenciasTasksLocal();
+  renderKeepUI();
+  if (runBtn) runBtn.disabled = false;
+}
+
+async function importarTextoPegadoKeep() {
+  if (typeof tieneTokenGoogleValido === 'function' && !tieneTokenGoogleValido()) {
+    showToast('Primero conectá tu cuenta de Google', 'error');
+    if (typeof conectarGoogle === 'function') conectarGoogle(true);
+    return;
+  }
+
+  const titleEl = document.getElementById('keep-quick-import-title');
+  const linesEl = document.getElementById('keep-quick-import-lines');
+  const colorEl = document.getElementById('keep-quick-import-color');
+
+  const title = (titleEl ? titleEl.value : '').trim();
+  const rawLines = (linesEl ? linesEl.value : '').trim();
+  const color = colorEl ? colorEl.value : 'amber';
+
+  if (!title) {
+    showToast('Escribí un nombre para la lista (ej: Supermercado)', 'error');
+    if (titleEl) titleEl.focus();
+    return;
+  }
+
+  if (!rawLines) {
+    showToast('Pegá al menos un ítem de tu lista de Keep', 'error');
+    if (linesEl) linesEl.focus();
+    return;
+  }
+
+  const items = rawLines.split('\n').map(line => line.trim()).filter(Boolean).map(line => {
+    const isChecked = /^(\[x\]|✓|✔|☑)/i.test(line);
+    const cleanText = line.replace(/^(\[\s*\]|\[x\]|[-*•]|✓|✔|☑|☐)\s*/i, '').trim();
+    return {
+      text: cleanText || line,
+      checked: isChecked
+    };
+  });
+
+  try {
+    await crearListaEnTasksConItems(title, items, color, '');
+    if (titleEl) titleEl.value = '';
+    if (linesEl) linesEl.value = '';
+    cerrarModalImportarKeep();
+    showToast(`Lista "${title}" migrada a Google Tasks con ${items.length} ítems ✓`, 'ok');
+  } catch (err) {
+    console.error(err);
+    const runBtn = document.getElementById('btn-run-migrate');
+    if (runBtn) runBtn.disabled = false;
+    showToast('Error al crear la lista en Google Tasks. Verificá que Tasks API esté activa.', 'error');
+  }
+}
+
+async function procesarArchivosTakeoutKeep(event) {
+  const files = event.target.files;
+  if (!files || files.length === 0) return;
+
+  if (typeof tieneTokenGoogleValido === 'function' && !tieneTokenGoogleValido()) {
+    showToast('Primero conectá tu cuenta de Google', 'error');
+    return;
+  }
+
+  const colorMapKeep = {
+    DEFAULT: 'default', RED: 'rose', ORANGE: 'amber', YELLOW: 'amber',
+    GREEN: 'emerald', TEAL: 'cyan', CERULEAN: 'cyan', BLUE: 'blue',
+    PURPLE: 'violet', PINK: 'rose', BROWN: 'amber', GRAY: 'default'
+  };
+
+  let importadas = 0;
+  for (const file of files) {
+    try {
+      const txt = await file.text();
+      const data = JSON.parse(txt);
+      if (data.isTrashed) continue;
+
+      let items = [];
+      if (Array.isArray(data.listContent) && data.listContent.length > 0) {
+        items = data.listContent
+          .map(li => ({ text: (li.text || '').trim(), checked: Boolean(li.isChecked) }))
+          .filter(li => li.text !== '');
+      } else if (data.textContent) {
+        items = String(data.textContent).split('\n').map(l => l.trim()).filter(Boolean).map(l => ({
+          text: l,
+          checked: false
+        }));
+      }
+
+      const title = data.title || file.name.replace(/\.json$/i, '');
+      const color = colorMapKeep[data.color] || 'amber';
+      const label = (Array.isArray(data.labels) && data.labels[0] && data.labels[0].name) ? data.labels[0].name : '';
+
+      await crearListaEnTasksConItems(title, items, color, label);
+      importadas++;
+    } catch (e) {
+      console.warn('Error migrando archivo JSON de Keep:', file.name, e);
+    }
+  }
+
+  event.target.value = '';
+  if (importadas > 0) {
+    cerrarModalImportarKeep();
+    showToast(`${importadas} ${importadas === 1 ? 'lista migrada' : 'listas migradas'} a Google Tasks ✓`, 'ok');
+  }
 }
 
 </script>

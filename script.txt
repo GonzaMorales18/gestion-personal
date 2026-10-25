@@ -117,6 +117,18 @@ function doGet(e) {
     return ContentService.createTextOutput(JSON.stringify({ operaciones: rows })).setMimeType(ContentService.MimeType.JSON);
   }
 
+  // Hoja de notas / listas estilo Google Keep
+  if (e && e.parameter && e.parameter.sheet === 'keep_notes') {
+    const sheet = ss.getSheetByName('keep_notes');
+    if (!sheet) return ContentService.createTextOutput(JSON.stringify({ notes: [] })).setMimeType(ContentService.MimeType.JSON);
+    const rows = sheet.getDataRange().getValues();
+    rows.shift();
+    const notes = rows.map(r => {
+      try { return JSON.parse(r[1]); } catch (err) { return null; }
+    }).filter(Boolean);
+    return ContentService.createTextOutput(JSON.stringify({ notes })).setMimeType(ContentService.MimeType.JSON);
+  }
+
   // Finanzas (por defecto)
   const configSheet  = ss.getSheetByName('Config');
   const lastRow      = configSheet.getLastRow();
