@@ -352,88 +352,59 @@
 
   /* ══════════════════════════════════════════════════════════════════════════════
      OBSIDIAN GLASS (DARK DEFAULT) & NORDIC DAYLIGHT GLASS (LIGHT MODE)
+     (Optimizado para GPU / Cero stuttering en video y hover)
      ══════════════════════════════════════════════════════════════════════════════ */
 
   /* ── 1. MODO OSCURO PRINCIPAL: OBSIDIAN GLASS ── */
   body {
     background-color: #05070e !important;
     background-image:
-      radial-gradient(ellipse 75% 55% at 15% -5%, rgba(99, 102, 241, 0.28), transparent 65%),
-      radial-gradient(ellipse 60% 50% at 88% 15%, rgba(16, 185, 129, 0.20), transparent 60%),
-      radial-gradient(ellipse 65% 55% at 22% 95%, rgba(236, 72, 153, 0.18), transparent 65%),
-      radial-gradient(ellipse 60% 50% at 82% 90%, rgba(139, 92, 246, 0.22), transparent 60%) !important;
-    background-attachment: fixed !important;
+      radial-gradient(ellipse 75% 55% at 15% -5%, rgba(99, 102, 241, 0.24), transparent 65%),
+      radial-gradient(ellipse 60% 50% at 88% 15%, rgba(16, 185, 129, 0.16), transparent 60%),
+      radial-gradient(ellipse 65% 55% at 22% 95%, rgba(236, 72, 153, 0.14), transparent 65%),
+      radial-gradient(ellipse 60% 50% at 82% 90%, rgba(139, 92, 246, 0.18), transparent 60%) !important;
     color: #f1f5f9 !important;
-    transition: background-color 0.25s ease, color 0.25s ease;
   }
 
-  /* Orbes de luz ambiental detrás de las tarjetas de vidrio (efecto Obsidian Glass profundo) */
+  /* Orbes desactivados con filter:blur(95px) para evitar sobrecarga de GPU en multi-monitor */
   body::before,
   body::after {
-    content: '';
-    position: fixed;
-    pointer-events: none;
-    z-index: 0;
-    border-radius: 9999px;
-    filter: blur(95px);
-    transition: opacity 0.3s ease;
-  }
-  body::before {
-    top: 6%;
-    left: 22%;
-    width: 520px;
-    height: 360px;
-    background: radial-gradient(circle, rgba(99, 102, 241, 0.26) 0%, rgba(16, 185, 129, 0.16) 55%, transparent 75%);
-    opacity: 0.95;
-  }
-  body::after {
-    bottom: 6%;
-    right: 10%;
-    width: 560px;
-    height: 380px;
-    background: radial-gradient(circle, rgba(244, 63, 94, 0.20) 0%, rgba(139, 92, 246, 0.22) 55%, transparent 75%);
-    opacity: 0.95;
-  }
-  html.light-mode body::before,
-  html.light-mode body::after {
-    opacity: 0.32;
+    display: none !important;
   }
 
-  /* Contenedor principal transparente para dejar ver los halos de luz de Obsidian Glass */
+  /* Contenedor principal */
   body > div.md\:ml-64 {
     background: transparent !important;
     position: relative;
     z-index: 1;
   }
 
-  /* Sidebar Obsidian Glass */
+  /* Sidebar Obsidian */
   #sidebar {
-    background: rgba(8, 12, 22, 0.78) !important;
-    backdrop-filter: blur(24px) saturate(160%) !important;
-    -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+    background: rgba(8, 12, 22, 0.96) !important;
     border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
     box-shadow: 12px 0 36px -12px rgba(0, 0, 0, 0.65) !important;
   }
 
-  /* Header superior Obsidian Glass */
+  /* Header superior Obsidian */
   header.sticky {
-    background: rgba(8, 12, 22, 0.72) !important;
-    backdrop-filter: blur(20px) saturate(160%) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+    background: rgba(8, 12, 22, 0.92) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
   }
 
-  /* Tarjetas principales (antes bg-black) convertidas en cristal ahumado Obsidian */
+  /* Tarjetas principales convertidas en superficie Obsidian de alto rendimiento (sin backdrop-filter masivo) */
   main .bg-black,
   section.bg-black,
   div.bg-black:not(#overlay) {
-    background: linear-gradient(155deg, rgba(255, 255, 255, 0.055) 0%, rgba(15, 23, 42, 0.46) 100%) !important;
-    backdrop-filter: blur(20px) saturate(155%) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(155%) !important;
-    border-color: rgba(255, 255, 255, 0.11) !important;
+    background: linear-gradient(155deg, rgba(18, 25, 43, 0.94) 0%, rgba(10, 15, 28, 0.96) 100%) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-color: rgba(255, 255, 255, 0.10) !important;
     box-shadow:
-      0 14px 34px -12px rgba(0, 0, 0, 0.60),
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.14) !important;
+      0 10px 26px -10px rgba(0, 0, 0, 0.55),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.10) !important;
   }
 
   /* Halos cromáticos internos de cada tarjeta SIEMPRE visibles en Obsidian Glass (no sólo en hover) */
@@ -447,36 +418,36 @@
     opacity: 0.45 !important;
   }
   html:not(.light-mode) .from-green-900\/20 {
-    background-image: radial-gradient(120% 100% at 0% 0%, rgba(16, 185, 129, 0.28) 0%, rgba(16, 185, 129, 0.05) 55%, transparent 100%) !important;
+    background-image: radial-gradient(120% 100% at 0% 0%, rgba(16, 185, 129, 0.25) 0%, rgba(16, 185, 129, 0.04) 55%, transparent 100%) !important;
   }
   html:not(.light-mode) .from-emerald-900\/20 {
-    background-image: radial-gradient(120% 100% at 0% 0%, rgba(16, 185, 129, 0.28) 0%, rgba(16, 185, 129, 0.05) 55%, transparent 100%) !important;
+    background-image: radial-gradient(120% 100% at 0% 0%, rgba(16, 185, 129, 0.25) 0%, rgba(16, 185, 129, 0.04) 55%, transparent 100%) !important;
   }
   html:not(.light-mode) .from-blue-900\/20 {
-    background-image: radial-gradient(120% 100% at 0% 0%, rgba(99, 102, 241, 0.30) 0%, rgba(59, 130, 246, 0.06) 55%, transparent 100%) !important;
+    background-image: radial-gradient(120% 100% at 0% 0%, rgba(99, 102, 241, 0.26) 0%, rgba(59, 130, 246, 0.05) 55%, transparent 100%) !important;
   }
   html:not(.light-mode) .from-indigo-900\/20 {
-    background-image: radial-gradient(120% 100% at 0% 0%, rgba(99, 102, 241, 0.30) 0%, rgba(99, 102, 241, 0.06) 55%, transparent 100%) !important;
+    background-image: radial-gradient(120% 100% at 0% 0%, rgba(99, 102, 241, 0.26) 0%, rgba(99, 102, 241, 0.05) 55%, transparent 100%) !important;
   }
   html:not(.light-mode) .from-red-900\/20,
   html:not(.light-mode) .from-rose-900\/20 {
-    background-image: radial-gradient(120% 100% at 0% 0%, rgba(244, 63, 94, 0.28) 0%, rgba(244, 63, 94, 0.05) 55%, transparent 100%) !important;
+    background-image: radial-gradient(120% 100% at 0% 0%, rgba(244, 63, 94, 0.25) 0%, rgba(244, 63, 94, 0.04) 55%, transparent 100%) !important;
   }
   html:not(.light-mode) .from-violet-900\/20 {
-    background-image: radial-gradient(120% 100% at 0% 0%, rgba(139, 92, 246, 0.30) 0%, rgba(139, 92, 246, 0.06) 55%, transparent 100%) !important;
+    background-image: radial-gradient(120% 100% at 0% 0%, rgba(139, 92, 246, 0.26) 0%, rgba(139, 92, 246, 0.05) 55%, transparent 100%) !important;
   }
   html:not(.light-mode) .from-yellow-900\/20,
   html:not(.light-mode) .from-amber-900\/10 {
-    background-image: radial-gradient(120% 100% at 0% 0%, rgba(245, 158, 11, 0.26) 0%, rgba(245, 158, 11, 0.05) 55%, transparent 100%) !important;
+    background-image: radial-gradient(120% 100% at 0% 0%, rgba(245, 158, 11, 0.24) 0%, rgba(245, 158, 11, 0.04) 55%, transparent 100%) !important;
   }
   html:not(.light-mode) .from-teal-900\/20 {
-    background-image: radial-gradient(120% 100% at 0% 0%, rgba(20, 184, 166, 0.28) 0%, rgba(20, 184, 166, 0.05) 55%, transparent 100%) !important;
+    background-image: radial-gradient(120% 100% at 0% 0%, rgba(20, 184, 166, 0.25) 0%, rgba(20, 184, 166, 0.04) 55%, transparent 100%) !important;
   }
   html:not(.light-mode) .from-orange-900\/20 {
-    background-image: radial-gradient(120% 100% at 0% 0%, rgba(249, 115, 22, 0.28) 0%, rgba(249, 115, 22, 0.05) 55%, transparent 100%) !important;
+    background-image: radial-gradient(120% 100% at 0% 0%, rgba(249, 115, 22, 0.25) 0%, rgba(249, 115, 22, 0.04) 55%, transparent 100%) !important;
   }
   html:not(.light-mode) .from-pink-900\/10 {
-    background-image: radial-gradient(120% 100% at 0% 0%, rgba(236, 72, 153, 0.24) 0%, rgba(236, 72, 153, 0.04) 55%, transparent 100%) !important;
+    background-image: radial-gradient(120% 100% at 0% 0%, rgba(236, 72, 153, 0.22) 0%, rgba(236, 72, 153, 0.04) 55%, transparent 100%) !important;
   }
 
   /* Sub-superficies y cabeceras de tarjeta */
@@ -485,8 +456,9 @@
   main .bg-slate-900\/50,
   main .bg-slate-900\/40,
   main .bg-slate-800\/30 {
-    background: rgba(15, 23, 42, 0.45) !important;
-    backdrop-filter: blur(12px) !important;
+    background: rgba(15, 23, 42, 0.68) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     border-color: rgba(255, 255, 255, 0.07) !important;
   }
 
@@ -497,43 +469,40 @@
   #globalEditModal input:not([type="checkbox"]):not([type="radio"]),
   #globalEditModal select,
   #globalEditModal textarea {
-    background-color: rgba(15, 23, 42, 0.62) !important;
+    background-color: rgba(15, 23, 42, 0.78) !important;
     border-color: rgba(255, 255, 255, 0.10) !important;
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35) !important;
   }
   main input:not([type="checkbox"]):focus,
   main select:focus,
   main textarea:focus {
     border-color: rgba(99, 102, 241, 0.55) !important;
-    background-color: rgba(15, 23, 42, 0.82) !important;
+    background-color: rgba(15, 23, 42, 0.95) !important;
   }
 
   /* Balance Card Glows en Obsidian Glass */
   .balance-positive {
     border-color: rgba(52, 211, 153, 0.35) !important;
-    box-shadow: 0 14px 34px -10px rgba(16, 185, 129, 0.22), inset 0 1px 0 0 rgba(52, 211, 153, 0.25) !important;
+    box-shadow: 0 12px 28px -10px rgba(16, 185, 129, 0.20), inset 0 1px 0 0 rgba(52, 211, 153, 0.22) !important;
   }
   .balance-negative {
     border-color: rgba(251, 113, 133, 0.35) !important;
-    box-shadow: 0 14px 34px -10px rgba(244, 63, 94, 0.22), inset 0 1px 0 0 rgba(251, 113, 133, 0.25) !important;
+    box-shadow: 0 12px 28px -10px rgba(244, 63, 94, 0.20), inset 0 1px 0 0 rgba(251, 113, 133, 0.22) !important;
   }
   .balance-neutral {
     border-color: rgba(129, 140, 248, 0.32) !important;
-    box-shadow: 0 14px 34px -10px rgba(99, 102, 241, 0.20), inset 0 1px 0 0 rgba(129, 140, 248, 0.25) !important;
+    box-shadow: 0 12px 28px -10px rgba(99, 102, 241, 0.18), inset 0 1px 0 0 rgba(129, 140, 248, 0.22) !important;
   }
 
-  /* FullCalendar en Obsidian Glass */
+  /* FullCalendar en Obsidian Glass (sin backdrop-filter en las 42 celdas) */
   .fc-theme-standard th.fc-col-header-cell {
-    background: rgba(255, 255, 255, 0.04) !important;
-    backdrop-filter: blur(12px) !important;
+    background: rgba(18, 26, 44, 0.92) !important;
+    backdrop-filter: none !important;
     border: 1px solid rgba(255, 255, 255, 0.09) !important;
-    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1) !important;
   }
   .fc-theme-standard td.fc-daygrid-day {
-    background: linear-gradient(155deg, rgba(255, 255, 255, 0.035) 0%, rgba(15, 23, 42, 0.48) 100%) !important;
-    backdrop-filter: blur(14px) !important;
+    background: rgba(14, 21, 38, 0.88) !important;
+    backdrop-filter: none !important;
     border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08) !important;
   }
   .fc-theme-standard td.fc-day-today,
   .fc .fc-day-today {
@@ -546,16 +515,16 @@
   html.light-mode body {
     background-color: #f3f6fb !important;
     background-image:
-      radial-gradient(ellipse 75% 50% at 15% -5%, rgba(99, 102, 241, 0.10), transparent 60%),
-      radial-gradient(ellipse 65% 45% at 88% 10%, rgba(16, 185, 129, 0.08), transparent 55%),
-      radial-gradient(ellipse 70% 50% at 50% 105%, rgba(59, 130, 246, 0.08), transparent 60%) !important;
+      radial-gradient(ellipse 75% 50% at 15% -5%, rgba(99, 102, 241, 0.09), transparent 60%),
+      radial-gradient(ellipse 65% 45% at 88% 10%, rgba(16, 185, 129, 0.07), transparent 55%),
+      radial-gradient(ellipse 70% 50% at 50% 105%, rgba(59, 130, 246, 0.07), transparent 60%) !important;
     color: #0f172a !important;
   }
 
   html.light-mode #sidebar {
-    background: rgba(255, 255, 255, 0.84) !important;
-    backdrop-filter: blur(24px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     border-right: 1px solid rgba(15, 23, 42, 0.08) !important;
     box-shadow: 8px 0 30px -12px rgba(15, 23, 42, 0.07) !important;
     color: #0f172a !important;
@@ -569,24 +538,23 @@
   }
 
   html.light-mode header.sticky {
-    background: rgba(255, 255, 255, 0.80) !important;
-    backdrop-filter: blur(20px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    background: rgba(255, 255, 255, 0.94) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
     border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important;
   }
 
-  /* Tarjetas blancas translúcidas estilo Nordic Daylight Glass */
+  /* Tarjetas blancas estilo Nordic Daylight (sin backdrop-filter masivo) */
   html.light-mode main .bg-black,
   html.light-mode section.bg-black,
   html.light-mode div.bg-black:not(#overlay) {
-    background: rgba(255, 255, 255, 0.86) !important;
-    backdrop-filter: blur(20px) saturate(160%) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     border-color: rgba(15, 23, 42, 0.09) !important;
     box-shadow:
-      0 10px 28px -8px rgba(15, 23, 42, 0.06),
-      0 2px 6px -1px rgba(15, 23, 42, 0.03),
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.9) !important;
+      0 8px 22px -8px rgba(15, 23, 42, 0.06),
+      0 2px 6px -1px rgba(15, 23, 42, 0.03) !important;
   }
 
   /* Superficies secundarias en modo claro */
@@ -820,8 +788,8 @@
     color: #475569 !important;
   }
   html.light-mode .fc-theme-standard td.fc-daygrid-day {
-    background: rgba(255, 255, 255, 0.82) !important;
-    backdrop-filter: blur(12px) !important;
+    background: rgba(255, 255, 255, 0.94) !important;
+    backdrop-filter: none !important;
     border: 1px solid rgba(15, 23, 42, 0.09) !important;
     box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.04) !important;
   }
@@ -946,7 +914,7 @@
   </nav>
   <!-- Status indicador -->
   <div class="p-4 border-t border-slate-800 flex items-center gap-2">
-    <div id="status-dot" class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+    <div id="status-dot" class="w-2 h-2 bg-green-500 rounded-full"></div>
     <span id="status-text" class="text-[10px] text-white uppercase tracking-widest">Conectado</span>
   </div>
 </aside>
@@ -4153,6 +4121,17 @@ Chart.defaults.plugins.tooltip.boxPadding = 4;
 
 const scriptURL = 'https://script.google.com/macros/s/AKfycbxjVp8zlxI2HCWrKiKf5Lg8RW_X4pmb49yetQN3lDJiTmTBTnASgtGE4TTvYA-95rpn/exec';
 
+// ─── CACHÉ LOCAL INSTANTÁNEO (SWR) ────────────────────────────────────────────
+function guardarCacheModulo(key, val) {
+  try { localStorage.setItem('gm_cache_' + key, JSON.stringify(val)); } catch (e) {}
+}
+function leerCacheModulo(key) {
+  try {
+    const raw = localStorage.getItem('gm_cache_' + key);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) { return null; }
+}
+
 // ─── ESTADO GLOBAL ────────────────────────────────────────────────────────────
 let datosHistoricos = [];
 let tiposActivo     = [];
@@ -4276,8 +4255,6 @@ function showSection(nombre) {
 
   const secEl = document.getElementById('section-' + nombre);
   secEl.classList.remove('hidden');
-  // trigger reflow para que la animación reinicie
-  void secEl.offsetWidth;
   secEl.classList.add('section-active');
 
   const accent = MODULE_ACCENT[nombre] || MODULE_ACCENT.inicio;
@@ -4393,12 +4370,32 @@ async function cargarDatos(silencioso = false) {
       iniciarKeep();
     }
 
+    // Renderizado instantáneo desde caché local si existe
+    const cachedFin = leerCacheModulo('finanzas');
+    if (cachedFin && !datosCargados) {
+      datosHistoricos = cachedFin.historico || [];
+      fillSelect('categoria',   cachedFin.categorias);
+      fillSelect('metodo_pago', cachedFin.metodos);
+      tiposActivo = cachedFin.tiposActivo || [];
+      datosCargados = true;
+      fillTiposActivo();
+      renderFiltroAniosFinanzas();
+      filtrarHistorial();
+      actualizarTarjetaFinanzas();
+    }
+
     const finanzasReq = fetch(scriptURL).then(r => r.json()).then(data => {
       datosHistoricos = data.historico || [];
       fillSelect('categoria',   data.categorias);
       fillSelect('metodo_pago', data.metodos);
       tiposActivo = data.tiposActivo || [];
       datosCargados = true;
+      guardarCacheModulo('finanzas', {
+        historico: datosHistoricos,
+        categorias: data.categorias || [],
+        metodos: data.metodos || [],
+        tiposActivo: tiposActivo
+      });
       
       fillTiposActivo();
       renderFiltroAniosFinanzas();
@@ -4596,8 +4593,8 @@ function setStatus(estado) {
   const text = document.getElementById('status-text');
   const map  = {
     loading: ['bg-yellow-400 animate-pulse', 'Cargando...'],
-    ok:      ['bg-green-500 animate-pulse',       'Conectado'  ],
-    error:   ['bg-red-500',                       'Sin conexión'],
+    ok:      ['bg-green-500',                'Conectado'  ],
+    error:   ['bg-red-500',                  'Sin conexión'],
   };
   dot.className    = 'w-2 h-2 rounded-full ' + map[estado][0];
   text.textContent = map[estado][1];
@@ -5922,9 +5919,25 @@ async function iniciarAhorros() {
   if (ahorrosIniciado) return;
   ahorrosIniciado = true;
   fillTiposActivo(); 
+
+  const cachedCot = leerCacheModulo('cotizaciones');
+  if (cachedCot && !cotizaciones.USD) {
+    cotizaciones = { ...cotizaciones, ...cachedCot, tickers: { ...(cachedCot.tickers || {}), ...cotizaciones.tickers } };
+  }
+  const cachedOps = leerCacheModulo('operaciones');
+  if (cachedOps && operacionesData.length === 0) {
+    operacionesData = cachedOps;
+    renderTablaOperaciones();
+    renderPnlTotal();
+    actualizarDatalistActivos();
+    renderCotizacionesBadge();
+    renderTablaAhorros();
+  }
   
   if (operacionesData.length === 0) {
     await cargarOperacionesSheet();
+  } else {
+    cargarOperacionesSheet();
   }
   
   renderCotizacionesBadge();
@@ -5940,6 +5953,7 @@ async function actualizarCotizacionesAhorros(mostrarModal = false) {
   if (cotizaciones.BTC_USD && cotizaciones.USD) {
     cotizaciones.BTC = cotizaciones.BTC_USD * cotizaciones.USD;
   }
+  guardarCacheModulo('cotizaciones', cotizaciones);
   renderCotizacionesBadge();
   renderTablaAhorros();
   if (iconR) iconR.classList.remove('spin');
@@ -6722,12 +6736,16 @@ async function cargarOperacionesSheet() {
       totalARS:     parseFloat(r[8]) || 0,
       pnl:          parseFloat(r[9]) || 0
     }));
+    guardarCacheModulo('operaciones', operacionesData);
     renderTablaOperaciones();
     renderPnlTotal();
     actualizarDatalistActivos();
+    renderTablaAhorros();
   } catch {
-    operacionesData = [];
-    renderTablaOperaciones();
+    if (!operacionesData.length) {
+      operacionesData = [];
+      renderTablaOperaciones();
+    }
   }
 }
 
@@ -7019,8 +7037,15 @@ async function iniciarSueldos() {
   document.getElementById('su-mes').value  = hoy.getMonth() + 1;
   document.getElementById('su-anio').value = hoy.getFullYear();
   document.getElementById('su-coef').value = '0.17';
-  // Si hay TC cargado de finanzas, actualizar el preview
-  if (!cotizaciones.USD) await fetchUSD();
+
+  const cachedSu = leerCacheModulo('sueldos');
+  if (cachedSu && !sueldosData.length) {
+    sueldosData = cachedSu;
+    renderSueldos();
+  }
+
+  // Cargar hoja y tipo de cambio en paralelo sin bloquear
+  if (!cotizaciones.USD) fetchUSD();
   await cargarSueldosSheet();
 }
 
@@ -7113,17 +7138,22 @@ async function cargarSueldosSheet() {
     const res  = await fetch(scriptURL + '?sheet=sueldos');
     const data = await res.json();
     const rawSueldos = (data.sueldos || []).filter(r => r[0] && String(r[0]).trim() !== '');
-    sueldosData = rawSueldos.map(r => ({ mes: String(r[0]).trim(), bruto: suParsNum(r[1]), neto: suParsNum(r[2]), brutoUSD: suParsNum(r[3]), netoUSD: suParsNum(r[4]) }));
-    // Debug detallado
-    console.log('[Sueldos] Registros cargados:', sueldosData.length);
-    console.log('[Sueldos] Meses raw:', sueldosData.map(r => r.mes));
-    console.log('[Sueldos] Años parseados:', sueldosData.map(r => suAnioRow(r)));
-    console.log('[Sueldos] Filtro año activo:', suFiltroPeriodo);
+    sueldosData = rawSueldos.map(r => ({
+      rowIndex: r[7] ? parseInt(r[7]) : (r[5] ? parseInt(r[5]) : null),
+      mes: String(r[0]).trim(),
+      bruto: suParsNum(r[1]),
+      neto: suParsNum(r[2]),
+      brutoUSD: suParsNum(r[3]),
+      netoUSD: suParsNum(r[4])
+    }));
+    guardarCacheModulo('sueldos', sueldosData);
     renderSueldos();
   } catch(err) {
     console.warn('Error cargando sueldos:', err);
-    sueldosData = [];
-    renderSueldos();
+    if (!sueldosData.length) {
+      sueldosData = [];
+      renderSueldos();
+    }
   }
 }
 
@@ -8030,9 +8060,10 @@ async function iniciarPartidos() {
     else el.value = fStr;
   }
 
-  // Setup form listener
+  // Setup form listener (una sola vez)
   const form = document.getElementById('partidosForm');
-  if (form) {
+  if (form && !form._paListenerAdded) {
+    form._paListenerAdded = true;
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = document.getElementById('btn-guardar-partidos');
@@ -8040,8 +8071,9 @@ async function iniciarPartidos() {
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Guardando...</span>';
       btn.disabled = true;
 
+      const isEdit = paEditIndex !== null;
       const data = {
-        accion: paEditIndex !== null ? 'editarPartido' : 'guardarPartido',
+        accion: isEdit ? 'editarPartido' : 'guardarPartido',
         rowIndex: paEditIndex,
         data: [
           document.getElementById('pa-fecha').value,
@@ -8061,7 +8093,7 @@ async function iniciarPartidos() {
           body: JSON.stringify(data)
         });
         
-        if (paEditIndex !== null) {
+        if (isEdit) {
           const idx = partidosData.findIndex(r => r.rowIndex === paEditIndex);
           if (idx !== -1) {
             const rowData = data.data;
@@ -8094,9 +8126,10 @@ async function iniciarPartidos() {
           document.getElementById('pa-equipo').value = 'Boca Juniors';
         }
         
+        guardarCacheModulo('partidos', partidosData);
         paFiltroPeriodo = 'Todos';
         renderPartidos();
-        showToast(paEditIndex !== null ? 'Partido actualizado' : 'Partido registrado con éxito', 'success');
+        showToast(isEdit ? 'Partido actualizado' : 'Partido registrado con éxito', 'success');
       } catch (err) {
         showToast('Error al registrar el partido', 'error');
         console.error(err);
@@ -8148,6 +8181,13 @@ async function iniciarPartidos() {
   };
   
   
+  const cachedPa = leerCacheModulo('partidos');
+  if (cachedPa && !partidosData.length) {
+    partidosData = cachedPa;
+    actualizarFiltrosEquipos();
+    renderPartidos();
+  }
+
   await cargarPartidosSheet();
 }
 
@@ -8178,12 +8218,15 @@ async function cargarPartidosSheet() {
       };
     });
 
+    guardarCacheModulo('partidos', partidosData);
     actualizarFiltrosEquipos();
     renderPartidos();
   } catch(err) {
     console.warn('Error cargando partidos:', err);
-    partidosData = [];
-    renderPartidos();
+    if (!partidosData.length) {
+      partidosData = [];
+      renderPartidos();
+    }
   }
 }
 
@@ -8654,6 +8697,12 @@ async function iniciarTenis() {
   const el = document.getElementById('te-fecha');
   if (el._flatpickr) el._flatpickr.setDate(fStr);
   else el.value = fStr;
+
+  const cachedTe = leerCacheModulo('tenis');
+  if (cachedTe && !tenisData.length) {
+    tenisData = cachedTe;
+    renderTenis();
+  }
   
   await cargarTenisSheet();
 }
@@ -8677,10 +8726,11 @@ async function cargarTenisSheet() {
         ganado: ganado
       };
     });
+    guardarCacheModulo('tenis', tenisData);
     renderTenis();
   } catch(err) {
     console.warn('Error cargando tenis:', err);
-    tenisData = [];
+    if (!tenisData.length) tenisData = [];
     renderTenis();
   }
 }
@@ -9069,6 +9119,7 @@ document.getElementById('tenisForm')?.addEventListener('submit', async (e) => {
     }
     
     teFiltroPeriodo = 'Todos';
+    guardarCacheModulo('tenis', tenisData);
     renderTenis();
     showToast(isEdit ? 'Partido actualizado' : 'Partido guardado', 'ok');
   } catch (err) {
@@ -9124,6 +9175,7 @@ window.eliminarTenisUI = function(rowIndex) {
         body: JSON.stringify({ accion: 'eliminarTenis', rowIndex })
       });
       tenisData = tenisData.filter(r => r.rowIndex !== rowIndex);
+      guardarCacheModulo('tenis', tenisData);
       renderTenis();
       showToast('Partido eliminado', 'ok');
     } catch (e) {
@@ -9147,52 +9199,28 @@ let gisInited = false;
 let calendarioIniciado = false;
 let fullCalendarInst = null;
 
+let _fcCompactRAF = null;
 function compactarCarrilesCalendario() {
-  const container = document.getElementById('fullcalendar-container');
-  if (!container) return;
-  container.querySelectorAll('.fc-daygrid-event-harness, .fc-daygrid-event-harness-abs').forEach(el => {
-    if (el.getAttribute('style')) {
+  if (_fcCompactRAF) return;
+  _fcCompactRAF = requestAnimationFrame(() => {
+    _fcCompactRAF = null;
+    const container = document.getElementById('fullcalendar-container');
+    if (!container) return;
+    container.querySelectorAll('.fc-daygrid-event-harness[style], .fc-daygrid-event-harness-abs[style]').forEach(el => {
       el.removeAttribute('style');
-    }
-  });
-  container.querySelectorAll('.fc-daygrid-day-events').forEach(el => {
-    if (el.style && (el.style.minHeight || el.style.height || el.style.paddingBottom)) {
-      el.style.removeProperty('min-height');
-      el.style.removeProperty('height');
-      el.style.removeProperty('padding-bottom');
-    }
+    });
+    container.querySelectorAll('.fc-daygrid-day-events').forEach(el => {
+      if (el.style && (el.style.minHeight || el.style.height || el.style.paddingBottom)) {
+        el.style.removeProperty('min-height');
+        el.style.removeProperty('height');
+        el.style.removeProperty('padding-bottom');
+      }
+    });
   });
 }
 
-let _fcObserver = null;
 function iniciarObserverCalendario() {
-  const container = document.getElementById('fullcalendar-container');
-  if (!container || _fcObserver) return;
-  _fcObserver = new MutationObserver((mutations) => {
-    let needsCompact = false;
-    for (let i = 0; i < mutations.length; i++) {
-      const m = mutations[i];
-      if (m.type === 'attributes' && m.attributeName === 'style') {
-        const t = m.target;
-        if (t.classList && (t.classList.contains('fc-daygrid-event-harness') || t.classList.contains('fc-daygrid-event-harness-abs'))) {
-          if (t.getAttribute('style')) {
-            t.removeAttribute('style');
-          }
-        }
-      } else if (m.type === 'childList') {
-        needsCompact = true;
-      }
-    }
-    if (needsCompact) {
-      compactarCarrilesCalendario();
-    }
-  });
-  _fcObserver.observe(container, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: ['style']
-  });
+  // Ya manejado por CSS y eventos datesSet/eventsSet con debounce en RAF
 }
 
 function scrollearADiaActualCalendario() {
@@ -9233,15 +9261,12 @@ async function iniciarCalendario(hacerScroll = false) {
       if (info.el && info.el.parentElement && info.el.parentElement.getAttribute('style')) {
         info.el.parentElement.removeAttribute('style');
       }
-      requestAnimationFrame(compactarCarrilesCalendario);
     },
     datesSet: function() {
-      requestAnimationFrame(compactarCarrilesCalendario);
-      setTimeout(compactarCarrilesCalendario, 60);
+      compactarCarrilesCalendario();
     },
     eventsSet: function() {
-      requestAnimationFrame(compactarCarrilesCalendario);
-      setTimeout(compactarCarrilesCalendario, 60);
+      compactarCarrilesCalendario();
     },
     headerToolbar: {
       left: 'prev,next today',
@@ -9258,6 +9283,17 @@ async function iniciarCalendario(hacerScroll = false) {
   compactarCarrilesCalendario();
   if (hacerScroll) {
     setTimeout(scrollearADiaActualCalendario, 150);
+  }
+
+  const cachedCal = leerCacheModulo('calendario');
+  if (cachedCal) {
+    if (Array.isArray(cachedCal.fcEvents) && cachedCal.fcEvents.length && fullCalendarInst) {
+      fullCalendarInst.addEventSource(cachedCal.fcEvents);
+    }
+    if (Array.isArray(cachedCal.rawEvents) && cachedCal.rawEvents.length && !globalGoogleEvents.length) {
+      globalGoogleEvents = cachedCal.rawEvents;
+      renderMiniCalendar();
+    }
   }
 
   // Try initializing API automatically
@@ -9713,6 +9749,7 @@ async function fetchGoogleEvents() {
     }
     
     globalGoogleEvents = allEvents;
+    guardarCacheModulo('calendario', { fcEvents, rawEvents: allEvents });
     renderMiniCalendar();
     
     showToast('Datos de Google sincronizados', 'ok');
