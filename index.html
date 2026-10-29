@@ -9036,27 +9036,30 @@ document.getElementById('tenisForm')?.addEventListener('submit', async (e) => {
     }
 
     const ganado = w > l;
+    const isEdit = typeof teEditIndex !== 'undefined' && teEditIndex !== null;
+    const torneo = document.getElementById('te-torneo').value;
+    const categoria = document.getElementById('te-categoria').value;
+    const instancia = document.getElementById('te-instancia').value;
+    const rival = document.getElementById('te-rival').value;
+    const resultado = res.join(' - ');
     
     const payload = {
-      accion: (typeof teEditIndex !== 'undefined' && teEditIndex !== null) ? 'editarTenis' : 'guardarTenis',
-      rowIndex: typeof teEditIndex !== 'undefined' ? teEditIndex : null,
-      fecha, torneo: document.getElementById('te-torneo').value, 
-      categoria: document.getElementById('te-categoria').value,
-      instancia: document.getElementById('te-instancia').value, 
-      rival: document.getElementById('te-rival').value,
-      resultado: res.join(' - '), ganado
+      accion: isEdit ? 'editarTenis' : 'guardarTenis',
+      rowIndex: isEdit ? teEditIndex : null,
+      data: [fecha, torneo, categoria, instancia, rival, resultado, ganado ? '✓' : '✕'],
+      fecha, torneo, categoria, instancia, rival, resultado, ganado
     };
     
     await fetch(scriptURL, { method:'POST', mode:'no-cors', body: JSON.stringify(payload) });
     
-    if (typeof teEditIndex !== 'undefined' && teEditIndex !== null) {
+    if (isEdit) {
       const idx = tenisData.findIndex(r => r.rowIndex === teEditIndex);
-      if(idx !== -1) tenisData[idx] = { ...tenisData[idx], fecha, torneo: payload.torneo, categoria: payload.categoria, instancia: payload.instancia, rival: payload.rival, resultadoStr: payload.resultado, ganado };
+      if(idx !== -1) tenisData[idx] = { ...tenisData[idx], fecha, torneo, categoria, instancia, rival, resultadoStr: resultado, ganado };
       closeEditModal();
     } else {
       tenisData.unshift({
-        rowIndex: Date.now(), fecha, torneo: payload.torneo, categoria: payload.categoria,
-        instancia: payload.instancia, rival: payload.rival, resultadoStr: payload.resultado,
+        rowIndex: Date.now(), fecha, torneo, categoria,
+        instancia, rival, resultadoStr: resultado,
         ganado: ganado
       });
       document.getElementById('tenisForm').reset();
@@ -9067,7 +9070,7 @@ document.getElementById('tenisForm')?.addEventListener('submit', async (e) => {
     
     teFiltroPeriodo = 'Todos';
     renderTenis();
-    showToast((typeof teEditIndex !== 'undefined' && teEditIndex !== null) ? 'Partido actualizado' : 'Partido guardado', 'ok');
+    showToast(isEdit ? 'Partido actualizado' : 'Partido guardado', 'ok');
   } catch (err) {
     showToast('Error', 'error');
   } finally {

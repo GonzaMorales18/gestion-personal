@@ -295,7 +295,16 @@ function doPost(e) {
       sheet = ss.insertSheet('tenis');
       sheet.appendRow(['Fecha', 'Torneo', 'Categoria', 'Instancia', 'Rival', 'Resultado', 'W/L']);
     }
-    sheet.appendRow(data.data);
+    const rowData = data.data || [
+      data.fecha || '',
+      data.torneo || '',
+      data.categoria || '',
+      data.instancia || '',
+      data.rival || '',
+      data.resultado || '',
+      data.ganado ? '✓' : '✕'
+    ];
+    sheet.appendRow(rowData);
     return ok();
   }
 
@@ -303,7 +312,16 @@ function doPost(e) {
   if (data.accion === 'editarTenis') {
     let sheet = ss.getSheetByName('tenis');
     if (sheet && data.rowIndex) {
-      sheet.getRange(data.rowIndex, 1, 1, data.data.length).setValues([data.data]);
+      const rowData = data.data || [
+        data.fecha || '',
+        data.torneo || '',
+        data.categoria || '',
+        data.instancia || '',
+        data.rival || '',
+        data.resultado || '',
+        data.ganado ? '✓' : '✕'
+      ];
+      sheet.getRange(data.rowIndex, 1, 1, rowData.length).setValues([rowData]);
     }
     return ok();
   }
