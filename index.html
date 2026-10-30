@@ -814,6 +814,127 @@
   html.light-mode .fc .fc-day-today .fc-daygrid-day-number {
     color: #ffffff !important;
   }
+
+  /* ── 3. PANEL LATERAL RETRÁCTIL Y ADAPTACIÓN INTEGRAL (MÓVIL HORIZONTAL / TABLET HORIZONTAL) ── */
+  #sidebar, #main-content-wrapper {
+    transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  #sidebar .sidebar-label,
+  #sidebar .sidebar-group-title,
+  #sidebar #status-text {
+    transition: opacity 0.18s ease, width 0.18s ease;
+    white-space: nowrap;
+  }
+
+  @media (min-width: 768px) {
+    html.sidebar-collapsed #sidebar {
+      width: 4.5rem !important;
+    }
+    html.sidebar-collapsed #main-content-wrapper {
+      margin-left: 4.5rem !important;
+    }
+    html.sidebar-collapsed #sidebar .sidebar-label,
+    html.sidebar-collapsed #sidebar .sidebar-group-title,
+    html.sidebar-collapsed #sidebar #status-text,
+    html.sidebar-collapsed #sidebar #sidebar-brand-full {
+      display: none !important;
+    }
+    html.sidebar-collapsed #sidebar #sidebar-brand-mini {
+      display: block !important;
+    }
+    html.sidebar-collapsed #sidebar .sidebar-header-box {
+      padding: 1rem 0.5rem !important;
+      justify-content: center !important;
+    }
+    html.sidebar-collapsed #sidebar nav a {
+      justify-content: center !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+    html.sidebar-collapsed #sidebar nav a i {
+      width: auto !important;
+      font-size: 1.05rem !important;
+      margin: 0 !important;
+    }
+    html.sidebar-collapsed #sidebar .sidebar-footer-box {
+      justify-content: center !important;
+      padding: 0.75rem 0.25rem !important;
+    }
+  }
+
+  /* Evitar cortes en tablas en pantallas intermedias (móvil horizontal y tablet) */
+  main .overflow-x-hidden {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Tablet y Teléfono Grande en Horizontal (768px a 1180px): evitar que formularios sticky se corten si son más altos que la pantalla */
+  @media (max-width: 1180px) {
+    main section.sticky,
+    #keep-mis-tareas-col.lg\:sticky {
+      position: relative !important;
+      top: 0 !important;
+    }
+  }
+
+  /* Teléfono en Horizontal (Landscape con poca altura vertical, ej. <= 540px de alto) */
+  @media (orientation: landscape) and (max-height: 540px) {
+    header.sticky {
+      height: 3.25rem !important;
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+    }
+    #sidebar .sidebar-header-box {
+      padding: 0.75rem 1rem !important;
+    }
+    #sidebar nav a {
+      padding-top: 0.5rem !important;
+      padding-bottom: 0.5rem !important;
+    }
+    #sidebar .sidebar-group-title {
+      padding-top: 0.5rem !important;
+      padding-bottom: 0.15rem !important;
+    }
+    main {
+      padding-top: 0.75rem !important;
+      padding-bottom: 1rem !important;
+    }
+    /* Asegurar que todos los modales puedan scrollear cómodamente en teléfono horizontal */
+    #modal-editar > div,
+    #modal-editar-op > div,
+    #modal-editar-ahorro > div,
+    #modal-ia > div.relative,
+    #modal-anual > div.relative,
+    #modal-cotizaciones > div,
+    #modal-fallidos > div,
+    #globalEditModal > div {
+      max-height: 92vh !important;
+      overflow-y: auto !important;
+    }
+    #fullcalendar-container .fc-daygrid-day-frame {
+      height: 110px !important;
+      min-height: 110px !important;
+      max-height: 110px !important;
+    }
+  }
+
+  /* Tablet en Horizontal (768px a 1180px): optimizar grillas y tipografía de KPIs para que nada desborde */
+  @media (min-width: 768px) and (max-width: 1180px) {
+    #section-finanzas h4.text-3xl,
+    #section-ahorros h4.text-3xl,
+    #section-sueldos h4.text-3xl,
+    #section-tenis h4.text-3xl,
+    #section-partidos h4.text-3xl,
+    #section-actividad h3.text-3xl {
+      font-size: 1.45rem !important;
+      line-height: 1.85rem !important;
+    }
+    #fullcalendar-container .fc-daygrid-day-frame {
+      height: 135px !important;
+      min-height: 135px !important;
+      max-height: 135px !important;
+    }
+  }
 </style>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://apis.google.com/js/api.js" async defer></script>
@@ -843,91 +964,103 @@
 
 <!-- Sidebar -->
 <aside id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-black text-white z-50 -translate-x-full md:translate-x-0 shadow-2xl flex flex-col border-r border-slate-800">
-  <div class="p-6 border-b border-slate-800/80 text-center">
-    <h1 class="text-3xl font-black tracking-tight text-white mono">GM APP</h1>
+  <div class="sidebar-header-box p-5 border-b border-slate-800/80 flex items-center justify-between gap-2">
+    <h1 id="sidebar-brand-full" class="text-2xl font-black tracking-tight text-white mono truncate">GM APP</h1>
+    <h1 id="sidebar-brand-mini" class="hidden text-xl font-black tracking-tight text-blue-400 mono">GM</h1>
+    <button onclick="toggleSidebarCollapse()" id="btn-collapse-sidebar" title="Retraer / Expandir menú lateral"
+            class="hidden md:flex w-8 h-8 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-400 hover:text-white items-center justify-center transition-colors shrink-0">
+      <i id="icon-collapse-sidebar" class="fas fa-angles-left text-xs"></i>
+    </button>
   </div>
-  <nav class="flex-1 mt-4 overflow-y-auto">
+  <nav class="flex-1 mt-3 overflow-y-auto overflow-x-hidden">
     <!-- Inicio -->
-    <a href="#" onclick="showSection('inicio')" id="nav-inicio"
+    <a href="#" onclick="showSection('inicio')" id="nav-inicio" title="Inicio"
        class="flex items-center px-6 py-3.5 text-slate-400 hover:bg-slate-800 border-l-4 border-transparent transition-colors">
-      <i class="fas fa-home w-6 text-sm"></i>
-      <span class="font-bold text-sm uppercase tracking-wider">Inicio</span>
+      <i class="fas fa-home w-6 text-sm shrink-0"></i>
+      <span class="sidebar-label font-bold text-sm uppercase tracking-wider">Inicio</span>
     </a>
 
     <!-- Grupo: Salud -->
-    <div class="px-6 pt-5 pb-2 text-[9px] font-black text-slate-500 uppercase tracking-[0.25em]">Salud</div>
-    <a href="#" onclick="showSection('actividad')" id="nav-actividad"
+    <div class="sidebar-group-title px-6 pt-5 pb-2 text-[9px] font-black text-slate-500 uppercase tracking-[0.25em]">Salud</div>
+    <a href="#" onclick="showSection('actividad')" id="nav-actividad" title="Actividad"
        class="flex items-center px-6 py-3.5 text-slate-400 hover:bg-slate-800 border-l-4 border-transparent transition-colors">
-      <i class="fas fa-heartbeat w-6 text-sm"></i>
-      <span class="font-bold text-sm uppercase tracking-wider">Actividad</span>
+      <i class="fas fa-heartbeat w-6 text-sm shrink-0"></i>
+      <span class="sidebar-label font-bold text-sm uppercase tracking-wider">Actividad</span>
     </a>
 
 
     <!-- Grupo: Finanzas -->
-    <div class="px-6 pt-5 pb-2 text-[9px] font-black text-slate-500 uppercase tracking-[0.25em]">Finanzas</div>
-    <a href="#" onclick="showSection('finanzas')" id="nav-finanzas"
+    <div class="sidebar-group-title px-6 pt-5 pb-2 text-[9px] font-black text-slate-500 uppercase tracking-[0.25em]">Finanzas</div>
+    <a href="#" onclick="showSection('finanzas')" id="nav-finanzas" title="Balance"
        class="flex items-center px-6 py-3.5 bg-blue-600/10 border-l-4 border-blue-500 text-blue-400 transition-colors">
-      <i class="fas fa-chart-line w-6 text-sm"></i>
-      <span class="font-bold text-sm uppercase tracking-wider">Balance</span>
+      <i class="fas fa-chart-line w-6 text-sm shrink-0"></i>
+      <span class="sidebar-label font-bold text-sm uppercase tracking-wider">Balance</span>
     </a>
-    <a href="#" onclick="showSection('ahorros')" id="nav-ahorros"
+    <a href="#" onclick="showSection('ahorros')" id="nav-ahorros" title="Ahorros"
        class="flex items-center px-6 py-3.5 text-slate-400 hover:bg-slate-800 border-l-4 border-transparent transition-colors">
-      <i class="fas fa-piggy-bank w-6 text-sm"></i>
-      <span class="font-bold text-sm uppercase tracking-wider">Ahorros</span>
+      <i class="fas fa-piggy-bank w-6 text-sm shrink-0"></i>
+      <span class="sidebar-label font-bold text-sm uppercase tracking-wider">Ahorros</span>
     </a>
-    <a href="#" onclick="showSection('sueldos')" id="nav-sueldos"
+    <a href="#" onclick="showSection('sueldos')" id="nav-sueldos" title="Sueldos"
        class="flex items-center px-6 py-3.5 text-slate-400 hover:bg-slate-800 border-l-4 border-transparent transition-colors">
-      <i class="fas fa-money-bill-wave w-6 text-sm"></i>
-      <span class="font-bold text-sm uppercase tracking-wider">Sueldos</span>
+      <i class="fas fa-money-bill-wave w-6 text-sm shrink-0"></i>
+      <span class="sidebar-label font-bold text-sm uppercase tracking-wider">Sueldos</span>
     </a>
 
     <!-- Grupo: Agenda & Hogar -->
-    <div class="px-6 pt-5 pb-2 text-[9px] font-black text-slate-500 uppercase tracking-[0.25em]">Agenda &amp; Hogar</div>
-    <a href="#" onclick="showSection('calendario')" id="nav-calendario"
+    <div class="sidebar-group-title px-6 pt-5 pb-2 text-[9px] font-black text-slate-500 uppercase tracking-[0.25em]">Agenda &amp; Hogar</div>
+    <a href="#" onclick="showSection('calendario')" id="nav-calendario" title="Calendario"
        class="flex items-center px-6 py-3.5 text-slate-400 hover:bg-slate-800 border-l-4 border-transparent transition-colors">
-      <i class="fas fa-calendar-alt w-6 text-sm"></i>
-      <span class="font-bold text-sm uppercase tracking-wider">Calendario</span>
+      <i class="fas fa-calendar-alt w-6 text-sm shrink-0"></i>
+      <span class="sidebar-label font-bold text-sm uppercase tracking-wider">Calendario</span>
     </a>
-    <a href="#" onclick="showSection('listas')" id="nav-listas"
+    <a href="#" onclick="showSection('listas')" id="nav-listas" title="Listas"
        class="flex items-center px-6 py-3.5 text-slate-400 hover:bg-slate-800 border-l-4 border-transparent transition-colors">
-      <i class="fas fa-list-check w-6 text-sm"></i>
-      <span class="font-bold text-sm uppercase tracking-wider">Listas</span>
+      <i class="fas fa-list-check w-6 text-sm shrink-0"></i>
+      <span class="sidebar-label font-bold text-sm uppercase tracking-wider">Listas</span>
     </a>
-    <a href="#" onclick="showSection('domotica')" id="nav-domotica"
+    <a href="#" onclick="showSection('domotica')" id="nav-domotica" title="Domótica"
        class="flex items-center px-6 py-3.5 text-slate-400 hover:bg-slate-800 border-l-4 border-transparent transition-colors">
-      <i class="fas fa-sliders-h w-6 text-sm"></i>
-      <span class="font-bold text-sm uppercase tracking-wider">Domótica</span>
+      <i class="fas fa-sliders-h w-6 text-sm shrink-0"></i>
+      <span class="sidebar-label font-bold text-sm uppercase tracking-wider">Domótica</span>
     </a>
 
     <!-- Grupo: Hobbies -->
-    <div class="px-6 pt-5 pb-2 text-[9px] font-black text-slate-500 uppercase tracking-[0.25em]">Hobbies</div>
-    <a href="#" onclick="showSection('tenis')" id="nav-tenis"
+    <div class="sidebar-group-title px-6 pt-5 pb-2 text-[9px] font-black text-slate-500 uppercase tracking-[0.25em]">Hobbies</div>
+    <a href="#" onclick="showSection('tenis')" id="nav-tenis" title="Tenis"
        class="flex items-center px-6 py-3.5 text-slate-400 hover:bg-slate-800 border-l-4 border-transparent transition-colors">
-      <i class="fas fa-table-tennis w-6 text-sm"></i>
-      <span class="font-bold text-sm uppercase tracking-wider">Tenis</span>
+      <i class="fas fa-table-tennis w-6 text-sm shrink-0"></i>
+      <span class="sidebar-label font-bold text-sm uppercase tracking-wider">Tenis</span>
     </a>
-    <a href="#" onclick="showSection('partidos')" id="nav-partidos"
+    <a href="#" onclick="showSection('partidos')" id="nav-partidos" title="Partidos"
        class="flex items-center px-6 py-3.5 text-slate-400 hover:bg-slate-800 border-l-4 border-transparent transition-colors">
-      <i class="fas fa-futbol w-6 text-sm"></i>
-      <span class="font-bold text-sm uppercase tracking-wider">Partidos</span>
+      <i class="fas fa-futbol w-6 text-sm shrink-0"></i>
+      <span class="sidebar-label font-bold text-sm uppercase tracking-wider">Partidos</span>
     </a>
   </nav>
   <!-- Status indicador -->
-  <div class="p-4 border-t border-slate-800 flex items-center gap-2">
-    <div id="status-dot" class="w-2 h-2 bg-green-500 rounded-full"></div>
+  <div class="sidebar-footer-box p-4 border-t border-slate-800 flex items-center gap-2" title="Estado de conexión">
+    <div id="status-dot" class="w-2 h-2 bg-green-500 rounded-full shrink-0"></div>
     <span id="status-text" class="text-[10px] text-white uppercase tracking-widest">Conectado</span>
   </div>
 </aside>
 
 <!-- Contenido principal -->
-<div class="md:ml-64 flex flex-col min-h-screen bg-black">
+<div id="main-content-wrapper" class="md:ml-64 flex flex-col min-h-screen bg-black">
 
   <!-- Header -->
-  <header class="bg-black/90 sticky top-0 z-30 border-b border-slate-800 backdrop-blur-md h-16 flex items-center justify-between px-6">
-    <button onclick="toggleMenu()" class="md:hidden text-2xl text-slate-400"><i class="fas fa-bars"></i></button>
+  <header class="bg-black/90 sticky top-0 z-30 border-b border-slate-800 backdrop-blur-md h-16 flex items-center justify-between px-4 md:px-6">
     <div class="flex items-center gap-3">
-      <i id="header-icon" class="fas fa-wallet text-blue-500 text-sm"></i>
-      <span id="header-title" class="font-black text-white uppercase tracking-[0.15em] text-xs">Balance</span>
+      <button onclick="toggleMenu()" class="md:hidden w-9 h-9 rounded-xl bg-slate-900/90 border border-slate-700/80 flex items-center justify-center text-slate-300 hover:text-white transition-colors" title="Abrir menú">
+        <i class="fas fa-bars text-sm"></i>
+      </button>
+      <button onclick="toggleSidebarCollapse()" class="hidden md:flex w-9 h-9 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 items-center justify-center text-slate-400 hover:text-white transition-colors" title="Retraer / Expandir panel izquierdo">
+        <i class="fas fa-bars text-xs"></i>
+      </button>
+      <div class="flex items-center gap-2.5">
+        <i id="header-icon" class="fas fa-wallet text-blue-500 text-sm"></i>
+        <span id="header-title" class="font-black text-white uppercase tracking-[0.15em] text-xs">Balance</span>
+      </div>
     </div>
     <div class="flex items-center gap-3">
       <!-- Widget Clima en Header (aparece al scrollear hacia abajo en Inicio) -->
@@ -1610,7 +1743,7 @@
 
             <div class="space-y-1.5">
               <label class="text-[10px] font-bold text-white uppercase ml-1">Categoría</label>
-              <select id="categoria" class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/60 font-bold text-sm text-white">
+              <select id="categoria" onchange="onCategoriaChange()" class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/60 font-bold text-sm text-white">
                 <option value="">Cargando...</option>
               </select>
             </div>
@@ -1715,17 +1848,7 @@
             <div class="relative z-10">
               <h4 id="total-gastos" class="text-3xl font-black text-red-300 mono tracking-tighter transition-all duration-300">$0</h4>
               <p id="top-categoria-gas" class="text-[10px] font-bold text-red-400/90 mt-1.5 tracking-wide truncate">—</p>
-              <!-- Desglose Fijos vs Variables -->
-              <div class="mt-2.5 pt-2 border-t border-slate-800/80">
-                <div class="flex items-center justify-between text-[9px] font-bold text-slate-400 mb-1">
-                  <span id="gastos-fijos-label" class="text-indigo-300">🔄 Recurrentes: 0%</span>
-                  <span id="gastos-variables-label" class="text-rose-300">⚡ Variables: 100%</span>
-                </div>
-                <div class="w-full h-1.5 bg-slate-800/90 rounded-full overflow-hidden flex">
-                  <div id="gastos-fijos-bar" class="h-full bg-indigo-500 transition-all duration-500" style="width:0%"></div>
-                  <div id="gastos-variables-bar" class="h-full bg-rose-500/80 transition-all duration-500" style="width:100%"></div>
-                </div>
-              </div>
+
             </div>
           </div>
           
@@ -1850,11 +1973,11 @@
           </div>
         </div>
 
-        <!-- Gráficos con total en el centro (Unificados) -->
+        <!-- Gráficos con total en el centro (Unificados) + Recurrentes vs. Variables por Columna -->
         <div class="bg-black rounded-2xl border border-slate-700/60 overflow-hidden w-full">
           <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-700/60">
-            <!-- Contenedor Gastos -->
-            <div id="grafico-container-gasto" class="block">
+            <!-- Columna Gastos -->
+            <div id="grafico-container-gasto" class="flex flex-col">
               <div class="p-4 border-b border-slate-700/60 bg-slate-800/30 flex items-center justify-between">
                 <h4 class="text-[10px] font-black text-red-400 uppercase tracking-widest flex items-center gap-1.5"><i class="fas fa-arrow-down"></i> Top Categorías de Gasto</h4>
                 <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mono">Ranking %</span>
@@ -1868,7 +1991,7 @@
                   </div>
                 </div>
               </div>
-              <div class="border-t border-slate-700/60">
+              <div class="border-t border-slate-700/60 flex-1 flex flex-col justify-between">
                 <table class="w-full text-sm">
                   <thead>
                     <tr class="bg-slate-800 border-b border-slate-700/60">
@@ -1882,10 +2005,54 @@
                   </tbody>
                 </table>
               </div>
+
+              <!-- Sub-bloque: Gastos Recurrentes vs. Variables -->
+              <div class="border-t border-slate-700/60 flex flex-col">
+                <div class="p-4 border-b border-slate-700/60 bg-slate-800/30 flex items-center justify-between flex-wrap gap-2">
+                  <h4 class="text-[10px] font-black text-indigo-300 uppercase tracking-widest flex items-center gap-1.5"><i class="fas fa-sync-alt text-indigo-400"></i> Gastos Recurrentes vs. Variables</h4>
+                  <span id="rec-var-badge" class="text-[9px] font-black mono px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-400/30">Recurrentes 0% · Variables 100%</span>
+                </div>
+                <div class="p-5 space-y-4">
+                  <div class="chart-wrapper">
+                    <canvas id="chartGastosRecurrentesPie" class="max-h-[180px]"></canvas>
+                    <div class="chart-center-label" id="center-recurrentes">
+                      <p class="text-[9px] text-slate-500 uppercase tracking-widest">Recurrentes</p>
+                      <p id="center-recurrentes-val" class="text-base font-black text-indigo-300 mono">0%</p>
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-indigo-950/35 border border-indigo-500/30 rounded-xl p-3">
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="text-[9px] font-black text-indigo-300 uppercase tracking-wider">🔄 Recurrentes</span>
+                        <span id="card-rec-pct" class="text-[9px] font-black mono text-indigo-400">0%</span>
+                      </div>
+                      <p id="card-rec-monto" class="text-sm font-black text-white mono">$0</p>
+                      <p id="card-rec-count" class="text-[9px] font-bold text-slate-400 mt-0.5">0 gastos</p>
+                    </div>
+                    <div class="bg-rose-950/35 border border-rose-500/30 rounded-xl p-3">
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="text-[9px] font-black text-rose-300 uppercase tracking-wider">⚡ Variables</span>
+                        <span id="card-var-pct" class="text-[9px] font-black mono text-rose-400">0%</span>
+                      </div>
+                      <p id="card-var-monto" class="text-sm font-black text-white mono">$0</p>
+                      <p id="card-var-count" class="text-[9px] font-bold text-slate-400 mt-0.5">0 gastos</p>
+                    </div>
+                  </div>
+                  <div class="pt-3 border-t border-slate-800/80">
+                    <div class="flex items-center justify-between mb-2">
+                      <p id="chartRecurrentesBarTitle" class="text-[9px] font-black text-slate-300 uppercase tracking-widest">Desglose Recurrentes vs. Variables</p>
+                      <span class="text-[9px] font-bold text-slate-500 mono">ARS ($)</span>
+                    </div>
+                    <div class="relative h-[195px]">
+                      <canvas id="chartGastosRecurrentesBar" class="w-full h-full"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <!-- Contenedor Ingresos -->
-            <div id="grafico-container-ingreso" class="block">
+            <!-- Columna Ingresos -->
+            <div id="grafico-container-ingreso" class="flex flex-col">
               <div class="p-4 border-b border-slate-700/60 bg-slate-800/30 flex items-center justify-between">
                 <h4 class="text-[10px] font-black text-green-400 uppercase tracking-widest flex items-center gap-1.5"><i class="fas fa-arrow-up"></i> Top Categorías de Ingreso</h4>
                 <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mono">Ranking %</span>
@@ -1899,7 +2066,7 @@
                   </div>
                 </div>
               </div>
-              <div class="border-t border-slate-700/60">
+              <div class="border-t border-slate-700/60 flex-1 flex flex-col justify-between">
                 <table class="w-full text-sm">
                   <thead>
                     <tr class="bg-slate-800 border-b border-slate-700/60">
@@ -1913,61 +2080,49 @@
                   </tbody>
                 </table>
               </div>
-            </div>
-          </div>
-        </div>
 
-        <!-- Gráfico de Gastos Recurrentes vs. Variables -->
-        <div id="chartRecurrentesContainer" class="bg-black rounded-2xl border border-slate-700/60 overflow-hidden w-full">
-          <div class="p-4 border-b border-slate-700/60 bg-slate-800/30 flex items-center justify-between flex-wrap gap-2">
-            <div class="flex items-center gap-2.5">
-              <div class="w-7 h-7 rounded-xl bg-indigo-900/50 border border-indigo-500/30 flex items-center justify-center">
-                <i class="fas fa-sync-alt text-indigo-400 text-xs"></i>
-              </div>
-              <div>
-                <h4 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Gastos Recurrentes vs. Variables</h4>
-                <p id="rec-var-sub" class="text-[9px] font-bold text-slate-400">Proporción y desglose de tus gastos en el período seleccionado</p>
-              </div>
-            </div>
-            <span id="rec-var-badge" class="text-[9px] font-black mono px-2.5 py-1 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-400/30">Recurrentes 0% · Variables 100%</span>
-          </div>
-          <div class="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-slate-700/60">
-            <!-- Izquierda: Dona + Tarjetas comparativas -->
-            <div class="lg:col-span-5 p-5 flex flex-col justify-between gap-4">
-              <div class="chart-wrapper">
-                <canvas id="chartGastosRecurrentesPie" class="max-h-[185px]"></canvas>
-                <div class="chart-center-label" id="center-recurrentes">
-                  <p class="text-[9px] text-slate-500 uppercase tracking-widest">Recurrentes</p>
-                  <p id="center-recurrentes-val" class="text-base font-black text-indigo-300 mono">0%</p>
+              <!-- Sub-bloque: Ingresos Recurrentes vs. Variables -->
+              <div class="border-t border-slate-700/60 flex flex-col">
+                <div class="p-4 border-b border-slate-700/60 bg-slate-800/30 flex items-center justify-between flex-wrap gap-2">
+                  <h4 class="text-[10px] font-black text-emerald-300 uppercase tracking-widest flex items-center gap-1.5"><i class="fas fa-sync-alt text-emerald-400"></i> Ingresos Recurrentes vs. Variables</h4>
+                  <span id="ing-rec-var-badge" class="text-[9px] font-black mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-400/30">Recurrentes 0% · Variables 100%</span>
                 </div>
-              </div>
-              <div class="grid grid-cols-2 gap-3">
-                <div class="bg-indigo-950/35 border border-indigo-500/30 rounded-xl p-3">
-                  <div class="flex items-center justify-between mb-1">
-                    <span class="text-[9px] font-black text-indigo-300 uppercase tracking-wider">🔄 Recurrentes</span>
-                    <span id="card-rec-pct" class="text-[9px] font-black mono text-indigo-400">0%</span>
+                <div class="p-5 space-y-4">
+                  <div class="chart-wrapper">
+                    <canvas id="chartIngresosRecurrentesPie" class="max-h-[180px]"></canvas>
+                    <div class="chart-center-label" id="center-ing-recurrentes">
+                      <p class="text-[9px] text-slate-500 uppercase tracking-widest">Recurrentes</p>
+                      <p id="center-ing-recurrentes-val" class="text-base font-black text-emerald-300 mono">0%</p>
+                    </div>
                   </div>
-                  <p id="card-rec-monto" class="text-sm font-black text-white mono">$0</p>
-                  <p id="card-rec-count" class="text-[9px] font-bold text-slate-400 mt-0.5">0 gastos</p>
-                </div>
-                <div class="bg-rose-950/35 border border-rose-500/30 rounded-xl p-3">
-                  <div class="flex items-center justify-between mb-1">
-                    <span class="text-[9px] font-black text-rose-300 uppercase tracking-wider">⚡ Variables</span>
-                    <span id="card-var-pct" class="text-[9px] font-black mono text-rose-400">0%</span>
+                  <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-emerald-950/35 border border-emerald-500/30 rounded-xl p-3">
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="text-[9px] font-black text-emerald-300 uppercase tracking-wider">🔄 Recurrentes</span>
+                        <span id="card-ing-rec-pct" class="text-[9px] font-black mono text-emerald-400">0%</span>
+                      </div>
+                      <p id="card-ing-rec-monto" class="text-sm font-black text-white mono">$0</p>
+                      <p id="card-ing-rec-count" class="text-[9px] font-bold text-slate-400 mt-0.5">0 ingresos</p>
+                    </div>
+                    <div class="bg-cyan-950/35 border border-cyan-500/30 rounded-xl p-3">
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="text-[9px] font-black text-cyan-300 uppercase tracking-wider">⚡ Variables</span>
+                        <span id="card-ing-var-pct" class="text-[9px] font-black mono text-cyan-400">0%</span>
+                      </div>
+                      <p id="card-ing-var-monto" class="text-sm font-black text-white mono">$0</p>
+                      <p id="card-ing-var-count" class="text-[9px] font-bold text-slate-400 mt-0.5">0 ingresos</p>
+                    </div>
                   </div>
-                  <p id="card-var-monto" class="text-sm font-black text-white mono">$0</p>
-                  <p id="card-var-count" class="text-[9px] font-bold text-slate-400 mt-0.5">0 gastos</p>
+                  <div class="pt-3 border-t border-slate-800/80">
+                    <div class="flex items-center justify-between mb-2">
+                      <p id="chartIngresosRecurrentesBarTitle" class="text-[9px] font-black text-slate-300 uppercase tracking-widest">Desglose Recurrentes vs. Variables</p>
+                      <span class="text-[9px] font-bold text-slate-500 mono">ARS ($)</span>
+                    </div>
+                    <div class="relative h-[195px]">
+                      <canvas id="chartIngresosRecurrentesBar" class="w-full h-full"></canvas>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <!-- Derecha: Gráfico de barras / desglose -->
-            <div class="lg:col-span-7 p-5 flex flex-col justify-between">
-              <div class="flex items-center justify-between mb-3">
-                <p id="chartRecurrentesBarTitle" class="text-[9px] font-black text-slate-300 uppercase tracking-widest">Comparativa Recurrentes vs. Variables</p>
-                <span class="text-[9px] font-bold text-slate-500 mono">ARS ($)</span>
-              </div>
-              <div class="relative flex-1 min-h-[210px] flex items-center justify-center">
-                <canvas id="chartGastosRecurrentesBar" class="max-h-[225px] w-full"></canvas>
               </div>
             </div>
           </div>
@@ -3944,7 +4099,7 @@
         </div>
         <div class="space-y-1.5">
           <label class="text-[10px] font-bold text-white uppercase ml-1">Categoría</label>
-          <select id="edit-categoria" class="w-full h-11 px-4 bg-slate-800 border border-slate-700 rounded-lg outline-none text-sm text-white"></select>
+          <select id="edit-categoria" onchange="onEditCategoriaChange()" class="w-full h-11 px-4 bg-slate-800 border border-slate-700 rounded-lg outline-none text-sm text-white"></select>
         </div>
       </div>
       <div class="space-y-1.5">
@@ -4199,6 +4354,8 @@ const FILAS_POR_PAG = 10;
 let chartBalanceTrendInst = null;
 let chartRecurrentesPieInst = null;
 let chartRecurrentesBarInst = null;
+let chartIngresosRecurrentesPieInst = null;
+let chartIngresosRecurrentesBarInst = null;
 
 // ─── PERSISTENCIA LOCAL DE RECURRENTES Y BACKUP CONCILIADOR ──────────────────
 function esValorRecurrente(val) {
@@ -4430,6 +4587,44 @@ function toggleMenu() {
   document.getElementById('sidebar').classList.toggle('sidebar-open');
   document.getElementById('overlay').classList.toggle('hidden');
 }
+
+function aplicarEstadoSidebar(collapsed) {
+  if (collapsed) {
+    document.documentElement.classList.add('sidebar-collapsed');
+  } else {
+    document.documentElement.classList.remove('sidebar-collapsed');
+  }
+  const icon = document.getElementById('icon-collapse-sidebar');
+  if (icon) {
+    icon.className = collapsed ? 'fas fa-angles-right text-xs' : 'fas fa-angles-left text-xs';
+  }
+  // Redimensionar gráficos y calendario tras la transición del panel lateral
+  setTimeout(() => {
+    window.dispatchEvent(new Event('resize'));
+    if (typeof calendarInstance !== 'undefined' && calendarInstance && typeof calendarInstance.updateSize === 'function') {
+      calendarInstance.updateSize();
+    }
+  }, 260);
+}
+
+function toggleSidebarCollapse() {
+  const isCollapsed = document.documentElement.classList.contains('sidebar-collapsed');
+  const nextState = !isCollapsed;
+  try { localStorage.setItem('gm_sidebar_collapsed', nextState ? '1' : '0'); } catch (e) {}
+  aplicarEstadoSidebar(nextState);
+}
+
+(function initSidebarState() {
+  try {
+    const saved = localStorage.getItem('gm_sidebar_collapsed');
+    if (saved === '1') {
+      aplicarEstadoSidebar(true);
+    } else if (saved === null && window.innerWidth >= 768 && window.innerWidth <= 1024) {
+      // En tablets o teléfonos grandes en horizontal, retraer por defecto para dar más espacio al contenido
+      aplicarEstadoSidebar(true);
+    }
+  } catch (e) {}
+})();
 
 // ─── TEMA VISUAL: OBSIDIAN GLASS (OSCURO) / NORDIC DAYLIGHT (CLARO) ───────────
 function aplicarTemaVisual(modo) {
@@ -5024,6 +5219,28 @@ function abrirModalEditar(globalIdx) {
   document.getElementById("modal-editar").classList.remove("hidden");
 }
 
+function esCategoriaRecurrentePorDefecto(cat) {
+  const norm = String(cat || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+  return ['alquiler', 'prestamos', 'prestamo', 'servicios', 'servicio', 'tarjeta', 'tarjetas', 'salario', 'salarios', 'sueldo', 'sueldos', 'haberes'].includes(norm);
+}
+
+function onCategoriaChange() {
+  const catEl = document.getElementById('categoria');
+  const recEl = document.getElementById('recurrente');
+  if (!catEl || !recEl) return;
+  recEl.checked = esCategoriaRecurrentePorDefecto(catEl.value);
+  actualizarUIRecurrente();
+}
+
+function onEditCategoriaChange() {
+  const catEl = document.getElementById('edit-categoria');
+  const recEl = document.getElementById('edit-recurrente');
+  if (!catEl || !recEl) return;
+  if (esCategoriaRecurrentePorDefecto(catEl.value)) {
+    recEl.checked = true;
+  }
+}
+
 function actualizarUIRecurrente() {
   const cb = document.getElementById('recurrente');
   const box = document.getElementById('recurrente-box');
@@ -5090,8 +5307,8 @@ function pedirConfirmacionGenerica(titulo, desc, onConfirm) {
   if (descEl)  descEl.textContent  = desc || 'Esta acción no se puede deshacer.';
   modal.classList.remove('hidden');
   btnEl.onclick = async () => {
-    cerrarModalConfirm();
     if (typeof onConfirm === 'function') await onConfirm();
+    cerrarModalConfirm();
   };
 }
 
@@ -5100,7 +5317,7 @@ function pedirEliminarMovimiento(globalIdx) {
   if (!row) return;
   pendingDeleteIndex = globalIdx;
   const desc = `${row[1] || ''} — ${row[3] || ''} — ${row[2] || ''} — $${(parseFloat(row[4]) || 0).toLocaleString('es-AR')}`;
-  pedirConfirmacionGenerica('¿Eliminar movimiento?', desc, confirmarEliminarMovimiento);
+  pedirConfirmacionGenerica('¿Eliminar movimiento?', desc, () => confirmarEliminarMovimiento(globalIdx, row));
 }
 
 function cerrarModalConfirm() {
@@ -5108,9 +5325,10 @@ function cerrarModalConfirm() {
   pendingDeleteIndex = null;
 }
 
-async function confirmarEliminarMovimiento() {
-  if (pendingDeleteIndex === null) return;
-  const row = datosBuscados[pendingDeleteIndex];
+async function confirmarEliminarMovimiento(idxParam = null, rowParam = null) {
+  const targetIdx = idxParam !== null ? idxParam : pendingDeleteIndex;
+  const row = rowParam || (targetIdx !== null ? datosBuscados[targetIdx] : null);
+  if (!row) return;
   cerrarModalConfirm();
 
   // Eliminar de todos los arrays
@@ -5167,20 +5385,7 @@ function actualizarResumen(datos) {
   document.getElementById('total-gastos').textContent   = fmt(gasTotal);
   document.getElementById('total-balance').textContent  = (balance < 0 ? '-' : '') + fmt(balance);
 
-  // Desglose Fijos vs Variables en tarjeta de Gastos
-  const fijosLbl = document.getElementById('gastos-fijos-label');
-  const varsLbl  = document.getElementById('gastos-variables-label');
-  const fijosBar = document.getElementById('gastos-fijos-bar');
-  const varsBar  = document.getElementById('gastos-variables-bar');
-  if (fijosLbl && varsLbl && fijosBar && varsBar) {
-    const pctFijo = gasTotal > 0 ? Math.round((gasFijoTotal / gasTotal) * 100) : 0;
-    const pctVar  = gasTotal > 0 ? (100 - pctFijo) : 0;
-    const gasVarTotal = Math.max(0, gasTotal - gasFijoTotal);
-    fijosLbl.textContent = `🔄 Recurrentes: ${pctFijo}% (${fmt(gasFijoTotal)})`;
-    varsLbl.textContent  = `⚡ Variables: ${pctVar}% (${fmt(gasVarTotal)})`;
-    fijosBar.style.width = `${pctFijo}%`;
-    varsBar.style.width  = `${pctVar}%`;
-  }
+
 
   // Top categoría con su emoji y % de incidencia
   const topGas = Object.entries(catGas).sort((a,b) => b[1]-a[1])[0];
@@ -5195,7 +5400,7 @@ function actualizarResumen(datos) {
   if (topIng) {
     const metaI = getCategoriaMeta(topIng[0], 0, true);
     const pctI  = ingTotal > 0 ? Math.round((topIng[1] / ingTotal) * 100) : 0;
-    document.getElementById('top-categoria-ing').textContent = `${metaI.emoji} Mayor fuente: ${topIng[0]} (${pctI}%)`;
+    document.getElementById('top-categoria-ing').textContent = `${metaI.emoji} Mayor ingreso: ${topIng[0]} (${pctI}%)`;
   } else {
     document.getElementById('top-categoria-ing').textContent = '—';
   }
@@ -5312,6 +5517,7 @@ function actualizarGraficos(datos) {
   renderPie('chartIngresos', cIng, PALETA_CATEGORIAS_INGRESO);
   
   renderGastosRecurrentesChart(datos);
+  renderIngresosRecurrentesChart(datos);
   renderBalanceTrend(datos);
 }
 
@@ -5480,6 +5686,212 @@ function renderGastosRecurrentesChart(datos) {
           data: dataVar,
           backgroundColor: 'rgba(244, 63, 94, 0.80)',
           borderColor: '#f43f5e',
+          borderWidth: 1,
+          borderRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          labels: { usePointStyle: true, boxWidth: 8, font: { size: 10, family: 'Space Grotesk', weight: 'bold' }, color: '#94a3b8' }
+        },
+        tooltip: {
+          callbacks: {
+            label: c => ` ${c.dataset.label}: $${(c.raw || 0).toLocaleString('es-AR', { maximumFractionDigits: 0 })}`
+          }
+        }
+      },
+      scales: {
+        x: {
+          stacked: true,
+          ticks: { font: { size: 9, family: 'Space Grotesk', weight: 'bold' }, color: '#64748b' },
+          grid: { display: false }
+        },
+        y: {
+          stacked: true,
+          ticks: {
+            font: { size: 9, family: 'JetBrains Mono' },
+            color: '#64748b',
+            callback: v => '$' + v.toLocaleString('es-AR', { maximumFractionDigits: 0 })
+          },
+          grid: { color: 'rgba(51, 65, 85, 0.35)' }
+        }
+      }
+    }
+  });
+}
+
+function renderIngresosRecurrentesChart(datos) {
+  let recTotal = 0, varTotal = 0;
+  let recCount = 0, varCount = 0;
+  const porMes = {};
+  const catPorTipo = {};
+
+  datos.forEach(r => {
+    if (r[1] !== 'Ingreso') return;
+    const monto = parseFloat(r[4]) || 0;
+    if (monto <= 0) return;
+    const esRec = esValorRecurrente(r[6]);
+    const cat = r[3] || 'Sin categoría';
+
+    if (esRec) {
+      recTotal += monto;
+      recCount++;
+    } else {
+      varTotal += monto;
+      varCount++;
+    }
+
+    if (!catPorTipo[cat]) catPorTipo[cat] = { rec: 0, var: 0 };
+    if (esRec) catPorTipo[cat].rec += monto;
+    else       catPorTipo[cat].var += monto;
+
+    const f = new Date(r[0]);
+    if (!isNaN(f)) {
+      const mesKey = f.getFullYear() + '-' + String(f.getMonth() + 1).padStart(2, '0');
+      if (!porMes[mesKey]) porMes[mesKey] = { rec: 0, var: 0 };
+      if (esRec) porMes[mesKey].rec += monto;
+      else       porMes[mesKey].var += monto;
+    }
+  });
+
+  const totalIngreso = recTotal + varTotal;
+  const pctRec = totalIngreso > 0 ? Math.round((recTotal / totalIngreso) * 100) : 0;
+  const pctVar = totalIngreso > 0 ? (100 - pctRec) : 0;
+  const fmt = n => '$' + Math.abs(n).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+
+  const badgeEl = document.getElementById('ing-rec-var-badge');
+  const centerValEl = document.getElementById('center-ing-recurrentes-val');
+  const cardRecPct = document.getElementById('card-ing-rec-pct');
+  const cardRecMonto = document.getElementById('card-ing-rec-monto');
+  const cardRecCount = document.getElementById('card-ing-rec-count');
+  const cardVarPct = document.getElementById('card-ing-var-pct');
+  const cardVarMonto = document.getElementById('card-ing-var-monto');
+  const cardVarCount = document.getElementById('card-ing-var-count');
+
+  if (badgeEl) badgeEl.textContent = `Recurrentes ${pctRec}% · Variables ${pctVar}%`;
+  if (centerValEl) centerValEl.textContent = `${pctRec}%`;
+  if (cardRecPct) cardRecPct.textContent = `${pctRec}%`;
+  if (cardRecMonto) cardRecMonto.textContent = fmt(recTotal);
+  if (cardRecCount) cardRecCount.textContent = `${recCount} ingreso${recCount !== 1 ? 's' : ''}`;
+  if (cardVarPct) cardVarPct.textContent = `${pctVar}%`;
+  if (cardVarMonto) cardVarMonto.textContent = fmt(varTotal);
+  if (cardVarCount) cardVarCount.textContent = `${varCount} ingreso${varCount !== 1 ? 's' : ''}`;
+
+  // 1. Gráfico Dona (Ingresos Recurrentes vs Variables)
+  const pieCanvas = document.getElementById('chartIngresosRecurrentesPie');
+  if (pieCanvas) {
+    const ctxPie = pieCanvas.getContext('2d');
+    if (chartIngresosRecurrentesPieInst instanceof Chart) chartIngresosRecurrentesPieInst.destroy();
+
+    if (totalIngreso <= 0) {
+      chartIngresosRecurrentesPieInst = new Chart(ctxPie, {
+        type: 'doughnut',
+        data: {
+          labels: ['Sin ingresos en el período'],
+          datasets: [{ data: [1], backgroundColor: ['#1e293b'], borderWidth: 0 }]
+        },
+        options: { cutout: '72%', plugins: { legend: { display: false }, tooltip: { enabled: false } } }
+      });
+    } else {
+      chartIngresosRecurrentesPieInst = new Chart(ctxPie, {
+        type: 'doughnut',
+        data: {
+          labels: ['🔄 Recurrentes', '⚡ Variables'],
+          datasets: [{
+            data: [recTotal, varTotal],
+            backgroundColor: ['#10b981', '#06b6d4'],
+            hoverBackgroundColor: ['#34d399', '#22d3ee'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          cutout: '72%',
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { boxWidth: 8, font: { size: 9, weight: 'bold', family: 'Space Grotesk' }, padding: 10, color: '#94a3b8' }
+            },
+            tooltip: {
+              callbacks: {
+                label: ctx => {
+                  const val = ctx.raw || 0;
+                  const pct = totalIngreso ? ((val / totalIngreso) * 100).toFixed(1) : 0;
+                  return ` $${val.toLocaleString('es-AR', { maximumFractionDigits: 0 })} (${pct}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // 2. Gráfico de Barras Apiladas (Por mes si hay varios meses, o por Categoría si es un solo mes)
+  const barCanvas = document.getElementById('chartIngresosRecurrentesBar');
+  const barTitleEl = document.getElementById('chartIngresosRecurrentesBarTitle');
+  if (!barCanvas) return;
+  const ctxBar = barCanvas.getContext('2d');
+  if (chartIngresosRecurrentesBarInst instanceof Chart) chartIngresosRecurrentesBarInst.destroy();
+
+  const mesKeys = Object.keys(porMes).sort();
+  const mesNombres = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
+  let labels = [];
+  let dataRec = [];
+  let dataVar = [];
+
+  if (mesKeys.length > 1) {
+    if (barTitleEl) barTitleEl.textContent = 'Evolución Mensual: Recurrentes vs. Variables';
+    mesKeys.slice(-12).forEach(k => {
+      const [y, m] = k.split('-');
+      labels.push(`${mesNombres[parseInt(m) - 1]} ${String(y).slice(-2)}`);
+      dataRec.push(porMes[k].rec);
+      dataVar.push(porMes[k].var);
+    });
+  } else {
+    if (barTitleEl) barTitleEl.textContent = 'Desglose por Categoría: Recurrentes vs. Variables';
+    const topCats = Object.entries(catPorTipo)
+      .sort((a, b) => (b[1].rec + b[1].var) - (a[1].rec + a[1].var))
+      .slice(0, 7);
+
+    if (topCats.length === 0) {
+      labels = ['Sin datos'];
+      dataRec = [0];
+      dataVar = [0];
+    } else {
+      topCats.forEach(([cat, vals]) => {
+        labels.push(cat.length > 12 ? cat.slice(0, 11) + '…' : cat);
+        dataRec.push(vals.rec);
+        dataVar.push(vals.var);
+      });
+    }
+  }
+
+  chartIngresosRecurrentesBarInst = new Chart(ctxBar, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: '🔄 Recurrentes',
+          data: dataRec,
+          backgroundColor: 'rgba(16, 185, 129, 0.85)',
+          borderColor: '#10b981',
+          borderWidth: 1,
+          borderRadius: 4
+        },
+        {
+          label: '⚡ Variables',
+          data: dataVar,
+          backgroundColor: 'rgba(6, 182, 212, 0.80)',
+          borderColor: '#06b6d4',
           borderWidth: 1,
           borderRadius: 4
         }
@@ -6087,6 +6499,7 @@ Texto del usuario: "${texto}"`;
         selectCat.add(newOption);
         selectCat.value = aiResult.categoria;
       }
+      onCategoriaChange();
     }
     
     // Método de pago
