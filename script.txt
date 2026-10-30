@@ -462,6 +462,9 @@ function doPost(e) {
         sheet.getRange(rowNum, 4).setValue(nvo.categoria || ant.categoria);
         sheet.getRange(rowNum, 5).setValue(parseFloat(nvo.monto) || monto);
         sheet.getRange(rowNum, 6).setValue(nvo.metodo    || ant.metodo || '');
+        const recVal = nvo.recurrente !== undefined ? nvo.recurrente : ant.recurrente;
+        const esRecBool = recVal === true || String(recVal || '').toLowerCase() === 'sí' || String(recVal || '').toLowerCase() === 'si' || String(recVal || '').toLowerCase() === 'recurrente' || String(recVal || '').toLowerCase() === 'true';
+        sheet.getRange(rowNum, 7).setValue(esRecBool ? 'Sí' : 'No');
 
         // Si la categoría nueva no existe en Config, agregarla
         if (nvo.categoria && nvo.categoria !== ant.categoria) {
@@ -515,7 +518,7 @@ function doPost(e) {
     data.categoria,
     monto,
     data.metodo_pago  || '',
-    data.recurrente   ? 'Sí' : 'No'
+    (data.recurrente === true || String(data.recurrente || '').toLowerCase() === 'sí' || String(data.recurrente || '').toLowerCase() === 'si' || String(data.recurrente || '').toLowerCase() === 'recurrente' || String(data.recurrente || '').toLowerCase() === 'true') ? 'Sí' : 'No'
   ]);
 
   return ok();

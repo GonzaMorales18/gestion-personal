@@ -1640,7 +1640,7 @@
               <label for="recurrente" id="recurrente-box" class="h-11 flex items-center justify-between px-3.5 bg-slate-900 rounded-xl border border-slate-700/80 cursor-pointer select-none transition-all hover:border-indigo-500/50">
                 <div class="flex items-center gap-2">
                   <input type="checkbox" id="recurrente" onchange="actualizarUIRecurrente()" class="w-4 h-4 rounded accent-indigo-500 text-indigo-600 border-slate-500 cursor-pointer">
-                  <span id="recurrente-label" class="text-[10px] font-black text-slate-400 uppercase tracking-wider">🔄 Fijo</span>
+                  <span id="recurrente-label" class="text-[10px] font-black text-slate-400 uppercase tracking-wider">🔄 Recurrente</span>
                 </div>
                 <span id="recurrente-pill" class="text-[8px] font-black uppercase px-1.5 py-0.5 rounded bg-slate-800 text-slate-500 border border-slate-700">No</span>
               </label>
@@ -1718,7 +1718,7 @@
               <!-- Desglose Fijos vs Variables -->
               <div class="mt-2.5 pt-2 border-t border-slate-800/80">
                 <div class="flex items-center justify-between text-[9px] font-bold text-slate-400 mb-1">
-                  <span id="gastos-fijos-label" class="text-indigo-300">🔄 Fijos: 0%</span>
+                  <span id="gastos-fijos-label" class="text-indigo-300">🔄 Recurrentes: 0%</span>
                   <span id="gastos-variables-label" class="text-rose-300">⚡ Variables: 100%</span>
                 </div>
                 <div class="w-full h-1.5 bg-slate-800/90 rounded-full overflow-hidden flex">
@@ -1912,6 +1912,62 @@
                     <tr><td colspan="3" class="text-center py-4 text-slate-500 text-xs">Sin datos</td></tr>
                   </tbody>
                 </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gráfico de Gastos Recurrentes vs. Variables -->
+        <div id="chartRecurrentesContainer" class="bg-black rounded-2xl border border-slate-700/60 overflow-hidden w-full">
+          <div class="p-4 border-b border-slate-700/60 bg-slate-800/30 flex items-center justify-between flex-wrap gap-2">
+            <div class="flex items-center gap-2.5">
+              <div class="w-7 h-7 rounded-xl bg-indigo-900/50 border border-indigo-500/30 flex items-center justify-center">
+                <i class="fas fa-sync-alt text-indigo-400 text-xs"></i>
+              </div>
+              <div>
+                <h4 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Gastos Recurrentes vs. Variables</h4>
+                <p id="rec-var-sub" class="text-[9px] font-bold text-slate-400">Proporción y desglose de tus gastos en el período seleccionado</p>
+              </div>
+            </div>
+            <span id="rec-var-badge" class="text-[9px] font-black mono px-2.5 py-1 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-400/30">Recurrentes 0% · Variables 100%</span>
+          </div>
+          <div class="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-slate-700/60">
+            <!-- Izquierda: Dona + Tarjetas comparativas -->
+            <div class="lg:col-span-5 p-5 flex flex-col justify-between gap-4">
+              <div class="chart-wrapper">
+                <canvas id="chartGastosRecurrentesPie" class="max-h-[185px]"></canvas>
+                <div class="chart-center-label" id="center-recurrentes">
+                  <p class="text-[9px] text-slate-500 uppercase tracking-widest">Recurrentes</p>
+                  <p id="center-recurrentes-val" class="text-base font-black text-indigo-300 mono">0%</p>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div class="bg-indigo-950/35 border border-indigo-500/30 rounded-xl p-3">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-[9px] font-black text-indigo-300 uppercase tracking-wider">🔄 Recurrentes</span>
+                    <span id="card-rec-pct" class="text-[9px] font-black mono text-indigo-400">0%</span>
+                  </div>
+                  <p id="card-rec-monto" class="text-sm font-black text-white mono">$0</p>
+                  <p id="card-rec-count" class="text-[9px] font-bold text-slate-400 mt-0.5">0 gastos</p>
+                </div>
+                <div class="bg-rose-950/35 border border-rose-500/30 rounded-xl p-3">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-[9px] font-black text-rose-300 uppercase tracking-wider">⚡ Variables</span>
+                    <span id="card-var-pct" class="text-[9px] font-black mono text-rose-400">0%</span>
+                  </div>
+                  <p id="card-var-monto" class="text-sm font-black text-white mono">$0</p>
+                  <p id="card-var-count" class="text-[9px] font-bold text-slate-400 mt-0.5">0 gastos</p>
+                </div>
+              </div>
+            </div>
+            <!-- Derecha: Gráfico de barras / desglose -->
+            <div class="lg:col-span-7 p-5 flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-3">
+                <p id="chartRecurrentesBarTitle" class="text-[9px] font-black text-slate-300 uppercase tracking-widest">Comparativa Recurrentes vs. Variables</p>
+                <span class="text-[9px] font-bold text-slate-500 mono">ARS ($)</span>
+              </div>
+              <div class="relative flex-1 min-h-[210px] flex items-center justify-center">
+                <canvas id="chartGastosRecurrentesBar" class="max-h-[225px] w-full"></canvas>
               </div>
             </div>
           </div>
@@ -3910,7 +3966,7 @@
         <label for="edit-recurrente" class="h-11 flex items-center justify-between px-3.5 bg-slate-900 rounded-xl border border-slate-700/80 cursor-pointer select-none hover:border-indigo-500/50 transition-all">
           <div class="flex items-center gap-2">
             <input type="checkbox" id="edit-recurrente" class="w-4 h-4 rounded accent-indigo-500 text-indigo-600 border-slate-500 cursor-pointer">
-            <span class="text-[10px] font-black text-slate-300 uppercase tracking-wider">🔄 Fijo</span>
+            <span class="text-[10px] font-black text-slate-300 uppercase tracking-wider">🔄 Recurrente</span>
           </div>
         </label>
       </div>
@@ -4141,6 +4197,66 @@ let paginaActual    = 1;
 let datosCargados   = false;
 const FILAS_POR_PAG = 10;
 let chartBalanceTrendInst = null;
+let chartRecurrentesPieInst = null;
+let chartRecurrentesBarInst = null;
+
+// ─── PERSISTENCIA LOCAL DE RECURRENTES Y BACKUP CONCILIADOR ──────────────────
+function esValorRecurrente(val) {
+  if (val === true) return true;
+  const s = String(val || '').toLowerCase().trim();
+  return s === 'sí' || s === 'si' || s === 'recurrente' || s === 'fijo' || s === 'true';
+}
+
+function getRecurrenteKey(row) {
+  const fechaStr = String(row[0] || '').slice(0, 10);
+  const tipo = String(row[1] || '').trim().toLowerCase();
+  const concepto = String(row[2] || '').trim().toLowerCase();
+  const cat = String(row[3] || '').trim().toLowerCase();
+  const monto = Math.round((parseFloat(row[4]) || 0) * 100);
+  return `${fechaStr}|${tipo}|${concepto}|${cat}|${monto}`;
+}
+
+function leerOverridesRecurrentes() {
+  try {
+    const raw = localStorage.getItem('gm_recurrentes_overrides');
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) { return {}; }
+}
+
+function guardarOverrideRecurrente(row, esRec) {
+  try {
+    const map = leerOverridesRecurrentes();
+    const key = getRecurrenteKey(row);
+    map[key] = esRec ? 'Sí' : 'No';
+    const keySinFecha = `*|${String(row[1]||'').trim().toLowerCase()}|${String(row[2]||'').trim().toLowerCase()}|${String(row[3]||'').trim().toLowerCase()}|${Math.round((parseFloat(row[4])||0)*100)}`;
+    map[keySinFecha] = esRec ? 'Sí' : 'No';
+    localStorage.setItem('gm_recurrentes_overrides', JSON.stringify(map));
+  } catch (e) {}
+}
+
+function reconciliarRecurrentesConOverrides(rows) {
+  const map = leerOverridesRecurrentes();
+  if (!map || !Object.keys(map).length) return rows;
+  (rows || []).forEach(r => {
+    if (esValorRecurrente(r[6])) return;
+    const key = getRecurrenteKey(r);
+    const keySinFecha = `*|${String(r[1]||'').trim().toLowerCase()}|${String(r[2]||'').trim().toLowerCase()}|${String(r[3]||'').trim().toLowerCase()}|${Math.round((parseFloat(r[4])||0)*100)}`;
+    if (map[key] !== undefined) {
+      r[6] = map[key];
+    } else if (map[keySinFecha] !== undefined) {
+      r[6] = map[keySinFecha];
+    }
+  });
+  return rows;
+}
+
+function actualizarCacheFinanzasLocal() {
+  try {
+    const cached = leerCacheModulo('finanzas') || {};
+    cached.historico = datosHistoricos;
+    guardarCacheModulo('finanzas', cached);
+  } catch (e) {}
+}
 
 // Modal de Edición Global
 let currentEditFormId = null;
@@ -4373,7 +4489,7 @@ async function cargarDatos(silencioso = false) {
     // Renderizado instantáneo desde caché local si existe
     const cachedFin = leerCacheModulo('finanzas');
     if (cachedFin && !datosCargados) {
-      datosHistoricos = cachedFin.historico || [];
+      datosHistoricos = reconciliarRecurrentesConOverrides(cachedFin.historico || []);
       fillSelect('categoria',   cachedFin.categorias);
       fillSelect('metodo_pago', cachedFin.metodos);
       tiposActivo = cachedFin.tiposActivo || [];
@@ -4385,7 +4501,7 @@ async function cargarDatos(silencioso = false) {
     }
 
     const finanzasReq = fetch(scriptURL).then(r => r.json()).then(data => {
-      datosHistoricos = data.historico || [];
+      datosHistoricos = reconciliarRecurrentesConOverrides(data.historico || []);
       fillSelect('categoria',   data.categorias);
       fillSelect('metodo_pago', data.metodos);
       tiposActivo = data.tiposActivo || [];
@@ -4833,7 +4949,7 @@ function renderTabla() {
     const cat      = row[3] || '—';
     const monto    = parseFloat(row[4]) || 0;
     const metodo   = row[5] || '—';
-    const esRec    = String(row[6] || '').toLowerCase() === 'sí' || String(row[6] || '').toLowerCase() === 'si';
+    const esRec    = esValorRecurrente(row[6]);
     const esGasto  = tipo === 'Gasto';
 
     const metaCat   = getCategoriaMeta(cat, i, !esGasto);
@@ -4842,7 +4958,7 @@ function renderTabla() {
       ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-500/15 text-rose-400 border border-rose-500/30 text-[10px] font-bold">▼ Gasto</span>`
       : `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold">▲ Ingreso</span>`;
     const recBadge  = esRec
-      ? `<span class="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded bg-indigo-500/15 text-indigo-300 border border-indigo-400/25 text-[9px] font-bold" title="Movimiento recurrente">🔄 Fijo</span>`
+      ? `<span class="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded bg-indigo-500/15 text-indigo-300 border border-indigo-400/25 text-[9px] font-bold" title="Movimiento recurrente">🔄 Recurrente</span>`
       : '';
 
     return `
@@ -4904,7 +5020,7 @@ function abrirModalEditar(globalIdx) {
   if (catVal) { if (!Array.from(editCat.options).find(o => o.value === catVal)) editCat.add(new Option(catVal,catVal)); editCat.value = catVal; }
   if (metVal) { if (!Array.from(editMet.options).find(o => o.value === metVal)) editMet.add(new Option(metVal,metVal)); editMet.value = metVal; }
   const editRec = document.getElementById("edit-recurrente");
-  if (editRec) editRec.checked = String(row[6] || "").toLowerCase() === "sí" || String(row[6] || "").toLowerCase() === "si";
+  if (editRec) editRec.checked = esValorRecurrente(row[6]);
   document.getElementById("modal-editar").classList.remove("hidden");
 }
 
@@ -4955,6 +5071,8 @@ async function guardarEdicion() {
   btn.innerHTML   = '<i class="fas fa-circle-notch fa-spin"></i> Guardando...';
   const anterior  = { fecha:row[0], tipo:row[1], concepto:row[2], categoria:row[3], monto:row[4], metodo:row[5], recurrente:row[6] };
   row[0]=fechaISO; row[1]=tipo; row[2]=concepto; row[3]=categoria; row[4]=monto; row[5]=metodo; row[6]=esRec;
+  guardarOverrideRecurrente(row, esRec === "Sí");
+  actualizarCacheFinanzasLocal();
   cerrarModalEditar();
   filtrarHistorial();
   showToast("Cambios guardados ✓", "ok");
@@ -4998,6 +5116,7 @@ async function confirmarEliminarMovimiento() {
   // Eliminar de todos los arrays
   const idxHistorico = datosHistoricos.indexOf(row);
   if (idxHistorico !== -1) datosHistoricos.splice(idxHistorico, 1);
+  actualizarCacheFinanzasLocal();
 
   filtrarHistorial(); // recalcula datosFiltrados y datosBuscados
   showToast('Movimiento eliminado', 'ok');
@@ -5036,7 +5155,7 @@ function actualizarResumen(datos) {
     } else {
       gasTotal += monto;
       catGas[cat] = (catGas[cat] || 0) + monto;
-      const esFijo = String(r[6] || '').toLowerCase() === 'sí' || String(r[6] || '').toLowerCase() === 'si';
+      const esFijo = esValorRecurrente(r[6]);
       if (esFijo) gasFijoTotal += monto;
     }
   });
@@ -5056,8 +5175,9 @@ function actualizarResumen(datos) {
   if (fijosLbl && varsLbl && fijosBar && varsBar) {
     const pctFijo = gasTotal > 0 ? Math.round((gasFijoTotal / gasTotal) * 100) : 0;
     const pctVar  = gasTotal > 0 ? (100 - pctFijo) : 0;
-    fijosLbl.textContent = `🔄 Fijos: ${pctFijo}% (${fmt(gasFijoTotal)})`;
-    varsLbl.textContent  = `⚡ Variables: ${pctVar}%`;
+    const gasVarTotal = Math.max(0, gasTotal - gasFijoTotal);
+    fijosLbl.textContent = `🔄 Recurrentes: ${pctFijo}% (${fmt(gasFijoTotal)})`;
+    varsLbl.textContent  = `⚡ Variables: ${pctVar}% (${fmt(gasVarTotal)})`;
     fijosBar.style.width = `${pctFijo}%`;
     varsBar.style.width  = `${pctVar}%`;
   }
@@ -5191,7 +5311,214 @@ function actualizarGraficos(datos) {
   renderTablaCategorias("tbody-cat-ingresos", cIng, true);
   renderPie('chartIngresos', cIng, PALETA_CATEGORIAS_INGRESO);
   
+  renderGastosRecurrentesChart(datos);
   renderBalanceTrend(datos);
+}
+
+function renderGastosRecurrentesChart(datos) {
+  let recTotal = 0, varTotal = 0;
+  let recCount = 0, varCount = 0;
+  const porMes = {};
+  const catPorTipo = {};
+
+  datos.forEach(r => {
+    if (r[1] !== 'Gasto') return;
+    const monto = parseFloat(r[4]) || 0;
+    if (monto <= 0) return;
+    const esRec = esValorRecurrente(r[6]);
+    const cat = r[3] || 'Sin categoría';
+
+    if (esRec) {
+      recTotal += monto;
+      recCount++;
+    } else {
+      varTotal += monto;
+      varCount++;
+    }
+
+    if (!catPorTipo[cat]) catPorTipo[cat] = { rec: 0, var: 0 };
+    if (esRec) catPorTipo[cat].rec += monto;
+    else       catPorTipo[cat].var += monto;
+
+    const f = new Date(r[0]);
+    if (!isNaN(f)) {
+      const mesKey = f.getFullYear() + '-' + String(f.getMonth() + 1).padStart(2, '0');
+      if (!porMes[mesKey]) porMes[mesKey] = { rec: 0, var: 0 };
+      if (esRec) porMes[mesKey].rec += monto;
+      else       porMes[mesKey].var += monto;
+    }
+  });
+
+  const totalGasto = recTotal + varTotal;
+  const pctRec = totalGasto > 0 ? Math.round((recTotal / totalGasto) * 100) : 0;
+  const pctVar = totalGasto > 0 ? (100 - pctRec) : 0;
+  const fmt = n => '$' + Math.abs(n).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+
+  const badgeEl = document.getElementById('rec-var-badge');
+  const centerValEl = document.getElementById('center-recurrentes-val');
+  const cardRecPct = document.getElementById('card-rec-pct');
+  const cardRecMonto = document.getElementById('card-rec-monto');
+  const cardRecCount = document.getElementById('card-rec-count');
+  const cardVarPct = document.getElementById('card-var-pct');
+  const cardVarMonto = document.getElementById('card-var-monto');
+  const cardVarCount = document.getElementById('card-var-count');
+
+  if (badgeEl) badgeEl.textContent = `Recurrentes ${pctRec}% · Variables ${pctVar}%`;
+  if (centerValEl) centerValEl.textContent = `${pctRec}%`;
+  if (cardRecPct) cardRecPct.textContent = `${pctRec}%`;
+  if (cardRecMonto) cardRecMonto.textContent = fmt(recTotal);
+  if (cardRecCount) cardRecCount.textContent = `${recCount} gasto${recCount !== 1 ? 's' : ''}`;
+  if (cardVarPct) cardVarPct.textContent = `${pctVar}%`;
+  if (cardVarMonto) cardVarMonto.textContent = fmt(varTotal);
+  if (cardVarCount) cardVarCount.textContent = `${varCount} gasto${varCount !== 1 ? 's' : ''}`;
+
+  // 1. Gráfico Dona (Recurrentes vs Variables)
+  const pieCanvas = document.getElementById('chartGastosRecurrentesPie');
+  if (pieCanvas) {
+    const ctxPie = pieCanvas.getContext('2d');
+    if (chartRecurrentesPieInst instanceof Chart) chartRecurrentesPieInst.destroy();
+
+    if (totalGasto <= 0) {
+      chartRecurrentesPieInst = new Chart(ctxPie, {
+        type: 'doughnut',
+        data: {
+          labels: ['Sin gastos en el período'],
+          datasets: [{ data: [1], backgroundColor: ['#1e293b'], borderWidth: 0 }]
+        },
+        options: { cutout: '72%', plugins: { legend: { display: false }, tooltip: { enabled: false } } }
+      });
+    } else {
+      chartRecurrentesPieInst = new Chart(ctxPie, {
+        type: 'doughnut',
+        data: {
+          labels: ['🔄 Recurrentes', '⚡ Variables'],
+          datasets: [{
+            data: [recTotal, varTotal],
+            backgroundColor: ['#6366f1', '#f43f5e'],
+            hoverBackgroundColor: ['#818cf8', '#fb7185'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          cutout: '72%',
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { boxWidth: 8, font: { size: 9, weight: 'bold', family: 'Space Grotesk' }, padding: 10, color: '#94a3b8' }
+            },
+            tooltip: {
+              callbacks: {
+                label: ctx => {
+                  const val = ctx.raw || 0;
+                  const pct = totalGasto ? ((val / totalGasto) * 100).toFixed(1) : 0;
+                  return ` $${val.toLocaleString('es-AR', { maximumFractionDigits: 0 })} (${pct}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // 2. Gráfico de Barras Apiladas (Por mes si hay varios meses, o por Categoría si es un solo mes)
+  const barCanvas = document.getElementById('chartGastosRecurrentesBar');
+  const barTitleEl = document.getElementById('chartRecurrentesBarTitle');
+  if (!barCanvas) return;
+  const ctxBar = barCanvas.getContext('2d');
+  if (chartRecurrentesBarInst instanceof Chart) chartRecurrentesBarInst.destroy();
+
+  const mesKeys = Object.keys(porMes).sort();
+  const mesNombres = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
+  let labels = [];
+  let dataRec = [];
+  let dataVar = [];
+
+  if (mesKeys.length > 1) {
+    if (barTitleEl) barTitleEl.textContent = 'Evolución Mensual: Recurrentes vs. Variables';
+    mesKeys.slice(-12).forEach(k => {
+      const [y, m] = k.split('-');
+      labels.push(`${mesNombres[parseInt(m) - 1]} ${String(y).slice(-2)}`);
+      dataRec.push(porMes[k].rec);
+      dataVar.push(porMes[k].var);
+    });
+  } else {
+    if (barTitleEl) barTitleEl.textContent = 'Desglose por Categoría: Recurrentes vs. Variables';
+    const topCats = Object.entries(catPorTipo)
+      .sort((a, b) => (b[1].rec + b[1].var) - (a[1].rec + a[1].var))
+      .slice(0, 7);
+
+    if (topCats.length === 0) {
+      labels = ['Sin datos'];
+      dataRec = [0];
+      dataVar = [0];
+    } else {
+      topCats.forEach(([cat, vals]) => {
+        labels.push(cat.length > 12 ? cat.slice(0, 11) + '…' : cat);
+        dataRec.push(vals.rec);
+        dataVar.push(vals.var);
+      });
+    }
+  }
+
+  chartRecurrentesBarInst = new Chart(ctxBar, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: '🔄 Recurrentes',
+          data: dataRec,
+          backgroundColor: 'rgba(99, 102, 241, 0.85)',
+          borderColor: '#6366f1',
+          borderWidth: 1,
+          borderRadius: 4
+        },
+        {
+          label: '⚡ Variables',
+          data: dataVar,
+          backgroundColor: 'rgba(244, 63, 94, 0.80)',
+          borderColor: '#f43f5e',
+          borderWidth: 1,
+          borderRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          labels: { usePointStyle: true, boxWidth: 8, font: { size: 10, family: 'Space Grotesk', weight: 'bold' }, color: '#94a3b8' }
+        },
+        tooltip: {
+          callbacks: {
+            label: c => ` ${c.dataset.label}: $${(c.raw || 0).toLocaleString('es-AR', { maximumFractionDigits: 0 })}`
+          }
+        }
+      },
+      scales: {
+        x: {
+          stacked: true,
+          ticks: { font: { size: 9, family: 'Space Grotesk', weight: 'bold' }, color: '#64748b' },
+          grid: { display: false }
+        },
+        y: {
+          stacked: true,
+          ticks: {
+            font: { size: 9, family: 'JetBrains Mono' },
+            color: '#64748b',
+            callback: v => '$' + v.toLocaleString('es-AR', { maximumFractionDigits: 0 })
+          },
+          grid: { color: 'rgba(51, 65, 85, 0.35)' }
+        }
+      }
+    }
+  });
 }
 
 function renderBalanceTrend(datos) {
@@ -5546,7 +5873,9 @@ document.getElementById('financeForm').addEventListener('submit', async e => {
       parseFloat(payload.monto), payload.metodo_pago,
       payload.recurrente ? 'Sí' : 'No'
     ];
+    guardarOverrideRecurrente(nuevoRow, Boolean(payload.recurrente));
     datosHistoricos.unshift(nuevoRow);
+    actualizarCacheFinanzasLocal();
 
     showToast('Registro guardado ✓', 'ok');
     e.target.reset();
