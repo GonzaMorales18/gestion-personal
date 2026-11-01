@@ -374,12 +374,8 @@
 
   /* ── 1. MODO OSCURO PRINCIPAL: OBSIDIAN GLASS ── */
   body {
-    background-color: #05070e !important;
-    background-image:
-      radial-gradient(ellipse 75% 55% at 15% -5%, rgba(99, 102, 241, 0.24), transparent 65%),
-      radial-gradient(ellipse 60% 50% at 88% 15%, rgba(16, 185, 129, 0.16), transparent 60%),
-      radial-gradient(ellipse 65% 55% at 22% 95%, rgba(236, 72, 153, 0.14), transparent 65%),
-      radial-gradient(ellipse 60% 50% at 82% 90%, rgba(139, 92, 246, 0.18), transparent 60%) !important;
+    background-color: #070a13 !important;
+    background-image: none !important;
     color: #f1f5f9 !important;
   }
 
@@ -389,9 +385,10 @@
     display: none !important;
   }
 
-  /* Contenedor principal */
+  /* Contenedor principal con fondo obsidian sólido (elimina halos o recuadros extraños en pestañas) */
+  #main-content-wrapper,
   body > div.md\:ml-64 {
-    background: transparent !important;
+    background: #080c17 !important;
     position: relative;
     z-index: 1;
   }
@@ -415,43 +412,46 @@
   main .bg-black,
   section.bg-black,
   div.bg-black:not(#overlay) {
-    background: linear-gradient(155deg, rgba(18, 25, 43, 0.94) 0%, rgba(10, 15, 28, 0.96) 100%) !important;
+    background: linear-gradient(155deg, rgba(17, 24, 39, 0.98) 0%, rgba(10, 15, 26, 0.99) 100%) !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-    border-color: rgba(255, 255, 255, 0.10) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
     box-shadow:
-      0 10px 26px -10px rgba(0, 0, 0, 0.55),
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.10) !important;
+      0 10px 26px -10px rgba(0, 0, 0, 0.65),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.08) !important;
   }
 
-  /* Halos cromáticos internos de cada tarjeta SIEMPRE visibles en Obsidian Glass (no sólo en hover) */
+  /* Halos cromáticos internos de cada tarjeta sutiles en hover (sin halos estáticos quemados en reposo) */
   html:not(.light-mode) .group > div.bg-gradient-to-br.opacity-0 {
-    opacity: 0.85 !important;
+    opacity: 0 !important;
   }
   html:not(.light-mode) .group:hover > div.bg-gradient-to-br.opacity-0 {
-    opacity: 1 !important;
+    opacity: 0.35 !important;
   }
   html.light-mode .group > div.bg-gradient-to-br.opacity-0 {
-    opacity: 0.45 !important;
+    opacity: 0 !important;
+  }
+  html.light-mode .group:hover > div.bg-gradient-to-br.opacity-0 {
+    opacity: 0.30 !important;
   }
   html:not(.light-mode) .from-green-900\/20 {
-    background-image: radial-gradient(120% 100% at 0% 0%, rgba(16, 185, 129, 0.25) 0%, rgba(16, 185, 129, 0.04) 55%, transparent 100%) !important;
+    background-image: radial-gradient(120% 100% at 0% 0%, rgba(16, 185, 129, 0.18) 0%, rgba(16, 185, 129, 0.03) 55%, transparent 100%) !important;
   }
   html:not(.light-mode) .from-emerald-900\/20 {
-    background-image: radial-gradient(120% 100% at 0% 0%, rgba(16, 185, 129, 0.25) 0%, rgba(16, 185, 129, 0.04) 55%, transparent 100%) !important;
+    background-image: radial-gradient(120% 100% at 0% 0%, rgba(16, 185, 129, 0.18) 0%, rgba(16, 185, 129, 0.03) 55%, transparent 100%) !important;
   }
   html:not(.light-mode) .from-blue-900\/20 {
-    background-image: radial-gradient(120% 100% at 0% 0%, rgba(99, 102, 241, 0.26) 0%, rgba(59, 130, 246, 0.05) 55%, transparent 100%) !important;
+    background-image: radial-gradient(120% 100% at 0% 0%, rgba(99, 102, 241, 0.18) 0%, rgba(59, 130, 246, 0.03) 55%, transparent 100%) !important;
   }
   html:not(.light-mode) .from-indigo-900\/20 {
-    background-image: radial-gradient(120% 100% at 0% 0%, rgba(99, 102, 241, 0.26) 0%, rgba(99, 102, 241, 0.05) 55%, transparent 100%) !important;
+    background-image: radial-gradient(120% 100% at 0% 0%, rgba(99, 102, 241, 0.18) 0%, rgba(99, 102, 241, 0.03) 55%, transparent 100%) !important;
   }
   html:not(.light-mode) .from-red-900\/20,
   html:not(.light-mode) .from-rose-900\/20 {
-    background-image: radial-gradient(120% 100% at 0% 0%, rgba(244, 63, 94, 0.25) 0%, rgba(244, 63, 94, 0.04) 55%, transparent 100%) !important;
+    background-image: radial-gradient(120% 100% at 0% 0%, rgba(244, 63, 94, 0.18) 0%, rgba(244, 63, 94, 0.03) 55%, transparent 100%) !important;
   }
   html:not(.light-mode) .from-violet-900\/20 {
-    background-image: radial-gradient(120% 100% at 0% 0%, rgba(139, 92, 246, 0.26) 0%, rgba(139, 92, 246, 0.05) 55%, transparent 100%) !important;
+    background-image: radial-gradient(120% 100% at 0% 0%, rgba(139, 92, 246, 0.18) 0%, rgba(139, 92, 246, 0.03) 55%, transparent 100%) !important;
   }
   html:not(.light-mode) .from-yellow-900\/20,
   html:not(.light-mode) .from-amber-900\/10 {
@@ -924,6 +924,7 @@
     #modal-editar-op > div,
     #modal-editar-ahorro > div,
     #modal-ia > div.relative,
+    #modal-ia-listas > div.relative,
     #modal-anual > div.relative,
     #modal-cotizaciones > div,
     #modal-fallidos > div,
@@ -1016,10 +1017,10 @@
       <i class="fas fa-chart-line w-6 text-sm shrink-0"></i>
       <span class="sidebar-label font-bold text-sm uppercase tracking-wider">Balance</span>
     </a>
-    <a href="#" onclick="showSection('ahorros')" id="nav-ahorros" title="Ahorros"
+    <a href="#" onclick="showSection('ahorros')" id="nav-ahorros" title="Inversiones"
        class="flex items-center px-6 py-3.5 text-slate-400 hover:bg-slate-800 border-l-4 border-transparent transition-colors">
       <i class="fas fa-piggy-bank w-6 text-sm shrink-0"></i>
-      <span class="sidebar-label font-bold text-sm uppercase tracking-wider">Ahorros</span>
+      <span class="sidebar-label font-bold text-sm uppercase tracking-wider">Inversiones</span>
     </a>
     <a href="#" onclick="showSection('sueldos')" id="nav-sueldos" title="Sueldos"
        class="flex items-center px-6 py-3.5 text-slate-400 hover:bg-slate-800 border-l-4 border-transparent transition-colors">
@@ -1208,7 +1209,7 @@
       </div>
       <!-- /Tarjeta Finanzas -->
 
-      <!-- Tarjeta Ahorros -->
+      <!-- Tarjeta Inversiones -->
       <div onclick="showSection('ahorros')"
            id="card-inicio-ahorros"
            class="group bg-black rounded-2xl border border-slate-700/60 p-4 xl:p-5 cursor-pointer
@@ -1223,7 +1224,7 @@
             <div class="w-8 h-8 rounded-xl bg-violet-900/50 flex items-center justify-center">
               <i class="fas fa-piggy-bank text-violet-500 text-xs"></i>
             </div>
-            <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Ahorros</span>
+            <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Inversiones</span>
           </div>
           <div class="flex items-center gap-1 text-slate-500 group-hover:text-violet-400 transition-colors">
             <span class="text-[9px] font-bold uppercase tracking-widest hidden sm:block">Ver más</span>
@@ -1231,7 +1232,7 @@
           </div>
         </div>
 
-        <!-- Total Ahorros ARS -->
+        <!-- Total Inversiones ARS -->
         <div class="relative">
           <p class="text-[9px] font-bold text-white uppercase tracking-widest mb-1">Total en ARS</p>
           <h3 id="inicio-ahorros-ars" class="text-2xl font-black mono tracking-tighter text-white"><span class="skeleton w-32 h-8">&nbsp;</span></h3>
@@ -1248,9 +1249,12 @@
           <p class="text-[9px] font-bold text-white uppercase tracking-widest">Total en USD</p>
           <p id="inicio-ahorros-usd" class="text-xs font-black mono text-green-400 tracking-tight"><span class="skeleton w-20 h-4">&nbsp;</span></p>
         </div>
-        <div class="mt-2.5 pt-2 border-t border-slate-800/70 flex items-center justify-between text-[9px] font-bold text-slate-400">
-          <span>Cotización en vivo</span>
-          <span id="inicio-ahorros-tc-pill" class="mono text-violet-300 font-black">USD $—</span>
+        <div id="inicio-ahorros-interes-anual-row" class="mt-2.5 pt-2 border-t border-slate-800/70 flex items-center justify-between text-[9px] font-bold">
+          <span class="text-slate-400 flex items-center gap-1">
+            <i class="fas fa-chart-line text-emerald-400 text-[8px]"></i>
+            <span>Interés anual</span>
+          </span>
+          <span id="inicio-ahorros-interes-anual" class="mono text-emerald-300 font-black">+0.0% anual</span>
         </div>
       </div>
       <!-- /Tarjeta Ahorros -->
@@ -1506,6 +1510,10 @@
                 <input id="inicio-mis-tareas-input" type="text" placeholder="Agregar recordatorio a Mis tareas..."
                        onkeydown="if(event.key==='Enter'){event.preventDefault(); agregarTareaRapidaDesdeInicio(this);}"
                        class="w-full bg-transparent text-[11px] text-slate-200 placeholder-slate-500 outline-none">
+                <button type="button" onclick="abrirModalIAListas()" title="Asistente de IA para Listas"
+                        class="w-7 h-7 rounded-lg bg-purple-600/80 hover:bg-purple-600 text-white flex items-center justify-center shrink-0 text-[10px] transition-colors shadow-sm">
+                  <i class="fas fa-wand-magic-sparkles"></i>
+                </button>
               </div>
             </div>
           </div>
@@ -2363,7 +2371,7 @@
   </main>
 
 
-  <!-- SECCIÓN AHORROS -->
+  <!-- SECCIÓN INVERSIONES -->
   <main id="section-ahorros" class="hidden p-4 md:p-8 max-w-[1400px] mx-auto w-full space-y-6">
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
@@ -2376,7 +2384,7 @@
               <div class="w-7 h-7 rounded-xl bg-violet-900/50 border border-violet-500/30 flex items-center justify-center">
                 <i class="fas fa-piggy-bank text-violet-400 text-xs"></i>
               </div>
-              <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Registrar Ahorro</h3>
+              <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Registrar Inversión</h3>
             </div>
           </div>
           <!-- Tabs -->
@@ -2410,12 +2418,14 @@
               </select>
             </div>
 
-            <div id="ah-ticker-group" class="space-y-1.5" style="display:none">
-              <label class="text-[10px] font-bold text-white uppercase ml-1">Ticker <span class="text-slate-500">(ej: GGAL, YPFD)</span></label>
+            <div id="ah-ticker-group" class="space-y-1.5">
+              <label id="ah-ticker-label" class="text-[10px] font-bold text-white uppercase ml-1">
+                Ticker / Símbolo <span id="ah-ticker-hint" class="text-slate-500 font-normal">(ej: KO, AAPL, USD, BTC)</span>
+              </label>
               <div class="flex gap-2">
-                <input type="text" id="ah-ticker" placeholder="GGAL" oninput="resetTickerStatus()"
+                <input type="text" id="ah-ticker" placeholder="Ej: KO, USD, BTC" oninput="resetTickerStatus()"
                        class="flex-1 h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-sm text-white uppercase font-bold tracking-widest">
-                <button type="button" onclick="buscarTicker()" id="btn-buscar-ticker"
+                <button type="button" onclick="buscarTicker()" id="btn-buscar-ticker" title="Buscar cotización"
                         class="h-11 px-4 bg-black text-white rounded-xl text-[11px] font-bold uppercase hover:bg-violet-600 transition-colors">
                   <i class="fas fa-search"></i>
                 </button>
@@ -2424,11 +2434,28 @@
             </div>
 
             <div class="space-y-1.5">
-              <label class="text-[10px] font-bold text-white uppercase ml-1">Activo / Descripción</label>
-              <input type="text" id="ah-descripcion" list="ah-descripcion-list"
-                     placeholder="Escribí el nombre del activo..."
-                     class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-sm text-white">
-              <datalist id="ah-descripcion-list"></datalist>
+              <label class="text-[10px] font-bold text-white uppercase ml-1 flex items-center justify-between">
+                <span>Plataforma</span>
+                <span class="text-[9px] text-slate-500 font-normal">Broker / Exchange / Banco</span>
+              </label>
+              <input type="text" id="ah-plataforma" list="ah-plataforma-list"
+                     placeholder="Ej: Balanz, IOL, Binance, Cocos..."
+                     class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-sm text-white font-bold">
+              <datalist id="ah-plataforma-list">
+                <option value="Balanz"></option>
+                <option value="IOL (InvertirOnline)"></option>
+                <option value="Binance"></option>
+                <option value="Cocos Capital"></option>
+                <option value="Bull Market"></option>
+                <option value="Lemon Cash"></option>
+                <option value="Buenbit"></option>
+                <option value="Belo"></option>
+                <option value="Santander"></option>
+                <option value="Galicia"></option>
+                <option value="BBVA"></option>
+                <option value="Brubank"></option>
+                <option value="Efectivo"></option>
+              </datalist>
             </div>
 
             <div class="space-y-1.5">
@@ -2457,7 +2484,7 @@
 
             <button type="submit" id="btn-guardar-ahorro"
                     class="w-full bg-green-600 hover:opacity-90 text-white font-black py-4 rounded-xl border border-white/20 active:scale-95 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest mt-2">
-              <i class="fas fa-save"></i><span>Registrar</span>
+              <i class="fas fa-save"></i><span>Registrar Inversión</span>
             </button>
           </form>
         </div>
@@ -2514,102 +2541,206 @@
 
         <!-- Tarjetas resumen -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+          <!-- Tarjeta 1: Total en ARS -->
+          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between h-full">
             <div class="absolute inset-0 bg-gradient-to-br from-violet-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
-            <div class="flex items-center justify-between mb-5 relative z-10">
-              <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-xl bg-violet-900/50 flex items-center justify-center">
-                  <i class="fas fa-wallet text-violet-400 text-xs"></i>
+            <div class="relative z-10">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-lg bg-violet-900/50 flex items-center justify-center">
+                    <i class="fas fa-wallet text-violet-400 text-xs"></i>
+                  </div>
+                  <span class="text-[10px] font-black text-white uppercase tracking-[0.18em]">Total en ARS</span>
                 </div>
-                <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Total en ARS</span>
+              </div>
+              <h4 id="ah-total-ars" class="text-3xl font-black text-white mono tracking-tighter transition-all duration-300 leading-tight">$—</h4>
+              <div class="h-6 flex items-center mt-1">
+                <p id="ah-ars-sub" class="text-[10px] text-violet-400 font-bold truncate" title="Rendimiento sobre invertido">—</p>
               </div>
             </div>
-            <div class="relative z-10">
-              <h4 id="ah-total-ars" class="text-3xl font-black text-white mono tracking-tighter transition-all duration-300">$—</h4>
-              <p id="ah-ars-sub" class="text-[10px] text-violet-400 font-bold mt-1.5">—</p>
+            <div id="ah-ars-interes-row" class="relative z-10 mt-3 pt-2.5 border-t border-slate-800/90 flex items-center justify-between text-[10px]">
+              <span class="text-slate-400 text-[9px] font-bold uppercase tracking-wider flex items-center gap-1">
+                <i class="fas fa-chart-line text-emerald-400 text-[8px]"></i> Interés anual
+              </span>
+              <span id="ah-interes-anual-val" class="mono font-black text-emerald-400 whitespace-nowrap">+0.0% anual</span>
             </div>
           </div>
-          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+
+          <!-- Tarjeta 2: Total en USD -->
+          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between h-full">
             <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
-            <div class="flex items-center justify-between mb-5 relative z-10">
-              <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-xl bg-emerald-900/50 flex items-center justify-center">
-                  <i class="fas fa-dollar-sign text-emerald-400 text-xs"></i>
+            <div class="relative z-10">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-lg bg-emerald-900/50 flex items-center justify-center">
+                    <i class="fas fa-dollar-sign text-emerald-400 text-xs"></i>
+                  </div>
+                  <span class="text-[10px] font-black text-white uppercase tracking-[0.18em]">Total en USD</span>
                 </div>
-                <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Total en USD</span>
+              </div>
+              <h4 id="ah-total-usd" class="text-3xl font-black text-emerald-300 mono tracking-tighter transition-all duration-300 leading-tight">U$S —</h4>
+              <div class="h-6 flex items-center mt-1">
+                <p id="ah-usd-sub" class="text-[10px] text-emerald-400/80 font-bold truncate" title="Rendimiento en USD">—</p>
               </div>
             </div>
-            <div class="relative z-10">
-              <h4 id="ah-total-usd" class="text-3xl font-black text-emerald-300 mono tracking-tighter transition-all duration-300">U$S —</h4>
-              <p id="ah-usd-sub" class="text-[10px] text-emerald-400/80 font-bold mt-1.5">—</p>
+            <div id="ah-usd-interes-row" class="relative z-10 mt-3 pt-2.5 border-t border-slate-800/90 flex items-center justify-between text-[10px]">
+              <span class="text-slate-400 text-[9px] font-bold uppercase tracking-wider flex items-center gap-1">
+                <i class="fas fa-chart-line text-emerald-400 text-[8px]"></i> Interés anual
+              </span>
+              <span id="ah-interes-anual-usd-val" class="mono font-black text-emerald-400 whitespace-nowrap">+0.0% anual</span>
             </div>
           </div>
-          <div id="card-ah-pnl" class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+
+          <!-- Tarjeta 3: P&L Realizado -->
+          <div id="card-ah-pnl" class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between h-full">
             <div class="absolute inset-0 bg-gradient-to-br from-indigo-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
-            <div class="flex items-center justify-between mb-5 relative z-10">
-              <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-xl bg-indigo-900/50 flex items-center justify-center">
-                  <i class="fas fa-chart-line text-indigo-500 text-xs"></i>
+            <div class="relative z-10">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-lg bg-indigo-900/50 flex items-center justify-center">
+                    <i class="fas fa-chart-line text-indigo-400 text-xs"></i>
+                  </div>
+                  <span class="text-[10px] font-black text-white uppercase tracking-[0.18em]">P&L Realizado</span>
                 </div>
-                <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">P&L Realizado</span>
+              </div>
+              <h4 id="ah-pnl-total" class="text-3xl font-black mono tracking-tighter text-slate-400 transition-all duration-300 leading-tight">$—</h4>
+              <div class="h-6 flex items-center mt-1">
+                <p id="ah-pnl-sub" class="text-[10px] text-slate-400 font-bold truncate">0 ventas realizadas</p>
               </div>
             </div>
-            <div class="relative z-10">
-              <h4 id="ah-pnl-total" class="text-3xl font-black mono tracking-tighter text-slate-400 transition-all duration-300">$—</h4>
-              <p id="ah-pnl-sub" class="text-[10px] text-slate-400 mt-1.5">Total de ventas</p>
+            <div id="ah-pnl-bottom-row" class="relative z-10 mt-3 pt-2.5 border-t border-slate-800/90 flex items-center justify-between text-[10px]">
+              <span class="text-slate-400 text-[9px] font-bold uppercase tracking-wider flex items-center gap-1">
+                <i class="fas fa-coins text-indigo-400 text-[8px]"></i> Resultado ARS
+              </span>
+              <span id="ah-pnl-ars-val" class="mono font-black text-slate-400">$0</span>
             </div>
           </div>
-          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+
+          <!-- Tarjeta 4: Cotizaciones -->
+          <div class="group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between h-full">
             <div class="absolute inset-0 bg-gradient-to-br from-violet-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
-            <div class="flex items-center justify-between mb-5 relative z-10">
-              <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-xl bg-violet-900/50 flex items-center justify-center">
-                  <i class="fas fa-exchange-alt text-violet-500 text-xs"></i>
-                </div>
-                <span class="text-[10px] font-black text-violet-400 uppercase tracking-[0.2em]">Cotizaciones</span>
-              </div>
-            </div>
             <div class="relative z-10">
-              <div id="ah-cotizaciones" class="space-y-1 mt-0">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-lg bg-violet-900/50 flex items-center justify-center">
+                    <i class="fas fa-exchange-alt text-violet-400 text-xs"></i>
+                  </div>
+                  <span class="text-[10px] font-black text-violet-300 uppercase tracking-[0.18em]">Cotizaciones</span>
+                </div>
+              </div>
+              <div id="ah-cotizaciones" class="h-14 flex flex-col justify-center">
                 <p class="text-[11px] text-slate-400 mono">Cargando...</p>
               </div>
+            </div>
+            <div id="ah-cotizaciones-bottom" class="relative z-10 mt-3 pt-2.5 border-t border-slate-800/90">
+              <button onclick="abrirModalCotizaciones()" class="w-full py-1.5 px-2 bg-violet-950/40 hover:bg-violet-900/50 border border-violet-700/40 hover:border-violet-600/60 rounded-xl flex items-center justify-between text-[9px] font-black text-violet-300 hover:text-white transition-all uppercase tracking-wider group">
+                <span class="flex items-center gap-1.5 truncate">
+                  <i class="fas fa-layer-group text-violet-400 text-[10px]"></i>
+                  <span class="truncate">Mercado &amp; CEDEARs</span>
+                </span>
+                <i class="fas fa-arrow-right text-[9px] transform group-hover:translate-x-1 transition-transform shrink-0 ml-1"></i>
+              </button>
             </div>
           </div>
         </div>
 
-        <!-- Gráfico y Desglose: Composición de Cartera -->
+        <!-- Gráficos y Desglose: Composición de Inversiones -->
         <div class="bg-black rounded-2xl border border-slate-700/60 overflow-hidden w-full">
           <div class="px-6 py-4 border-b border-slate-700/60 bg-slate-800/30 flex items-center justify-between flex-wrap gap-2">
             <div class="flex items-center gap-2.5">
               <i class="fas fa-chart-pie text-violet-400 text-xs"></i>
-              <h3 class="text-[10px] font-black text-violet-300 uppercase tracking-[0.2em]">Composición de Mi Cartera</h3>
+              <h3 class="text-[10px] font-black text-violet-300 uppercase tracking-[0.2em]">Composición de Inversiones</h3>
             </div>
             <span id="ah-composicion-badge" class="text-[9px] font-black mono px-2.5 py-0.5 rounded-full bg-violet-500/15 text-violet-300 border border-violet-400/30">0 activos · 100%</span>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-700/60">
-            <!-- Mitad izquierda: Gráfico de Torta -->
-            <div class="p-6 flex flex-col items-center justify-center">
-              <div class="chart-wrapper w-full max-w-[260px]">
-                <canvas id="chartAhorrosCartera" class="max-h-[210px]"></canvas>
+
+          <!-- Dos gráficos de torta lado a lado -->
+          <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-700/60 border-b border-slate-700/60 bg-slate-900/20">
+            <!-- Gráfico 1: Por Activo -->
+            <div class="p-5 flex flex-col items-center justify-center">
+              <div class="flex items-center gap-2 mb-2 self-start ml-2">
+                <span class="w-2 h-2 rounded-full bg-violet-400"></span>
+                <span class="text-[10px] font-black text-slate-300 uppercase tracking-wider">Por Activo</span>
+              </div>
+              <div class="chart-wrapper w-full max-w-[240px]">
+                <canvas id="chartAhorrosCartera" class="max-h-[190px]"></canvas>
                 <div class="chart-center-label" id="center-ahorros-cartera">
-                  <p class="text-[9px] text-slate-500 uppercase tracking-widest">Total Cartera</p>
-                  <p id="center-ahorros-val" class="text-base font-black text-white mono">$0</p>
-                  <p id="center-ahorros-usd" class="text-[10px] font-bold text-emerald-400 mono mt-0.5">U$S 0</p>
+                  <p class="text-[8px] text-slate-500 uppercase tracking-widest">Total Invertido</p>
+                  <p id="center-ahorros-val" class="text-sm font-black text-white mono">$0</p>
+                  <p id="center-ahorros-usd" class="text-[9px] font-bold text-emerald-400 mono mt-0.5">U$S 0</p>
                 </div>
               </div>
             </div>
-            <!-- Mitad derecha: Tabla porcentual con barras tipo Top Categoría -->
-            <div class="flex flex-col justify-between">
-              <table class="w-full text-sm">
+
+            <!-- Gráfico 2: Por Tipo de Activo -->
+            <div class="p-5 flex flex-col items-center justify-center">
+              <div class="flex items-center gap-2 mb-2 self-start ml-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span class="text-[10px] font-black text-slate-300 uppercase tracking-wider">Por Tipo de Activo</span>
+              </div>
+              <div class="chart-wrapper w-full max-w-[240px]">
+                <canvas id="chartAhorrosTipoActivo" class="max-h-[190px]"></canvas>
+                <div class="chart-center-label" id="center-ahorros-tipo">
+                  <p class="text-[8px] text-slate-500 uppercase tracking-widest">Diversificación</p>
+                  <p id="center-ahorros-tipo-val" class="text-sm font-black text-white mono">0</p>
+                  <p class="text-[9px] font-bold text-violet-400 mono mt-0.5">Tipos</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dos Tablas Porcentuales: Por Activo y Por Plataforma -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-700/60">
+            <!-- Tabla 1: Desglose por Activo / Ticker -->
+            <div class="flex flex-col">
+              <div class="px-5 py-2.5 min-h-[40px] bg-slate-800/40 border-b border-slate-700/60 flex items-center justify-between">
+                <span class="text-[10px] font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                  <i class="fas fa-layer-group text-violet-400 text-[10px]"></i> Desglose por Activo
+                </span>
+                <span id="ah-activos-count" class="text-[9px] font-black mono text-violet-400">0 activos</span>
+              </div>
+              <table class="w-full text-sm table-fixed">
+                <colgroup>
+                  <col class="w-[50%]">
+                  <col class="w-[28%]">
+                  <col class="w-[22%]">
+                </colgroup>
                 <thead>
-                  <tr class="bg-slate-800 border-b border-slate-700/60">
-                    <th class="px-4 py-3 text-[10px] text-left font-black text-white uppercase tracking-widest">Concepto / Activo</th>
-                    <th class="px-4 py-3 text-[10px] text-right font-black text-white uppercase tracking-widest">Total</th>
-                    <th class="px-4 py-3 text-[10px] text-right font-black text-white uppercase tracking-widest">Peso %</th>
+                  <tr class="h-9 bg-slate-800 border-b border-slate-700/60">
+                    <th class="px-4 py-2 text-[10px] text-left font-black text-white uppercase tracking-widest truncate">Concepto / Activo</th>
+                    <th class="px-4 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Total</th>
+                    <th class="px-4 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Peso %</th>
                   </tr>
                 </thead>
                 <tbody id="tbody-composicion-ahorros">
                   <tr><td colspan="3" class="text-center py-8 text-slate-500 text-xs">Sin activos en cartera</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Tabla 2: Desglose por Plataforma -->
+            <div class="flex flex-col">
+              <div class="px-5 py-2.5 min-h-[40px] bg-slate-800/40 border-b border-slate-700/60 flex items-center justify-between">
+                <span class="text-[10px] font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                  <i class="fas fa-landmark text-emerald-400 text-[10px]"></i> Distribución por Plataforma
+                </span>
+                <span id="ah-plataformas-count" class="text-[9px] font-black mono text-emerald-400">0 plataformas</span>
+              </div>
+              <table class="w-full text-sm table-fixed">
+                <colgroup>
+                  <col class="w-[50%]">
+                  <col class="w-[28%]">
+                  <col class="w-[22%]">
+                </colgroup>
+                <thead>
+                  <tr class="h-9 bg-slate-800 border-b border-slate-700/60">
+                    <th class="px-4 py-2 text-[10px] text-left font-black text-white uppercase tracking-widest truncate">Plataforma</th>
+                    <th class="px-4 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Total</th>
+                    <th class="px-4 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Peso %</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-plataformas-ahorros">
+                  <tr><td colspan="3" class="text-center py-8 text-slate-500 text-xs">Sin datos de plataformas</td></tr>
                 </tbody>
               </table>
             </div>
@@ -2618,11 +2749,14 @@
 
         <!-- Tabla portfolio -->
         <div class="bg-black rounded-2xl border border-slate-700/60 overflow-hidden">
-          <div class="px-6 py-4 border-b border-slate-700/60 flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
+          <div class="px-6 py-4 border-b border-slate-700/60 flex items-center justify-between flex-wrap gap-2">
+            <div class="flex items-center gap-2.5 flex-wrap">
               <i class="fas fa-Briefcase text-violet-400 text-xs hidden"></i>
               <i class="fas fa-layer-group text-violet-400 text-xs"></i>
-              <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Mis Activos</h3>
+              <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Mis Inversiones</h3>
+              <span id="ah-interes-anual-badge-header" class="hidden text-[10px] font-black mono px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                <i class="fas fa-chart-line text-[9px] mr-1"></i><span id="ah-interes-anual-header-txt">+0.0% anual</span>
+              </span>
             </div>
             <button onclick="actualizarCotizacionesAhorros(true)" id="btn-refrescar-ah"
                     class="h-8 px-3 rounded-xl bg-slate-900 border border-slate-700/80 flex items-center gap-1.5 text-[10px] font-black text-slate-300 hover:text-violet-300 hover:border-violet-500/50 transition-all uppercase tracking-wider">
@@ -2647,16 +2781,16 @@
                 <tr>
                   <td colspan="8" class="text-center py-12 text-slate-500 text-sm">
                     <i class="fas fa-piggy-bank text-3xl mb-3 block"></i>
-                    Sin activos cargados
+                    Sin inversiones cargadas
                   </td>
                 </tr>
               </tbody>
               <tfoot id="tfoot-ahorros" class="hidden">
                 <tr class="border-t-2 border-slate-700 bg-slate-800">
-                  <td colspan="5" class="px-5 py-3 text-[10px] font-black text-white uppercase tracking-widest">Total Portfolio</td>
+                  <td colspan="5" class="px-5 py-3 text-[10px] font-black text-white uppercase tracking-widest">Total Inversiones</td>
                   <td id="ah-footer-ars" class="px-5 py-3 text-right font-black text-white mono text-sm"></td>
                   <td id="ah-footer-usd" class="px-5 py-3 text-right font-black text-white mono text-sm"></td>
-                  <td></td>
+                  <td id="ah-footer-rend" class="px-2.5 py-3 text-right whitespace-nowrap"></td>
                 </tr>
               </tfoot>
             </table>
@@ -3452,9 +3586,9 @@
 
     <!-- Fila Superior Limpia: Buscador a la izquierda y Crear nueva lista a la derecha -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
-      <!-- Izquierda: Buscador de listas -->
-      <div class="lg:col-span-5">
-        <div class="relative">
+      <!-- Izquierda: Buscador de listas e IA -->
+      <div class="lg:col-span-5 flex items-center gap-2.5">
+        <div class="relative flex-1">
           <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
           <input id="keep-search-input" type="text" oninput="filtrarKeepUI()" placeholder="Buscar en tus listas..."
                  class="w-full h-12 pl-10 pr-9 bg-black border border-slate-700/70 rounded-2xl text-xs font-bold text-white placeholder-slate-500 outline-none focus:border-amber-500/70 transition-colors">
@@ -3462,6 +3596,10 @@
             <i class="fas fa-times text-xs"></i>
           </button>
         </div>
+        <button type="button" id="btn-ia-listas" onclick="abrirModalIAListas()" title="Asistente de IA para Listas"
+                class="h-12 px-4 rounded-2xl bg-purple-600 hover:bg-purple-500 text-white font-black text-xs uppercase tracking-wider flex items-center gap-2 border border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.35)] active:scale-95 transition-all shrink-0">
+          <i class="fas fa-wand-magic-sparkles"></i><span class="hidden sm:inline">IA</span>
+        </button>
       </div>
 
       <!-- Derecha: Crear nueva lista -->
@@ -4029,6 +4167,61 @@
 
 </div>
 
+<!-- MODAL IA LISTAS (GOOGLE TASKS) -->
+<div id="modal-ia-listas" class="fixed inset-0 z-[320] flex items-center justify-center p-4" style="display:none!important">
+  <div class="absolute inset-0 bg-black/75 backdrop-blur-sm" onclick="cerrarModalIAListas()"></div>
+  <div class="relative bg-black rounded-2xl shadow-2xl w-full max-w-lg flex flex-col overflow-hidden border border-purple-500/40 z-10">
+     <div class="px-6 py-5 border-b border-slate-700/60 flex items-center justify-between bg-purple-900/20">
+       <div class="flex items-center gap-2.5">
+         <div class="w-8 h-8 rounded-xl bg-purple-600/30 border border-purple-500/40 flex items-center justify-center text-purple-300">
+           <i class="fas fa-wand-magic-sparkles text-sm"></i>
+         </div>
+         <div>
+           <h3 class="font-black text-white uppercase tracking-widest text-sm">IA para Listas y Tareas</h3>
+           <p class="text-[10px] text-purple-300/80 font-medium">Agregar ítems o tildar tareas con lenguaje natural</p>
+         </div>
+       </div>
+       <button onclick="cerrarModalIAListas()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-800 hover:bg-slate-700 transition-colors text-slate-400 hover:text-white">
+         <i class="fas fa-times text-xs"></i>
+       </button>
+     </div>
+     <div class="p-6 space-y-4">
+       <p class="text-[11px] text-slate-400 font-bold leading-relaxed">
+         Escribe o dicta tu indicación (ej. <span class="text-purple-300">"En la lista Supermercado agregar yerba y café"</span> o <span class="text-purple-300">"Tildar comprar leche"</span>):
+       </p>
+       <div class="relative">
+         <textarea id="ia-listas-texto" rows="4"
+                   onkeydown="if((event.ctrlKey || event.metaKey) && event.key === 'Enter'){ event.preventDefault(); procesarTextoIAListas(); }"
+                   class="w-full p-4 bg-slate-800 border border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-purple-500/50 text-sm text-white resize-none"
+                   placeholder="Escribe aquí tu orden para las listas... (Ctrl+Enter para enviar)"></textarea>
+         <button type="button" id="btn-dictar-ia-listas" onclick="toggleDictadoIAListas()"
+                 title="Dictar por voz"
+                 class="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-slate-700 hover:bg-purple-600 text-slate-300 flex items-center justify-center transition-colors border border-slate-600">
+           <i class="fas fa-microphone"></i>
+         </button>
+       </div>
+       <div id="ia-listas-status" class="text-[10px] font-bold uppercase tracking-widest text-purple-400 hidden animate-pulse flex items-center gap-2">
+         <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+         <span>Escuchando tu voz...</span>
+       </div>
+       <div class="pt-1">
+         <button type="button" id="btn-procesar-ia-listas" onclick="procesarTextoIAListas()"
+                 class="w-full bg-purple-600 hover:bg-purple-500 text-white font-black py-3 rounded-xl border border-white/20 active:scale-95 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest shadow-lg shadow-purple-600/30">
+           <i class="fas fa-microchip"></i><span id="ia-listas-btn-text">Procesar con IA</span>
+         </button>
+       </div>
+       <!-- Listas disponibles badges para orientación rápida -->
+       <div class="pt-3 border-t border-slate-800/80">
+         <p class="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-1.5">
+           <i class="fas fa-tags text-[9px] text-amber-400"></i>
+           <span>Listas disponibles (clic para incluir en el texto):</span>
+         </p>
+         <div id="ia-listas-disponibles-pills" class="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto pr-1"></div>
+       </div>
+     </div>
+  </div>
+</div>
+
 <!-- Modal Edición de Lista (Google Tasks) -->
 <div id="modal-keep-edit" onclick="if(event.target===this) guardarYCerrarModalKeep()" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[310] items-center justify-center p-4 overflow-y-auto">
   <div id="modal-keep-card" class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl my-auto transition-colors duration-200">
@@ -4216,25 +4409,54 @@
 
 <!-- Modal todas las cotizaciones -->
 <div id="modal-cotizaciones" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[300] flex items-center justify-center p-4">
-  <div class="bg-black border border-slate-700/80 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
-    <div class="px-6 py-4 border-b border-slate-700/80 bg-slate-900/60 flex items-center justify-between">
+  <div class="bg-black border border-slate-700/80 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[88vh] flex flex-col overflow-hidden">
+    <!-- Header -->
+    <div class="px-6 py-4 border-b border-slate-700/80 bg-slate-900/60 flex items-center justify-between flex-shrink-0">
       <div class="flex items-center gap-2.5">
         <div class="w-8 h-8 rounded-xl bg-violet-900/50 border border-violet-500/30 flex items-center justify-center">
-          <i class="fas fa-exchange-alt text-violet-400 text-xs"></i>
+          <i class="fas fa-chart-line text-violet-400 text-xs"></i>
         </div>
         <div>
-          <h3 class="font-black text-white text-sm uppercase tracking-wider">Cotizaciones</h3>
-          <p class="text-[10px] text-slate-400 mt-0.5" id="modal-cotizaciones-subtitle"></p>
+          <h3 class="font-black text-white text-sm uppercase tracking-wider">Cotizaciones de Mercado</h3>
+          <p class="text-[10px] text-slate-400 mt-0.5" id="modal-cotizaciones-subtitle">BYMA en vivo (Acciones &amp; CEDEARs), Dólares &amp; Cripto</p>
         </div>
       </div>
-      <button onclick="cerrarModalCotizaciones()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors">
-        <i class="fas fa-times text-sm"></i>
-      </button>
+      <div class="flex items-center gap-2">
+        <button onclick="actualizarCotizacionesAhorros(true)" class="h-8 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-violet-300 flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider transition-colors">
+          <i class="fas fa-sync-alt text-[10px]"></i> Actualizar
+        </button>
+        <button onclick="cerrarModalCotizaciones()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors">
+          <i class="fas fa-times text-sm"></i>
+        </button>
+      </div>
     </div>
-    <div id="modal-cotizaciones-lista" class="px-6 py-2 max-h-[60vh] overflow-y-auto"></div>
-    <div class="px-6 py-4 border-t border-slate-700/60 flex justify-end">
-      <button onclick="cerrarModalCotizaciones()"
-              class="h-9 px-5 bg-slate-800 text-slate-300 rounded-xl text-[11px] font-bold uppercase hover:bg-slate-700 transition-colors">
+
+    <!-- Buscador y Tabs de Filtro -->
+    <div class="px-6 pt-3 pb-2.5 bg-slate-900/40 border-b border-slate-800 flex-shrink-0 space-y-2.5">
+      <div class="relative">
+        <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+        <input type="text" id="filtro-cotizaciones-input" oninput="filtrarModalCotizaciones()"
+               placeholder="Buscar acción, CEDEAR o divisa (ej: GGAL, AAPL, YPFD, NVDA, Blue, MEP)..."
+               class="w-full h-10 pl-9 pr-4 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 font-medium">
+      </div>
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-[10px] font-bold">
+        <button onclick="setTabCotizaciones('todos')" id="tab-cot-todos" class="px-3 py-1.5 rounded-lg bg-violet-600 text-white border border-violet-500/50 transition-colors whitespace-nowrap">Todos</button>
+        <button onclick="setTabCotizaciones('dolar')" id="tab-cot-dolar" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Dólares &amp; Cripto</button>
+        <button onclick="setTabCotizaciones('acciones')" id="tab-cot-acciones" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Acciones BYMA</button>
+        <button onclick="setTabCotizaciones('cedears')" id="tab-cot-cedears" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">CEDEARs</button>
+        <button onclick="setTabCotizaciones('cartera')" id="tab-cot-cartera" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Mi Cartera</button>
+      </div>
+    </div>
+
+    <!-- Contenido Scrollable -->
+    <div id="modal-cotizaciones-lista" class="px-6 py-2 overflow-y-auto flex-1 divide-y divide-slate-800/60">
+      <p class="text-xs text-slate-400 py-6 text-center">Cargando cotizaciones...</p>
+    </div>
+
+    <!-- Footer -->
+    <div class="px-6 py-3 border-t border-slate-700/60 bg-slate-900/60 flex items-center justify-between text-[10px] text-slate-400 flex-shrink-0">
+      <span id="modal-cotizaciones-count" class="mono font-bold text-slate-400">0 cotizaciones</span>
+      <button onclick="cerrarModalCotizaciones()" class="h-8 px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-bold uppercase transition-colors">
         Cerrar
       </button>
     </div>
@@ -4406,8 +4628,8 @@
         </div>
       </div>
       <div class="space-y-1.5">
-        <label class="text-[10px] font-bold text-white uppercase ml-1">Activo</label>
-        <input type="text" id="op-edit-descripcion" list="op-edit-descripcion-list" class="w-full h-11 px-4 bg-slate-800 border border-slate-700 rounded-lg outline-none text-sm text-white">
+        <label class="text-[10px] font-bold text-white uppercase ml-1">Plataforma</label>
+        <input type="text" id="op-edit-descripcion" list="op-edit-descripcion-list" placeholder="Ej: Balanz, IOL, Binance" class="w-full h-11 px-4 bg-slate-800 border border-slate-700 rounded-lg outline-none text-sm text-white">
         <datalist id="op-edit-descripcion-list"></datalist>
       </div>
       <div class="grid grid-cols-2 gap-3">
@@ -4433,7 +4655,7 @@
     </div>
   </div>
 </div>
-<!-- Modal confirmar eliminación ahorro -->
+<!-- Modal confirmar eliminación inversión -->
 <div id="modal-confirm-delete-ahorro" class="hidden fixed inset-0 bg-black/70 z-[300] flex items-center justify-center p-4">
   <div class="bg-black rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
     <div class="px-6 py-5 border-b border-slate-700/60 flex items-center gap-3">
@@ -4441,7 +4663,7 @@
         <i class="fas fa-trash-alt text-red-400 text-xs"></i>
       </div>
       <div>
-        <h3 class="font-black text-white text-sm uppercase tracking-wider">Eliminar activo</h3>
+        <h3 class="font-black text-white text-sm uppercase tracking-wider">Eliminar Inversión</h3>
         <p id="confirm-delete-ahorro-desc" class="text-[12px] text-slate-400 mt-0.5">Esta acción no se puede deshacer.</p>
       </div>
     </div>
@@ -4452,12 +4674,12 @@
   </div>
 </div>
 
-<!-- Modal editar ahorro -->
+<!-- Modal editar inversión -->
 <div id="modal-editar-ahorro" class="hidden fixed inset-0 bg-black/70 z-[300] flex items-center justify-center p-4">
   <div class="bg-black rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
     <div class="px-6 py-5 border-b border-slate-700/60 flex items-center justify-between">
       <div>
-        <h3 class="font-black text-white text-sm uppercase tracking-wider">Editar Activo</h3>
+        <h3 class="font-black text-white text-sm uppercase tracking-wider">Editar Inversión</h3>
         <p class="text-[10px] text-slate-400 mt-0.5">Modificá los campos y guardá los cambios</p>
       </div>
       <button onclick="cerrarModalEditarAhorro()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-800 hover:bg-slate-700 transition-colors text-slate-400"><i class="fas fa-times text-xs"></i></button>
@@ -4474,8 +4696,8 @@
         </div>
       </div>
       <div class="space-y-1.5">
-        <label class="text-[10px] font-bold text-white uppercase ml-1">Activo</label>
-        <input type="text" id="ah-edit-descripcion" list="ah-edit-descripcion-list" class="w-full h-11 px-4 bg-slate-800 border border-slate-700 rounded-lg outline-none text-sm text-white">
+        <label class="text-[10px] font-bold text-white uppercase ml-1">Plataforma</label>
+        <input type="text" id="ah-edit-descripcion" list="ah-edit-descripcion-list" placeholder="Ej: Balanz, IOL, Binance" class="w-full h-11 px-4 bg-slate-800 border border-slate-700 rounded-lg outline-none text-sm text-white">
         <datalist id="ah-edit-descripcion-list"></datalist>
       </div>
       <div class="space-y-1.5">
@@ -4685,7 +4907,7 @@ const HEADER_MAP = {
   inicio:   { titulo: 'Inicio',    icono: 'fa-home'           },
   actividad:{ titulo: 'Actividad', icono: 'fa-heartbeat'      },
   finanzas: { titulo: 'Balance',  icono: 'fa-chart-line'     },
-  ahorros:  { titulo: 'Ahorros',   icono: 'fa-piggy-bank'     },
+  ahorros:  { titulo: 'Inversiones', icono: 'fa-piggy-bank'     },
   sueldos:  { titulo: 'Sueldos',   icono: 'fa-money-bill-wave'},
   tenis:    { titulo: 'Tenis',    icono: 'fa-table-tennis'  },
   partidos: { titulo: 'Partidos', icono: 'fa-futbol' },
@@ -4992,8 +5214,8 @@ function exportarCSV() {
       r.precioPromCompra || 0
     ].join(','));
     const csv  = [cabecera.join(','), ...filas].join('\n');
-    descargarCSV(csv, `ahorros_${new Date().toISOString().slice(0,10)}.csv`);
-    showToast(`${posiciones.length} activos exportados ✓`, 'ok');
+    descargarCSV(csv, `inversiones_${new Date().toISOString().slice(0,10)}.csv`);
+    showToast(`${posiciones.length} inversiones exportadas ✓`, 'ok');
     return;
   }
 
@@ -6520,6 +6742,7 @@ function cerrarModalAnual() {
 
 let isRecording = false;
 let recognition = null;
+let speechCaptured = false;
 
 if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -6532,6 +6755,9 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
     const transcript = event.results[0][0].transcript;
     const textArea = document.getElementById('ia-texto');
     textArea.value = (textArea.value + ' ' + transcript).trim();
+    if (transcript && transcript.trim()) {
+      speechCaptured = true;
+    }
   };
 
   recognition.onend = function() {
@@ -6539,10 +6765,20 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
     document.getElementById('ia-status').classList.add('hidden');
     document.getElementById('btn-dictar-ia').classList.remove('bg-red-600', 'text-white', 'border-red-500');
     document.getElementById('btn-dictar-ia').classList.add('bg-slate-700', 'text-slate-300', 'border-slate-600');
+    if (speechCaptured) {
+      speechCaptured = false;
+      const txt = document.getElementById('ia-texto');
+      if (txt && txt.value.trim()) {
+        setTimeout(() => {
+          procesarTextoIA();
+        }, 200);
+      }
+    }
   };
 
   recognition.onerror = function(event) {
     console.error('Speech recognition error', event.error);
+    speechCaptured = false;
     isRecording = false;
     document.getElementById('ia-status').classList.add('hidden');
     document.getElementById('btn-dictar-ia').classList.remove('bg-red-600', 'text-white', 'border-red-500');
@@ -6551,12 +6787,14 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
 }
 
 function abrirModalIA() {
+  speechCaptured = false;
   document.getElementById('modal-ia').style.setProperty('display', 'flex', 'important');
   document.body.style.overflow = 'hidden'; // Evitar scroll de fondo
   document.getElementById('ia-texto').focus();
 }
 
 function cerrarModalIA() {
+  speechCaptured = false;
   document.getElementById('modal-ia').style.setProperty('display', 'none', 'important');
   document.body.style.overflow = ''; // Restaurar scroll
   if (isRecording && recognition) {
@@ -6573,6 +6811,7 @@ function toggleDictadoIA() {
   if (isRecording) {
     recognition.stop();
   } else {
+    speechCaptured = false;
     recognition.start();
     isRecording = true;
     document.getElementById('ia-status').classList.remove('hidden');
@@ -6755,6 +6994,8 @@ document.addEventListener('keydown', e => {
     cerrarConfirmDeleteAhorro();
     cerrarConfirmDeleteOp();
     cerrarModalEditarOp();
+    cerrarModalIA();
+    cerrarModalIAListas();
   }
 });
 
@@ -6854,8 +7095,39 @@ function renderModalAnio(anio) {
 // MÓDULO AHORROS
 // ═══════════════════════════════════════════════════════════════════════════════
 let ahorrosData     = [];
-let cotizaciones    = { USD: null, BTC: null, BTC_USD: null, tickers: {}, tickerSymbol: {} };
+let cotizaciones    = { USD: null, USD_BLUE: null, USD_MEP: null, USD_CCL: null, BTC: null, BTC_USD: null, tickers: {}, tickerSymbol: {} };
+let marketData      = { stocks: {}, cedears: {}, dolares: [], tabActual: 'todos', filtroTexto: '', lastUpdated: null, loading: false };
 let ahorrosIniciado = false;
+
+// ─── HELPERS PARA RECONOCER ACTIVOS ──────────────────────────────────────────
+function isDolarActivo(a) {
+  if (!a) return false;
+  const tipo = (typeof a === 'string' ? a : (a.tipo || '')).toUpperCase();
+  const ticker = (typeof a === 'object' && a.ticker ? a.ticker : '').toUpperCase();
+  const desc = (typeof a === 'object' && (a.plataforma || a.descripcion) ? (a.plataforma || a.descripcion) : '').toUpperCase();
+  if (ticker === 'EUR' || ticker === 'BRL' || ticker === 'GBP') return false;
+  return tipo === 'USD' || ticker === 'USD' || (tipo.includes('DIVISA') && (ticker === 'USD' || !ticker)) || tipo.includes('DOLAR') || tipo.includes('DÓLAR') || desc.includes('DOLAR') || desc.includes('DÓLAR') || desc.includes('USD');
+}
+
+function isDivisaActivo(a) {
+  if (!a) return false;
+  const tipo = (typeof a === 'string' ? a : (a.tipo || '')).toUpperCase();
+  const ticker = (typeof a === 'object' && a.ticker ? a.ticker : '').toUpperCase();
+  return isDolarActivo(a) || tipo.includes('DIVISA') || ticker === 'EUR' || ticker === 'BRL' || ticker === 'GBP';
+}
+
+function isCriptoActivo(a) {
+  if (!a) return false;
+  const tipo = (typeof a === 'string' ? a : (a.tipo || '')).toUpperCase();
+  const ticker = (typeof a === 'object' && a.ticker ? a.ticker : '').toUpperCase();
+  return tipo === 'BTC' || tipo.includes('CRIPTO') || ticker === 'BTC' || ticker === 'ETH' || ticker === 'USDT' || ticker === 'SOL';
+}
+
+function tipoRequiereTicker(tipo) {
+  if (!tipo) return false;
+  const t = tipo.toUpperCase();
+  return t === 'ACCION' || t === 'ACCIÓN' || t === 'CEDEAR' || t === 'BONO';
+}
 
 async function iniciarAhorros() {
   if (ahorrosIniciado) return;
@@ -6888,23 +7160,118 @@ async function iniciarAhorros() {
   actualizarCotizacionesAhorros();
 }
 
+// ─── API PÚBLICA DE MERCADO: ACCIONES BYMA, CEDEARS Y DÓLARES ────────────────
+async function fetchMarketQuotes() {
+  if (marketData.loading) return;
+  marketData.loading = true;
+  try {
+    const [stocksRes, cedearsRes, dolaresRes, btcRes] = await Promise.allSettled([
+      fetch('https://data912.com/live/arg_stocks', { signal: AbortSignal.timeout(8000) }),
+      fetch('https://data912.com/live/arg_cedears', { signal: AbortSignal.timeout(8000) }),
+      fetch('https://dolarapi.com/v1/dolares', { signal: AbortSignal.timeout(8000) }),
+      fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT', { signal: AbortSignal.timeout(6000) })
+    ]);
+
+    // 1. Acciones BYMA (data912.com)
+    if (stocksRes.status === 'fulfilled' && stocksRes.value.ok) {
+      try {
+        const stocksArr = await stocksRes.value.json();
+        if (Array.isArray(stocksArr)) {
+          stocksArr.forEach(s => {
+            if (s && s.symbol) {
+              const sym = s.symbol.trim().toUpperCase();
+              marketData.stocks[sym] = s;
+              if (s.c && s.c > 0) {
+                cotizaciones.tickers[sym] = s.c;
+              }
+            }
+          });
+        }
+      } catch (e) { console.warn('Error procesando stocks BYMA:', e); }
+    }
+
+    // 2. CEDEARs (data912.com)
+    if (cedearsRes.status === 'fulfilled' && cedearsRes.value.ok) {
+      try {
+        const cedearsArr = await cedearsRes.value.json();
+        if (Array.isArray(cedearsArr)) {
+          cedearsArr.forEach(c => {
+            if (c && c.symbol) {
+              const sym = c.symbol.trim().toUpperCase();
+              marketData.cedears[sym] = c;
+              if (c.c && c.c > 0) {
+                cotizaciones.tickers[sym] = c.c;
+              }
+            }
+          });
+        }
+      } catch (e) { console.warn('Error procesando CEDEARs:', e); }
+    }
+
+    // 3. Dólares (DolarApi)
+    if (dolaresRes.status === 'fulfilled' && dolaresRes.value.ok) {
+      try {
+        const dolaresArr = await dolaresRes.value.json();
+        if (Array.isArray(dolaresArr)) {
+          marketData.dolares = dolaresArr;
+          dolaresArr.forEach(d => {
+            const casa = (d.casa || '').toLowerCase();
+            const venta = parseFloat(d.venta) || null;
+            if (casa === 'oficial') cotizaciones.USD = venta;
+            else if (casa === 'blue') cotizaciones.USD_BLUE = venta;
+            else if (casa === 'bolsa' || casa === 'mep') cotizaciones.USD_MEP = venta;
+            else if (casa === 'contadoconliqui' || casa === 'ccl') cotizaciones.USD_CCL = venta;
+          });
+        }
+      } catch (e) { console.warn('Error procesando Dólares:', e); }
+    }
+
+    // 4. BTC (Binance)
+    if (btcRes.status === 'fulfilled' && btcRes.value.ok) {
+      try {
+        const btcData = await btcRes.value.json();
+        cotizaciones.BTC_USD = parseFloat(btcData.price);
+        if (cotizaciones.USD) cotizaciones.BTC = cotizaciones.BTC_USD * cotizaciones.USD;
+      } catch (e) { console.warn('Error procesando BTC:', e); }
+    }
+
+    marketData.lastUpdated = new Date();
+  } catch (err) {
+    console.error('Error al actualizar cotizaciones de mercado:', err);
+  } finally {
+    marketData.loading = false;
+  }
+}
+
 async function actualizarCotizacionesAhorros(mostrarModal = false) {
   const iconR = document.getElementById('icon-refresh-ah');
   if (iconR) iconR.classList.add('spin');
-  await Promise.allSettled([fetchUSD(), fetchBTC(), fetchTickers()]);
+
+  await Promise.allSettled([fetchMarketQuotes(), fetchTickers()]);
+
   if (cotizaciones.BTC_USD && cotizaciones.USD) {
     cotizaciones.BTC = cotizaciones.BTC_USD * cotizaciones.USD;
   }
   guardarCacheModulo('cotizaciones', cotizaciones);
   renderCotizacionesBadge();
   renderTablaAhorros();
+  renderModalCotizaciones();
+
   if (iconR) iconR.classList.remove('spin');
   if (mostrarModal) {
     const fallidos = calcularPosicionesNetas()
-      .filter(a => tipoRequiereTicker(a.tipo) && !cotizaciones.tickers[a.ticker?.toUpperCase()])
+      .filter(a => {
+        if (!tipoRequiereTicker(a.tipo)) return false;
+        const sym = (a.ticker || '').toUpperCase();
+        return !cotizaciones.tickers[sym] && !marketData.cedears[sym]?.c && !marketData.stocks[sym]?.c;
+      })
       .map(a => a.ticker?.toUpperCase())
       .filter((v, i, arr) => v && arr.indexOf(v) === i);
-    mostrarModalFallidos(fallidos);
+    if (fallidos.length > 0) {
+      mostrarModalFallidos(fallidos);
+    } else {
+      showToast('Cotizaciones actualizadas en vivo ✓', 'ok');
+    }
   }
 }
 
@@ -6937,33 +7304,37 @@ async function fetchTickers() {
   const faltantes = tickersRaw.filter(t => !cotizaciones.tickers[t]);
   if (faltantes.length === 0) return;
 
-  // Consultar directo al Apps Script para los que faltan
+  // Consultar directo al Apps Script para los que no estén en data912
   await Promise.allSettled(faltantes.map(async t => {
     try {
       const url = `${scriptURL}?sheet=cotizacion&ticker=${encodeURIComponent(t)}`;
-      console.log('Consultando Apps Script para:', t, url);
       const r   = await fetch(url, { signal: AbortSignal.timeout(10000) });
       const d   = await r.json();
-      console.log('Respuesta Apps Script para', t, ':', d);
       if (d.precio && d.precio > 0) {
         cotizaciones.tickers[t] = d.precio;
-      } else {
-        console.warn('Apps Script devolvió precio 0 para', t);
       }
     } catch (err) {
-      console.error('Error al consultar Apps Script para', t, err);
+      console.warn('Apps Script cotización fallback falló para', t, err);
     }
   }));
 }
 
 async function fetchTickerPrecio(ticker) {
   const t = ticker.trim().toUpperCase();
+  // 1. Revisar si ya está en data912 (CEDEARs o Acciones)
+  if (marketData.cedears[t]?.c) {
+    cotizaciones.tickers[t] = marketData.cedears[t].c;
+    return true;
+  }
+  if (marketData.stocks[t]?.c) {
+    cotizaciones.tickers[t] = marketData.stocks[t].c;
+    return true;
+  }
+  // 2. Fallback Apps Script
   try {
     const url = `${scriptURL}?sheet=cotizacion&ticker=${encodeURIComponent(t)}`;
-    console.log('Consultando precio individual Apps Script para:', t, url);
     const r   = await fetch(url, { signal: AbortSignal.timeout(10000) });
     const d   = await r.json();
-    console.log('Respuesta individual Apps Script para', t, ':', d);
     if (d.precio && d.precio > 0) {
       cotizaciones.tickers[t] = d.precio;
       return true;
@@ -6975,87 +7346,295 @@ async function fetchTickerPrecio(ticker) {
 }
 
 function getPrecioARS(activo) {
-  const tipo = activo.tipo;
-  if (tipo === 'USD') return cotizaciones.USD || activo.precioManual || 1;
-  if (tipo === 'BTC') return cotizaciones.BTC || (activo.precioManual * (cotizaciones.USD || 1));
-  // Cualquier otro tipo con ticker: primero API, luego manual
-  return cotizaciones.tickers[activo.ticker?.toUpperCase()] || activo.precioManual || 0;
+  if (!activo) return 0;
+  if (isDolarActivo(activo)) {
+    return cotizaciones.USD || activo.precioPromCompra || activo.precioManual || activo.precioRef || 1;
+  }
+  if (isDivisaActivo(activo)) {
+    const t = (activo.ticker || '').toUpperCase();
+    if (t === 'EUR' && cotizaciones.EUR) return cotizaciones.EUR;
+    return activo.precioPromCompra || activo.precioManual || activo.precioRef || 1;
+  }
+  if (isCriptoActivo(activo)) {
+    if (cotizaciones.BTC) return cotizaciones.BTC;
+    const btcUsd = cotizaciones.BTC_USD || activo.precioManual;
+    return btcUsd ? btcUsd * (cotizaciones.USD || 1) : 0;
+  }
+  const t = (activo.ticker || '').trim().toUpperCase();
+  if (t) {
+    if (marketData.cedears[t]?.c) return marketData.cedears[t].c;
+    if (marketData.stocks[t]?.c) return marketData.stocks[t].c;
+    if (cotizaciones.tickers[t]) return cotizaciones.tickers[t];
+  }
+  return activo.precioPromCompra || activo.precioManual || activo.precioRef || 0;
 }
 
 function getPrecioUSD(activo) {
+  if (!activo) return null;
+  // REGLA FUNDAMENTAL: Para divisa dólar (USD), 1 USD siempre vale exactamente 1 USD
+  if (isDolarActivo(activo)) return 1;
+  if (isCriptoActivo(activo)) return cotizaciones.BTC_USD || null;
   const ars     = getPrecioARS(activo);
-  const usdRate = cotizaciones.USD;
-  if (activo.tipo === 'USD') return 1;
-  if (activo.tipo === 'BTC') return cotizaciones.BTC_USD || null;
+  const usdRate = cotizaciones.USD_MEP || cotizaciones.USD;
   if (!ars || !usdRate) return null;
   return ars / usdRate;
 }
 
 function renderCotizacionesBadge() {
   const el = document.getElementById('ah-cotizaciones');
-  const modalLista = document.getElementById('modal-cotizaciones-lista');
-  const modalSubtitle = document.getElementById('modal-cotizaciones-subtitle');
   if (!el) return;
-  const fmtARS = n => n != null ? '$' + n.toLocaleString('es-AR', { maximumFractionDigits: 0 }) : '—';
-  const fmtUSD = n => n != null ? 'U$S ' + n.toLocaleString('en-US', { maximumFractionDigits: 2 }) : '—';
+  const fmtARS = n => n != null ? '$' + Math.round(n).toLocaleString('es-AR') : '—';
+  const fmtUSD = n => n != null ? 'U$S ' + Math.round(n).toLocaleString('en-US') : '—';
 
-  let topHtml = '';
-  if (cotizaciones.USD != null) {
-    topHtml = `
-      <div class="flex items-center justify-between gap-2">
-        <span class="text-[10px] text-slate-400 font-bold truncate">USD Oficial</span>
-        <span class="mono text-[11px] text-white font-bold whitespace-nowrap">${fmtARS(cotizaciones.USD)}</span>
-      </div>`;
-  }
+  const usdOficial = cotizaciones.USD != null ? fmtARS(cotizaciones.USD) : '—';
+  const btcPrecio = cotizaciones.BTC_USD != null ? fmtUSD(cotizaciones.BTC_USD) : '—';
 
-  const filasRestantes = [];
-  if (cotizaciones.BTC_USD != null) {
-    filasRestantes.push({ label: 'BTC', valor: fmtUSD(cotizaciones.BTC_USD), id: null, info: 'API (CoinGecko)' });
-  }
+  el.innerHTML = `
+    <div class="space-y-1 py-0.5">
+      <div class="flex items-center justify-between text-xs py-1 border-b border-slate-800/60">
+        <div class="flex items-center gap-1.5 min-w-0">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0"></span>
+          <span class="text-slate-300 font-bold text-[11px] truncate">Dólar Of.</span>
+          <span class="text-[9px] text-slate-500 mono">Venta</span>
+        </div>
+        <span class="mono font-bold text-white text-[11px] whitespace-nowrap">${usdOficial}</span>
+      </div>
+      <div class="flex items-center justify-between text-xs py-1">
+        <div class="flex items-center gap-1.5 min-w-0">
+          <span class="w-1.5 h-1.5 rounded-full bg-yellow-400 flex-shrink-0"></span>
+          <span class="text-slate-300 font-bold text-[11px] truncate">Bitcoin</span>
+          <span class="text-[9px] text-slate-500 mono">Binance</span>
+        </div>
+        <span class="mono font-bold text-white text-[11px] whitespace-nowrap">${btcPrecio}</span>
+      </div>
+    </div>
+  `;
+}
 
-  const posiciones = calcularPosicionesNetas();
-  posiciones.forEach(p => {
-    if (!tipoRequiereTicker(p.tipo) || !p.ticker) return;
-    const t      = p.ticker.toUpperCase();
-    const precio = cotizaciones.tickers[t];
-    // Simple heuristic to show if manual or API: if it exactly matches precioManual and price != null, it might be manual,
-    // but the actual manual fallback sets it to cotizaciones.tickers[t]. Let's just assume IOL found it if it's > 0,
-    // or if the user used the modal it was updated manually.
-    const isManual = p.precioManual && p.precioManual === precio;
-    const label  = `${p.descripcion || t} (${t})`;
-    const info = precio == null ? 'Buscando...' : (isManual ? 'Ingresado manual' : 'API (Yahoo)');
-    filasRestantes.push({ label, valor: precio != null ? fmtARS(precio) : '⏳', id: t, info });
-  });
-
-  let out = topHtml;
-
-  if (filasRestantes.length > 0) {
-    if (modalLista) {
-      modalLista.innerHTML = filasRestantes.map(f => `
-        <div class="flex items-center justify-between py-3 border-b border-slate-800/50 last:border-0" ${f.id ? `id="cot-modal-${f.id}"` : ''}>
-          <div class="flex flex-col">
-            <span class="text-[12px] text-white font-bold">${f.label}</span>
-            <span class="text-[9px] ${f.info.includes('manual') ? 'text-amber-500' : 'text-green-500'} uppercase tracking-widest mt-0.5">${f.info}</span>
-          </div>
-          <span class="mono text-[14px] text-white font-black whitespace-nowrap">${f.valor}</span>
-        </div>`).join('');
-    }
-
-    out += `
-      <button onclick="document.getElementById('modal-cotizaciones').classList.remove('hidden')" class="w-full mt-3 flex items-center justify-between text-[9px] font-bold text-violet-400/80 hover:text-violet-300 transition-colors uppercase tracking-widest text-left">
-        <span>Ver más...</span>
-        <i class="fas fa-expand-arrows-alt"></i>
-      </button>`;
-  }
-
-  const timeStr = new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
-  out += `<p class="text-[9px] text-slate-500 mt-2">Actualizado: ${timeStr}</p>`;
-  if (modalSubtitle) modalSubtitle.textContent = `Actualizado: ${timeStr}`;
-  el.innerHTML = out;
+// ─── CONTROL DEL MODAL DE COTIZACIONES ─────────────────────────────────────────
+function abrirModalCotizaciones() {
+  const modal = document.getElementById('modal-cotizaciones');
+  if (modal) modal.classList.remove('hidden');
+  renderModalCotizaciones();
 }
 
 function cerrarModalCotizaciones() {
-  document.getElementById('modal-cotizaciones').classList.add('hidden');
+  const modal = document.getElementById('modal-cotizaciones');
+  if (modal) modal.classList.add('hidden');
+}
+
+function setTabCotizaciones(tab) {
+  marketData.tabActual = tab;
+  ['todos', 'dolar', 'acciones', 'cedears', 'cartera'].forEach(t => {
+    const btn = document.getElementById(`tab-cot-${t}`);
+    if (btn) {
+      if (t === tab) {
+        btn.className = 'px-3 py-1.5 rounded-lg bg-violet-600 text-white border border-violet-500/50 transition-colors whitespace-nowrap font-bold shadow-sm';
+      } else {
+        btn.className = 'px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap font-bold';
+      }
+    }
+  });
+  renderModalCotizaciones();
+}
+
+function filtrarModalCotizaciones() {
+  const input = document.getElementById('filtro-cotizaciones-input');
+  marketData.filtroTexto = (input?.value || '').trim().toLowerCase();
+  renderModalCotizaciones();
+}
+
+function renderModalCotizaciones() {
+  const lista = document.getElementById('modal-cotizaciones-lista');
+  const countEl = document.getElementById('modal-cotizaciones-count');
+  const subEl = document.getElementById('modal-cotizaciones-subtitle');
+  if (!lista) return;
+
+  const fmtARS = n => n != null ? '$' + Math.round(n).toLocaleString('es-AR') : '—';
+  const fmtUSD = n => n != null ? 'U$S ' + n.toLocaleString('en-US', { maximumFractionDigits: 2 }) : '—';
+
+  const tab = marketData.tabActual || 'todos';
+  const q = marketData.filtroTexto || '';
+  let items = [];
+
+  // 1. Dólares
+  if (tab === 'todos' || tab === 'dolar') {
+    (marketData.dolares || []).forEach(d => {
+      const nombre = d.nombre || d.casa;
+      if (q && !nombre.toLowerCase().includes(q) && !(d.casa || '').toLowerCase().includes(q)) return;
+      items.push({
+        tipo: 'Dólar',
+        badgeColor: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
+        symbol: nombre,
+        sub: `Compra: ${fmtARS(d.compra)} · Venta: ${fmtARS(d.venta)}`,
+        precio: fmtARS(d.venta),
+        rawPrecio: d.venta,
+        pct: null,
+        vol: null
+      });
+    });
+
+    if (cotizaciones.BTC_USD != null && (!q || 'btc bitcoin cripto'.includes(q))) {
+      items.push({
+        tipo: 'Cripto',
+        badgeColor: 'bg-yellow-500/15 text-yellow-300 border-yellow-500/30',
+        symbol: 'BTC (Bitcoin)',
+        sub: `Binance · ${fmtARS(cotizaciones.BTC)} ARS`,
+        precio: fmtUSD(cotizaciones.BTC_USD),
+        rawPrecio: cotizaciones.BTC_USD,
+        pct: null,
+        vol: null
+      });
+    }
+  }
+
+  // 2. Acciones BYMA
+  if (tab === 'todos' || tab === 'acciones') {
+    Object.values(marketData.stocks || {}).forEach(s => {
+      if (!s || !s.symbol) return;
+      if (q && !s.symbol.toLowerCase().includes(q)) return;
+      items.push({
+        tipo: 'Acción BYMA',
+        badgeColor: 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30',
+        symbol: s.symbol,
+        sub: s.v ? `Vol: ${Math.round(s.v).toLocaleString('es-AR')} ops` : 'Mercado BYMA',
+        precio: fmtARS(s.c),
+        rawPrecio: s.c,
+        pct: s.pct_change,
+        vol: s.v || 0
+      });
+    });
+  }
+
+  // 3. CEDEARs
+  if (tab === 'todos' || tab === 'cedears') {
+    Object.values(marketData.cedears || {}).forEach(c => {
+      if (!c || !c.symbol) return;
+      if (q && !c.symbol.toLowerCase().includes(q)) return;
+      items.push({
+        tipo: 'CEDEAR',
+        badgeColor: 'bg-violet-500/15 text-violet-300 border-violet-500/30',
+        symbol: c.symbol,
+        sub: c.v ? `Vol: ${Math.round(c.v).toLocaleString('es-AR')} ops` : 'CEDEAR BYMA',
+        precio: fmtARS(c.c),
+        rawPrecio: c.c,
+        pct: c.pct_change,
+        vol: c.v || 0
+      });
+    });
+  }
+
+  // 4. Mi Cartera
+  if (tab === 'cartera') {
+    const posiciones = calcularPosicionesNetas();
+    posiciones.forEach(p => {
+      const isDol = isDivisaActivo(p);
+      const isCr  = isCriptoActivo(p);
+      const sym   = isDol ? 'USD' : (isCr ? (p.ticker || 'BTC') : (p.ticker || p.tipo));
+      if (q && !sym.toLowerCase().includes(q) && !(p.plataforma || '').toLowerCase().includes(q)) return;
+      const pArs = getPrecioARS(p);
+      const mkt = marketData.cedears[sym.toUpperCase()] || marketData.stocks[sym.toUpperCase()];
+      items.push({
+        tipo: p.tipo,
+        badgeColor: isDol ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30',
+        symbol: sym.toUpperCase(),
+        sub: `${p.plataforma || p.descripcion || 'General'} · Cant: ${p.cantidad}`,
+        precio: isDol ? fmtARS(pArs) : (pArs ? fmtARS(pArs) : '—'),
+        rawPrecio: pArs,
+        pct: mkt?.pct_change != null ? mkt.pct_change : null,
+        vol: 0
+      });
+    });
+  }
+
+  // Ordenamiento: si es tab 'todos' o 'acciones'/'cedears', ordenar por volumen o los más populares primero
+  if (tab === 'todos' && !q) {
+    // En todos, poner dólares primero, luego acciones con mayor volumen y CEDEARs populares
+    const dolaresPart = items.filter(it => it.tipo === 'Dólar' || it.tipo === 'Cripto');
+    const resto = items.filter(it => it.tipo !== 'Dólar' && it.tipo !== 'Cripto')
+      .sort((a, b) => (b.vol || 0) - (a.vol || 0));
+    items = [...dolaresPart, ...resto.slice(0, 100)];
+  } else if (!q && (tab === 'acciones' || tab === 'cedears')) {
+    items.sort((a, b) => (b.vol || 0) - (a.vol || 0));
+  }
+
+  if (countEl) countEl.textContent = `${items.length} instrumentos`;
+  const timeStr = marketData.lastUpdated ? marketData.lastUpdated.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }) : '';
+  if (subEl && timeStr) subEl.textContent = `Precios en vivo BYMA & DólarApi (${timeStr})`;
+
+  if (!items.length) {
+    lista.innerHTML = `
+      <div class="py-12 text-center text-slate-500 text-xs">
+        <i class="fas fa-search text-2xl mb-2 block opacity-40"></i>
+        No se encontraron cotizaciones para "${q}"
+      </div>
+    `;
+    return;
+  }
+
+  lista.innerHTML = items.map(it => {
+    let pctBadge = '';
+    if (it.pct != null) {
+      const pos = it.pct >= 0;
+      pctBadge = `
+        <span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-[10px] font-black mono ${pos ? 'bg-emerald-500/15 text-emerald-300' : 'bg-rose-500/15 text-rose-300'}">
+          ${pos ? '▲ +' : '▼ '}${it.pct.toFixed(2)}%
+        </span>
+      `;
+    }
+
+    return `
+      <div class="flex items-center justify-between py-2.5 px-2 hover:bg-slate-800/40 rounded-xl transition-colors">
+        <div class="flex items-center gap-3 min-w-0">
+          <span class="px-2 py-0.5 rounded-full text-[9px] font-bold border ${it.badgeColor} whitespace-nowrap flex-shrink-0">${it.tipo}</span>
+          <div class="flex flex-col min-w-0">
+            <span class="text-xs font-black text-white truncate mono">${it.symbol}</span>
+            <span class="text-[10px] text-slate-400 truncate">${it.sub}</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="flex flex-col items-end">
+            <span class="mono text-sm font-black text-white whitespace-nowrap">${it.precio}</span>
+            ${pctBadge}
+          </div>
+          ${it.rawPrecio ? `
+            <button onclick="usarCotizacionEnFormulario('${it.symbol}', ${it.rawPrecio}, '${it.tipo}')" title="Cargar en formulario de inversión"
+                    class="h-7 px-2.5 bg-violet-600/30 hover:bg-violet-600 border border-violet-500/40 text-violet-300 hover:text-white rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all">
+              Usar
+            </button>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function usarCotizacionEnFormulario(symbol, precio, tipo) {
+  cerrarModalCotizaciones();
+  // Ir al form de compra
+  switchAhTab('compra');
+  const selTipo = document.getElementById('ah-tipo');
+  const inpTicker = document.getElementById('ah-ticker');
+  const inpPrecio = document.getElementById('ah-precio-manual');
+
+  if (tipo.includes('Dólar')) {
+    if (selTipo) selTipo.value = 'Divisa';
+    onAhTipoChange();
+    if (inpTicker) inpTicker.value = 'USD';
+  } else if (tipo.includes('Cripto')) {
+    if (selTipo) selTipo.value = 'Cripto';
+    onAhTipoChange();
+    if (inpTicker) inpTicker.value = 'BTC';
+  } else if (tipo.includes('CEDEAR') || tipo.includes('Acción')) {
+    if (selTipo) selTipo.value = tipo.includes('CEDEAR') ? 'CEDEAR' : 'Accion';
+    onAhTipoChange();
+    if (inpTicker) inpTicker.value = symbol;
+  }
+  if (inpPrecio) {
+    inpPrecio.value = precio;
+  }
+  calcularInversionPreview();
+  showToast(`Cotización cargada: ${symbol} a $${precio.toLocaleString('es-AR')}`, 'ok');
 }
 
 // Actualiza una sola línea de cotización desde el campo precio de venta
@@ -7076,16 +7655,20 @@ function actualizarCotizacionDesdeVenta() {
   }
 }
 
-// Poblar datalists con activos ya cargados
+// Poblar datalists con plataformas y activos cargados
 function actualizarDatalistActivos() {
-  const activos = [...new Set(
-    operacionesData.map(op => op.descripcion).filter(Boolean)
-  )].sort();
-  const ids = ['ah-descripcion-list', 'ah-edit-descripcion-list', 'op-edit-descripcion-list'];
+  const defaultPlataformas = [
+    'Balanz', 'IOL (InvertirOnline)', 'Binance', 'Cocos Capital',
+    'Bull Market', 'Lemon Cash', 'Buenbit', 'Belo',
+    'Santander', 'Galicia', 'BBVA', 'Brubank', 'Efectivo'
+  ];
+  const customPlats = operacionesData.map(op => (op.plataforma || op.descripcion)).filter(Boolean);
+  const todasPlataformas = [...new Set([...defaultPlataformas, ...customPlats])].sort();
+  const ids = ['ah-plataforma-list', 'op-edit-descripcion-list', 'ah-edit-descripcion-list', 'ah-descripcion-list'];
   ids.forEach(id => {
     const dl = document.getElementById(id);
     if (!dl) return;
-    dl.innerHTML = activos.map(a => `<option value="${a}">`).join('');
+    dl.innerHTML = todasPlataformas.map(p => `<option value="${p}">`).join('');
   });
 }
 
@@ -7096,16 +7679,20 @@ function calcularPosicionesNetas() {
   // Como operacionesData está newest-first, lo recorremos al revés
   for (let i = operacionesData.length - 1; i >= 0; i--) {
     const op = operacionesData[i];
-    const key = `${op.tipo}||${(op.ticker||'').toUpperCase()}||${op.descripcion||''}`;
+    const plat = (op.plataforma || op.descripcion || '').trim();
+    const key = `${op.tipo}||${(op.ticker||'').toUpperCase()}||${plat}`;
 
     if (!mapa[key]) {
       mapa[key] = {
         tipo: op.tipo,
         ticker: op.ticker || '',
-        descripcion: op.descripcion || '',
+        descripcion: plat,
+        plataforma: plat,
         cantidad: 0,
         precioRef: 0,
-        precioPromCompra: 0
+        precioPromCompra: 0,
+        fechaPrimerCompra: op.fecha || null,
+        fechaUltimaCompra: op.fecha || null
       };
     }
 
@@ -7122,6 +7709,8 @@ function calcularPosicionesNetas() {
         activo.precioPromCompra = ((cantPrevia * promPrevio) + (nuevaCant * nuevoPrecio)) / (cantPrevia + nuevaCant);
       }
       activo.precioRef = nuevoPrecio; // Último precio de compra se usa como ref manual
+      activo.fechaUltimaCompra = op.fecha || activo.fechaUltimaCompra;
+      if (!activo.fechaPrimerCompra && op.fecha) activo.fechaPrimerCompra = op.fecha;
     } else if (op.operacion === 'Venta') {
       activo.cantidad -= op.cantidad;
     }
@@ -7130,91 +7719,187 @@ function calcularPosicionesNetas() {
   return Object.values(mapa).filter(p => p.cantidad > 0.000001);
 }
 
-// Colores parametrizados por tipo/activo en Ahorros: USD = Verde dólar, BTC = Amarillo Bitcoin
+// Colores parametrizados por tipo/activo en Inversiones: USD = Verde dólar, BTC = Amarillo Bitcoin
 const COLORES_ACTIVOS_AHORRO = {
   USD: '#10b981', // Verde dólar
   BTC: '#eab308'  // Amarillo Bitcoin
 };
 const PALETA_OTROS_ACTIVOS_AHORRO = ['#6366f1', '#06b6d4', '#8b5cf6', '#ec4899', '#3b82f6', '#f43f5e', '#14b8a6', '#a855f7'];
 
+const COLORES_TIPOS_ACTIVO = {
+  USD: '#10b981',
+  BTC: '#eab308',
+  Accion: '#6366f1',
+  Bono: '#06b6d4',
+  CEDEAR: '#8b5cf6',
+  FCI: '#f97316',
+  Cripto: '#eab308'
+};
+const PALETA_FALLBACK_TIPOS = ['#ec4899', '#3b82f6', '#14b8a6', '#a855f7', '#f43f5e', '#84cc16'];
+const PALETA_PLATAFORMAS = ['#10b981', '#6366f1', '#06b6d4', '#f59e0b', '#ec4899', '#8b5cf6', '#3b82f6', '#14b8a6', '#f43f5e'];
+
 function getColorActivoAhorro(activo, index = 0) {
-  const tipo = (activo?.tipo || '').toUpperCase();
-  const ticker = (activo?.ticker || '').toUpperCase();
-  const desc = (activo?.descripcion || '').toUpperCase();
-  if (tipo === 'USD' || ticker === 'USD' || desc === 'USD' || desc.includes('DÓLAR') || desc.includes('DOLAR')) {
-    return COLORES_ACTIVOS_AHORRO.USD;
-  }
-  if (tipo === 'BTC' || ticker === 'BTC' || desc === 'BTC' || desc.includes('BITCOIN')) {
-    return COLORES_ACTIVOS_AHORRO.BTC;
-  }
+  if (!activo) return PALETA_OTROS_ACTIVOS_AHORRO[index % PALETA_OTROS_ACTIVOS_AHORRO.length];
+  if (isDolarActivo(activo)) return COLORES_ACTIVOS_AHORRO.USD;
+  if (isCriptoActivo(activo)) return COLORES_ACTIVOS_AHORRO.BTC;
+  const t = (activo.ticker || '').toUpperCase();
+  if (t === 'USD') return COLORES_ACTIVOS_AHORRO.USD;
+  if (t === 'BTC') return COLORES_ACTIVOS_AHORRO.BTC;
   return PALETA_OTROS_ACTIVOS_AHORRO[index % PALETA_OTROS_ACTIVOS_AHORRO.length];
 }
 
 function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
   const tbody = document.getElementById('tbody-composicion-ahorros');
+  const tbodyPlat = document.getElementById('tbody-plataformas-ahorros');
   const centerVal = document.getElementById('center-ahorros-val');
   const centerUsd = document.getElementById('center-ahorros-usd');
+  const centerTipoVal = document.getElementById('center-ahorros-tipo-val');
   const badge = document.getElementById('ah-composicion-badge');
+  const activosBadge = document.getElementById('ah-activos-count');
+  const platBadge = document.getElementById('ah-plataformas-count');
 
   const fmtARS = v => '$' + Math.round(v || 0).toLocaleString('es-AR', { maximumFractionDigits: 0 });
-  const fmtUSD = v => 'U$S ' + (v || 0).toLocaleString('en-US', { maximumFractionDigits: 2 });
+  const fmtUSD = v => 'U$S ' + (v || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   if (centerVal) centerVal.textContent = fmtARS(totalARS);
   if (centerUsd) centerUsd.textContent = fmtUSD(totalUSD);
 
   if (!enriquecidas || !enriquecidas.length || totalARS <= 0) {
+    if (centerTipoVal) centerTipoVal.textContent = '0';
     if (badge) badge.textContent = '0 activos · 0%';
+    if (activosBadge) activosBadge.textContent = '0 activos';
+    if (platBadge) platBadge.textContent = '0 plataformas';
     if (tbody) {
       tbody.innerHTML = '<tr><td colspan="3" class="text-center py-8 text-slate-500 text-xs">Sin activos en cartera</td></tr>';
     }
+    if (tbodyPlat) {
+      tbodyPlat.innerHTML = '<tr><td colspan="3" class="text-center py-8 text-slate-500 text-xs">Sin datos de plataformas</td></tr>';
+    }
     renderPie('chartAhorrosCartera', {}, PALETA_OTROS_ACTIVOS_AHORRO);
+    renderPie('chartAhorrosTipoActivo', {}, PALETA_FALLBACK_TIPOS);
     return;
   }
 
-  const tipoIcon = { USD: '💵', BTC: '₿', Accion: '📈', Bono: '📄' };
-  const sorted = [...enriquecidas]
+  const tipoIcon = {
+    USD: '💵', Divisa: '💵', Dólar: '💵', Dolar: '💵',
+    BTC: '₿', Cripto: '🪙',
+    Accion: '📈', 'Acción': '📈',
+    CEDEAR: '🌐',
+    Bono: '📄',
+    FCI: '📊'
+  };
+
+  // 1. Agrupar estrictamente POR ACTIVO / TICKER (sin dividir por plataforma)
+  const activosMap = {};
+  enriquecidas.forEach(a => {
+    const esDol = isDolarActivo(a);
+    const esCr  = isCriptoActivo(a);
+    let key = '';
+    let nombreActivo = '';
+    let icon = tipoIcon[a.tipo] || '💎';
+
+    if (esDol) {
+      key = 'USD';
+      nombreActivo = 'Dólar (USD)';
+      icon = '💵';
+    } else if (esCr) {
+      const sym = (a.ticker || 'BTC').toUpperCase();
+      key = sym;
+      nombreActivo = sym === 'BTC' ? 'Bitcoin (BTC)' : sym;
+      icon = '₿';
+    } else if (a.ticker) {
+      const sym = a.ticker.toUpperCase();
+      key = sym;
+      nombreActivo = sym;
+      if (a.tipo === 'CEDEAR') icon = '🌐';
+      else if (a.tipo === 'Accion' || a.tipo === 'Acción') icon = '📈';
+      else if (a.tipo === 'Bono') icon = '📄';
+    } else {
+      key = (a.tipo || 'OTRO').toUpperCase();
+      nombreActivo = a.tipo || 'Activo';
+    }
+
+    if (!activosMap[key]) {
+      activosMap[key] = {
+        key,
+        tipo: a.tipo,
+        ticker: a.ticker,
+        nombre: nombreActivo,
+        icon,
+        valorARS: 0,
+        valorUSD: 0,
+        cantidad: 0,
+        plataformas: new Set(),
+        rawActivo: a
+      };
+    }
+
+    activosMap[key].valorARS += (a.valorARS || 0);
+    activosMap[key].valorUSD += (a.valorUSD || 0);
+    activosMap[key].cantidad += (a.cantidad || 0);
+    const platName = (a.plataforma || a.descripcion || '').trim();
+    if (platName) activosMap[key].plataformas.add(platName);
+  });
+
+  const sortedActivos = Object.values(activosMap)
     .filter(a => (a.valorARS || 0) > 0)
     .sort((a, b) => (b.valorARS || 0) - (a.valorARS || 0));
 
   if (badge) {
-    const topItem = sorted[0];
+    const topItem = sortedActivos[0];
     const topPct = topItem && totalARS > 0 ? Math.round((topItem.valorARS / totalARS) * 100) : 0;
-    const topLabel = topItem ? (topItem.ticker ? topItem.ticker.toUpperCase() : (topItem.descripcion || topItem.tipo)) : '';
-    badge.textContent = `${sorted.length} activo${sorted.length !== 1 ? 's' : ''} · Mayor: ${topLabel} (${topPct}%)`;
+    const topLabel = topItem ? topItem.nombre : '';
+    badge.textContent = `${sortedActivos.length} activo${sortedActivos.length !== 1 ? 's' : ''} · Mayor: ${topLabel} (${topPct}%)`;
+  }
+  if (activosBadge) {
+    activosBadge.textContent = `${sortedActivos.length} activo${sortedActivos.length !== 1 ? 's' : ''}`;
   }
 
+  // 1. Gráfico y Desglose agrupado por Activo
   const pieObj = {};
   const pieColors = [];
 
-  const rowsHtml = sorted.map((a, i) => {
+  const rowsHtml = sortedActivos.map((a, i) => {
     const val = a.valorARS || 0;
     const pct = totalARS > 0 ? ((val / totalARS) * 100).toFixed(1) : '0.0';
     const barWidth = totalARS > 0 ? Math.min(100, (val / totalARS) * 100) : 0;
-    const color = getColorActivoAhorro(a, i);
-    const icon = tipoIcon[a.tipo] || '💎';
-    const tickerStr = (tipoRequiereTicker(a.tipo) && a.ticker) ? ` (${a.ticker.toUpperCase()})` : '';
-    const nombre = `${a.descripcion || a.tipo}${tickerStr}`;
+    const color = getColorActivoAhorro(a.rawActivo, i);
 
-    pieObj[nombre] = val;
+    pieObj[a.nombre] = val;
     pieColors.push(color);
 
-    const usdSub = a.valorUSD != null ? `<div class="text-[10px] font-bold text-emerald-400/80 mono mt-0.5">${fmtUSD(a.valorUSD)}</div>` : '';
+    const usdSub = a.valorUSD != null
+      ? `<div class="text-[10px] font-bold text-emerald-400/80 mono mt-0.5">${fmtUSD(a.valorUSD)}</div>`
+      : '<div class="text-[10px] text-transparent mono mt-0.5 select-none">&nbsp;</div>';
+
+    const platsArr = Array.from(a.plataformas);
+    let platBadgeHtml = '';
+    if (platsArr.length === 1) {
+      platBadgeHtml = `<div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 truncate"><i class="fas fa-landmark text-emerald-400/80 text-[9px] flex-shrink-0"></i><span class="truncate">${platsArr[0]}</span></div>`;
+    } else if (platsArr.length > 1) {
+      platBadgeHtml = `<div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 truncate" title="${platsArr.join(', ')}"><i class="fas fa-layer-group text-violet-400/80 text-[9px] flex-shrink-0"></i><span class="truncate">${platsArr.join(', ')}</span></div>`;
+    } else {
+      platBadgeHtml = `<div class="text-[10px] text-slate-500 flex items-center gap-1 mt-0.5"><i class="fas fa-wallet text-slate-500 text-[9px] flex-shrink-0"></i><span>General</span></div>`;
+    }
 
     return `<tr class="border-b border-slate-800 hover:bg-slate-800/60 transition-colors">
-      <td class="px-4 py-3 text-sm">
-        <div class="flex items-center gap-2.5">
-          <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background:${color};box-shadow:0 0 8px ${color}99"></span>
-          <span class="text-xs font-bold text-slate-200 truncate max-w-[180px]" title="${nombre}">${icon} ${nombre}</span>
-        </div>
-        <div class="mt-1.5 ml-5 h-1.5 bg-slate-800/90 rounded-full overflow-hidden">
-          <div class="h-full rounded-full transition-all duration-500" style="width:${barWidth}%;background:${color}"></div>
+      <td class="px-4 py-3 align-top">
+        <div class="flex items-start gap-2.5">
+          <span class="w-2.5 h-2.5 rounded-full flex-shrink-0 mt-1" style="background:${color};box-shadow:0 0 8px ${color}99"></span>
+          <div class="flex-1 min-w-0">
+            <span class="text-xs font-bold text-slate-200 truncate block" title="${a.nombre}">${a.icon} ${a.nombre}</span>
+            ${platBadgeHtml}
+            <div class="mt-2 h-1.5 w-full bg-slate-800/90 rounded-full overflow-hidden">
+              <div class="h-full rounded-full transition-all duration-500" style="width:${barWidth}%;background:${color}"></div>
+            </div>
+          </div>
         </div>
       </td>
-      <td class="px-4 py-3 text-sm text-right mono font-black text-white">
-        ${fmtARS(val)}
+      <td class="px-4 py-3 text-right align-top">
+        <div class="mono font-black text-white text-sm leading-tight">${fmtARS(val)}</div>
         ${usdSub}
       </td>
-      <td class="px-4 py-3 text-sm text-right">
+      <td class="px-4 py-3 text-right align-top">
         <span class="inline-block px-2 py-0.5 rounded-md text-[11px] font-black mono" style="background:${color}22;color:${color};border:1px solid ${color}44">${pct}%</span>
       </td>
     </tr>`;
@@ -7222,6 +7907,85 @@ function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
 
   if (tbody) tbody.innerHTML = rowsHtml;
   renderPie('chartAhorrosCartera', pieObj, pieColors);
+
+  // 2. Gráfico Por Tipo de Activo
+  const tiposMap = {};
+  enriquecidas.forEach(a => {
+    const t = a.tipo || 'Otro';
+    tiposMap[t] = (tiposMap[t] || 0) + (a.valorARS || 0);
+  });
+  const sortedTipos = Object.entries(tiposMap)
+    .filter(([, v]) => v > 0)
+    .sort((a, b) => b[1] - a[1]);
+
+  if (centerTipoVal) centerTipoVal.textContent = sortedTipos.length;
+
+  const pieTiposObj = {};
+  const pieTiposColors = [];
+  sortedTipos.forEach(([tipo, val], idx) => {
+    pieTiposObj[tipo] = val;
+    pieTiposColors.push(COLORES_TIPOS_ACTIVO[tipo] || PALETA_FALLBACK_TIPOS[idx % PALETA_FALLBACK_TIPOS.length]);
+  });
+  renderPie('chartAhorrosTipoActivo', pieTiposObj, pieTiposColors);
+
+  // 3. Tabla Desglose Por Plataforma
+  const platMap = {};
+  enriquecidas.forEach(a => {
+    const p = (a.plataforma || a.descripcion || 'General').trim() || 'General';
+    if (!platMap[p]) {
+      platMap[p] = { nombre: p, valorARS: 0, valorUSD: 0, count: 0 };
+    }
+    platMap[p].valorARS += (a.valorARS || 0);
+    platMap[p].valorUSD += (a.valorUSD || 0);
+    platMap[p].count += 1;
+  });
+
+  const sortedPlats = Object.values(platMap)
+    .filter(p => p.valorARS > 0)
+    .sort((a, b) => b.valorARS - a.valorARS);
+
+  if (platBadge) {
+    platBadge.textContent = `${sortedPlats.length} plataforma${sortedPlats.length !== 1 ? 's' : ''}`;
+  }
+
+  if (tbodyPlat) {
+    if (!sortedPlats.length) {
+      tbodyPlat.innerHTML = '<tr><td colspan="3" class="text-center py-8 text-slate-500 text-xs">Sin datos de plataformas</td></tr>';
+    } else {
+      tbodyPlat.innerHTML = sortedPlats.map((p, i) => {
+        const pct = totalARS > 0 ? ((p.valorARS / totalARS) * 100).toFixed(1) : '0.0';
+        const barWidth = totalARS > 0 ? Math.min(100, (p.valorARS / totalARS) * 100) : 0;
+        const color = PALETA_PLATAFORMAS[i % PALETA_PLATAFORMAS.length];
+        const usdSub = p.valorUSD > 0
+          ? `<div class="text-[10px] font-bold text-emerald-400/80 mono mt-0.5">${fmtUSD(p.valorUSD)}</div>`
+          : '<div class="text-[10px] text-transparent mono mt-0.5 select-none">&nbsp;</div>';
+        const subtext = `<div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 truncate"><i class="fas fa-layer-group text-violet-400/80 text-[9px] flex-shrink-0"></i><span>${p.count} activo${p.count !== 1 ? 's' : ''}</span></div>`;
+        return `<tr class="border-b border-slate-800 hover:bg-slate-800/60 transition-colors">
+          <td class="px-4 py-3 align-top">
+            <div class="flex items-start gap-2.5">
+              <span class="w-2.5 h-2.5 rounded-full flex-shrink-0 mt-1" style="background:${color};box-shadow:0 0 8px ${color}99"></span>
+              <div class="flex-1 min-w-0">
+                <span class="text-xs font-bold text-slate-200 truncate block" title="${p.nombre}">
+                  <i class="fas fa-landmark text-[10px] text-emerald-400 mr-1"></i>${p.nombre}
+                </span>
+                ${subtext}
+                <div class="mt-2 h-1.5 w-full bg-slate-800/90 rounded-full overflow-hidden">
+                  <div class="h-full rounded-full transition-all duration-500" style="width:${barWidth}%;background:${color}"></div>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="px-4 py-3 text-right align-top">
+            <div class="mono font-black text-white text-sm leading-tight">${fmtARS(p.valorARS)}</div>
+            ${usdSub}
+          </td>
+          <td class="px-4 py-3 text-right align-top">
+            <span class="inline-block px-2 py-0.5 rounded-md text-[11px] font-black mono" style="background:${color}22;color:${color};border:1px solid ${color}44">${pct}%</span>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+  }
 }
 
 function renderTablaAhorros() {
@@ -7234,15 +7998,30 @@ function renderTablaAhorros() {
 
   if (!posiciones.length) {
     tbody.innerHTML = `<tr><td colspan="8" class="text-center py-12 text-slate-500 text-sm">
-      <i class="fas fa-piggy-bank text-3xl mb-3 block"></i>Sin activos cargados</td></tr>`;
+      <i class="fas fa-piggy-bank text-3xl mb-3 block"></i>Sin inversiones cargadas</td></tr>`;
     tfoot.classList.add('hidden');
     document.getElementById('ah-total-ars').textContent = '$0';
-    document.getElementById('ah-total-usd').textContent = 'U$S0';
+    document.getElementById('ah-total-usd').textContent = 'U$S 0.00';
+    document.getElementById('ah-ars-sub').textContent = '0 activos en cartera';
+    document.getElementById('ah-usd-sub').textContent = 'Sin inversiones';
+    const elIntArs = document.getElementById('ah-interes-anual-val');
+    if (elIntArs) elIntArs.textContent = '0.0% anual';
+    const elIntUsd = document.getElementById('ah-interes-anual-usd-val');
+    if (elIntUsd) elIntUsd.textContent = '0.0% anual';
+    const elHeaderBadge = document.getElementById('ah-interes-anual-badge-header');
+    if (elHeaderBadge) elHeaderBadge.classList.add('hidden');
+
     const inicioAhorrosArs = document.getElementById('inicio-ahorros-ars');
     const inicioAhorrosUsd = document.getElementById('inicio-ahorros-usd');
     if (inicioAhorrosArs) inicioAhorrosArs.textContent = '$0';
-    if (inicioAhorrosUsd) inicioAhorrosUsd.textContent = 'U$S0';
+    if (inicioAhorrosUsd) inicioAhorrosUsd.textContent = 'U$S 0.00';
+    const elInicioInt = document.getElementById('inicio-ahorros-interes-anual');
+    if (elInicioInt) elInicioInt.textContent = '0.0% anual';
+    const badgeContainer = document.getElementById('inicio-ahorros-ganancia-badge');
+    if (badgeContainer) badgeContainer.classList.add('hidden');
+
     renderComposicionCarteraAhorros([], 0, 0);
+    poblarSelectorCompraExistente();
     return;
   }
 
@@ -7257,49 +8036,79 @@ function renderTablaAhorros() {
 
   // Pre-calcular valores para poder mostrar el % de peso en el portfolio y rendimiento no realizado
   const enriquecidas = posiciones.map(a => {
+    const esDolar = isDolarActivo(a);
     const activoProxy = {
-      tipo: a.tipo, ticker: a.ticker, descripcion: a.descripcion,
-      cantidad: a.cantidad, precioManual: a.precioRef
+      tipo: a.tipo, ticker: a.ticker, descripcion: a.descripcion, plataforma: a.plataforma,
+      cantidad: a.cantidad, precioManual: a.precioRef, precioPromCompra: a.precioPromCompra
     };
     const precioARS = getPrecioARS(activoProxy);
-    const precioUSD = getPrecioUSD(activoProxy);
+    const precioUSD = esDolar ? 1 : getPrecioUSD(activoProxy);
     const valorARS  = precioARS != null ? a.cantidad * precioARS : null;
-    const valorUSD  = precioUSD != null ? a.cantidad * precioUSD : null;
+    // REGLA FUNDAMENTAL: Para divisa dólar (USD), valorUSD siempre es EXACTAMENTE igual a la cantidad
+    const valorUSD  = esDolar ? a.cantidad : (precioUSD != null ? a.cantidad * precioUSD : null);
     if (valorARS != null) totalARS += valorARS;
     if (valorUSD != null) totalUSD += valorUSD;
-    return { ...a, precioARS, precioUSD, valorARS, valorUSD };
+    return { ...a, precioARS, precioUSD, valorARS, valorUSD, esDolar };
   });
 
   tbody.innerHTML = enriquecidas.map((a, i) => {
-    const { precioARS, precioUSD, valorARS, valorUSD } = a;
+    const { precioARS, precioUSD, valorARS, valorUSD, esDolar } = a;
     const sinPrecio = tipoRequiereTicker(a.tipo) && !precioARS;
-    const fmtARS = v => v != null ? '$' + v.toLocaleString('es-AR', { maximumFractionDigits: 0 }) : '<span class="text-slate-500">—</span>';
-    const fmtUSD = v => v != null ? 'U$S' + v.toLocaleString('en-US', { maximumFractionDigits: 2 }) : '<span class="text-slate-500">—</span>';
+    const fmtARS = v => v != null ? '$' + Math.round(v).toLocaleString('es-AR') : '<span class="text-slate-500">—</span>';
+    const fmtUSD = v => v != null ? 'U$S ' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '<span class="text-slate-500">—</span>';
     const fmtPrecio = () => {
-      if (a.tipo === 'USD') return fmtARS(precioARS);
-      if (a.tipo === 'BTC') return 'U$S' + (cotizaciones.BTC_USD?.toLocaleString('en-US', { maximumFractionDigits: 0 }) || '—');
+      if (esDolar) return fmtARS(precioARS) + ' <span class="text-slate-500 text-[9px]">ARS</span>';
+      if (isCriptoActivo(a)) return 'U$S ' + (cotizaciones.BTC_USD?.toLocaleString('en-US', { maximumFractionDigits: 0 }) || '—');
       if (sinPrecio) return '<span class="text-amber-400 text-[10px]">⚠ Sin precio</span>';
       return fmtARS(precioARS) + ' <span class="text-slate-500 text-[9px]">ARS</span>';
     };
-    const tickerBadge = tipoRequiereTicker(a.tipo) && a.ticker
-      ? `<span class="ml-1.5 px-1.5 py-0.5 ${sinPrecio ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-indigo-500/15 text-indigo-300 border border-indigo-500/30'} rounded text-[9px] font-black mono">${a.ticker.toUpperCase()}</span>` : '';
+
+    let nombreActivo = '';
+    let badgeTicker = '';
+    if (esDolar) {
+      nombreActivo = 'Dólar (USD)';
+      badgeTicker = '<span class="ml-1.5 px-1.5 py-0.5 bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 rounded text-[9px] font-black mono">USD</span>';
+    } else if (isCriptoActivo(a)) {
+      nombreActivo = a.ticker ? (a.ticker.toUpperCase() === 'BTC' ? 'Bitcoin' : a.ticker.toUpperCase()) : 'Cripto';
+      badgeTicker = `<span class="ml-1.5 px-1.5 py-0.5 bg-yellow-500/15 text-yellow-300 border border-yellow-500/30 rounded text-[9px] font-black mono">${(a.ticker||'BTC').toUpperCase()}</span>`;
+    } else if (a.ticker) {
+      nombreActivo = a.ticker.toUpperCase();
+      badgeTicker = `<span class="ml-1.5 px-1.5 py-0.5 ${sinPrecio ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-indigo-500/15 text-indigo-300 border border-indigo-500/30'} rounded text-[9px] font-black mono">${a.ticker.toUpperCase()}</span>`;
+    } else {
+      nombreActivo = a.tipo || 'Activo';
+    }
+
+    const platTexto = (a.plataforma || a.descripcion || '').trim();
+    const platHtml = platTexto
+      ? `<span class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 truncate"><i class="fas fa-landmark text-emerald-400/80 text-[9px] flex-shrink-0"></i><span class="truncate">${platTexto}</span></span>`
+      : '';
 
     const pesoPct = (totalARS > 0 && valorARS != null) ? ((valorARS / totalARS) * 100) : 0;
     const barColor = getColorActivoAhorro(a, i);
 
-    // Rendimiento no realizado en ARS (comparando precioARS actual vs precioPromCompra)
+    // Rendimiento en USD (comparando valorUSD actual vs costoUSD de compra)
     let rendHtml = '<span class="text-slate-500 text-xs">—</span>';
-    if (precioARS != null && a.precioPromCompra && a.precioPromCompra > 0) {
-      const diffPct = ((precioARS - a.precioPromCompra) / a.precioPromCompra) * 100;
-      const diffARS = (precioARS - a.precioPromCompra) * a.cantidad;
-      const esPos   = diffPct >= 0;
-      rendHtml = `
-        <div class="flex flex-col items-end">
-          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black mono border ${esPos ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-rose-500/15 text-rose-300 border-rose-500/30'}">
-            ${esPos ? '▲ +' : '▼ '}${diffPct.toFixed(1)}%
-          </span>
-          <span class="text-[9px] font-bold mono mt-0.5 ${esPos ? 'text-emerald-400/80' : 'text-rose-400/80'}">${esPos ? '+' : '-'}$${Math.abs(Math.round(diffARS)).toLocaleString('es-AR')}</span>
-        </div>`;
+    if (valorUSD != null && a.cantidad > 0) {
+      let costoUSD = null;
+      if (esDolar) {
+        costoUSD = a.cantidad; // Dólar divisa compra = valor exacto en USD
+      } else if (a.precioPromCompra && a.precioPromCompra > 0) {
+        const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
+        costoUSD = (a.precioPromCompra * a.cantidad) / usdRate;
+      }
+
+      if (costoUSD != null && costoUSD > 0) {
+        const diffUSD = valorUSD - costoUSD;
+        const diffPct = ((valorUSD - costoUSD) / costoUSD) * 100;
+        const esPos   = diffUSD >= -0.001;
+        rendHtml = `
+          <div class="flex flex-col items-end">
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black mono border ${esPos ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-rose-500/15 text-rose-300 border-rose-500/30'}">
+              ${esPos ? '▲ +' : '▼ '}${diffPct.toFixed(1)}%
+            </span>
+            <span class="text-[9px] font-bold mono mt-0.5 ${esPos ? 'text-emerald-400/80' : 'text-rose-400/80'}">${esPos ? '+' : '-'}U$S ${Math.abs(diffUSD).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+          </div>`;
+      }
     }
 
     const pillCls = tipoColor[a.tipo] || 'bg-slate-800 text-slate-300 border-slate-700';
@@ -7310,7 +8119,12 @@ function renderTablaAhorros() {
         </td>
         <td class="px-2.5 py-2.5 text-xs">
           <div class="flex items-center justify-between gap-1.5">
-            <span class="text-slate-200 font-bold text-xs">${a.descripcion||'—'}${tickerBadge}</span>
+            <div class="flex flex-col min-w-0">
+              <span class="text-slate-200 font-bold text-xs truncate max-w-[170px]" title="${nombreActivo}">
+                ${nombreActivo}${badgeTicker}
+              </span>
+              ${platHtml}
+            </div>
             <span class="text-[10px] font-black mono text-slate-400">${pesoPct.toFixed(1)}%</span>
           </div>
           <div class="mt-1 h-1.5 w-full bg-slate-800/90 rounded-full overflow-hidden">
@@ -7328,63 +8142,125 @@ function renderTablaAhorros() {
 
   renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD);
 
+  // 1. Neto Invertido Real de las posiciones activas actuales (costo de adquisición)
+  const netoInvertidoARS = enriquecidas.reduce((s, a) => s + (a.cantidad * (a.precioPromCompra || a.precioRef || 0)), 0);
+  const netoInvertidoUSD = enriquecidas.reduce((s, a) => {
+    if (isDolarActivo(a)) return s + a.cantidad;
+    const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
+    return s + ((a.cantidad * (a.precioPromCompra || a.precioRef || 0)) / usdRate);
+  }, 0);
+
+  // 2. Diferencia entre el total actual y el neto invertido (P&L no realizado)
+  const diffARS = totalARS - netoInvertidoARS;
+  const pctARS  = netoInvertidoARS > 0 ? ((diffARS / netoInvertidoARS) * 100) : 0;
+  const esPosARS = diffARS >= -0.01;
+
+  const diffUSD = totalUSD - netoInvertidoUSD;
+  const pctUSD  = netoInvertidoUSD > 0 ? ((diffUSD / netoInvertidoUSD) * 100) : 0;
+  const esPosUSD = diffUSD >= -0.01;
+
+  const signoARS = esPosARS ? '+' : '-';
+  const diffStrARS = `${signoARS}$${Math.round(Math.abs(diffARS)).toLocaleString('es-AR')}`;
+  const pctStrARS = `${signoARS}${Math.abs(pctARS).toFixed(1)}%`;
+  const colorClsARS = esPosARS ? 'text-emerald-400' : 'text-rose-400';
+
+  const signoUSD = esPosUSD ? '+' : '-';
+  const diffStrUSD = `${signoUSD}U$S ${Math.abs(diffUSD).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  const pctStrUSD = `${signoUSD}${Math.abs(pctUSD).toFixed(1)}%`;
+  const colorClsUSD = esPosUSD ? 'text-emerald-400' : 'text-rose-400';
+
+  // 3. Cálculo de días promedio ponderados e Interés Anual (TNA estimada)
+  const ahora = Date.now();
+  let sumaDiasPonderados = 0;
+  enriquecidas.forEach(a => {
+    let fTime = ahora;
+    if (a.fechaPrimerCompra) {
+      const parsed = new Date(a.fechaPrimerCompra).getTime();
+      if (!isNaN(parsed)) fTime = parsed;
+    }
+    const dias = Math.max(1, (ahora - fTime) / (1000 * 60 * 60 * 24));
+    const peso = Math.max(0.01, a.cantidad * (a.precioPromCompra || 1));
+    sumaDiasPonderados += dias * peso;
+  });
+  const diasEfectivos = netoInvertidoARS > 0 ? Math.max(1, sumaDiasPonderados / netoInvertidoARS) : 1;
+
+  // Interés Anual (% anual / TNA estimada)
+  const tasaAnualARS = (pctARS / diasEfectivos) * 365;
+  const tasaAnualUSD = (pctUSD / diasEfectivos) * 365;
+
+  const tasaAnualARSStr = `${tasaAnualARS >= 0 ? '+' : ''}${tasaAnualARS.toFixed(1)}% anual`;
+  const tasaAnualUSDStr = `${tasaAnualUSD >= 0 ? '+' : ''}${tasaAnualUSD.toFixed(1)}% anual`;
+
+  // 4. Actualizar footer de la tabla
   tfoot.classList.remove('hidden');
-  document.getElementById('ah-footer-ars').textContent = '$' + totalARS.toLocaleString('es-AR', { maximumFractionDigits: 0 });
-  document.getElementById('ah-footer-usd').textContent = 'U$S' + totalUSD.toLocaleString('en-US', { maximumFractionDigits: 2 });
-  document.getElementById('ah-total-ars').textContent  = '$' + totalARS.toLocaleString('es-AR', { maximumFractionDigits: 0 });
-  document.getElementById('ah-total-usd').textContent  = 'U$S' + totalUSD.toLocaleString('en-US', { maximumFractionDigits: 2 });
+  document.getElementById('ah-footer-ars').textContent = '$' + Math.round(totalARS).toLocaleString('es-AR');
+  document.getElementById('ah-footer-usd').textContent = 'U$S ' + totalUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const footRend = document.getElementById('ah-footer-rend');
+  if (footRend) {
+    footRend.innerHTML = `
+      <div class="flex justify-end">
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black mono border ${esPosUSD ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-rose-500/15 text-rose-300 border-rose-500/30'}">
+          ${esPosUSD ? '▲ +' : '▼ '}${Math.abs(pctUSD).toFixed(1)}% USD
+        </span>
+      </div>`;
+  }
+
+  // 5. Actualizar tarjetas resumen en Inversiones
+  document.getElementById('ah-total-ars').textContent = '$' + Math.round(totalARS).toLocaleString('es-AR');
+  document.getElementById('ah-total-usd').textContent = 'U$S ' + totalUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  const n = posiciones.length;
+  document.getElementById('ah-ars-sub').innerHTML = `${n} activo${n !== 1 ? 's' : ''} · <span class="${colorClsARS} mono font-bold">${diffStrARS} (${pctStrARS})</span>`;
+  document.getElementById('ah-usd-sub').innerHTML = `${n} activo${n !== 1 ? 's' : ''} · <span class="${colorClsUSD} mono font-bold">${diffStrUSD} (${pctStrUSD})</span>`;
+
+  // Interés anual en tarjetas de Inversiones
+  const elIntArs = document.getElementById('ah-interes-anual-val');
+  if (elIntArs) {
+    elIntArs.textContent = tasaAnualARSStr;
+    elIntArs.className = `mono font-black ${tasaAnualARS >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+  }
+  const elIntUsd = document.getElementById('ah-interes-anual-usd-val');
+  if (elIntUsd) {
+    elIntUsd.textContent = tasaAnualUSDStr;
+    elIntUsd.className = `mono font-black ${tasaAnualUSD >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+  }
+
+  // Interés anual en badge de cabecera de la tabla
+  const elHeaderBadge = document.getElementById('ah-interes-anual-badge-header');
+  const elHeaderTxt   = document.getElementById('ah-interes-anual-header-txt');
+  if (elHeaderBadge && elHeaderTxt) {
+    elHeaderBadge.classList.remove('hidden');
+    elHeaderTxt.textContent = `Interés: ${tasaAnualARSStr}`;
+  }
+
+  // 6. Actualizar Tarjeta de Inicio / Dashboard Principal
   const inicioAhorrosArs = document.getElementById('inicio-ahorros-ars');
   const inicioAhorrosUsd = document.getElementById('inicio-ahorros-usd');
-  if (inicioAhorrosArs) inicioAhorrosArs.textContent = '$' + totalARS.toLocaleString('es-AR', { maximumFractionDigits: 0 });
-  if (inicioAhorrosUsd) inicioAhorrosUsd.textContent = 'U$S' + totalUSD.toLocaleString('en-US', { maximumFractionDigits: 2 });
-
-  // Update Ganancia in dashboard
-  let totalCompras = 0;
-  let totalVentas = 0;
-  operacionesData.forEach(op => {
-    if (op.operacion === 'Compra') totalCompras += op.totalARS || 0;
-    if (op.operacion === 'Venta') totalVentas += op.totalARS || 0;
-  });
-  const capitalInvertido = totalCompras - totalVentas;
-  const gananciaARS = totalARS - capitalInvertido;
+  if (inicioAhorrosArs) inicioAhorrosArs.textContent = '$' + Math.round(totalARS).toLocaleString('es-AR');
+  if (inicioAhorrosUsd) inicioAhorrosUsd.textContent = 'U$S ' + totalUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   const badgeContainer = document.getElementById('inicio-ahorros-ganancia-badge');
   const badgeText = document.getElementById('inicio-ahorros-ganancia');
   if (badgeContainer && badgeText) {
     badgeContainer.classList.remove('hidden');
-    const esPos = gananciaARS >= 0;
-    const pctGan = capitalInvertido > 0 ? ` (${esPos ? '+' : ''}${((gananciaARS / capitalInvertido) * 100).toFixed(1)}%)` : '';
-    badgeContainer.className = `mt-1.5 inline-flex items-center gap-1`;
-    badgeText.className = `text-[9px] font-bold uppercase tracking-widest ${esPos ? 'text-green-400' : 'text-red-400'}`;
-    badgeText.textContent = `${esPos ? '↑' : '↓'} ${esPos ? '+' : ''}$${Math.abs(gananciaARS).toLocaleString('es-AR', { maximumFractionDigits: 0 })}${pctGan}`;
+    badgeContainer.className = `mt-1 inline-flex items-center gap-1`;
+    badgeText.className = `text-[9px] font-bold uppercase tracking-widest ${esPosARS ? 'text-green-400' : 'text-red-400'}`;
+    badgeText.textContent = `${esPosARS ? '↑' : '↓'} ${diffStrARS} (${pctStrARS}) vs inv.`;
   }
-  const tcPillInicio = document.getElementById('inicio-ahorros-tc-pill');
-  if (tcPillInicio) {
-    const usdTxt = cotizaciones.USD ? `USD $${cotizaciones.USD.toLocaleString('es-AR')}` : 'USD $—';
-    const btcTxt = cotizaciones.BTC_USD ? ` · BTC $${Math.round(cotizaciones.BTC_USD / 1000)}k` : '';
-    tcPillInicio.textContent = usdTxt + btcTxt;
+
+  const elInicioInt = document.getElementById('inicio-ahorros-interes-anual');
+  if (elInicioInt) {
+    elInicioInt.textContent = tasaAnualARSStr;
+    elInicioInt.className = `mono text-[10px] font-black ${tasaAnualARS >= 0 ? 'text-emerald-300' : 'text-rose-400'}`;
   }
 
   const cardAhorros = document.getElementById('card-inicio-ahorros');
   if (cardAhorros) {
-    if (gananciaARS >= 0) {
-      if (inicioAhorrosArs) inicioAhorrosArs.className = 'text-3xl font-black mono tracking-tighter text-green-300';
-      if (inicioAhorrosUsd) inicioAhorrosUsd.className = 'text-sm font-black mono text-green-400 tracking-tight';
-    } else if (gananciaARS < 0) {
-      if (inicioAhorrosArs) inicioAhorrosArs.className = 'text-3xl font-black mono tracking-tighter text-green-300';
-      if (inicioAhorrosUsd) inicioAhorrosUsd.className = 'text-sm font-black mono text-green-400 tracking-tight';
-    } else {
-      if (inicioAhorrosArs) inicioAhorrosArs.className = 'text-3xl font-black mono tracking-tighter text-green-300';
-      if (inicioAhorrosUsd) inicioAhorrosUsd.className = 'text-sm font-black mono text-green-400 tracking-tight';
-    }
+    if (inicioAhorrosArs) inicioAhorrosArs.className = 'text-3xl font-black mono tracking-tighter text-green-300';
+    if (inicioAhorrosUsd) inicioAhorrosUsd.className = 'text-sm font-black mono text-green-400 tracking-tight';
   }
 
-  const n = posiciones.length;
-  const topPos = [...enriquecidas].sort((a,b) => (b.valorARS || 0) - (a.valorARS || 0))[0];
-  const topPct = (topPos && totalARS > 0) ? Math.round(((topPos.valorARS || 0) / totalARS) * 100) : 0;
-  const pctGanPortfolio = capitalInvertido > 0 ? ((gananciaARS / capitalInvertido) * 100).toFixed(1) : null;
-  document.getElementById('ah-ars-sub').innerHTML = `${n} activo${n !== 1 ? 's' : ''} en cartera` + (pctGanPortfolio !== null ? ` · <span class="${gananciaARS >= 0 ? 'text-emerald-400' : 'text-rose-400'} mono">${gananciaARS >= 0 ? '+' : ''}${pctGanPortfolio}% vs inv.</span>` : '');
-  document.getElementById('ah-usd-sub').textContent = (cotizaciones.USD ? `TC $${cotizaciones.USD.toLocaleString('es-AR')}` : 'Cotización USD') + (topPos ? ` · Mayor: ${topPos.ticker || topPos.tipo} (${topPct}%)` : '');
+  poblarSelectorCompraExistente();
 }
 
 function mostrarModalFallidos(tickers) {
@@ -7440,31 +8316,128 @@ function resetTickerStatus() {
 }
 
 async function buscarTicker() {
-  const ticker = document.getElementById('ah-ticker').value.trim().toUpperCase();
+  const ticker = (document.getElementById('ah-ticker')?.value || '').trim().toUpperCase();
   if (!ticker) return;
   const btn    = document.getElementById('btn-buscar-ticker');
   const status = document.getElementById('ah-ticker-status');
-  btn.innerHTML      = '<i class="fas fa-circle-notch fa-spin"></i>';
-  status.textContent = 'Buscando...';
-  status.className   = 'text-[11px] mono px-1 text-slate-400';
+  if (btn) btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+  if (status) {
+    status.textContent = 'Buscando cotización en vivo...';
+    status.className   = 'text-[11px] mono px-1 text-slate-400';
+  }
+
+  // Asegurar que los datos de mercado estén cargados
+  if (!marketData.stocks || Object.keys(marketData.stocks).length === 0 || !marketData.cedears || Object.keys(marketData.cedears).length === 0) {
+    await fetchMarketQuotes();
+  }
+
+  // 1. Dólar Divisa
+  if (ticker === 'USD' || ticker === 'DOLAR' || ticker === 'DÓLAR') {
+    if (!cotizaciones.USD) await fetchMarketQuotes();
+    const p = cotizaciones.USD;
+    if (p) {
+      if (status) {
+        status.textContent = `✓ Dólar Oficial: $${Math.round(p).toLocaleString('es-AR')} ARS`;
+        status.className   = 'text-[11px] mono px-1 text-green-400 font-bold';
+      }
+      document.getElementById('ah-precio-manual').value = p;
+      calcularInversionPreview();
+    }
+    if (btn) btn.innerHTML = '<i class="fas fa-search"></i>';
+    return;
+  }
+
+  // 2. Euro
+  if (ticker === 'EUR' || ticker === 'EURO') {
+    try {
+      const r = await fetch('https://dolarapi.com/v1/cotizaciones/eur');
+      const d = await r.json();
+      const p = parseFloat(d.venta);
+      if (p) {
+        if (status) {
+          status.textContent = `✓ Euro: $${Math.round(p).toLocaleString('es-AR')} ARS`;
+          status.className   = 'text-[11px] mono px-1 text-green-400 font-bold';
+        }
+        document.getElementById('ah-precio-manual').value = p;
+        calcularInversionPreview();
+        if (btn) btn.innerHTML = '<i class="fas fa-search"></i>';
+        return;
+      }
+    } catch (e) {}
+  }
+
+  // 3. Bitcoin
+  if (ticker === 'BTC' || ticker === 'BITCOIN') {
+    if (!cotizaciones.BTC) await fetchMarketQuotes();
+    const pArs = cotizaciones.BTC || (cotizaciones.BTC_USD * (cotizaciones.USD || 1));
+    if (pArs) {
+      if (status) {
+        status.textContent = `✓ Bitcoin: U$S ${Math.round(cotizaciones.BTC_USD || 0).toLocaleString('en-US')} ($${Math.round(pArs).toLocaleString('es-AR')} ARS)`;
+        status.className   = 'text-[11px] mono px-1 text-green-400 font-bold';
+      }
+      document.getElementById('ah-precio-manual').value = Math.round(pArs);
+      calcularInversionPreview();
+    }
+    if (btn) btn.innerHTML = '<i class="fas fa-search"></i>';
+    return;
+  }
+
+  // 4. CEDEARs BYMA (ej: KO de Coca-Cola, AAPL, SPY, MELI, NVDA, TSLA) o Acciones BYMA (GGAL, YPFD)
+  if (marketData.cedears[ticker]?.c || marketData.stocks[ticker]?.c) {
+    const item = marketData.cedears[ticker] || marketData.stocks[ticker];
+    const esCedear = !!marketData.cedears[ticker];
+    const tipo = esCedear ? 'CEDEAR' : 'Acción BYMA';
+    const precio = item.c;
+    cotizaciones.tickers[ticker] = precio;
+    const pct = item.pct_change != null ? ` (${item.pct_change >= 0 ? '+' : ''}${item.pct_change.toFixed(2)}%)` : '';
+    if (status) {
+      status.textContent = `✓ ${tipo} ${ticker}: $${Math.round(precio).toLocaleString('es-AR')} ARS${pct}`;
+      status.className   = 'text-[11px] mono px-1 text-green-400 font-bold';
+    }
+    document.getElementById('ah-precio-manual').value = precio;
+    calcularInversionPreview();
+    if (btn) btn.innerHTML = '<i class="fas fa-search"></i>';
+    return;
+  }
+
+  // 5. Criptos principales desde Binance (ETH, SOL, USDT, BNB, etc.)
+  const criptosComunes = ['ETH', 'SOL', 'USDT', 'BNB', 'XRP', 'ADA', 'DOGE'];
+  if (criptosComunes.includes(ticker)) {
+    try {
+      const r = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${ticker}USDT`);
+      const d = await r.json();
+      const pUsd = parseFloat(d.price);
+      if (pUsd) {
+        const pArs = Math.round(pUsd * (cotizaciones.USD_MEP || cotizaciones.USD || 1));
+        if (status) {
+          status.textContent = `✓ ${ticker}: U$S ${pUsd.toLocaleString('en-US')} ($${pArs.toLocaleString('es-AR')} ARS)`;
+          status.className   = 'text-[11px] mono px-1 text-green-400 font-bold';
+        }
+        document.getElementById('ah-precio-manual').value = pArs;
+        calcularInversionPreview();
+        if (btn) btn.innerHTML = '<i class="fas fa-search"></i>';
+        return;
+      }
+    } catch (e) {}
+  }
+
+  // 6. Fallback individual (Apps Script)
   await fetchTickerPrecio(ticker);
   const precio = cotizaciones.tickers[ticker];
   if (precio) {
-    status.textContent = `✓ Precio: $${precio.toLocaleString('es-AR')} ARS`;
-    status.className   = 'text-[11px] mono px-1 text-green-400 font-bold';
+    if (status) {
+      status.textContent = `✓ Precio: $${Math.round(precio).toLocaleString('es-AR')} ARS`;
+      status.className   = 'text-[11px] mono px-1 text-green-400 font-bold';
+    }
     document.getElementById('ah-precio-manual').value = precio;
     calcularInversionPreview();
   } else {
-    status.textContent = '✗ No encontrado — ingresá el precio manualmente';
-    status.className   = 'text-[11px] mono px-1 text-amber-400';
+    if (status) {
+      status.textContent = '✗ No encontrado — ingresá el precio manualmente';
+      status.className   = 'text-[11px] mono px-1 text-amber-400';
+    }
   }
-  btn.innerHTML = '<i class="fas fa-search"></i>';
-}
-
-// Tipos que requieren ticker (se puede ampliar desde Config col C con prefijo "#")
-// Por defecto: cualquier tipo que no sea USD ni BTC muestra el campo ticker
-function tipoRequiereTicker(tipo) {
-  return tipo && tipo !== 'USD' && tipo !== 'BTC';
+  if (btn) btn.innerHTML = '<i class="fas fa-search"></i>';
 }
 
 function fillTiposActivo() {
@@ -7473,7 +8446,7 @@ function fillTiposActivo() {
 
   let opciones = null;
   if (datosCargados) {
-    opciones = (tiposActivo && tiposActivo.length > 0) ? tiposActivo : ['USD', 'BTC', 'Accion', 'Bono'];
+    opciones = (tiposActivo && tiposActivo.length > 0) ? tiposActivo : ['Divisa', 'Accion', 'CEDEAR', 'Bono', 'Cripto'];
   }
 
   [selCompra, selEdit].forEach(sel => {
@@ -7502,11 +8475,14 @@ function aplicarColorTipoCompraAhorro(tipo) {
   const btn = document.getElementById('btn-guardar-ahorro');
   const preview = document.getElementById('compra-pnl-preview');
   const previewVal = document.getElementById('compra-pnl-valor');
+  const esDolar = isDivisaActivo(tipo);
+  const esCripto = isCriptoActivo(tipo);
+
   if (sel) {
-    if (tipo === 'USD') {
+    if (esDolar) {
       sel.style.borderColor = COLORES_ACTIVOS_AHORRO.USD;
       sel.style.color = '#6ee7b7';
-    } else if (tipo === 'BTC') {
+    } else if (esCripto) {
       sel.style.borderColor = COLORES_ACTIVOS_AHORRO.BTC;
       sel.style.color = '#fde047';
     } else {
@@ -7515,14 +8491,14 @@ function aplicarColorTipoCompraAhorro(tipo) {
     }
   }
   if (btn) {
-    if (tipo === 'BTC') {
+    if (esCripto) {
       btn.className = 'w-full bg-yellow-500 hover:opacity-90 text-black font-black py-4 rounded-xl border border-yellow-300/40 active:scale-95 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest mt-2';
     } else {
       btn.className = 'w-full bg-green-600 hover:opacity-90 text-white font-black py-4 rounded-xl border border-white/20 active:scale-95 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest mt-2';
     }
   }
   if (preview && previewVal) {
-    if (tipo === 'BTC') {
+    if (esCripto) {
       preview.className = preview.classList.contains('hidden')
         ? 'hidden rounded-xl p-3 border border-yellow-700/60 bg-yellow-900/20 text-center'
         : 'rounded-xl p-3 border border-yellow-700/60 bg-yellow-900/20 text-center';
@@ -7538,24 +8514,56 @@ function aplicarColorTipoCompraAhorro(tipo) {
 
 function onAhTipoChange() {
   const tipo = document.getElementById('ah-tipo').value;
-  document.getElementById('ah-ticker-group').style.display = tipoRequiereTicker(tipo) ? 'block' : 'none';
-  // El ah-precio-group se mantiene siempre visible
   const statusEl = document.getElementById('ah-ticker-status');
   if (statusEl) statusEl.textContent = '';
   aplicarColorTipoCompraAhorro(tipo);
 
-  if (tipo === 'USD' || tipo === 'BTC') {
-    preCargarPrecioEspecial(tipo);
+  // Mantener el grupo de ticker SIEMPRE visible
+  const tGroup = document.getElementById('ah-ticker-group');
+  if (tGroup) tGroup.style.display = 'block';
+
+  const tLabel = document.getElementById('ah-ticker-label');
+  const tHint  = document.getElementById('ah-ticker-hint');
+  const tInp   = document.getElementById('ah-ticker');
+
+  if (isDivisaActivo(tipo)) {
+    if (tLabel) tLabel.innerHTML = 'Moneda / Divisa';
+    if (tHint) tHint.innerHTML = '(ej: USD, EUR, BRL)';
+    if (tInp) {
+      tInp.placeholder = 'USD';
+      if (!tInp.value) tInp.value = 'USD';
+    }
+    preCargarPrecioEspecial('USD');
+  } else if (isCriptoActivo(tipo)) {
+    if (tLabel) tLabel.innerHTML = 'Criptomoneda / Ticker';
+    if (tHint) tHint.innerHTML = '(ej: BTC, ETH, USDT)';
+    if (tInp) {
+      tInp.placeholder = 'BTC';
+      if (!tInp.value) tInp.value = 'BTC';
+    }
+    preCargarPrecioEspecial('BTC');
+  } else if (tipo === 'Accion' || tipo === 'CEDEAR') {
+    if (tLabel) tLabel.innerHTML = 'Ticker de Acción / CEDEAR';
+    if (tHint) tHint.innerHTML = '(ej: KO, AAPL, GGAL, YPFD, SPY)';
+    if (tInp) tInp.placeholder = 'KO';
+  } else if (tipo === 'Bono') {
+    if (tLabel) tLabel.innerHTML = 'Ticker del Bono';
+    if (tHint) tHint.innerHTML = '(ej: AL30, GD30)';
+    if (tInp) tInp.placeholder = 'AL30';
+  } else {
+    if (tLabel) tLabel.innerHTML = 'Ticker / Símbolo';
+    if (tHint) tHint.innerHTML = '(ej: símbolo)';
+    if (tInp) tInp.placeholder = 'Ticker';
   }
 }
 
 async function preCargarPrecioEspecial(tipo) {
   let p = 0;
-  if (tipo === 'USD') {
-    if (!cotizaciones.USD) await fetchUSD();
+  if (tipo === 'USD' || isDivisaActivo(tipo)) {
+    if (!cotizaciones.USD) await fetchMarketQuotes();
     p = cotizaciones.USD;
-  } else if (tipo === 'BTC') {
-    if (!cotizaciones.BTC_USD) await Promise.all([fetchUSD(), fetchBTC()]);
+  } else if (tipo === 'BTC' || isCriptoActivo(tipo)) {
+    if (!cotizaciones.BTC_USD) await fetchMarketQuotes();
     p = cotizaciones.BTC_USD;
   }
   if (p) {
@@ -7583,10 +8591,16 @@ function calcularInversionPreview() {
 function poblarSelectorCompraExistente() {
   const sel = document.getElementById('compra-activo-existente');
   if (!sel) return;
-  sel.innerHTML = '<option value="">— Seleccioná un activo o cargá uno nuevo abajo —</option>';
+  sel.innerHTML = '<option value="">— Seleccioná un activo existente o cargá uno nuevo abajo —</option>';
   const posiciones = calcularPosicionesNetas();
   posiciones.forEach((a, i) => {
-    const label = `${a.tipo}${a.ticker ? ' · ' + a.ticker.toUpperCase() : ''} — ${a.descripcion || ''}`;
+    const plat = (a.plataforma || a.descripcion || '').trim();
+    const platStr = plat ? ` · ${plat}` : '';
+    let tickerLabel = a.ticker ? a.ticker.toUpperCase() : '';
+    if (isDivisaActivo(a)) tickerLabel = (a.ticker || 'USD').toUpperCase();
+    else if (isCriptoActivo(a)) tickerLabel = (a.ticker || 'BTC').toUpperCase();
+    
+    const label = `${tickerLabel || a.tipo} (${a.tipo})${platStr} · Cant: ${a.cantidad.toLocaleString('es-AR', { maximumFractionDigits: 4 })}`;
     const opt   = new Option(label, i);
     sel.appendChild(opt);
   });
@@ -7595,38 +8609,46 @@ function poblarSelectorCompraExistente() {
 
 function onCompraActivoExistenteChange() {
   const sel = document.getElementById('compra-activo-existente');
-  const idx = parseInt(sel.value);
-  const posiciones = sel._posiciones;
-  if (isNaN(idx) || !posiciones[idx]) {
+  const idx = parseInt(sel?.value);
+  const posiciones = sel?._posiciones || calcularPosicionesNetas();
+  if (isNaN(idx) || !posiciones || !posiciones[idx]) {
     document.getElementById('ah-tipo').value = '';
     onAhTipoChange();
     document.getElementById('ah-ticker').value = '';
-    document.getElementById('ah-descripcion').value = '';
+    const platInput = document.getElementById('ah-plataforma');
+    if (platInput) platInput.value = '';
     document.getElementById('ah-precio-manual').value = '';
     calcularInversionPreview();
     return;
   }
   const a = posiciones[idx];
-  document.getElementById('ah-tipo').value = a.tipo;
+  const selTipo = document.getElementById('ah-tipo');
+  if (selTipo) selTipo.value = a.tipo;
   onAhTipoChange();
 
-  if (tipoRequiereTicker(a.tipo)) {
-    document.getElementById('ah-ticker').value = a.ticker || '';
-    buscarTicker(); // trae precio
+  const inpTicker = document.getElementById('ah-ticker');
+  if (inpTicker) {
+    inpTicker.value = a.ticker || (isDivisaActivo(a) ? 'USD' : (isCriptoActivo(a) ? 'BTC' : ''));
   }
-  document.getElementById('ah-descripcion').value = a.descripcion || '';
+  const platInput = document.getElementById('ah-plataforma');
+  if (platInput) platInput.value = a.plataforma || a.descripcion || '';
+
+  // Actualizar cotización y precio en vivo
+  buscarTicker();
 }
 
 
 
 document.getElementById('ahorrosForm').addEventListener('submit', async e => {
   e.preventDefault();
-  const tipo   = document.getElementById('ah-tipo').value;
-  const ticker = document.getElementById('ah-ticker').value.trim().toUpperCase();
-  const desc   = document.getElementById('ah-descripcion').value.trim();
-  const cant   = parseFloat(document.getElementById('ah-cantidad').value);
+  const tipo       = document.getElementById('ah-tipo').value;
+  let ticker       = document.getElementById('ah-ticker').value.trim().toUpperCase();
+  const plataforma = (document.getElementById('ah-plataforma')?.value || '').trim();
+  const cant       = parseFloat(document.getElementById('ah-cantidad').value);
   if (!tipo)              return showToast('Seleccioná un tipo de activo', 'error');
   if (!cant || cant <= 0) return showToast('Ingresá una cantidad válida', 'error');
+  if (isDivisaActivo(tipo) && !ticker) ticker = 'USD';
+  if (isCriptoActivo(tipo) && !ticker) ticker = 'BTC';
   if (tipoRequiereTicker(tipo) && !ticker) return showToast('Ingresá el ticker', 'error');
 
   let precioActual = parseFloat(document.getElementById('ah-precio-manual').value);
@@ -7639,10 +8661,10 @@ document.getElementById('ahorrosForm').addEventListener('submit', async e => {
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i><span>Guardando...</span>';
 
-  const descripcionFinal = desc||ticker||tipo;
+  const descripcionFinal = plataforma || ticker || tipo;
   const opCompra = {
     fecha: new Date().toISOString(), operacion: 'Compra', tipo, ticker,
-    descripcion: descripcionFinal, cantidad: cant, precio: precioActual,
+    descripcion: descripcionFinal, plataforma: descripcionFinal, cantidad: cant, precio: precioActual,
     precioCompra: precioActual, totalARS: cant * precioActual, pnl: 0
   };
 
@@ -7652,13 +8674,14 @@ document.getElementById('ahorrosForm').addEventListener('submit', async e => {
     renderTablaOperaciones();
     renderPnlTotal();
     actualizarDatalistActivos();
-    showToast('Compra registrada ✓', 'ok');
+    showToast('Inversión registrada ✓', 'ok');
     document.getElementById('ahorrosForm').reset();
     aplicarColorTipoCompraAhorro('');
-    document.getElementById('ah-ticker-group').style.display = 'none';
+    onAhTipoChange();
     document.getElementById('compra-pnl-preview').classList.add('hidden');
+    poblarSelectorCompraExistente();
     renderTablaAhorros();
-  } catch { showToast('Error al registrar compra', 'error'); }
+  } catch { showToast('Error al registrar inversión', 'error'); }
   finally { btn.disabled = false; btn.innerHTML = orig; }
 });
 
@@ -7690,7 +8713,13 @@ function poblarSelectorVenta() {
   // Usar posiciones netas para mostrar solo activos con saldo positivo
   const posiciones = calcularPosicionesNetas();
   posiciones.forEach((a, i) => {
-    const label = `${a.tipo}${a.ticker ? ' · ' + a.ticker.toUpperCase() : ''} — ${a.descripcion || ''} (${a.cantidad.toLocaleString('es-AR', {maximumFractionDigits:8})})`;
+    const plat = (a.plataforma || a.descripcion || '').trim();
+    const platStr = plat ? ` · ${plat}` : '';
+    let nom = a.tipo;
+    if (isDivisaActivo(a)) nom = 'Dólar (USD)';
+    else if (isCriptoActivo(a)) nom = (a.ticker || 'BTC').toUpperCase();
+    else if (a.ticker) nom = `${a.tipo} (${a.ticker.toUpperCase()})`;
+    const label = `${nom}${platStr} (${a.cantidad.toLocaleString('es-AR', {maximumFractionDigits:8})})`;
     const opt   = new Option(label, i);
     sel.appendChild(opt);
   });
@@ -7768,6 +8797,7 @@ document.getElementById('ventaForm').addEventListener('submit', async e => {
     tipo:         activo.tipo,
     ticker:       activo.ticker,
     descripcion:  activo.descripcion,
+    plataforma:   activo.plataforma || activo.descripcion,
     cantidad:     cant,
     precio:       precioVenta,
     precioCompra: precioComp,
@@ -7810,6 +8840,7 @@ async function cargarOperacionesSheet() {
       tipo:         r[2] || '',
       ticker:       r[3] || '',
       descripcion:  r[4] || '',
+      plataforma:   r[4] || '',
       cantidad:     parseFloat(r[5]) || 0,
       precio:       parseFloat(r[6]) || 0,
       precioCompra: parseFloat(r[7]) || 0,
@@ -7871,14 +8902,16 @@ function renderTablaOperaciones() {
            ${pctOp !== null ? `<span class="text-[9px] font-bold mono px-1.5 py-0.2 rounded ${pnlPos ? 'bg-emerald-500/15 text-emerald-300' : 'bg-rose-500/15 text-rose-300'}">${pnlPos ? '+' : ''}${pctOp.toFixed(1)}%</span>` : ''}
          </div>`
       : '<span class="text-slate-500">—</span>';
-    const label      = op.descripcion || op.ticker || op.tipo;
+    const platStr    = (op.plataforma || op.descripcion || '').trim();
+    const nombreAct  = op.ticker ? op.ticker.toUpperCase() : (platStr || op.tipo);
+    const platBadge  = platStr ? `<span class="text-[10px] text-slate-400 font-normal flex items-center gap-1 mt-0.5"><i class="fas fa-landmark text-emerald-400/80 text-[9px]"></i>${platStr}</span>` : '';
     const icon       = tipoIcon[op.tipo] || '💎';
     const tickerBadge = op.ticker ? `<span class="ml-1.5 px-1.5 py-0.5 bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 rounded text-[9px] font-black mono">${op.ticker.toUpperCase()}</span>` : '';
     return `
       <tr class="table-row border-b border-slate-800 fade-row" style="animation-delay:${i*0.03}s">
         <td class="px-2.5 py-2.5 text-xs text-slate-400 mono whitespace-nowrap">${fechaStr}</td>
         <td class="px-2 py-2.5 text-xs whitespace-nowrap">${opBadge}</td>
-        <td class="px-2.5 py-2.5 text-xs text-slate-200 font-bold"><span class="mr-1">${icon}</span>${label}${tickerBadge}</td>
+        <td class="px-2.5 py-2.5 text-xs text-slate-200 font-bold"><div class="flex flex-col"><span class="flex items-center"><span class="mr-1">${icon}</span>${nombreAct}${tickerBadge}</span>${platBadge}</div></td>
         <td class="px-2.5 py-2.5 text-xs text-right mono text-slate-300 font-semibold whitespace-nowrap">${op.cantidad.toLocaleString('es-AR', {maximumFractionDigits:8})}</td>
         <td class="px-2.5 py-2.5 text-xs text-right mono text-slate-400 whitespace-nowrap">${fmt(op.precio)}</td>
         <td class="px-2.5 py-2.5 text-xs text-right mono font-black text-white whitespace-nowrap">${fmt(op.totalARS)}</td>
@@ -7899,29 +8932,38 @@ function renderPnlTotal() {
   const el       = document.getElementById('ah-pnl-total');
   const sub      = document.getElementById('ah-pnl-sub');
   const card     = document.getElementById('card-ah-pnl');
+  const arsVal   = document.getElementById('ah-pnl-ars-val');
   if (!el) return;
   if (!ventas.length) {
-    el.textContent = '$0'; el.className = 'text-3xl font-black mono tracking-tighter text-slate-400 transition-all duration-300';
-    if(sub) sub.textContent = '0 ventas realizadas';
-    if(card) card.className = 'bg-black p-5 rounded-2xl border transition-all balance-neutral border-slate-700/60';
+    el.textContent = 'U$S 0.00'; el.className = 'text-3xl font-black mono tracking-tighter text-slate-400 transition-all duration-300 leading-tight';
+    if (sub) sub.textContent = '0 ventas realizadas';
+    if (arsVal) { arsVal.textContent = '$0 ARS'; arsVal.className = 'mono font-black text-slate-400'; }
+    if (card) card.className = 'group bg-black p-5 rounded-2xl border transition-all balance-neutral border-slate-700/60 flex flex-col justify-between h-full';
     return;
   }
 
-  const esPos = totalPnl > 0;
-  const esNeg = totalPnl < 0;
+  const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
+  const totalPnlUSD = totalPnl / usdRate;
+  const esPos = totalPnl > 0.001;
+  const esNeg = totalPnl < -0.001;
 
-  el.textContent = (esPos ? '+' : (esNeg ? '-' : '')) + '$' + Math.round(Math.abs(totalPnl)).toLocaleString('es-AR');
-  el.className   = `text-3xl font-black mono tracking-tighter transition-all duration-300 ${esPos ? 'text-green-400' : (esNeg ? 'text-red-500' : 'text-yellow-500')}`;
+  el.textContent = (esPos ? '+' : (esNeg ? '-' : '')) + 'U$S ' + Math.abs(totalPnlUSD).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  el.className   = `text-3xl font-black mono tracking-tighter transition-all duration-300 leading-tight ${esPos ? 'text-emerald-400' : (esNeg ? 'text-rose-400' : 'text-slate-400')}`;
 
   if (card) {
-    let cardStyle = 'bg-black p-5 rounded-2xl border transition-all ';
-    if (esPos) cardStyle += 'balance-positive border-green-800/50';
-    else if (esNeg) cardStyle += 'balance-negative border-red-800/50';
-    else cardStyle += 'balance-neutral border-yellow-600/50';
+    let cardStyle = 'group bg-black p-5 rounded-2xl border transition-all flex flex-col justify-between h-full ';
+    if (esPos) cardStyle += 'balance-positive border-emerald-800/50';
+    else if (esNeg) cardStyle += 'balance-negative border-rose-800/50';
+    else cardStyle += 'balance-neutral border-slate-700/60';
     card.className = cardStyle;
   }
 
-  if (sub) sub.textContent = `${ventas.length} venta${ventas.length !== 1 ? 's' : ''} realizadas`;
+  if (sub) sub.textContent = `${ventas.length} venta${ventas.length !== 1 ? 's' : ''} realizada${ventas.length !== 1 ? 's' : ''}`;
+  const pnlArsStr = (esPos ? '+' : (esNeg ? '-' : '')) + '$' + Math.round(Math.abs(totalPnl)).toLocaleString('es-AR');
+  if (arsVal) {
+    arsVal.textContent = pnlArsStr + ' ARS';
+    arsVal.className = `mono font-black ${esPos ? 'text-emerald-400' : (esNeg ? 'text-rose-400' : 'text-slate-400')}`;
+  }
 }
 
 // Listeners para P&L preview en tiempo real
@@ -7958,7 +9000,7 @@ async function confirmarEliminarOperacion() {
   renderTablaAhorros();
   renderPnlTotal();
   renderCotizacionesBadge();
-  showToast('Operación eliminada', 'ok');
+  showToast('Inversión eliminada', 'ok');
   try {
     await fetch(scriptURL, {
       method: 'POST', mode: 'no-cors',
@@ -8024,7 +9066,7 @@ async function guardarEdicionOperacion() {
 
   const anterior = { ...operacionesData[pendingEditOpIdx] };
   operacionesData[pendingEditOpIdx] = {
-    ...anterior, fecha: fechaISO, operacion, descripcion,
+    ...anterior, fecha: fechaISO, operacion, descripcion, plataforma: descripcion,
     cantidad, precio, precioCompra: precioComp, totalARS, pnl
   };
 
@@ -8032,7 +9074,7 @@ async function guardarEdicionOperacion() {
   renderTablaOperaciones();
   renderTablaAhorros();
   renderPnlTotal();
-  showToast('Operación actualizada ✓', 'ok');
+  showToast('Inversión actualizada ✓', 'ok');
 
   try {
     await fetch(scriptURL, {
@@ -14218,6 +15260,433 @@ async function procesarArchivosTakeoutKeep(event) {
   }
 }
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// ─── INTEGRACIÓN IA PARA LISTAS Y TAREAS (GEMINI API Y DICTADO POR VOZ) ──────
+// ═══════════════════════════════════════════════════════════════════════════════
+
+let isRecordingListas = false;
+let recognitionListas = null;
+let speechCapturedListas = false;
+
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognitionListas = new SpeechRecognition();
+  recognitionListas.lang = 'es-AR';
+  recognitionListas.continuous = false;
+  recognitionListas.interimResults = false;
+
+  recognitionListas.onresult = function(event) {
+    const transcript = event.results[0][0].transcript;
+    const textArea = document.getElementById('ia-listas-texto');
+    if (textArea) {
+      textArea.value = (textArea.value + ' ' + transcript).trim();
+      if (transcript && transcript.trim()) {
+        speechCapturedListas = true;
+      }
+    }
+  };
+
+  recognitionListas.onend = function() {
+    isRecordingListas = false;
+    const status = document.getElementById('ia-listas-status');
+    const btn = document.getElementById('btn-dictar-ia-listas');
+    if (status) status.classList.add('hidden');
+    if (btn) {
+      btn.classList.remove('bg-red-600', 'text-white', 'border-red-500');
+      btn.classList.add('bg-slate-700', 'text-slate-300', 'border-slate-600');
+    }
+    if (speechCapturedListas) {
+      speechCapturedListas = false;
+      const txt = document.getElementById('ia-listas-texto');
+      if (txt && txt.value.trim()) {
+        setTimeout(() => {
+          procesarTextoIAListas();
+        }, 200);
+      }
+    }
+  };
+
+  recognitionListas.onerror = function(event) {
+    console.error('Speech recognition error listas', event.error);
+    speechCapturedListas = false;
+    isRecordingListas = false;
+    const status = document.getElementById('ia-listas-status');
+    const btn = document.getElementById('btn-dictar-ia-listas');
+    if (status) status.classList.add('hidden');
+    if (btn) {
+      btn.classList.remove('bg-red-600', 'text-white', 'border-red-500');
+      btn.classList.add('bg-slate-700', 'text-slate-300', 'border-slate-600');
+    }
+  };
+}
+
+function abrirModalIAListas() {
+  speechCapturedListas = false;
+  const modal = document.getElementById('modal-ia-listas');
+  if (modal) {
+    modal.style.setProperty('display', 'flex', 'important');
+    document.body.style.overflow = 'hidden';
+  }
+  const txt = document.getElementById('ia-listas-texto');
+  if (txt) {
+    setTimeout(() => txt.focus(), 60);
+  }
+
+  // Asegurar que las notas estén cargadas del caché si aún no se inicializó
+  if (!Array.isArray(keepNotes) || keepNotes.length === 0) {
+    if (typeof cargarPreferenciasTasksLocal === 'function') {
+      cargarPreferenciasTasksLocal();
+    }
+  }
+
+  // Renderizar pills de listas disponibles
+  const container = document.getElementById('ia-listas-disponibles-pills');
+  if (container) {
+    const listasNombres = (Array.isArray(keepNotes) && keepNotes.length > 0)
+      ? keepNotes.map(n => (n.title || '').trim()).filter(Boolean)
+      : ['Mis Tareas'];
+
+    container.innerHTML = listasNombres.map(nombre => `
+      <button type="button" onclick="insertarListaEnPromptListas('${nombre.replace(/'/g, "\\'")}')"
+              class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-purple-900/40 text-slate-300 hover:text-purple-300 border border-slate-700 hover:border-purple-500/40 text-[10px] font-bold transition-all flex items-center gap-1.5 cursor-pointer">
+        <i class="fas fa-list text-[9px] text-amber-400"></i><span>${escapeHtmlKeep(nombre)}</span>
+      </button>
+    `).join('');
+  }
+}
+
+function insertarListaEnPromptListas(nombreLista) {
+  const txt = document.getElementById('ia-listas-texto');
+  if (!txt) return;
+  const actual = txt.value.trim();
+  if (!actual) {
+    txt.value = `En la lista "${nombreLista}" agregar `;
+  } else {
+    txt.value = `${actual} (en la lista "${nombreLista}")`;
+  }
+  txt.focus();
+}
+
+function cerrarModalIAListas() {
+  speechCapturedListas = false;
+  const modal = document.getElementById('modal-ia-listas');
+  if (modal) {
+    modal.style.setProperty('display', 'none', 'important');
+    document.body.style.overflow = '';
+  }
+  if (isRecordingListas && recognitionListas) {
+    recognitionListas.stop();
+  }
+}
+
+function toggleDictadoIAListas() {
+  if (!recognitionListas) {
+    alert("El dictado por voz no está soportado en este navegador.");
+    return;
+  }
+
+  if (isRecordingListas) {
+    recognitionListas.stop();
+  } else {
+    try {
+      speechCapturedListas = false;
+      recognitionListas.start();
+      isRecordingListas = true;
+      const status = document.getElementById('ia-listas-status');
+      const btn = document.getElementById('btn-dictar-ia-listas');
+      if (status) status.classList.remove('hidden');
+      if (btn) {
+        btn.classList.remove('bg-slate-700', 'text-slate-300', 'border-slate-600');
+        btn.classList.add('bg-red-600', 'text-white', 'border-red-500');
+      }
+    } catch (e) {
+      console.warn("Error al iniciar dictado de voz:", e);
+    }
+  }
+}
+
+async function procesarTextoIAListas() {
+  const txtInput = document.getElementById('ia-listas-texto');
+  const texto = txtInput ? txtInput.value.trim() : '';
+  if (!texto) {
+    alert("Por favor ingresa un texto o usa el micrófono.");
+    return;
+  }
+
+  let apiKey = localStorage.getItem('GEMINI_API_KEY');
+  if (!apiKey) {
+    apiKey = prompt("Por favor, ingresa tu API Key de Google Gemini:");
+    if (!apiKey) return;
+    localStorage.setItem('GEMINI_API_KEY', apiKey.trim());
+  }
+
+  const btnText = document.getElementById('ia-listas-btn-text');
+  const btnEl = document.getElementById('btn-procesar-ia-listas');
+  const originalText = btnText ? btnText.innerText : "Procesar con IA";
+  if (btnText) btnText.innerText = "Procesando...";
+  if (btnEl) btnEl.disabled = true;
+
+  try {
+    const listasDisponibles = (Array.isArray(keepNotes) && keepNotes.length > 0)
+      ? keepNotes.map(n => (n.title || '').trim()).filter(Boolean)
+      : ['Mis Tareas'];
+    const listasStr = listasDisponibles.join(', ');
+
+    // Recopilar tareas pendientes para ayudar a la IA a identificar con precisión qué tarea tildar
+    const tareasPendientesInfo = (Array.isArray(keepNotes) ? keepNotes : []).map(n => {
+      const unch = (Array.isArray(n.items) ? n.items : [])
+        .filter(i => !i.checked)
+        .map(i => (i.text || '').trim())
+        .filter(Boolean);
+      if (unch.length > 0) {
+        return `- Lista "${n.title}": [${unch.slice(0, 30).join(', ')}]`;
+      }
+      return null;
+    }).filter(Boolean).join('\n');
+
+    const defaultListName = listasDisponibles.includes('Mis Tareas') ? 'Mis Tareas' : (listasDisponibles[0] || 'Mis Tareas');
+
+    const systemPrompt = `Eres un asistente inteligente para la gestión de listas de tareas y compras personales.
+Tu objetivo es interpretar la instrucción en lenguaje natural del usuario y determinar con exactitud qué acción realizar.
+
+Las listas disponibles actualmente son: [${listasStr}]
+
+${tareasPendientesInfo ? `Tareas pendientes actuales en cada lista:\n${tareasPendientesInfo}\n` : ''}
+
+Debes responder ÚNICAMENTE con un objeto JSON válido con la siguiente estructura:
+{
+  "accion": "agregar" | "completar",
+  "lista": "Nombre de la lista",
+  "items": ["Elemento 1", "Elemento 2"]
+}
+
+Reglas obligatorias:
+1. "accion":
+   - "agregar": Si el usuario desea sumar, anotar, agregar, comprar, cargar o registrar nuevas tareas o ítems.
+   - "completar": Si el usuario pide tildar, tachar, chequear, completar, marcar como hecha, o indica que ya realizó, compró o terminó algo (ej. "ya compré...", "hice...", "terminé...", "tildá...", "marcar como hecha...").
+2. "lista":
+   - Debe ser el nombre de la lista más adecuada entre las listas disponibles: [${listasStr}].
+   - Si el usuario dice "al súper" o "en el supermercado", asócialo a la lista correspondiente (ej. "Supermercado").
+   - Si el usuario no especifica ninguna lista, usa "${defaultListName}".
+   - Si el usuario pide explícitamente crear o cargar en una lista con un nombre nuevo que no está en las disponibles, asigna ese nuevo nombre a "lista".
+3. "items":
+   - Un array de strings con el texto limpio de cada ítem a agregar o tarea a completar.
+   - Quita palabras de instrucción como "anotar", "por favor", "agregar", "tildar", etc. Deja el contenido directo (ej: si dice "anotar leche y pan en compras", items es ["Leche", "Pan"]).
+   - Si la acción es "completar", coloca en "items" el nombre de la tarea (o tareas) a marcar como completada, preferentemente tal como figura en las tareas pendientes actuales si coincide.
+
+Texto del usuario: "${texto}"`;
+
+    let response;
+    let success = false;
+    let errorMsg = '';
+    const models = ['gemini-3.6-flash', 'gemini-3.5-flash-lite', 'gemini-3.5-flash', 'gemini-flash-lite-latest', 'gemini-2.5-flash', 'gemini-2.0-flash'];
+
+    for (const model of models) {
+      response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: systemPrompt }] }],
+          generationConfig: { temperature: 0.1, responseMimeType: "application/json" }
+        })
+      });
+
+      if (response.ok) {
+        success = true;
+        break;
+      } else {
+        try {
+          const errData = await response.json();
+          if (errData.error && errData.error.message) {
+            errorMsg = errData.error.message;
+          }
+        } catch (e) {}
+
+        if (response.status === 400 || response.status === 401 || response.status === 403) {
+          continue;
+        }
+        if (response.status === 404) {
+          continue;
+        }
+      }
+    }
+
+    if (!success) {
+      if (errorMsg.includes("API key not valid") || errorMsg.includes("API Key") || errorMsg.includes("credentials")) {
+        localStorage.removeItem('GEMINI_API_KEY');
+      }
+      throw new Error(`Ningún modelo funcionó. Último error: ${errorMsg}`);
+    }
+
+    const data = await response.json();
+    let candidateText = data.candidates[0].content.parts[0].text;
+    const primerLlave = candidateText.indexOf('{');
+    const ultimaLlave = candidateText.lastIndexOf('}');
+    if (primerLlave !== -1 && ultimaLlave !== -1 && ultimaLlave > primerLlave) {
+      candidateText = candidateText.substring(primerLlave, ultimaLlave + 1);
+    }
+
+    const aiResult = JSON.parse(candidateText);
+    const accion = String(aiResult.accion || 'agregar').toLowerCase().trim();
+
+    // Normalizar items
+    let rawItems = [];
+    if (Array.isArray(aiResult.items)) {
+      rawItems = aiResult.items;
+    } else if (aiResult.items) {
+      rawItems = [aiResult.items];
+    } else if (aiResult.item) {
+      rawItems = [aiResult.item];
+    } else if (aiResult.tarea) {
+      rawItems = [aiResult.tarea];
+    }
+    const items = rawItems.map(it => String(it).trim()).filter(Boolean);
+
+    if (items.length === 0) {
+      throw new Error("La IA no detectó ningún ítem o tarea en tu mensaje.");
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // ACCIÓN 1: COMPLETAR / TILDAR TAREA
+    // ─────────────────────────────────────────────────────────────
+    if (accion === 'completar') {
+      const nombreBuscado = String(aiResult.lista || '').trim().toLowerCase();
+      let listasCandidatas = [...keepNotes];
+      if (nombreBuscado) {
+        listasCandidatas.sort((a, b) => {
+          const aMatch = (a.title || '').toLowerCase().includes(nombreBuscado);
+          const bMatch = (b.title || '').toLowerCase().includes(nombreBuscado);
+          return (bMatch ? 1 : 0) - (aMatch ? 1 : 0);
+        });
+      }
+
+      let completados = [];
+      for (const targetText of items) {
+        const cleanTarget = targetText.toLowerCase();
+        let encontrado = false;
+
+        // Búsqueda 1: Coincidencia de inclusión
+        for (const note of listasCandidatas) {
+          if (!Array.isArray(note.items)) continue;
+          const item = note.items.find(i => !i.checked && (
+            i.text.toLowerCase().includes(cleanTarget) || cleanTarget.includes(i.text.toLowerCase())
+          ));
+          if (item) {
+            item.checked = true;
+            note.updatedAt = new Date().toISOString();
+            await syncKeepItemWithGoogleApi(note, item, 'update');
+            completados.push({ texto: item.text, lista: note.title });
+            encontrado = true;
+            break;
+          }
+        }
+
+        // Búsqueda 2: Coincidencia por palabras clave
+        if (!encontrado) {
+          const palabrasTarget = cleanTarget.split(/\s+/).filter(w => w.length > 2);
+          for (const note of listasCandidatas) {
+            if (!Array.isArray(note.items)) continue;
+            const item = note.items.find(i => !i.checked && palabrasTarget.some(p => i.text.toLowerCase().includes(p)));
+            if (item) {
+              item.checked = true;
+              note.updatedAt = new Date().toISOString();
+              await syncKeepItemWithGoogleApi(note, item, 'update');
+              completados.push({ texto: item.text, lista: note.title });
+              encontrado = true;
+              break;
+            }
+          }
+        }
+      }
+
+      if (completados.length > 0) {
+        guardarPreferenciasTasksLocal();
+        renderKeepUI();
+        cerrarModalIAListas();
+        if (txtInput) txtInput.value = '';
+        const nombresMsg = completados.map(c => `"${c.texto}" (${c.lista})`).join(', ');
+        showToast(`Tarea(s) tildada(s): ${nombresMsg} ✓`, 'success');
+      } else {
+        showToast(`No se encontró ninguna tarea pendiente que coincida con "${items.join(', ')}".`, 'error');
+      }
+      return;
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // ACCIÓN 2: AGREGAR A LISTA
+    // ─────────────────────────────────────────────────────────────
+    let targetList = null;
+    const nombreBuscado = String(aiResult.lista || '').trim().toLowerCase();
+
+    if (nombreBuscado) {
+      targetList = keepNotes.find(n => (n.title || '').trim().toLowerCase() === nombreBuscado);
+      if (!targetList) {
+        targetList = keepNotes.find(n => {
+          const t = (n.title || '').trim().toLowerCase();
+          return t.includes(nombreBuscado) || nombreBuscado.includes(t);
+        });
+      }
+    }
+
+    // Si la lista solicitada no existe, crearla en Google Tasks
+    if (!targetList && nombreBuscado && nombreBuscado !== 'mis tareas' && nombreBuscado !== 'tareas') {
+      const nuevoTitulo = aiResult.lista.trim();
+      try {
+        const createdList = await apiCreateTaskList(nuevoTitulo);
+        const listId = createdList.id;
+        actualizarMetaLista(listId, { color: 'amber', pinned: true, label: '' });
+        targetList = {
+          id: listId,
+          googleTaskListId: listId,
+          title: createdList.title || nuevoTitulo,
+          color: 'amber',
+          pinned: true,
+          label: '',
+          updatedAt: new Date().toISOString(),
+          items: []
+        };
+        keepNotes.unshift(targetList);
+      } catch (err) {
+        console.warn("No se pudo crear la lista remota, usando lista por defecto", err);
+      }
+    }
+
+    if (!targetList) {
+      targetList = obtenerListaMisTareas() || keepNotes[0];
+    }
+
+    if (!targetList) {
+      throw new Error("No hay ninguna lista disponible ni conectada a Google Tasks.");
+    }
+
+    if (!Array.isArray(targetList.items)) targetList.items = [];
+
+    for (const itemText of items) {
+      const newItem = {
+        id: 'temp_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+        text: itemText,
+        checked: false
+      };
+      targetList.items.unshift(newItem);
+      targetList.updatedAt = new Date().toISOString();
+      await syncKeepItemWithGoogleApi(targetList, newItem, 'create');
+    }
+
+    guardarPreferenciasTasksLocal();
+    renderKeepUI();
+    cerrarModalIAListas();
+    if (txtInput) txtInput.value = '';
+    showToast(`Agregado a "${targetList.title}": ${items.join(', ')} ✓`, 'success');
+
+  } catch (error) {
+    console.error(error);
+    alert("Error al procesar con IA en listas: " + error.message);
+  } finally {
+    if (btnText) btnText.innerText = originalText;
+    if (btnEl) btnEl.disabled = false;
+  }
+}
+
 // ─── BUSCADOR / COMANDO RÁPIDO GLOBAL (CTRL + K) ─────────────────────────────
 let cmdPaletteItems = [];
 let cmdSelectedIdx  = 0;
@@ -14253,7 +15722,7 @@ function filtrarCommandPalette() {
     { id: 'inicio',     title: 'Ir a Inicio (Panel de Control)', sub: 'Resumen general', icon: 'fa-home text-blue-400' },
     { id: 'actividad',  title: 'Ir a Actividad y Salud',         sub: 'Pasos, distancia, peso y calorías', icon: 'fa-heartbeat text-teal-400' },
     { id: 'finanzas',   title: 'Ir a Balance (Finanzas)',        sub: 'Ingresos, gastos y movimientos', icon: 'fa-chart-line text-indigo-400' },
-    { id: 'ahorros',    title: 'Ir a Ahorros e Inversiones',     sub: 'Cartera USD, BTC y CEDEARs', icon: 'fa-piggy-bank text-violet-400' },
+    { id: 'ahorros',    title: 'Ir a Inversiones',               sub: 'Cartera USD, BTC y CEDEARs', icon: 'fa-piggy-bank text-violet-400' },
     { id: 'sueldos',    title: 'Ir a Sueldos',                   sub: 'Historial salarial ARS y USD', icon: 'fa-money-bill-wave text-yellow-400' },
     { id: 'tenis',      title: 'Ir a Tenis',                     sub: 'Torneos, rivales y efectividad', icon: 'fa-table-tennis text-emerald-400' },
     { id: 'partidos',   title: 'Ir a Partidos en Cancha',        sub: 'Historial de cancha y estadios', icon: 'fa-futbol text-indigo-400' },
@@ -14275,6 +15744,7 @@ function filtrarCommandPalette() {
     { title: 'Escena Domótica: Tengo Calor (Aires a 22°C)', sub: 'Enciende ambos aires en frío', icon: 'fa-snowflake text-cyan-400', badge: 'Domótica', fn: () => ejecutarEscenaDomotica('tengo_calor') },
     { title: 'Escena Domótica: Salir de Casa (Aspirar)',     sub: 'Apaga clima/TV e inicia aspiradora', icon: 'fa-robot text-emerald-400', badge: 'Domótica', fn: () => ejecutarEscenaDomotica('salir_casa') },
     { title: 'Escena Domótica: Modo Cine',                   sub: 'Enciende TV Living y climatización', icon: 'fa-film text-violet-400', badge: 'Domótica', fn: () => ejecutarEscenaDomotica('modo_cine') },
+    { title: 'Asistente IA: Cargar o Tildar en Listas', sub: 'Agregar ítems o completar tareas con IA', icon: 'fa-wand-magic-sparkles text-purple-400', badge: 'Listas', fn: () => abrirModalIAListas() },
     { title: 'Alternar Tema Claro / Oscuro',                 sub: 'Cambia entre Obsidian Glass y Nordic Daylight', icon: 'fa-adjust text-amber-400', badge: 'Ajuste', fn: () => toggleThemeMode() },
     { title: 'Exportar vista actual a CSV',                  sub: 'Descarga tabla del módulo activo', icon: 'fa-download text-emerald-400', badge: 'Acción', fn: () => exportarCSV() }
   ];
