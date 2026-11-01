@@ -1510,9 +1510,9 @@
                 <input id="inicio-mis-tareas-input" type="text" placeholder="Agregar recordatorio a Mis tareas..."
                        onkeydown="if(event.key==='Enter'){event.preventDefault(); agregarTareaRapidaDesdeInicio(this);}"
                        class="w-full bg-transparent text-[11px] text-slate-200 placeholder-slate-500 outline-none">
-                <button type="button" onclick="abrirModalIAListas()" title="Asistente de IA para Listas"
+                <button type="button" id="btn-inicio-ia-listas" onclick="toggleVozIAListas()" title="Hablar a la IA para listas"
                         class="w-7 h-7 rounded-lg bg-purple-600/80 hover:bg-purple-600 text-white flex items-center justify-center shrink-0 text-[10px] transition-colors shadow-sm">
-                  <i class="fas fa-wand-magic-sparkles"></i>
+                  <i class="fas fa-microphone"></i>
                 </button>
               </div>
             </div>
@@ -1961,9 +1961,9 @@
             </div>
 
             <div class="flex gap-3">
-              <button type="button" id="btnIA" onclick="abrirModalIA()"
+              <button type="button" id="btnIA" onclick="toggleVozIABalance()" title="Hablar a la IA para registrar gasto o ingreso"
                       class="w-1/3 bg-purple-600 hover:bg-purple-500 text-white font-black py-4 rounded-xl border border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.4)] active:scale-95 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest">
-                <i class="fas fa-wand-magic-sparkles"></i><span class="hidden sm:inline">IA</span>
+                <i class="fas fa-microphone"></i><i class="fas fa-wand-magic-sparkles text-xs opacity-80"></i><span class="hidden sm:inline">IA</span>
               </button>
               <button type="submit" id="btnGuardar"
                       class="w-2/3 bg-red-600 hover:opacity-90 text-white font-black py-4 rounded-xl border border-white/20 active:scale-95 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest">
@@ -3596,9 +3596,9 @@
             <i class="fas fa-times text-xs"></i>
           </button>
         </div>
-        <button type="button" id="btn-ia-listas" onclick="abrirModalIAListas()" title="Asistente de IA para Listas"
+        <button type="button" id="btn-ia-listas" onclick="toggleVozIAListas()" title="Hablar a la IA para listas"
                 class="h-12 px-4 rounded-2xl bg-purple-600 hover:bg-purple-500 text-white font-black text-xs uppercase tracking-wider flex items-center gap-2 border border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.35)] active:scale-95 transition-all shrink-0">
-          <i class="fas fa-wand-magic-sparkles"></i><span class="hidden sm:inline">IA</span>
+          <i class="fas fa-microphone"></i><i class="fas fa-wand-magic-sparkles text-[10px] opacity-80"></i><span class="hidden sm:inline">IA</span>
         </button>
       </div>
 
@@ -6743,101 +6743,152 @@ function cerrarModalAnual() {
 let isRecording = false;
 let recognition = null;
 let speechCaptured = false;
+let voiceTranscriptBalance = '';
 
-if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  recognition = new SpeechRecognition();
-  recognition.lang = 'es-AR';
-  recognition.continuous = false;
-  recognition.interimResults = false;
-
-  recognition.onresult = function(event) {
-    const transcript = event.results[0][0].transcript;
-    const textArea = document.getElementById('ia-texto');
-    textArea.value = (textArea.value + ' ' + transcript).trim();
-    if (transcript && transcript.trim()) {
-      speechCaptured = true;
-    }
-  };
-
-  recognition.onend = function() {
-    isRecording = false;
-    document.getElementById('ia-status').classList.add('hidden');
-    document.getElementById('btn-dictar-ia').classList.remove('bg-red-600', 'text-white', 'border-red-500');
-    document.getElementById('btn-dictar-ia').classList.add('bg-slate-700', 'text-slate-300', 'border-slate-600');
-    if (speechCaptured) {
-      speechCaptured = false;
-      const txt = document.getElementById('ia-texto');
-      if (txt && txt.value.trim()) {
-        setTimeout(() => {
-          procesarTextoIA();
-        }, 200);
-      }
-    }
-  };
-
-  recognition.onerror = function(event) {
-    console.error('Speech recognition error', event.error);
-    speechCaptured = false;
-    isRecording = false;
-    document.getElementById('ia-status').classList.add('hidden');
-    document.getElementById('btn-dictar-ia').classList.remove('bg-red-600', 'text-white', 'border-red-500');
-    document.getElementById('btn-dictar-ia').classList.add('bg-slate-700', 'text-slate-300', 'border-slate-600');
-  };
-}
-
-function abrirModalIA() {
-  speechCaptured = false;
-  document.getElementById('modal-ia').style.setProperty('display', 'flex', 'important');
-  document.body.style.overflow = 'hidden'; // Evitar scroll de fondo
-  document.getElementById('ia-texto').focus();
-}
-
-function cerrarModalIA() {
-  speechCaptured = false;
-  document.getElementById('modal-ia').style.setProperty('display', 'none', 'important');
-  document.body.style.overflow = ''; // Restaurar scroll
-  if (isRecording && recognition) {
-    recognition.stop();
+function actualizarUIBotonIABalance(estado) {
+  const btn = document.getElementById('btnIA');
+  if (!btn) return;
+  if (estado === 'listening') {
+    btn.className = "w-1/3 bg-red-600 hover:bg-red-500 text-white font-black py-4 rounded-xl border border-red-400 shadow-[0_0_20px_rgba(239,68,68,0.7)] animate-pulse active:scale-95 transition-all flex items-center justify-center gap-2 text-xs uppercase tracking-widest cursor-pointer";
+    btn.innerHTML = '<i class="fas fa-microphone text-base animate-bounce"></i><span>Escuchando...</span>';
+    btn.title = "Escuchando... Di tu movimiento (haz clic para detener)";
+    btn.disabled = false;
+  } else if (estado === 'processing') {
+    btn.className = "w-1/3 bg-purple-800 text-purple-200 font-black py-4 rounded-xl border border-purple-400/60 shadow-[0_0_15px_rgba(168,85,247,0.5)] active:scale-95 transition-all flex items-center justify-center gap-2 text-xs uppercase tracking-widest cursor-wait";
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin text-base"></i><span>IA procesando...</span>';
+    btn.title = "La IA está interpretando tu audio...";
+    btn.disabled = true;
+  } else {
+    btn.className = "w-1/3 bg-purple-600 hover:bg-purple-500 text-white font-black py-4 rounded-xl border border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.4)] active:scale-95 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest cursor-pointer";
+    btn.innerHTML = '<i class="fas fa-microphone"></i><i class="fas fa-wand-magic-sparkles text-xs opacity-80"></i><span class="hidden sm:inline">IA</span>';
+    btn.title = "Hablar a la IA para registrar gasto o ingreso";
+    btn.disabled = false;
   }
 }
 
-function toggleDictadoIA() {
-  if (!recognition) {
+function toggleVozIABalance() {
+  if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
     alert("El dictado por voz no está soportado en este navegador.");
     return;
   }
 
   if (isRecording) {
-    recognition.stop();
-  } else {
+    if (recognition) {
+      try { recognition.stop(); } catch(e){}
+    }
+    return;
+  }
+
+  // Detener dictado de listas si estuviese activo
+  if (isRecordingListas && recognitionListas) {
+    try { recognitionListas.stop(); } catch(e){}
+  }
+
+  try {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.lang = 'es-AR';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    voiceTranscriptBalance = '';
     speechCaptured = false;
+
+    recognition.onresult = function(event) {
+      let text = '';
+      for (let i = 0; i < event.results.length; i++) {
+        text += event.results[i][0].transcript + ' ';
+      }
+      voiceTranscriptBalance = text.trim();
+      if (voiceTranscriptBalance) {
+        speechCaptured = true;
+      }
+    };
+
+    recognition.onend = function() {
+      isRecording = false;
+      const statusEl = document.getElementById('ia-status');
+      if (statusEl) statusEl.classList.add('hidden');
+      if (speechCaptured && voiceTranscriptBalance) {
+        const textoAProcesar = voiceTranscriptBalance;
+        speechCaptured = false;
+        voiceTranscriptBalance = '';
+        actualizarUIBotonIABalance('processing');
+        procesarTextoIA(textoAProcesar);
+      } else {
+        actualizarUIBotonIABalance('idle');
+      }
+    };
+
+    recognition.onerror = function(event) {
+      console.warn('Speech recognition error balance:', event.error);
+      speechCaptured = false;
+      isRecording = false;
+      const statusEl = document.getElementById('ia-status');
+      if (statusEl) statusEl.classList.add('hidden');
+      actualizarUIBotonIABalance('idle');
+      if (event.error !== 'no-speech' && event.error !== 'aborted') {
+        showToast('Error de micrófono: ' + event.error, 'error');
+      }
+    };
+
     recognition.start();
     isRecording = true;
-    document.getElementById('ia-status').classList.remove('hidden');
-    document.getElementById('btn-dictar-ia').classList.remove('bg-slate-700', 'text-slate-300', 'border-slate-600');
-    document.getElementById('btn-dictar-ia').classList.add('bg-red-600', 'text-white', 'border-red-500');
+    actualizarUIBotonIABalance('listening');
+    showToast('🎤 Escuchando... Di tu movimiento (ej: "Gasté 15000 en el súper con débito")', 'ok');
+  } catch(e) {
+    console.error("Error al iniciar reconocimiento de voz balance:", e);
+    isRecording = false;
+    actualizarUIBotonIABalance('idle');
   }
 }
 
-async function procesarTextoIA() {
-  const texto = document.getElementById('ia-texto').value.trim();
+function abrirModalIA() {
+  toggleVozIABalance();
+}
+
+function cerrarModalIA() {
+  speechCaptured = false;
+  const modal = document.getElementById('modal-ia');
+  if (modal) modal.style.setProperty('display', 'none', 'important');
+  document.body.style.overflow = '';
+  if (isRecording && recognition) {
+    try { recognition.stop(); } catch(e){}
+  }
+  actualizarUIBotonIABalance('idle');
+}
+
+function toggleDictadoIA() {
+  toggleVozIABalance();
+}
+
+async function procesarTextoIA(textoDirecto) {
+  const inputTxt = document.getElementById('ia-texto');
+  const texto = (typeof textoDirecto === 'string' && textoDirecto.trim())
+    ? textoDirecto.trim()
+    : (inputTxt ? inputTxt.value.trim() : '');
+
   if (!texto) {
-    alert("Por favor ingresa un texto o usa el micrófono.");
+    actualizarUIBotonIABalance('idle');
+    showToast("No se detectó audio ni texto para procesar.", "warning");
     return;
   }
 
   let apiKey = localStorage.getItem('GEMINI_API_KEY');
   if (!apiKey) {
     apiKey = prompt("Por favor, ingresa tu API Key de Google Gemini:");
-    if (!apiKey) return;
+    if (!apiKey) {
+      actualizarUIBotonIABalance('idle');
+      return;
+    }
     localStorage.setItem('GEMINI_API_KEY', apiKey.trim());
   }
 
+  actualizarUIBotonIABalance('processing');
   const btnText = document.getElementById('ia-btn-text');
-  const originalText = btnText.innerText;
-  btnText.innerText = "Procesando...";
-  document.getElementById('btn-procesar-ia').disabled = true;
+  const originalText = btnText ? btnText.innerText : "Procesar";
+  if (btnText) btnText.innerText = "Procesando...";
+  const btnProc = document.getElementById('btn-procesar-ia');
+  if (btnProc) btnProc.disabled = true;
 
   try {
     const selectCatOpts = Array.from(document.getElementById('categoria').options).map(o => o.value).filter(v => v);
@@ -6960,16 +7011,19 @@ Texto del usuario: "${texto}"`;
     }
 
     cerrarModalIA();
-    document.getElementById('ia-texto').value = '';
+    const txtArea = document.getElementById('ia-texto');
+    if (txtArea) txtArea.value = '';
     window.scrollTo({ top: 0, behavior: 'smooth' }); // Mantener siempre arriba
-    showToast('Datos cargados por IA. Revisa y presiona Registrar.', 'success');
+    showToast(`✓ Cargado por IA: ${aiResult.concepto || 'Movimiento'} ($${aiResult.monto || 0})`, 'success');
 
   } catch (error) {
     console.error(error);
     alert("Error al procesar con IA: " + error.message);
   } finally {
-    btnText.innerText = originalText;
-    document.getElementById('btn-procesar-ia').disabled = false;
+    if (btnText) btnText.innerText = originalText;
+    const btnProc = document.getElementById('btn-procesar-ia');
+    if (btnProc) btnProc.disabled = false;
+    actualizarUIBotonIABalance('idle');
   }
 }
 
@@ -15267,92 +15321,149 @@ async function procesarArchivosTakeoutKeep(event) {
 let isRecordingListas = false;
 let recognitionListas = null;
 let speechCapturedListas = false;
+let voiceTranscriptListas = '';
 
-if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  recognitionListas = new SpeechRecognition();
-  recognitionListas.lang = 'es-AR';
-  recognitionListas.continuous = false;
-  recognitionListas.interimResults = false;
+function actualizarUIBotonIAListas(estado) {
+  const btn = document.getElementById('btn-ia-listas');
+  const btnInicio = document.getElementById('btn-inicio-ia-listas');
 
-  recognitionListas.onresult = function(event) {
-    const transcript = event.results[0][0].transcript;
-    const textArea = document.getElementById('ia-listas-texto');
-    if (textArea) {
-      textArea.value = (textArea.value + ' ' + transcript).trim();
-      if (transcript && transcript.trim()) {
+  if (estado === 'listening') {
+    if (btn) {
+      btn.className = "h-12 px-4 rounded-2xl bg-red-600 hover:bg-red-500 text-white font-black text-xs uppercase tracking-wider flex items-center gap-2 border border-red-400 shadow-[0_0_20px_rgba(239,68,68,0.7)] animate-pulse active:scale-95 transition-all shrink-0 cursor-pointer";
+      btn.innerHTML = '<i class="fas fa-microphone text-sm animate-bounce"></i><span>Escuchando...</span>';
+      btn.title = "Escuchando... Di qué agregar o tildar (haz clic para detener)";
+      btn.disabled = false;
+    }
+    if (btnInicio) {
+      btnInicio.className = "w-7 h-7 rounded-lg bg-red-600 text-white flex items-center justify-center shrink-0 text-[10px] animate-pulse shadow-[0_0_10px_rgba(239,68,68,0.8)] cursor-pointer";
+      btnInicio.innerHTML = '<i class="fas fa-microphone text-xs animate-bounce text-white"></i>';
+      btnInicio.title = "Escuchando...";
+      btnInicio.disabled = false;
+    }
+  } else if (estado === 'processing') {
+    if (btn) {
+      btn.className = "h-12 px-4 rounded-2xl bg-purple-800 text-purple-200 font-black text-xs uppercase tracking-wider flex items-center gap-2 border border-purple-400/60 shadow-[0_0_15px_rgba(168,85,247,0.5)] active:scale-95 transition-all shrink-0 cursor-wait";
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin text-sm"></i><span>IA procesando...</span>';
+      btn.title = "Procesando con IA...";
+      btn.disabled = true;
+    }
+    if (btnInicio) {
+      btnInicio.className = "w-7 h-7 rounded-lg bg-purple-800 text-purple-200 flex items-center justify-center shrink-0 text-[10px] shadow-sm cursor-wait";
+      btnInicio.innerHTML = '<i class="fas fa-spinner fa-spin text-xs"></i>';
+      btnInicio.title = "Procesando...";
+      btnInicio.disabled = true;
+    }
+  } else {
+    if (btn) {
+      btn.className = "h-12 px-4 rounded-2xl bg-purple-600 hover:bg-purple-500 text-white font-black text-xs uppercase tracking-wider flex items-center gap-2 border border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.35)] active:scale-95 transition-all shrink-0 cursor-pointer";
+      btn.innerHTML = '<i class="fas fa-microphone"></i><i class="fas fa-wand-magic-sparkles text-[10px] opacity-80"></i><span class="hidden sm:inline">IA</span>';
+      btn.title = "Hablar a la IA para agregar o tildar tareas";
+      btn.disabled = false;
+    }
+    if (btnInicio) {
+      btnInicio.className = "w-7 h-7 rounded-lg bg-purple-600/80 hover:bg-purple-600 text-white flex items-center justify-center shrink-0 text-[10px] transition-colors shadow-sm cursor-pointer";
+      btnInicio.innerHTML = '<i class="fas fa-microphone"></i>';
+      btnInicio.title = "Hablar a la IA para listas";
+      btnInicio.disabled = false;
+    }
+  }
+}
+
+function toggleVozIAListas() {
+  if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+    alert("El dictado por voz no está soportado en este navegador.");
+    return;
+  }
+
+  if (isRecordingListas) {
+    if (recognitionListas) {
+      try { recognitionListas.stop(); } catch(e){}
+    }
+    return;
+  }
+
+  // Detener balance si estuviese grabando
+  if (isRecording && recognition) {
+    try { recognition.stop(); } catch(e){}
+  }
+
+  try {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognitionListas = new SpeechRecognition();
+    recognitionListas.lang = 'es-AR';
+    recognitionListas.continuous = false;
+    recognitionListas.interimResults = false;
+    voiceTranscriptListas = '';
+    speechCapturedListas = false;
+
+    recognitionListas.onresult = function(event) {
+      let text = '';
+      for (let i = 0; i < event.results.length; i++) {
+        text += event.results[i][0].transcript + ' ';
+      }
+      voiceTranscriptListas = text.trim();
+      if (voiceTranscriptListas) {
         speechCapturedListas = true;
       }
-    }
-  };
+    };
 
-  recognitionListas.onend = function() {
-    isRecordingListas = false;
-    const status = document.getElementById('ia-listas-status');
-    const btn = document.getElementById('btn-dictar-ia-listas');
-    if (status) status.classList.add('hidden');
-    if (btn) {
-      btn.classList.remove('bg-red-600', 'text-white', 'border-red-500');
-      btn.classList.add('bg-slate-700', 'text-slate-300', 'border-slate-600');
-    }
-    if (speechCapturedListas) {
-      speechCapturedListas = false;
-      const txt = document.getElementById('ia-listas-texto');
-      if (txt && txt.value.trim()) {
-        setTimeout(() => {
-          procesarTextoIAListas();
-        }, 200);
+    recognitionListas.onend = function() {
+      isRecordingListas = false;
+      const status = document.getElementById('ia-listas-status');
+      if (status) status.classList.add('hidden');
+      if (speechCapturedListas && voiceTranscriptListas) {
+        const textoAProcesar = voiceTranscriptListas;
+        speechCapturedListas = false;
+        voiceTranscriptListas = '';
+        actualizarUIBotonIAListas('processing');
+        procesarTextoIAListas(textoAProcesar);
+      } else {
+        actualizarUIBotonIAListas('idle');
       }
-    }
-  };
+    };
 
-  recognitionListas.onerror = function(event) {
-    console.error('Speech recognition error listas', event.error);
-    speechCapturedListas = false;
+    recognitionListas.onerror = function(event) {
+      console.warn('Speech recognition error listas', event.error);
+      speechCapturedListas = false;
+      isRecordingListas = false;
+      const status = document.getElementById('ia-listas-status');
+      if (status) status.classList.add('hidden');
+      actualizarUIBotonIAListas('idle');
+      if (event.error !== 'no-speech' && event.error !== 'aborted') {
+        showToast('Error de micrófono: ' + event.error, 'error');
+      }
+    };
+
+    recognitionListas.start();
+    isRecordingListas = true;
+    actualizarUIBotonIAListas('listening');
+    showToast('🎤 Escuchando... Di qué agregar o tildar (ej: "En la lista súper agregar leche")', 'ok');
+  } catch(e) {
+    console.error("Error al iniciar voz listas:", e);
     isRecordingListas = false;
-    const status = document.getElementById('ia-listas-status');
-    const btn = document.getElementById('btn-dictar-ia-listas');
-    if (status) status.classList.add('hidden');
-    if (btn) {
-      btn.classList.remove('bg-red-600', 'text-white', 'border-red-500');
-      btn.classList.add('bg-slate-700', 'text-slate-300', 'border-slate-600');
-    }
-  };
+    actualizarUIBotonIAListas('idle');
+  }
 }
 
 function abrirModalIAListas() {
+  toggleVozIAListas();
+}
+
+function cerrarModalIAListas() {
   speechCapturedListas = false;
   const modal = document.getElementById('modal-ia-listas');
   if (modal) {
-    modal.style.setProperty('display', 'flex', 'important');
-    document.body.style.overflow = 'hidden';
+    modal.style.setProperty('display', 'none', 'important');
+    document.body.style.overflow = '';
   }
-  const txt = document.getElementById('ia-listas-texto');
-  if (txt) {
-    setTimeout(() => txt.focus(), 60);
+  if (isRecordingListas && recognitionListas) {
+    try { recognitionListas.stop(); } catch(e){}
   }
+  actualizarUIBotonIAListas('idle');
+}
 
-  // Asegurar que las notas estén cargadas del caché si aún no se inicializó
-  if (!Array.isArray(keepNotes) || keepNotes.length === 0) {
-    if (typeof cargarPreferenciasTasksLocal === 'function') {
-      cargarPreferenciasTasksLocal();
-    }
-  }
-
-  // Renderizar pills de listas disponibles
-  const container = document.getElementById('ia-listas-disponibles-pills');
-  if (container) {
-    const listasNombres = (Array.isArray(keepNotes) && keepNotes.length > 0)
-      ? keepNotes.map(n => (n.title || '').trim()).filter(Boolean)
-      : ['Mis Tareas'];
-
-    container.innerHTML = listasNombres.map(nombre => `
-      <button type="button" onclick="insertarListaEnPromptListas('${nombre.replace(/'/g, "\\'")}')"
-              class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-purple-900/40 text-slate-300 hover:text-purple-300 border border-slate-700 hover:border-purple-500/40 text-[10px] font-bold transition-all flex items-center gap-1.5 cursor-pointer">
-        <i class="fas fa-list text-[9px] text-amber-400"></i><span>${escapeHtmlKeep(nombre)}</span>
-      </button>
-    `).join('');
-  }
+function toggleDictadoIAListas() {
+  toggleVozIAListas();
 }
 
 function insertarListaEnPromptListas(nombreLista) {
@@ -15367,47 +15478,11 @@ function insertarListaEnPromptListas(nombreLista) {
   txt.focus();
 }
 
-function cerrarModalIAListas() {
-  speechCapturedListas = false;
-  const modal = document.getElementById('modal-ia-listas');
-  if (modal) {
-    modal.style.setProperty('display', 'none', 'important');
-    document.body.style.overflow = '';
-  }
-  if (isRecordingListas && recognitionListas) {
-    recognitionListas.stop();
-  }
-}
-
-function toggleDictadoIAListas() {
-  if (!recognitionListas) {
-    alert("El dictado por voz no está soportado en este navegador.");
-    return;
-  }
-
-  if (isRecordingListas) {
-    recognitionListas.stop();
-  } else {
-    try {
-      speechCapturedListas = false;
-      recognitionListas.start();
-      isRecordingListas = true;
-      const status = document.getElementById('ia-listas-status');
-      const btn = document.getElementById('btn-dictar-ia-listas');
-      if (status) status.classList.remove('hidden');
-      if (btn) {
-        btn.classList.remove('bg-slate-700', 'text-slate-300', 'border-slate-600');
-        btn.classList.add('bg-red-600', 'text-white', 'border-red-500');
-      }
-    } catch (e) {
-      console.warn("Error al iniciar dictado de voz:", e);
-    }
-  }
-}
-
-async function procesarTextoIAListas() {
+async function procesarTextoIAListas(textoDirecto) {
   const txtInput = document.getElementById('ia-listas-texto');
-  const texto = txtInput ? txtInput.value.trim() : '';
+  const texto = (typeof textoDirecto === 'string' && textoDirecto.trim())
+    ? textoDirecto.trim()
+    : (txtInput ? txtInput.value.trim() : '');
   if (!texto) {
     alert("Por favor ingresa un texto o usa el micrófono.");
     return;
@@ -15684,6 +15759,7 @@ Texto del usuario: "${texto}"`;
   } finally {
     if (btnText) btnText.innerText = originalText;
     if (btnEl) btnEl.disabled = false;
+    actualizarUIBotonIAListas('idle');
   }
 }
 
@@ -15744,7 +15820,8 @@ function filtrarCommandPalette() {
     { title: 'Escena Domótica: Tengo Calor (Aires a 22°C)', sub: 'Enciende ambos aires en frío', icon: 'fa-snowflake text-cyan-400', badge: 'Domótica', fn: () => ejecutarEscenaDomotica('tengo_calor') },
     { title: 'Escena Domótica: Salir de Casa (Aspirar)',     sub: 'Apaga clima/TV e inicia aspiradora', icon: 'fa-robot text-emerald-400', badge: 'Domótica', fn: () => ejecutarEscenaDomotica('salir_casa') },
     { title: 'Escena Domótica: Modo Cine',                   sub: 'Enciende TV Living y climatización', icon: 'fa-film text-violet-400', badge: 'Domótica', fn: () => ejecutarEscenaDomotica('modo_cine') },
-    { title: 'Asistente IA: Cargar o Tildar en Listas', sub: 'Agregar ítems o completar tareas con IA', icon: 'fa-wand-magic-sparkles text-purple-400', badge: 'Listas', fn: () => abrirModalIAListas() },
+    { title: 'Asistente IA: Dictar para Listas',             sub: 'Hablar por micrófono para agregar o tildar tareas', icon: 'fa-microphone text-purple-400', badge: 'Listas', fn: () => toggleVozIAListas() },
+    { title: 'Asistente IA: Dictar Movimiento en Balance',   sub: 'Hablar por micrófono para registrar gasto o ingreso', icon: 'fa-microphone text-purple-400', badge: 'Balance', fn: () => { showSection('finanzas'); toggleVozIABalance(); } },
     { title: 'Alternar Tema Claro / Oscuro',                 sub: 'Cambia entre Obsidian Glass y Nordic Daylight', icon: 'fa-adjust text-amber-400', badge: 'Ajuste', fn: () => toggleThemeMode() },
     { title: 'Exportar vista actual a CSV',                  sub: 'Descarga tabla del módulo activo', icon: 'fa-download text-emerald-400', badge: 'Acción', fn: () => exportarCSV() }
   ];
