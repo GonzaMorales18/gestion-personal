@@ -1962,12 +1962,12 @@
 
             <div class="flex gap-3">
               <button type="button" id="btnIA" onclick="toggleVozIABalance()" title="Hablar a la IA para registrar gasto o ingreso"
-                      class="w-1/3 bg-purple-600 hover:bg-purple-500 text-white font-black py-4 rounded-xl border border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.4)] active:scale-95 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest">
-                <i class="fas fa-microphone"></i><i class="fas fa-wand-magic-sparkles text-xs opacity-80"></i><span class="hidden sm:inline">IA</span>
+                      class="shrink-0 w-auto px-4 py-4 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-black border border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.4)] active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 text-sm uppercase tracking-wider cursor-pointer whitespace-nowrap">
+                <i class="fas fa-microphone"></i><i class="fas fa-wand-magic-sparkles text-xs opacity-80"></i><span>IA</span>
               </button>
               <button type="submit" id="btnGuardar"
-                      class="w-2/3 bg-red-600 hover:opacity-90 text-white font-black py-4 rounded-xl border border-white/20 active:scale-95 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest">
-                <i class="fas fa-save"></i><span>Registrar</span>
+                      class="flex-1 bg-red-600 hover:opacity-90 text-white font-black py-4 px-3 rounded-xl border border-white/20 active:scale-95 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider overflow-hidden whitespace-nowrap">
+                <i class="fas fa-save shrink-0"></i><span>Registrar</span>
               </button>
             </div>
           </form>
@@ -3597,8 +3597,8 @@
           </button>
         </div>
         <button type="button" id="btn-ia-listas" onclick="toggleVozIAListas()" title="Hablar a la IA para listas"
-                class="h-12 px-4 rounded-2xl bg-purple-600 hover:bg-purple-500 text-white font-black text-xs uppercase tracking-wider flex items-center gap-2 border border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.35)] active:scale-95 transition-all shrink-0">
-          <i class="fas fa-microphone"></i><i class="fas fa-wand-magic-sparkles text-[10px] opacity-80"></i><span class="hidden sm:inline">IA</span>
+                class="h-12 px-4 rounded-2xl bg-purple-600 hover:bg-purple-500 text-white font-black text-xs uppercase tracking-wider flex items-center gap-2 border border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.35)] active:scale-95 transition-all duration-200 shrink-0 whitespace-nowrap">
+          <i class="fas fa-microphone"></i><i class="fas fa-wand-magic-sparkles text-[10px] opacity-80"></i><span>IA</span>
         </button>
       </div>
 
@@ -6749,18 +6749,18 @@ function actualizarUIBotonIABalance(estado) {
   const btn = document.getElementById('btnIA');
   if (!btn) return;
   if (estado === 'listening') {
-    btn.className = "w-1/3 bg-red-600 hover:bg-red-500 text-white font-black py-4 rounded-xl border border-red-400 shadow-[0_0_20px_rgba(239,68,68,0.7)] animate-pulse active:scale-95 transition-all flex items-center justify-center gap-2 text-xs uppercase tracking-widest cursor-pointer";
-    btn.innerHTML = '<i class="fas fa-microphone text-base animate-bounce"></i><span>Escuchando...</span>';
+    btn.className = "shrink-0 w-auto px-4 py-4 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black border border-red-400 shadow-[0_0_20px_rgba(239,68,68,0.7)] animate-pulse active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 text-xs uppercase tracking-wider cursor-pointer whitespace-nowrap";
+    btn.innerHTML = '<i class="fas fa-microphone text-sm animate-bounce"></i><span>Escuchando...</span>';
     btn.title = "Escuchando... Di tu movimiento (haz clic para detener)";
     btn.disabled = false;
   } else if (estado === 'processing') {
-    btn.className = "w-1/3 bg-purple-800 text-purple-200 font-black py-4 rounded-xl border border-purple-400/60 shadow-[0_0_15px_rgba(168,85,247,0.5)] active:scale-95 transition-all flex items-center justify-center gap-2 text-xs uppercase tracking-widest cursor-wait";
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin text-base"></i><span>IA procesando...</span>';
+    btn.className = "shrink-0 w-auto px-4 py-4 rounded-xl bg-purple-800 text-purple-200 font-black border border-purple-400/60 shadow-[0_0_15px_rgba(168,85,247,0.5)] active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 text-xs uppercase tracking-wider cursor-wait whitespace-nowrap";
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin text-sm"></i><span>Procesando...</span>';
     btn.title = "La IA está interpretando tu audio...";
     btn.disabled = true;
   } else {
-    btn.className = "w-1/3 bg-purple-600 hover:bg-purple-500 text-white font-black py-4 rounded-xl border border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.4)] active:scale-95 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest cursor-pointer";
-    btn.innerHTML = '<i class="fas fa-microphone"></i><i class="fas fa-wand-magic-sparkles text-xs opacity-80"></i><span class="hidden sm:inline">IA</span>';
+    btn.className = "shrink-0 w-auto px-4 py-4 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-black border border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.4)] active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 text-sm uppercase tracking-wider cursor-pointer whitespace-nowrap";
+    btn.innerHTML = '<i class="fas fa-microphone"></i><i class="fas fa-wand-magic-sparkles text-xs opacity-80"></i><span>IA</span>';
     btn.title = "Hablar a la IA para registrar gasto o ingreso";
     btn.disabled = false;
   }
@@ -15329,7 +15329,7 @@ function actualizarUIBotonIAListas(estado) {
 
   if (estado === 'listening') {
     if (btn) {
-      btn.className = "h-12 px-4 rounded-2xl bg-red-600 hover:bg-red-500 text-white font-black text-xs uppercase tracking-wider flex items-center gap-2 border border-red-400 shadow-[0_0_20px_rgba(239,68,68,0.7)] animate-pulse active:scale-95 transition-all shrink-0 cursor-pointer";
+      btn.className = "h-12 px-4 rounded-2xl bg-red-600 hover:bg-red-500 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 border border-red-400 shadow-[0_0_20px_rgba(239,68,68,0.7)] animate-pulse active:scale-95 transition-all duration-200 shrink-0 cursor-pointer whitespace-nowrap";
       btn.innerHTML = '<i class="fas fa-microphone text-sm animate-bounce"></i><span>Escuchando...</span>';
       btn.title = "Escuchando... Di qué agregar o tildar (haz clic para detener)";
       btn.disabled = false;
@@ -15342,8 +15342,8 @@ function actualizarUIBotonIAListas(estado) {
     }
   } else if (estado === 'processing') {
     if (btn) {
-      btn.className = "h-12 px-4 rounded-2xl bg-purple-800 text-purple-200 font-black text-xs uppercase tracking-wider flex items-center gap-2 border border-purple-400/60 shadow-[0_0_15px_rgba(168,85,247,0.5)] active:scale-95 transition-all shrink-0 cursor-wait";
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin text-sm"></i><span>IA procesando...</span>';
+      btn.className = "h-12 px-4 rounded-2xl bg-purple-800 text-purple-200 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 border border-purple-400/60 shadow-[0_0_15px_rgba(168,85,247,0.5)] active:scale-95 transition-all duration-200 shrink-0 cursor-wait whitespace-nowrap";
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin text-sm"></i><span>Procesando...</span>';
       btn.title = "Procesando con IA...";
       btn.disabled = true;
     }
@@ -15355,8 +15355,8 @@ function actualizarUIBotonIAListas(estado) {
     }
   } else {
     if (btn) {
-      btn.className = "h-12 px-4 rounded-2xl bg-purple-600 hover:bg-purple-500 text-white font-black text-xs uppercase tracking-wider flex items-center gap-2 border border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.35)] active:scale-95 transition-all shrink-0 cursor-pointer";
-      btn.innerHTML = '<i class="fas fa-microphone"></i><i class="fas fa-wand-magic-sparkles text-[10px] opacity-80"></i><span class="hidden sm:inline">IA</span>';
+      btn.className = "h-12 px-4 rounded-2xl bg-purple-600 hover:bg-purple-500 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 border border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.35)] active:scale-95 transition-all duration-200 shrink-0 cursor-pointer whitespace-nowrap";
+      btn.innerHTML = '<i class="fas fa-microphone"></i><i class="fas fa-wand-magic-sparkles text-[10px] opacity-80"></i><span>IA</span>';
       btn.title = "Hablar a la IA para agregar o tildar tareas";
       btn.disabled = false;
     }
