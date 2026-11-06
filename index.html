@@ -4443,9 +4443,12 @@
       </div>
       <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-[10px] font-bold">
         <button onclick="setTabCotizaciones('todos')" id="tab-cot-todos" class="px-3 py-1.5 rounded-lg bg-violet-600 text-white border border-violet-500/50 transition-colors whitespace-nowrap">Todos</button>
-        <button onclick="setTabCotizaciones('dolar')" id="tab-cot-dolar" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Dólares &amp; Cripto</button>
+        <button onclick="setTabCotizaciones('divisas')" id="tab-cot-divisas" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Divisas</button>
+        <button onclick="setTabCotizaciones('cripto')" id="tab-cot-cripto" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Cripto</button>
         <button onclick="setTabCotizaciones('acciones')" id="tab-cot-acciones" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Acciones BYMA</button>
         <button onclick="setTabCotizaciones('cedears')" id="tab-cot-cedears" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">CEDEARs</button>
+        <button onclick="setTabCotizaciones('bonos')" id="tab-cot-bonos" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Bonos</button>
+        <button onclick="setTabCotizaciones('ons')" id="tab-cot-ons" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Obligaciones Negociables</button>
         <button onclick="setTabCotizaciones('cartera')" id="tab-cot-cartera" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Mi Cartera</button>
         <button onclick="setTabCotizaciones('futuras')" id="tab-cot-futuras" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap flex items-center gap-1.5"><i class="fas fa-bookmark text-amber-400 text-[10px]"></i><span>Futuras Compras</span><span id="tab-cot-futuras-count" class="px-1.5 py-0.2 rounded-full text-[9px] bg-amber-500/20 text-amber-300 mono font-bold">0</span></button>
       </div>
@@ -7311,7 +7314,7 @@ function renderModalAnio(anio) {
 // ═══════════════════════════════════════════════════════════════════════════════
 let ahorrosData     = [];
 let cotizaciones    = { USD: null, USD_BLUE: null, USD_MEP: null, USD_CCL: null, BTC: null, BTC_USD: null, tickers: {}, tickerSymbol: {} };
-let marketData      = { stocks: {}, cedears: {}, dolares: [], tabActual: 'todos', filtroTexto: '', lastUpdated: null, loading: false };
+let marketData      = { stocks: {}, cedears: {}, bonds: {}, notes: {}, dolares: [], cotizacionesExtra: [], criptos: [], tabActual: 'todos', filtroTexto: '', lastUpdated: null, loading: false };
 let ahorrosIniciado = false;
 
 // ─── HELPERS PARA RECONOCER ACTIVOS ──────────────────────────────────────────
@@ -7342,7 +7345,8 @@ function isCriptoActivo(a) {
 function tipoRequiereTicker(tipo) {
   if (!tipo) return false;
   const t = tipo.toUpperCase();
-  return t === 'ACCION' || t === 'ACCIÓN' || t === 'CEDEAR' || t === 'BONO' || t.includes('OBLIGACI') || t === 'ON';
+  return t.includes('ACCION') || t.includes('ACCI') || t.includes('CEDEAR') || 
+         t.includes('BONO') || t.includes('OBLIGACI') || t === 'ON';
 }
 
 async function iniciarAhorros() {
@@ -7382,11 +7386,14 @@ async function fetchMarketQuotes() {
   if (marketData.loading) return;
   marketData.loading = true;
   try {
-    const [stocksRes, cedearsRes, dolaresRes, btcRes] = await Promise.allSettled([
+    const [stocksRes, cedearsRes, bondsRes, notesRes, dolaresRes, cotizRes, criptoRes] = await Promise.allSettled([
       fetch('https://data912.com/live/arg_stocks', { signal: AbortSignal.timeout(8000) }),
       fetch('https://data912.com/live/arg_cedears', { signal: AbortSignal.timeout(8000) }),
+      fetch('https://data912.com/live/arg_bonds', { signal: AbortSignal.timeout(8000) }),
+      fetch('https://data912.com/live/arg_notes', { signal: AbortSignal.timeout(8000) }),
       fetch('https://dolarapi.com/v1/dolares', { signal: AbortSignal.timeout(8000) }),
-      fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT', { signal: AbortSignal.timeout(6000) })
+      fetch('https://dolarapi.com/v1/cotizaciones', { signal: AbortSignal.timeout(8000) }),
+      fetch('https://api.binance.com/api/v3/ticker/price?symbols=%5B%22BTCUSDT%22,%22ETHUSDT%22,%22SOLUSDT%22,%22BNBUSDT%22,%22ADAUSDT%22,%22XRPUSDT%22,%22DOGEUSDT%22%5D', { signal: AbortSignal.timeout(6000) })
     ]);
 
     // 1. Acciones BYMA (data912.com)
@@ -7398,9 +7405,7 @@ async function fetchMarketQuotes() {
             if (s && s.symbol) {
               const sym = s.symbol.trim().toUpperCase();
               marketData.stocks[sym] = s;
-              if (s.c && s.c > 0) {
-                cotizaciones.tickers[sym] = s.c;
-              }
+              if (s.c && s.c > 0) cotizaciones.tickers[sym] = s.c;
             }
           });
         }
@@ -7416,16 +7421,46 @@ async function fetchMarketQuotes() {
             if (c && c.symbol) {
               const sym = c.symbol.trim().toUpperCase();
               marketData.cedears[sym] = c;
-              if (c.c && c.c > 0) {
-                cotizaciones.tickers[sym] = c.c;
-              }
+              if (c.c && c.c > 0) cotizaciones.tickers[sym] = c.c;
             }
           });
         }
       } catch (e) { console.warn('Error procesando CEDEARs:', e); }
     }
 
-    // 3. Dólares (DolarApi)
+    // 3. Bonos Soberanos / Subsoberanos BYMA (data912.com)
+    if (bondsRes.status === 'fulfilled' && bondsRes.value.ok) {
+      try {
+        const bondsArr = await bondsRes.value.json();
+        if (Array.isArray(bondsArr)) {
+          bondsArr.forEach(b => {
+            if (b && b.symbol) {
+              const sym = b.symbol.trim().toUpperCase();
+              marketData.bonds[sym] = b;
+              if (b.c && b.c > 0) cotizaciones.tickers[sym] = b.c;
+            }
+          });
+        }
+      } catch (e) { console.warn('Error procesando Bonos BYMA:', e); }
+    }
+
+    // 4. Notes (Obligaciones Negociables corporativas BYMA)
+    if (notesRes.status === 'fulfilled' && notesRes.value.ok) {
+      try {
+        const notesArr = await notesRes.value.json();
+        if (Array.isArray(notesArr)) {
+          notesArr.forEach(n => {
+            if (n && n.symbol) {
+              const sym = n.symbol.trim().toUpperCase();
+              marketData.notes[sym] = n;
+              if (n.c && n.c > 0) cotizaciones.tickers[sym] = n.c;
+            }
+          });
+        }
+      } catch (e) { console.warn('Error procesando Notes BYMA:', e); }
+    }
+
+    // 5. Dólares (DolarApi)
     if (dolaresRes.status === 'fulfilled' && dolaresRes.value.ok) {
       try {
         const dolaresArr = await dolaresRes.value.json();
@@ -7443,13 +7478,35 @@ async function fetchMarketQuotes() {
       } catch (e) { console.warn('Error procesando Dólares:', e); }
     }
 
-    // 4. BTC (Binance)
-    if (btcRes.status === 'fulfilled' && btcRes.value.ok) {
+    // 6. Divisas Extra (EUR, BRL, CLP, UYU)
+    if (cotizRes.status === 'fulfilled' && cotizRes.value.ok) {
       try {
-        const btcData = await btcRes.value.json();
-        cotizaciones.BTC_USD = parseFloat(btcData.price);
-        if (cotizaciones.USD) cotizaciones.BTC = cotizaciones.BTC_USD * cotizaciones.USD;
-      } catch (e) { console.warn('Error procesando BTC:', e); }
+        const cotizArr = await cotizRes.value.json();
+        if (Array.isArray(cotizArr)) {
+          marketData.cotizacionesExtra = cotizArr;
+          cotizArr.forEach(c => {
+            const mon = (c.moneda || '').toUpperCase();
+            const venta = parseFloat(c.venta) || null;
+            if (mon === 'EUR' && venta) cotizaciones.EUR = venta;
+            else if (mon === 'BRL' && venta) cotizaciones.BRL = venta;
+          });
+        }
+      } catch (e) { console.warn('Error procesando Divisas Extra:', e); }
+    }
+
+    // 7. Criptomonedas (Binance)
+    if (criptoRes.status === 'fulfilled' && criptoRes.value.ok) {
+      try {
+        const criptoArr = await criptoRes.value.json();
+        if (Array.isArray(criptoArr)) {
+          marketData.criptos = criptoArr;
+          const btc = criptoArr.find(c => c.symbol === 'BTCUSDT');
+          if (btc) {
+            cotizaciones.BTC_USD = parseFloat(btc.price);
+            if (cotizaciones.USD) cotizaciones.BTC = cotizaciones.BTC_USD * cotizaciones.USD;
+          }
+        }
+      } catch (e) { console.warn('Error procesando Criptos Binance:', e); }
     }
 
     marketData.lastUpdated = new Date();
@@ -7776,9 +7833,11 @@ function cerrarModalCotizaciones() {
   if (modal) modal.classList.add('hidden');
 }
 
+const TABS_COTIZACIONES = ['todos', 'divisas', 'cripto', 'acciones', 'cedears', 'bonos', 'ons', 'cartera', 'futuras'];
+
 function setTabCotizaciones(tab) {
   marketData.tabActual = tab;
-  ['todos', 'dolar', 'acciones', 'cedears', 'cartera', 'futuras'].forEach(t => {
+  TABS_COTIZACIONES.forEach(t => {
     const btn = document.getElementById(`tab-cot-${t}`);
     if (btn) {
       if (t === tab) {
@@ -7809,53 +7868,148 @@ function renderModalCotizaciones() {
   if (!lista) return;
 
   const fmtARS = n => n != null ? '$' + Math.round(n).toLocaleString('es-AR') : '—';
-  const fmtUSD = n => n != null ? 'U$S ' + n.toLocaleString('en-US', { maximumFractionDigits: 2 }) : '—';
+  const fmtUSD = n => n != null ? 'U$S ' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—';
+  const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1200;
 
   const tab = marketData.tabActual || 'todos';
   const q = marketData.filtroTexto || '';
   let items = [];
 
-  // 1. Dólares
-  if (tab === 'todos' || tab === 'dolar') {
+  // ONs corporativas reconocidas con datos de emisor
+  const ONS_DESTACADAS = [
+    { symbol: 'YMCXO', emisor: 'YPF Clase 16', venc: '2026', refUsd: 1.01 },
+    { symbol: 'YCA6O', emisor: 'YPF Clase 26', venc: '2029', refUsd: 0.99 },
+    { symbol: 'TLC1O', emisor: 'Telecom Clase 1', venc: '2026', refUsd: 1.00 },
+    { symbol: 'TLC5O', emisor: 'Telecom Clase 5', venc: '2027', refUsd: 0.98 },
+    { symbol: 'IRCFO', emisor: 'IRSA Clase 14', venc: '2028', refUsd: 1.02 },
+    { symbol: 'VSC3O', emisor: 'Vista Energy Clase 3', venc: '2027', refUsd: 1.03 },
+    { symbol: 'CS38O', emisor: 'Cresud Clase 38', venc: '2026', refUsd: 1.00 },
+    { symbol: 'MRCAO', emisor: 'Genneia Clase 36', venc: '2027', refUsd: 0.99 },
+    { symbol: 'MGC1O', emisor: 'Pampa Energía Clase 1', venc: '2026', refUsd: 1.01 },
+    { symbol: 'CAC2O', emisor: 'Aluar Clase 2', venc: '2025', refUsd: 1.00 },
+    { symbol: 'CP17O', emisor: 'Capex Clase 17', venc: '2028', refUsd: 0.97 }
+  ];
+
+  // 1. DIVISAS (Dólares, Euro, Real, etc.)
+  if (tab === 'todos' || tab === 'divisas') {
+    // Dólares DolarApi
     (marketData.dolares || []).forEach(d => {
       const nombre = d.nombre || d.casa;
-      if (q && !nombre.toLowerCase().includes(q) && !(d.casa || '').toLowerCase().includes(q)) return;
+      const nombreFull = nombre.toLowerCase().startsWith('dólar') || nombre.toLowerCase().startsWith('dolar') ? nombre : `Dólar ${nombre}`;
+      if (q && !nombreFull.toLowerCase().includes(q) && !(d.casa || '').toLowerCase().includes(q)) return;
       items.push({
-        tipo: 'Dólar',
+        tipo: 'Divisas',
+        moneda: 'ARS',
         badgeColor: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
-        symbol: nombre,
+        symbol: nombreFull,
+        tickerForm: 'USD',
         sub: `Compra: ${fmtARS(d.compra)} · Venta: ${fmtARS(d.venta)}`,
         precio: fmtARS(d.venta),
         rawPrecio: d.venta,
+        pct: d.variacion != null ? d.variacion : null,
+        vol: null
+      });
+    });
+
+    // Monedas extranjeras extra (Euro, Real, etc.)
+    (marketData.cotizacionesExtra || []).forEach(c => {
+      const mon = (c.moneda || '').toUpperCase();
+      if (mon === 'USD') return;
+      const nombre = c.nombre || mon;
+      if (q && !nombre.toLowerCase().includes(q) && !mon.toLowerCase().includes(q)) return;
+      items.push({
+        tipo: 'Divisas',
+        moneda: 'ARS',
+        badgeColor: 'bg-teal-500/15 text-teal-300 border-teal-500/30',
+        symbol: `${nombre} (${mon})`,
+        tickerForm: mon,
+        sub: `Oficial · Compra: ${fmtARS(c.compra)} · Venta: ${fmtARS(c.venta)}`,
+        precio: fmtARS(c.venta),
+        rawPrecio: c.venta,
         pct: null,
         vol: null
       });
     });
 
-    if (cotizaciones.BTC_USD != null && (!q || 'btc bitcoin cripto'.includes(q))) {
+    // Euro Blue / Paralelo
+    if (cotizaciones.EUR && cotizaciones.USD_BLUE && cotizaciones.USD && (!q || 'euro blue paralelo'.includes(q))) {
+      const euroBlue = (cotizaciones.EUR / cotizaciones.USD) * cotizaciones.USD_BLUE;
       items.push({
-        tipo: 'Cripto',
-        badgeColor: 'bg-yellow-500/15 text-yellow-300 border-yellow-500/30',
-        symbol: 'BTC (Bitcoin)',
-        sub: `Binance · ${fmtARS(cotizaciones.BTC)} ARS`,
-        precio: fmtUSD(cotizaciones.BTC_USD),
-        rawPrecio: cotizaciones.BTC_USD,
+        tipo: 'Divisas',
+        moneda: 'ARS',
+        badgeColor: 'bg-teal-500/15 text-teal-300 border-teal-500/30',
+        symbol: 'Euro Blue',
+        tickerForm: 'EUR',
+        sub: 'Mercado informal · Estimado por paridad',
+        precio: fmtARS(euroBlue),
+        rawPrecio: euroBlue,
         pct: null,
         vol: null
       });
     }
   }
 
-  // 2. Acciones BYMA
+  // 2. CRIPTO (Binance)
+  if (tab === 'todos' || tab === 'cripto') {
+    const nombresCripto = {
+      BTCUSDT: { ticker: 'BTC', name: 'BTC (Bitcoin)' },
+      ETHUSDT: { ticker: 'ETH', name: 'ETH (Ethereum)' },
+      SOLUSDT: { ticker: 'SOL', name: 'SOL (Solana)' },
+      BNBUSDT: { ticker: 'BNB', name: 'BNB (Binance Coin)' },
+      ADAUSDT: { ticker: 'ADA', name: 'ADA (Cardano)' },
+      XRPUSDT: { ticker: 'XRP', name: 'XRP (Ripple)' },
+      DOGEUSDT: { ticker: 'DOGE', name: 'DOGE (Dogecoin)' }
+    };
+
+    (marketData.criptos || []).forEach(c => {
+      const info = nombresCripto[c.symbol];
+      if (!info) return;
+      if (q && !info.name.toLowerCase().includes(q) && !info.ticker.toLowerCase().includes(q)) return;
+      const pUsd = parseFloat(c.price);
+      const pArs = pUsd * usdRate;
+      items.push({
+        tipo: 'Cripto',
+        moneda: 'USD',
+        badgeColor: 'bg-yellow-500/15 text-yellow-300 border-yellow-500/30',
+        symbol: info.name,
+        tickerForm: info.ticker,
+        sub: `Binance · ${fmtARS(pArs)} ARS`,
+        precio: fmtUSD(pUsd),
+        rawPrecio: pUsd,
+        pct: null,
+        vol: null
+      });
+    });
+
+    // USDT
+    if (!q || 'usdt tether cripto'.includes(q)) {
+      items.push({
+        tipo: 'Cripto',
+        moneda: 'USD',
+        badgeColor: 'bg-yellow-500/15 text-yellow-300 border-yellow-500/30',
+        symbol: 'USDT (Tether USD)',
+        tickerForm: 'USDT',
+        sub: `Stablecoin · ${fmtARS(usdRate)} ARS`,
+        precio: fmtUSD(1),
+        rawPrecio: 1,
+        pct: null,
+        vol: null
+      });
+    }
+  }
+
+  // 3. ACCIONES BYMA
   if (tab === 'todos' || tab === 'acciones') {
     Object.values(marketData.stocks || {}).forEach(s => {
       if (!s || !s.symbol) return;
       if (q && !s.symbol.toLowerCase().includes(q)) return;
       items.push({
-        tipo: 'Acción BYMA',
+        tipo: 'Acciones BYMA',
+        moneda: 'ARS',
         badgeColor: 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30',
         symbol: s.symbol,
-        sub: s.v ? `Vol: ${Math.round(s.v).toLocaleString('es-AR')} ops` : 'Mercado BYMA',
+        tickerForm: s.symbol,
+        sub: s.v ? `Vol: ${Math.round(s.v).toLocaleString('es-AR')} ops · BYMA` : 'Mercado BYMA',
         precio: fmtARS(s.c),
         rawPrecio: s.c,
         pct: s.pct_change,
@@ -7864,16 +8018,18 @@ function renderModalCotizaciones() {
     });
   }
 
-  // 3. CEDEARs
+  // 4. CEDEARs
   if (tab === 'todos' || tab === 'cedears') {
     Object.values(marketData.cedears || {}).forEach(c => {
       if (!c || !c.symbol) return;
       if (q && !c.symbol.toLowerCase().includes(q)) return;
       items.push({
-        tipo: 'CEDEAR',
+        tipo: 'CEDEARs',
+        moneda: 'ARS',
         badgeColor: 'bg-violet-500/15 text-violet-300 border-violet-500/30',
         symbol: c.symbol,
-        sub: c.v ? `Vol: ${Math.round(c.v).toLocaleString('es-AR')} ops` : 'CEDEAR BYMA',
+        tickerForm: c.symbol,
+        sub: c.v ? `Vol: ${Math.round(c.v).toLocaleString('es-AR')} ops · CEDEAR` : 'CEDEAR BYMA',
         precio: fmtARS(c.c),
         rawPrecio: c.c,
         pct: c.pct_change,
@@ -7882,7 +8038,69 @@ function renderModalCotizaciones() {
     });
   }
 
-  // 4. Mi Cartera
+  // 5. BONOS SOBERANOS
+  if (tab === 'todos' || tab === 'bonos') {
+    Object.values(marketData.bonds || {}).forEach(b => {
+      if (!b || !b.symbol) return;
+      if (q && !b.symbol.toLowerCase().includes(q)) return;
+      const esUsd = b.symbol.endsWith('D');
+      items.push({
+        tipo: 'Bonos',
+        moneda: esUsd ? 'USD' : 'ARS',
+        badgeColor: 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30',
+        symbol: b.symbol,
+        tickerForm: b.symbol,
+        sub: esUsd ? 'Bono Soberano USD · BYMA' : (b.v ? `Vol: ${Math.round(b.v).toLocaleString('es-AR')} ops · BYMA` : 'Bono Soberano BYMA'),
+        precio: esUsd ? fmtUSD(b.c) : fmtARS(b.c),
+        rawPrecio: b.c,
+        pct: b.pct_change,
+        vol: b.v || 0
+      });
+    });
+  }
+
+  // 6. OBLIGACIONES NEGOCIABLES
+  if (tab === 'todos' || tab === 'ons') {
+    ONS_DESTACADAS.forEach(on => {
+      if (q && !on.symbol.toLowerCase().includes(q) && !on.emisor.toLowerCase().includes(q)) return;
+      const live = marketData.notes[on.symbol] || marketData.bonds[on.symbol] || cotizaciones.tickers[on.symbol];
+      const p = typeof live === 'object' ? live.c : (parseFloat(live) || on.refUsd);
+      const pct = typeof live === 'object' ? live.pct_change : null;
+      const vol = typeof live === 'object' ? (live.v || 0) : 0;
+      items.push({
+        tipo: 'Obligaciones Negociables',
+        moneda: 'USD',
+        badgeColor: 'bg-sky-500/15 text-sky-300 border-sky-500/30',
+        symbol: on.symbol,
+        tickerForm: on.symbol,
+        sub: `${on.emisor} · Vencimiento ${on.venc}`,
+        precio: fmtUSD(p),
+        rawPrecio: p,
+        pct: pct,
+        vol: vol
+      });
+    });
+
+    Object.values(marketData.notes || {}).forEach(n => {
+      if (!n || !n.symbol) return;
+      if (ONS_DESTACADAS.some(o => o.symbol === n.symbol)) return;
+      if (q && !n.symbol.toLowerCase().includes(q)) return;
+      items.push({
+        tipo: 'Obligaciones Negociables',
+        moneda: 'USD',
+        badgeColor: 'bg-sky-500/15 text-sky-300 border-sky-500/30',
+        symbol: n.symbol,
+        tickerForm: n.symbol,
+        sub: n.v ? `Vol: ${Math.round(n.v).toLocaleString('es-AR')} ops · ON BYMA` : 'ON Corporativa BYMA',
+        precio: fmtUSD(n.c),
+        rawPrecio: n.c,
+        pct: n.pct_change,
+        vol: n.v || 0
+      });
+    });
+  }
+
+  // 7. MI CARTERA
   if (tab === 'cartera') {
     const posiciones = calcularPosicionesNetas();
     posiciones.forEach(p => {
@@ -7890,22 +8108,28 @@ function renderModalCotizaciones() {
       const isCr  = isCriptoActivo(p);
       const sym   = isDol ? 'USD' : (isCr ? (p.ticker || 'BTC') : (p.ticker || p.tipo));
       if (q && !sym.toLowerCase().includes(q) && !(p.plataforma || '').toLowerCase().includes(q)) return;
-      const pArs = getPrecioARS(p);
-      const mkt = (marketData.cedears && marketData.cedears[sym.toUpperCase()]) || (marketData.stocks && marketData.stocks[sym.toUpperCase()]);
+      const esUSD = p.moneda === 'USD' || isDol;
+      const pVal = esUSD ? getPrecioUSD(p) : getPrecioARS(p);
+      const mkt = (marketData.cedears && marketData.cedears[sym.toUpperCase()]) ||
+                  (marketData.stocks && marketData.stocks[sym.toUpperCase()]) ||
+                  (marketData.bonds && marketData.bonds[sym.toUpperCase()]) ||
+                  (marketData.notes && marketData.notes[sym.toUpperCase()]);
       items.push({
         tipo: p.tipo,
-        badgeColor: isDol ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30',
+        moneda: esUSD ? 'USD' : 'ARS',
+        badgeColor: esUSD ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30',
         symbol: sym.toUpperCase(),
+        tickerForm: sym.toUpperCase(),
         sub: `${p.plataforma || p.descripcion || 'General'} · Cant: ${p.cantidad}`,
-        precio: isDol ? fmtARS(pArs) : (pArs ? fmtARS(pArs) : '—'),
-        rawPrecio: pArs,
+        precio: esUSD ? fmtUSD(pVal) : fmtARS(pVal),
+        rawPrecio: pVal,
         pct: mkt?.pct_change != null ? mkt.pct_change : null,
         vol: 0
       });
     });
   }
 
-  // 5. Futuras Compras
+  // 8. FUTURAS COMPRAS
   if (tab === 'futuras') {
     const mapFuturas = leerFuturasCompras();
     const symbols = Object.keys(mapFuturas);
@@ -7916,63 +8140,55 @@ function renderModalCotizaciones() {
       const fInfo = mapFuturas[sym] || {};
       const cedear = marketData.cedears ? marketData.cedears[symUp] : null;
       const stock = marketData.stocks ? marketData.stocks[symUp] : null;
+      const bond = marketData.bonds ? marketData.bonds[symUp] : null;
+      const note = marketData.notes ? marketData.notes[symUp] : null;
       const dolarMatch = (marketData.dolares || []).find(d => (d.nombre || d.casa || '').toUpperCase().includes(symUp));
 
       if (cedear) {
         items.push({
-          tipo: 'CEDEAR',
-          badgeColor: 'bg-violet-500/15 text-violet-300 border-violet-500/30',
-          symbol: symUp,
-          sub: cedear.v ? `Vol: ${Math.round(cedear.v).toLocaleString('es-AR')} ops · CEDEAR BYMA` : 'CEDEAR BYMA',
-          precio: fmtARS(cedear.c),
-          rawPrecio: cedear.c,
-          pct: cedear.pct_change,
-          vol: cedear.v || 0
+          tipo: 'CEDEARs', moneda: 'ARS', badgeColor: 'bg-violet-500/15 text-violet-300 border-violet-500/30',
+          symbol: symUp, tickerForm: symUp, sub: 'CEDEAR BYMA', precio: fmtARS(cedear.c), rawPrecio: cedear.c, pct: cedear.pct_change, vol: cedear.v || 0
         });
       } else if (stock) {
         items.push({
-          tipo: 'Acción BYMA',
-          badgeColor: 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30',
-          symbol: symUp,
-          sub: stock.v ? `Vol: ${Math.round(stock.v).toLocaleString('es-AR')} ops · Mercado BYMA` : 'Mercado BYMA',
-          precio: fmtARS(stock.c),
-          rawPrecio: stock.c,
-          pct: stock.pct_change,
-          vol: stock.v || 0
+          tipo: 'Acciones BYMA', moneda: 'ARS', badgeColor: 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30',
+          symbol: symUp, tickerForm: symUp, sub: 'Mercado BYMA', precio: fmtARS(stock.c), rawPrecio: stock.c, pct: stock.pct_change, vol: stock.v || 0
+        });
+      } else if (bond) {
+        const esUsd = symUp.endsWith('D');
+        items.push({
+          tipo: 'Bonos', moneda: esUsd ? 'USD' : 'ARS', badgeColor: 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30',
+          symbol: symUp, tickerForm: symUp, sub: 'Bono Soberano BYMA', precio: esUsd ? fmtUSD(bond.c) : fmtARS(bond.c), rawPrecio: bond.c, pct: bond.pct_change, vol: bond.v || 0
+        });
+      } else if (note) {
+        items.push({
+          tipo: 'Obligaciones Negociables', moneda: 'USD', badgeColor: 'bg-sky-500/15 text-sky-300 border-sky-500/30',
+          symbol: symUp, tickerForm: symUp, sub: 'ON Corporativa BYMA', precio: fmtUSD(note.c), rawPrecio: note.c, pct: note.pct_change, vol: note.v || 0
         });
       } else if (dolarMatch) {
         items.push({
-          tipo: 'Dólar',
-          badgeColor: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
-          symbol: symUp,
-          sub: `Compra: ${fmtARS(dolarMatch.compra)} · Venta: ${fmtARS(dolarMatch.venta)}`,
-          precio: fmtARS(dolarMatch.venta),
-          rawPrecio: dolarMatch.venta,
-          pct: null,
-          vol: null
+          tipo: 'Divisas', moneda: 'ARS', badgeColor: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
+          symbol: symUp, tickerForm: 'USD', sub: `Compra: ${fmtARS(dolarMatch.compra)} · Venta: ${fmtARS(dolarMatch.venta)}`, precio: fmtARS(dolarMatch.venta), rawPrecio: dolarMatch.venta, pct: null, vol: null
         });
       } else {
         items.push({
-          tipo: fInfo.tipo || 'Futura Inversión',
-          badgeColor: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
-          symbol: symUp,
-          sub: 'Guardado para futura compra',
-          precio: fInfo.precioRef ? fmtARS(fInfo.precioRef) : '—',
-          rawPrecio: fInfo.precioRef || 0,
-          pct: null,
-          vol: 0
+          tipo: fInfo.tipo || 'Futura Inversión', moneda: 'USD', badgeColor: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
+          symbol: symUp, tickerForm: symUp, sub: 'Guardado para futura compra', precio: fInfo.precioRef ? fmtUSD(fInfo.precioRef) : '—', rawPrecio: fInfo.precioRef || 0, pct: null, vol: 0
         });
       }
     });
   }
 
-  // Ordenamiento: si es tab 'todos' o 'acciones'/'cedears', ordenar por volumen o los más populares primero
+  // Ordenamiento de 'todos'
   if (tab === 'todos' && !q) {
-    const dolaresPart = items.filter(it => it.tipo === 'Dólar' || it.tipo === 'Cripto');
-    const resto = items.filter(it => it.tipo !== 'Dólar' && it.tipo !== 'Cripto')
-      .sort((a, b) => (b.vol || 0) - (a.vol || 0));
-    items = [...dolaresPart, ...resto.slice(0, 100)];
-  } else if (!q && (tab === 'acciones' || tab === 'cedears')) {
+    const divPart = items.filter(it => it.tipo === 'Divisas').slice(0, 6);
+    const crPart  = items.filter(it => it.tipo === 'Cripto').slice(0, 4);
+    const stPart  = items.filter(it => it.tipo === 'Acciones BYMA').sort((a,b)=>(b.vol||0)-(a.vol||0)).slice(0, 15);
+    const cdPart  = items.filter(it => it.tipo === 'CEDEARs').sort((a,b)=>(b.vol||0)-(a.vol||0)).slice(0, 20);
+    const bnPart  = items.filter(it => it.tipo === 'Bonos').sort((a,b)=>(b.vol||0)-(a.vol||0)).slice(0, 15);
+    const onPart  = items.filter(it => it.tipo === 'Obligaciones Negociables').slice(0, 10);
+    items = [...divPart, ...crPart, ...stPart, ...cdPart, ...bnPart, ...onPart];
+  } else if (!q && (tab === 'acciones' || tab === 'cedears' || tab === 'bonos' || tab === 'ons')) {
     items.sort((a, b) => (b.vol || 0) - (a.vol || 0));
   }
 
@@ -7988,7 +8204,7 @@ function renderModalCotizaciones() {
             <i class="far fa-bookmark"></i>
           </div>
           <p class="font-bold text-white text-sm mb-1">Sin futuras compras anotadas</p>
-          <p class="text-slate-400 max-w-sm">Explora las pestañas <b>Todos</b>, <b>Acciones</b> o <b>CEDEARs</b> y haz clic en el botón <b>🔖 Guardar</b> en cualquier activo que quieras comprar a futuro.</p>
+          <p class="text-slate-400 max-w-sm">Explora las pestañas <b>Divisas</b>, <b>Acciones BYMA</b>, <b>CEDEARs</b>, <b>Bonos</b> u <b>ONs</b> y haz clic en el botón <b>🔖 Guardar</b> para añadirlas a tu lista.</p>
         </div>
       `;
     } else {
@@ -8013,9 +8229,10 @@ function renderModalCotizaciones() {
       `;
     }
 
-    const isFutura = esFuturaCompra(it.symbol);
+    const symClean = it.tickerForm || it.symbol;
+    const isFutura = esFuturaCompra(symClean);
     const btnFutura = `
-      <button onclick="toggleFuturaCompra('${it.symbol}', '${it.tipo}', ${it.rawPrecio || 0}); event.stopPropagation();"
+      <button onclick="toggleFuturaCompra('${symClean}', '${it.tipo}', ${it.rawPrecio || 0}); event.stopPropagation();"
               title="${isFutura ? 'Quitar de futuras compras' : 'Marcar como futura compra'}"
               class="h-7 px-2 rounded-lg text-xs flex items-center gap-1 font-bold transition-all ${
                 isFutura
@@ -8045,7 +8262,7 @@ function renderModalCotizaciones() {
           </div>
           ${btnFutura}
           ${it.rawPrecio ? `
-            <button onclick="usarCotizacionEnFormulario('${it.symbol}', ${it.rawPrecio}, '${it.tipo}')" title="Cargar en formulario"
+            <button onclick="usarCotizacionEnFormulario('${symClean}', ${it.rawPrecio}, '${it.tipo}', '${it.moneda || 'ARS'}')" title="Cargar en formulario"
                     class="h-7 px-2.5 bg-violet-600/30 hover:bg-violet-600 border border-violet-500/40 text-violet-300 hover:text-white rounded-lg text-xs font-bold transition-colors">
               Usar
             </button>
@@ -8056,35 +8273,64 @@ function renderModalCotizaciones() {
   }).join('');
 }
 
-function usarCotizacionEnFormulario(symbol, precio, tipo) {
+function usarCotizacionEnFormulario(symbol, precio, tipo, moneda) {
   cerrarModalCotizaciones();
-  // Ir al form de compra
   switchAhTab('compra');
   const selTipo = document.getElementById('ah-tipo');
   const inpTicker = document.getElementById('ah-ticker');
   const inpPrecio = document.getElementById('ah-precio-manual');
+  const chkUsd = document.getElementById('ah-moneda-usd');
 
-  if (tipo.includes('Dólar')) {
-    if (selTipo) selTipo.value = 'Divisa';
+  const tUp = (tipo || '').toUpperCase();
+  if (tUp.includes('DIVISA') || tUp.includes('DOLAR') || tUp.includes('EURO') || tUp.includes('REAL')) {
+    if (selTipo) selTipo.value = 'Divisas';
     onAhTipoChange();
-    if (inpTicker) inpTicker.value = 'USD';
-  } else if (tipo.includes('Cripto')) {
+    if (inpTicker) {
+      let tSym = symbol.toUpperCase();
+      if (tSym.includes('BLUE') || tSym.includes('OFICIAL') || tSym.includes('MEP') || tSym.includes('CCL') || tSym.includes('DÓLAR') || tSym.includes('DOLAR')) tSym = 'USD';
+      else if (tSym.includes('EURO') || tSym.includes('EUR')) tSym = 'EUR';
+      else if (tSym.includes('REAL') || tSym.includes('BRL')) tSym = 'BRL';
+      else if (tSym.includes('URUGUAY') || tSym.includes('UYU')) tSym = 'UYU';
+      else if (tSym.includes('CHILE') || tSym.includes('CLP')) tSym = 'CLP';
+      inpTicker.value = tSym;
+    }
+  } else if (tUp.includes('CRIPTO') || tUp === 'BTC') {
     if (selTipo) selTipo.value = 'Cripto';
     onAhTipoChange();
-    if (inpTicker) inpTicker.value = 'BTC';
-  } else if (tipo.includes('CEDEAR') || tipo.includes('Acción')) {
-    if (selTipo) selTipo.value = tipo.includes('CEDEAR') ? 'CEDEAR' : 'Accion';
+    if (inpTicker) inpTicker.value = symbol.replace(/\s*\(.*?\)/, '').trim().toUpperCase();
+  } else if (tUp.includes('CEDEAR')) {
+    if (selTipo) selTipo.value = 'CEDEARs';
     onAhTipoChange();
-    if (inpTicker) inpTicker.value = symbol;
+    if (inpTicker) inpTicker.value = symbol.toUpperCase();
+  } else if (tUp.includes('ACCI')) {
+    if (selTipo) selTipo.value = 'Acciones BYMA';
+    onAhTipoChange();
+    if (inpTicker) inpTicker.value = symbol.toUpperCase();
+  } else if (tUp.includes('BONO')) {
+    if (selTipo) selTipo.value = 'Bonos';
+    onAhTipoChange();
+    if (inpTicker) inpTicker.value = symbol.toUpperCase();
+    if (chkUsd) {
+      chkUsd.checked = symbol.toUpperCase().endsWith('D') || moneda === 'USD';
+      onMonedaCotizacionChange();
+    }
+  } else if (tUp.includes('OBLIGA') || tUp === 'ON') {
+    if (selTipo) selTipo.value = 'Obligaciones Negociables';
+    onAhTipoChange();
+    if (inpTicker) inpTicker.value = symbol.toUpperCase();
+    if (chkUsd) {
+      chkUsd.checked = (moneda === 'USD' || symbol.toUpperCase().endsWith('O') || symbol.toUpperCase().endsWith('D'));
+      onMonedaCotizacionChange();
+    }
   }
-  if (inpPrecio) {
+
+  if (inpPrecio && precio) {
     inpPrecio.value = precio;
   }
   calcularInversionPreview();
-  showToast(`Cotización cargada: ${symbol} a $${precio.toLocaleString('es-AR')}`, 'ok');
+  showToast(`Cotización cargada: ${symbol} (${tipo})`, 'ok');
 }
 
-// Actualiza una sola línea de cotización desde el campo precio de venta
 function actualizarCotizacionDesdeVenta() {
   const sel = document.getElementById('venta-activo');
   const idx = parseInt(sel?.value);
@@ -8197,16 +8443,26 @@ const PALETA_OTROS_ACTIVOS_AHORRO = ['#6366f1', '#06b6d4', '#8b5cf6', '#ec4899',
 
 const COLORES_TIPOS_ACTIVO = {
   USD: '#10b981',
+  Divisa: '#10b981',
+  Divisas: '#10b981',
+  'Dólar': '#10b981',
+  Dolar: '#10b981',
   BTC: '#eab308',
+  Cripto: '#eab308',
+  Criptomonedas: '#eab308',
   Accion: '#6366f1',
   'Acción': '#6366f1',
+  'Acciones BYMA': '#6366f1',
+  Acciones: '#6366f1',
   Bono: '#06b6d4',
+  Bonos: '#06b6d4',
   'Obligación Negociable': '#38bdf8',
+  'Obligaciones Negociables': '#38bdf8',
   'Obligacion Negociable': '#38bdf8',
   ON: '#38bdf8',
   CEDEAR: '#8b5cf6',
-  FCI: '#f97316',
-  Cripto: '#eab308'
+  CEDEARs: '#8b5cf6',
+  FCI: '#f97316'
 };
 const PALETA_FALLBACK_TIPOS = ['#ec4899', '#3b82f6', '#14b8a6', '#a855f7', '#f43f5e', '#84cc16'];
 const PALETA_PLATAFORMAS = ['#10b981', '#6366f1', '#06b6d4', '#f59e0b', '#ec4899', '#8b5cf6', '#3b82f6', '#14b8a6', '#f43f5e'];
@@ -8254,12 +8510,12 @@ function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
   }
 
   const tipoIcon = {
-    USD: '💵', Divisa: '💵', Dólar: '💵', Dolar: '💵',
-    BTC: '₿', Cripto: '🪙',
-    Accion: '📈', 'Acción': '📈',
-    CEDEAR: '🌐',
-    Bono: '📄',
-    'Obligación Negociable': '📑', 'Obligacion Negociable': '📑', ON: '📑',
+    USD: '💵', Divisa: '💵', Divisas: '💵', 'Dólar': '💵', Dolar: '💵', Euro: '💶', Real: '🪙',
+    BTC: '₿', Cripto: '🪙', Criptomonedas: '🪙',
+    Accion: '📈', 'Acción': '📈', 'Acción BYMA': '📈', 'Acciones BYMA': '📈', Acciones: '📈',
+    CEDEAR: '🌐', CEDEARs: '🌐',
+    Bono: '📜', Bonos: '📜',
+    'Obligación Negociable': '📑', 'Obligaciones Negociables': '📑', 'Obligacion Negociable': '📑', ON: '📑',
     FCI: '📊'
   };
 
@@ -8500,13 +8756,14 @@ function renderTablaAhorros() {
     return;
   }
 
-  const tipoIcon  = {
-    USD: '💵', Divisa: '💵', Dólar: '💵', Dolar: '💵',
-    BTC: '₿', Cripto: '🪙',
-    Accion: '📈', 'Acción': '📈',
-    CEDEAR: '🌐',
-    Bono: '📄',
-    'Obligación Negociable': '📑', 'Obligacion Negociable': '📑', ON: '📑'
+  const tipoIcon = {
+    USD: '💵', Divisa: '💵', Divisas: '💵', 'Dólar': '💵', Dolar: '💵', Euro: '💶', Real: '🪙',
+    BTC: '₿', Cripto: '🪙', Criptomonedas: '🪙',
+    Accion: '📈', 'Acción': '📈', 'Acción BYMA': '📈', 'Acciones BYMA': '📈', Acciones: '📈',
+    CEDEAR: '🌐', CEDEARs: '🌐',
+    Bono: '📜', Bonos: '📜',
+    'Obligación Negociable': '📑', 'Obligaciones Negociables': '📑', 'Obligacion Negociable': '📑', ON: '📑',
+    FCI: '📊'
   };
   const tipoColor = {
     USD:    'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
@@ -8942,40 +9199,61 @@ async function buscarTicker() {
 
 function fillTiposActivo() {
   const selCompra = document.getElementById('ah-tipo');
-  const selEdit   = document.getElementById('ah-edit-tipo');
+  if (!selCompra) return;
 
-  let opciones = null;
-  if (datosCargados) {
-    opciones = (tiposActivo && tiposActivo.length > 0) ? [...tiposActivo] : ['Divisa', 'Accion', 'CEDEAR', 'Bono', 'Obligación Negociable', 'Cripto'];
-    if (!opciones.some(t => t.toLowerCase().includes('obligaci') || t.toUpperCase() === 'ON')) {
-      const idxBono = opciones.indexOf('Bono');
-      if (idxBono >= 0) opciones.splice(idxBono + 1, 0, 'Obligación Negociable');
-      else opciones.push('Obligación Negociable');
-    }
+  const CANONICAL_TIPOS = [
+    'Divisas',
+    'Cripto',
+    'Acciones BYMA',
+    'CEDEARs',
+    'Bonos',
+    'Obligaciones Negociables'
+  ];
+
+  let opciones = [...CANONICAL_TIPOS];
+  if (datosCargados && Array.isArray(tiposActivo)) {
+    tiposActivo.forEach(t => {
+      if (!t) return;
+      const tNorm = t.trim();
+      const yaExiste = opciones.some(o =>
+        o.toLowerCase() === tNorm.toLowerCase() ||
+        (tNorm.toLowerCase().includes('divisa') && o === 'Divisas') ||
+        (tNorm.toLowerCase().includes('cripto') && o === 'Cripto') ||
+        (tNorm.toLowerCase().includes('accion') && o === 'Acciones BYMA') ||
+        (tNorm.toLowerCase().includes('cedear') && o === 'CEDEARs') ||
+        (tNorm.toLowerCase().includes('bono') && o === 'Bonos') ||
+        (tNorm.toLowerCase().includes('obligaci') && o === 'Obligaciones Negociables')
+      );
+      if (!yaExiste) opciones.push(tNorm);
+    });
   }
 
-  [selCompra, selEdit].forEach(sel => {
-    if (!sel) return;
-    const valorActual = sel.value;
+  const valorActual = selCompra.value;
+  const currentOptions = Array.from(selCompra.options).map(o => o.value).filter(v => v);
+  if (currentOptions.join(',') === opciones.join(',')) return;
 
-    if (!opciones) {
-      sel.innerHTML = '<option value="">Cargando...</option>';
-      return;
-    }
-
-    const currentOptions = Array.from(sel.options).map(o => o.value).filter(v => v);
-    if (currentOptions.join(',') === opciones.join(',')) return;
-
-    sel.innerHTML = '<option value="">— Seleccioná —</option>';
-    opciones.forEach(t => {
-      const opt = new Option(t, t);
-      sel.appendChild(opt);
-    });
-    if (valorActual && opciones.includes(valorActual)) sel.value = valorActual;
+  selCompra.innerHTML = '<option value="">— Seleccioná —</option>';
+  opciones.forEach(t => {
+    const opt = new Option(t, t);
+    selCompra.appendChild(opt);
   });
+
+  if (valorActual) {
+    if (opciones.includes(valorActual)) {
+      selCompra.value = valorActual;
+    } else {
+      const vUp = valorActual.toUpperCase();
+      if (vUp.includes('DIVISA') || vUp.includes('DOLAR')) selCompra.value = 'Divisas';
+      else if (vUp.includes('CRIPTO') || vUp === 'BTC') selCompra.value = 'Cripto';
+      else if (vUp.includes('ACCION') || vUp.includes('ACCI')) selCompra.value = 'Acciones BYMA';
+      else if (vUp.includes('CEDEAR')) selCompra.value = 'CEDEARs';
+      else if (vUp.includes('BONO')) selCompra.value = 'Bonos';
+      else if (vUp.includes('OBLIGACI') || vUp === 'ON') selCompra.value = 'Obligaciones Negociables';
+    }
+  }
 }
 
-function onMonedaCotizacionChange() {
+function onMonedaCotizacionChangefunction onMonedaCotizacionChange() {
   const esUSD = !!document.getElementById('ah-moneda-usd')?.checked;
   const badge = document.getElementById('ah-moneda-badge');
   const txt   = document.getElementById('ah-precio-moneda-txt');
@@ -9085,7 +9363,7 @@ function onAhTipoChange() {
 
   if (isDivisaActivo(tipo)) {
     if (tLabel) tLabel.innerHTML = 'Moneda / Divisa';
-    if (tHint) tHint.innerHTML = '(ej: USD, EUR, BRL)';
+    if (tHint) tHint.innerHTML = '(ej: USD, EUR, BRL, UYU, CLP)';
     if (tInp) {
       tInp.placeholder = 'USD';
       if (!tInp.value) tInp.value = 'USD';
@@ -9097,28 +9375,28 @@ function onAhTipoChange() {
     preCargarPrecioEspecial('USD');
   } else if (isCriptoActivo(tipo)) {
     if (tLabel) tLabel.innerHTML = 'Criptomoneda / Ticker';
-    if (tHint) tHint.innerHTML = '(ej: BTC, ETH, USDT)';
+    if (tHint) tHint.innerHTML = '(ej: BTC, ETH, SOL, USDT)';
     if (tInp) {
       tInp.placeholder = 'BTC';
       if (!tInp.value) tInp.value = 'BTC';
     }
     preCargarPrecioEspecial('BTC');
-  } else if (tipo === 'Accion' || tipo === 'CEDEAR') {
-    if (tLabel) tLabel.innerHTML = 'Ticker de Acción / CEDEAR';
-    if (tHint) tHint.innerHTML = '(ej: KO, AAPL, GGAL, YPFD, SPY)';
-    if (tInp) tInp.placeholder = 'KO';
+  } else if (tipo.includes('Acci') || tipo.includes('CEDEAR')) {
+    if (tLabel) tLabel.innerHTML = tipo.includes('CEDEAR') ? 'Ticker del CEDEAR' : 'Ticker de Acción BYMA';
+    if (tHint) tHint.innerHTML = tipo.includes('CEDEAR') ? '(ej: AAPL, NVDA, SPY, QQQ)' : '(ej: GGAL, YPFD, PAMP, ALUA)';
+    if (tInp) tInp.placeholder = tipo.includes('CEDEAR') ? 'AAPL' : 'GGAL';
     if (chkUsd && chkUsd.checked) {
       chkUsd.checked = false;
       onMonedaCotizacionChange();
     }
-  } else if (tipo === 'Bono') {
+  } else if (tipo.includes('Bono')) {
     if (tLabel) tLabel.innerHTML = 'Ticker del Bono';
-    if (tHint) tHint.innerHTML = '(ej: AL30, GD30)';
+    if (tHint) tHint.innerHTML = '(ej: AL30, GD30, AE38, AL30D)';
     if (tInp) tInp.placeholder = 'AL30';
-  } else if (tipo === 'Obligación Negociable' || tipo === 'ON') {
+  } else if (tipo.includes('Obliga') || tipo === 'ON') {
     if (tLabel) tLabel.innerHTML = 'Ticker de la ON';
-    if (tHint) tHint.innerHTML = '(ej: YMCIO, MGC3O, TLC1O)';
-    if (tInp) tInp.placeholder = 'YMCIO';
+    if (tHint) tHint.innerHTML = '(ej: YMCXO, TLC1O, IRCFO, VSC3O)';
+    if (tInp) tInp.placeholder = 'YMCXO';
     if (chkUsd && !chkUsd.checked) {
       chkUsd.checked = true;
       onMonedaCotizacionChange();
@@ -9130,7 +9408,7 @@ function onAhTipoChange() {
   }
 }
 
-async function preCargarPrecioEspecial(tipo) {
+async function preCargarPrecioEspecialasync function preCargarPrecioEspecial(tipo) {
   let p = 0;
   if (tipo === 'USD' || isDivisaActivo(tipo)) {
     if (!cotizaciones.USD) await fetchMarketQuotes();
@@ -9540,12 +9818,13 @@ function renderTablaOperaciones() {
   if (count) count.textContent = `${operacionesData.length} operación${operacionesData.length !== 1 ? 'es' : ''}`;
   const fmt = n => '$' + Math.round(Math.abs(n)).toLocaleString('es-AR');
   const tipoIcon = {
-    USD: '💵', Divisa: '💵', Dólar: '💵', Dolar: '💵',
-    BTC: '₿', Cripto: '🪙',
-    Accion: '📈', 'Acción': '📈',
-    CEDEAR: '🌐',
-    Bono: '📄',
-    'Obligación Negociable': '📑', 'Obligacion Negociable': '📑', ON: '📑'
+    USD: '💵', Divisa: '💵', Divisas: '💵', 'Dólar': '💵', Dolar: '💵', Euro: '💶', Real: '🪙',
+    BTC: '₿', Cripto: '🪙', Criptomonedas: '🪙',
+    Accion: '📈', 'Acción': '📈', 'Acción BYMA': '📈', 'Acciones BYMA': '📈', Acciones: '📈',
+    CEDEAR: '🌐', CEDEARs: '🌐',
+    Bono: '📜', Bonos: '📜',
+    'Obligación Negociable': '📑', 'Obligaciones Negociables': '📑', 'Obligacion Negociable': '📑', ON: '📑',
+    FCI: '📊'
   };
   tbody.innerHTML = operacionesData.map((op, i) => {
     const esVenta    = op.operacion === 'Venta';
