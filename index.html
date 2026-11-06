@@ -3912,41 +3912,72 @@
         </div>
       </div>
 
-      <!-- 2. ASPIRADORA ROBOT (CONTROL REMOTO TUYA) -->
+      <!-- 2. ASPIRADORA ROBOT (SMART LIFE / TUYA) -->
       <div id="dom-card-vacuum" class="bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all">
+        <div id="dom-vac-glow" class="absolute inset-0 bg-gradient-to-br from-emerald-900/15 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none"></div>
+
         <!-- Cabecera Aspiradora -->
         <div class="flex items-center justify-between mb-6 relative z-10">
           <div class="flex items-center gap-3">
-            <div id="dom-vac-icon-box" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-all">
+            <div id="dom-vac-icon-box" class="w-10 h-10 rounded-xl bg-emerald-900/40 border border-emerald-500/30 flex items-center justify-center transition-colors">
               <i id="dom-vac-icon" class="fas fa-robot text-emerald-400 text-base"></i>
             </div>
             <div>
               <div class="flex items-center gap-2">
                 <span class="text-xs font-black text-white uppercase tracking-[0.18em]">Aspiradora Robot</span>
-                <span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">Tuya Cloud</span>
+                <span id="dom-vac-badge" class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">En Base</span>
               </div>
-              <p id="dom-vac-subtitle" class="text-[11px] text-slate-400 mt-0.5">Control Remoto · Listo para enviar órdenes</p>
+              <p id="dom-vac-subtitle" class="text-[11px] text-slate-400 mt-0.5">Carga completa — Lista para limpiar</p>
             </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <!-- Batería Real Tuya -->
+            <div class="flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800 h-11" title="Nivel de batería reportado por Tuya Cloud">
+              <i id="dom-vac-bat-icon" class="fas fa-battery-full text-emerald-400 text-sm"></i>
+              <span id="dom-vac-battery" class="text-xs font-black mono text-white">100%</span>
+            </div>
+
+            <button onclick="domToggleAspiradoraPower()" id="dom-vac-power-btn" title="Iniciar / Pausar Aspiradora"
+                    class="w-11 h-11 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 flex items-center justify-center transition-all active:scale-95">
+              <i class="fas fa-power-off text-sm"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Métricas de Sesión de Limpieza (Tuya Cloud) -->
+        <div class="grid grid-cols-3 gap-3 mb-5 relative z-10">
+          <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-3 text-center">
+            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Estado</span>
+            <span id="dom-vac-state-text" class="text-xs font-black text-emerald-400 uppercase mt-1 block">Cargada</span>
+          </div>
+          <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-3 text-center">
+            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Área Limpia</span>
+            <span id="dom-vac-area" class="text-sm font-black mono text-white mt-0.5 block">42 m²</span>
+          </div>
+          <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-3 text-center">
+            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Tiempo</span>
+            <span id="dom-vac-time" class="text-sm font-black mono text-white mt-0.5 block">38 min</span>
           </div>
         </div>
 
         <!-- Botones Principales de Acción -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-5 relative z-10">
-          <button onclick="domAccionAspiradora('start')" class="py-3.5 px-3 rounded-xl bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/40 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-2 transition-all active:scale-95 shadow-sm">
-            <i class="fas fa-play text-sm"></i>
-            <span>Iniciar</span>
+          <button onclick="domAccionAspiradora('start')" id="dom-vac-btn-start" class="py-3 px-3 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95">
+            <i class="fas fa-power-off text-xs"></i>
+            <span id="dom-vac-btn-start-txt">Iniciar</span>
           </button>
-          <button onclick="domAccionAspiradora('pause')" class="py-3.5 px-3 rounded-xl bg-amber-600/20 hover:bg-amber-600 text-amber-300 hover:text-white border border-amber-500/40 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-2 transition-all active:scale-95 shadow-sm">
-            <i class="fas fa-pause text-sm"></i>
+          <button onclick="domAccionAspiradora('pause')" id="dom-vac-btn-pause" class="py-3 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95">
+            <i class="fas fa-pause text-xs text-amber-400"></i>
             <span>Pausar</span>
           </button>
-          <button onclick="domAccionAspiradora('dock')" class="py-3.5 px-3 rounded-xl bg-sky-600/20 hover:bg-sky-600 text-sky-300 hover:text-white border border-sky-500/40 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-2 transition-all active:scale-95 shadow-sm">
-            <i class="fas fa-charging-station text-sm"></i>
+          <button onclick="domAccionAspiradora('dock')" id="dom-vac-btn-dock" class="py-3 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95">
+            <i class="fas fa-charging-station text-xs text-cyan-400"></i>
             <span>A la Base</span>
           </button>
-          <button onclick="domAccionAspiradora('locate')" class="py-3.5 px-3 rounded-xl bg-purple-600/20 hover:bg-purple-600 text-purple-300 hover:text-white border border-purple-500/40 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-2 transition-all active:scale-95 shadow-sm">
-            <i class="fas fa-volume-up text-sm"></i>
-            <span>Localizar</span>
+          <button onclick="domAccionAspiradora('locate')" class="py-3 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95">
+            <i class="fas fa-volume-up text-xs text-violet-400"></i>
+            <span>Buscar</span>
           </button>
         </div>
 
@@ -4040,25 +4071,33 @@
       <div id="dom-card-tv" class="bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all">
         <div id="dom-tv-glow" class="absolute inset-0 bg-gradient-to-br from-violet-900/15 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none"></div>
 
-        <!-- Cabecera TV -->
-        <div class="flex items-center justify-between mb-5 relative z-10">
+        <!-- Cabecera TV (Mando Infrarrojo IR) -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 relative z-10">
           <div class="flex items-center gap-3">
-            <div id="dom-tv-icon-box" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-colors">
-              <i id="dom-tv-icon" class="fas fa-tv text-slate-400 text-sm"></i>
+            <div id="dom-tv-icon-box" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-all">
+              <i id="dom-tv-icon" class="fas fa-tv text-violet-400 text-sm"></i>
             </div>
             <div>
               <div class="flex items-center gap-2">
                 <span class="text-xs font-black text-white uppercase tracking-[0.18em]">Android TV</span>
                 <span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">Hub IR</span>
               </div>
-              <p id="dom-tv-subtitle" class="text-[11px] text-slate-400 mt-0.5">En espera — Control Infrarrojo</p>
+              <p id="dom-tv-subtitle" class="text-[11px] text-slate-400 mt-0.5">Mando Infrarrojo · Listo para enviar señal</p>
             </div>
           </div>
 
-          <button onclick="domCmdTV('power')" id="dom-tv-power-btn" title="Encender / Apagar TV"
-                  class="w-11 h-11 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 flex items-center justify-center transition-all active:scale-95">
-            <i class="fas fa-power-off text-sm"></i>
-          </button>
+          <div class="flex items-center gap-2">
+            <button onclick="domEncenderTV()" title="Enviar señal de Encendido"
+                    class="h-10 px-3.5 rounded-xl bg-violet-600/20 hover:bg-violet-600 text-violet-300 hover:text-white border border-violet-500/40 flex items-center gap-1.5 font-black text-xs uppercase tracking-wider transition-all active:scale-95 shadow-sm">
+              <i class="fas fa-power-off text-xs"></i>
+              <span>Encender</span>
+            </button>
+            <button onclick="domApagarTV()" title="Enviar señal de Apagado"
+                    class="h-10 px-3.5 rounded-xl bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-500/40 flex items-center gap-1.5 font-black text-xs uppercase tracking-wider transition-all active:scale-95 shadow-sm">
+              <i class="fas fa-power-off text-xs"></i>
+              <span>Apagar</span>
+            </button>
+          </div>
         </div>
 
         <!-- Barra Superior: Botón Home (Arriba) + Volumen Compacto a la Derecha -->
@@ -4093,7 +4132,7 @@
         <div class="relative z-10">
           <div class="flex items-center justify-between mb-2.5">
             <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Aplicaciones Android TV (Orden Fila Inicio)</span>
-            <span id="dom-tv-active-app-badge" class="text-[9px] font-bold text-violet-400 uppercase tracking-wider">Inicio</span>
+            <span id="dom-tv-active-app-badge" class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Macros IR</span>
           </div>
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
             <!-- 1. Flow -->
@@ -15469,10 +15508,53 @@ async function enviarComandoSmartLife(dispositivo, accion, payload = {}) {
       renderDomoticaUI();
     }
     if (data.vacStatus && data.vacStatus.success && Array.isArray(data.vacStatus.result)) {
-      const bat = data.vacStatus.result.find(d => d.code === 'electricity_left' || d.code === 'battery_percentage');
+      const res = data.vacStatus.result;
+
+      // 1. Batería real de la aspiradora
+      const bat = res.find(d => d.code === 'electricity_left' || d.code === 'battery_percentage' || d.code === 'battery');
       if (bat && typeof bat.value === 'number') {
         domState.vacuum.battery = bat.value;
       }
+
+      // 2. Metros cuadrados reales limpiados (clean_area)
+      const area = res.find(d => d.code === 'clean_area' || d.code === 'clean_area_total');
+      if (area && typeof area.value === 'number') {
+        domState.vacuum.area = area.value > 500 ? Math.round(area.value / 100) : area.value;
+      }
+
+      // 3. Tiempo real de limpieza en minutos (clean_time)
+      const time = res.find(d => d.code === 'clean_time' || d.code === 'clean_time_total');
+      if (time && typeof time.value === 'number') {
+        domState.vacuum.time = time.value;
+      }
+
+      // 4. Estado real de la aspiradora
+      const st = res.find(d => d.code === 'status');
+      if (st && typeof st.value === 'string') {
+        const val = st.value.toLowerCase();
+        if (['cleaning', 'smart', 'random', 'spiral', 'wall_follow', 'part_clean', 'zone_clean'].includes(val)) {
+          domState.vacuum.status = 'cleaning';
+        } else if (['paused'].includes(val)) {
+          domState.vacuum.status = 'paused';
+        } else if (['goto_charge', 'charging', 'returning'].includes(val)) {
+          domState.vacuum.status = 'returning';
+        } else if (['charge_done', 'standby', 'sleep', 'docked'].includes(val)) {
+          domState.vacuum.status = 'docked';
+        }
+      }
+
+      // 5. Modo de limpieza reportado
+      const md = res.find(d => d.code === 'mode');
+      if (md && typeof md.value === 'string') {
+        domState.vacuum.mode = md.value;
+      }
+
+      // 6. Succión reportada
+      const suc = res.find(d => d.code === 'suction' || d.code === 'fan_speed_enum');
+      if (suc && typeof suc.value === 'string') {
+        domState.vacuum.suction = suc.value;
+      }
+
       guardarEstadoDomotica();
       renderDomoticaUI();
     }
@@ -15540,10 +15622,55 @@ function renderDomoticaUI() {
     }`;
   }
 
-  // 2. Render Aspiradora Robot (Mando de Acciones Tuya - Sin asumir estado ciego)
+    // 2. Render Aspiradora Robot (Smart Life / Tuya Cloud con métricas completas)
   const vac = domState.vacuum;
   const vacCard = document.getElementById('dom-card-vacuum');
-  if (vacCard) vacCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all';
+  const vacGlow = document.getElementById('dom-vac-glow');
+  const vacBadge = document.getElementById('dom-vac-badge');
+  const vacSub = document.getElementById('dom-vac-subtitle');
+  const vacStateTxt = document.getElementById('dom-vac-state-text');
+  const vacBat = document.getElementById('dom-vac-battery');
+  const vacBatIcon = document.getElementById('dom-vac-bat-icon');
+  const vacArea = document.getElementById('dom-vac-area');
+  const vacTime = document.getElementById('dom-vac-time');
+  const vacPowerBtn = document.getElementById('dom-vac-power-btn');
+  const vacStartBtn = document.getElementById('dom-vac-btn-start');
+
+  const vacStatusMap = {
+    docked:    { badge: 'En Base', state: 'Cargada', sub: 'En base de carga — Lista para aspirar', color: 'text-emerald-400', active: false },
+    cleaning:  { badge: 'Limpiando', state: 'Aspirando', sub: 'Limpieza en progreso por la casa', color: 'text-cyan-400', active: true },
+    paused:    { badge: 'En Pausa', state: 'Pausada', sub: 'Recorrido en pausa temporal', color: 'text-amber-400', active: false },
+    returning: { badge: 'Volviendo', state: 'A la Base', sub: 'Regresando al cargador automáticamente', color: 'text-violet-400', active: true }
+  };
+  const vInfo = vacStatusMap[vac.status] || vacStatusMap.docked;
+
+  if (vacBadge) vacBadge.textContent = vInfo.badge;
+  if (vacSub) vacSub.textContent = vInfo.sub;
+  if (vacStateTxt) {
+    vacStateTxt.textContent = vInfo.state;
+    vacStateTxt.className = `text-xs font-black uppercase mt-1 block ${vInfo.color}`;
+  }
+  if (vacBat) vacBat.textContent = `${vac.battery}%`;
+  if (vacBatIcon) {
+    if (vac.battery <= 20) vacBatIcon.className = 'fas fa-battery-quarter text-rose-400 text-sm';
+    else if (vac.battery <= 50) vacBatIcon.className = 'fas fa-battery-half text-amber-400 text-sm';
+    else if (vac.battery <= 80) vacBatIcon.className = 'fas fa-battery-three-quarters text-emerald-400 text-sm';
+    else vacBatIcon.className = 'fas fa-battery-full text-emerald-400 text-sm';
+  }
+  if (vacArea) vacArea.textContent = `${vac.area} m²`;
+  if (vacTime) vacTime.textContent = `${vac.time} min`;
+
+  if (vInfo.active) {
+    if (vacCard) vacCard.className = 'bg-black rounded-2xl border border-emerald-500/50 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all shadow-lg shadow-emerald-950/30';
+    if (vacGlow) vacGlow.classList.replace('opacity-0', 'opacity-100');
+    if (vacPowerBtn) vacPowerBtn.className = redPowerOnClass;
+    if (vacStartBtn) vacStartBtn.className = 'py-3 px-3 rounded-xl bg-red-600 hover:bg-red-500 text-white border border-red-400/50 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 shadow-lg shadow-red-600/30';
+  } else {
+    if (vacCard) vacCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all';
+    if (vacGlow) vacGlow.classList.replace('opacity-100', 'opacity-0');
+    if (vacPowerBtn) vacPowerBtn.className = redPowerOffClass;
+    if (vacStartBtn) vacStartBtn.className = 'py-3 px-3 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95';
+  }
 
   ['smart', 'wall_follow', 'spiral', 'single'].forEach(m => {
     const btn = document.getElementById('dom-vac-mode-' + m);
@@ -15621,62 +15748,10 @@ function renderDomoticaUI() {
     }
   }
 
-  // 4. Render Televisor Android TV (IR)
-  const tv = domState.tv;
+  // 4. Render Televisor Android TV (Mando Infrarrojo IR - Sin estado ciego)
   const tvCard = document.getElementById('dom-card-tv');
-  const tvGlow = document.getElementById('dom-tv-glow');
-  const tvIconBox = document.getElementById('dom-tv-icon-box');
-  const tvIcon = document.getElementById('dom-tv-icon');
-  const tvSub = document.getElementById('dom-tv-subtitle');
-  const tvVol = document.getElementById('dom-tv-vol-val');
-  const tvMuteBtn = document.getElementById('dom-tv-mute-btn');
-  const tvAppBadge = document.getElementById('dom-tv-active-app-badge');
-  const tvPowerBtn = document.getElementById('dom-tv-power-btn');
-
-  const appLabels = {
-    home: 'Pantalla de Inicio',
-    flow: 'Flow',
-    youtube: 'YouTube',
-    stremio: 'Stremio',
-    disney: 'Disney+',
-    paramount: 'Paramount+',
-    netflix: 'Netflix',
-    ytmusic: 'YouTube Music',
-    kick: 'Kick'
-  };
-  const nombreAppActiva = appLabels[tv.activeApp] || 'Pantalla de Inicio';
-
-  if (tvVol) tvVol.textContent = tv.muted ? 'MUTE' : tv.volume;
-  if (tvAppBadge) tvAppBadge.textContent = tv.power ? `Activa: ${nombreAppActiva}` : 'En espera';
-  if (tvMuteBtn) {
-    tvMuteBtn.className = tv.muted
-      ? 'w-8 h-8 rounded-lg bg-amber-500/25 text-amber-300 border border-amber-400 flex items-center justify-center transition-all active:scale-95'
-      : 'w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 flex items-center justify-center transition-all active:scale-95';
-  }
-
-  ['flow', 'youtube', 'stremio', 'disney', 'paramount', 'netflix', 'ytmusic', 'kick'].forEach(appKey => {
-    const btn = document.getElementById('dom-tv-app-' + appKey);
-    if (!btn) return;
-    const isActiva = tv.power && tv.activeApp === appKey;
-    btn.className = isActiva
-      ? 'group h-14 px-2.5 rounded-xl bg-violet-950/50 border border-violet-400 flex items-center gap-2.5 transition-all active:scale-95 text-left shadow-md shadow-violet-950/40'
-      : 'group h-14 px-2.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-violet-500/40 flex items-center gap-2.5 transition-all active:scale-95 text-left';
-  });
-
-  if (tv.power) {
-    if (tvCard) tvCard.className = 'bg-black rounded-2xl border border-violet-500/50 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all shadow-lg shadow-violet-950/30';
-    if (tvGlow) tvGlow.classList.replace('opacity-0', 'opacity-100');
-    if (tvIconBox) tvIconBox.className = 'w-10 h-10 rounded-xl bg-violet-900/50 border border-violet-500/40 flex items-center justify-center transition-colors';
-    if (tvIcon) tvIcon.className = 'fas fa-tv text-violet-400 text-sm';
-    if (tvSub) tvSub.innerHTML = `<span class="text-violet-400 font-bold">Encendido</span> — ${nombreAppActiva} • Vol ${tv.muted ? 'Silenciado' : tv.volume}`;
-    if (tvPowerBtn) tvPowerBtn.className = redPowerOnClass;
-  } else {
-    if (tvCard) tvCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all';
-    if (tvGlow) tvGlow.classList.replace('opacity-100', 'opacity-0');
-    if (tvIconBox) tvIconBox.className = 'w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-colors';
-    if (tvIcon) tvIcon.className = 'fas fa-tv text-slate-500 text-sm';
-    if (tvSub) tvSub.textContent = 'En espera — Android TV (Hub IR)';
-    if (tvPowerBtn) tvPowerBtn.className = redPowerOffClass;
+  if (tvCard) {
+    tvCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all';
   }
 }
 
@@ -15773,30 +15848,35 @@ function domToggleSwingAC() {
   actualizarUltimaOrdenDomotica('dom-ac-subtitle', `Swing ${domState.ac.swing ? 'ON' : 'OFF'}`);
 }
 
-// ─── Controles Aspiradora Robot (Mando de Acciones Directas) ───────────────────
+// ─── Controles Aspiradora Robot (Smart Life / Tuya Cloud) ─────────────────────
 function domToggleAspiradoraPower() {
-  domAccionAspiradora('start');
+  const estaActiva = domState.vacuum.status === 'cleaning' || domState.vacuum.status === 'returning';
+  domAccionAspiradora(estaActiva ? 'pause' : 'start');
 }
 
 function domAccionAspiradora(accion) {
-  animarFeedbackDomotica('dom-vac-icon-box');
   if (accion === 'start') {
+    domState.vacuum.status = 'cleaning';
     enviarComandoSmartLife('Aspiradora Robot', `Iniciar limpieza (${domState.vacuum.mode})`, { command: 'start', mode: domState.vacuum.mode });
-    actualizarUltimaOrdenDomotica('dom-vac-subtitle', 'Iniciar limpieza');
-    showToast('Comando enviado: Iniciar limpieza', 'ok');
+    showToast('Aspiradora iniciando limpieza', 'ok');
   } else if (accion === 'pause') {
+    domState.vacuum.status = 'paused';
     enviarComandoSmartLife('Aspiradora Robot', 'Pausar limpieza', { command: 'pause' });
-    actualizarUltimaOrdenDomotica('dom-vac-subtitle', 'Pausar limpieza');
-    showToast('Comando enviado: Pausar limpieza', 'ok');
+    showToast('Aspiradora en pausa', 'ok');
   } else if (accion === 'dock') {
+    domState.vacuum.status = 'returning';
     enviarComandoSmartLife('Aspiradora Robot', 'Volver a la base de carga', { command: 'charge_go' });
-    actualizarUltimaOrdenDomotica('dom-vac-subtitle', 'Volver a la Base');
-    showToast('Comando enviado: Volver a la base', 'ok');
+    showToast('Aspiradora volviendo a la base', 'ok');
+    // Consultar estado real de Tuya tras dar tiempo al robot para acomodarse en la base
+    setTimeout(() => {
+      sincronizarDomotica(true);
+    }, 4000);
   } else if (accion === 'locate') {
     enviarComandoSmartLife('Aspiradora Robot', 'Emitir sonido de localización (Seek)', { command: 'seek' });
-    actualizarUltimaOrdenDomotica('dom-vac-subtitle', 'Localizar aspiradora');
     showToast('Buscando aspiradora (sonido emitido)', 'ok');
   }
+  guardarEstadoDomotica();
+  renderDomoticaUI();
 }
 
 function domSetModoAspiradora(modo) {
@@ -15852,10 +15932,23 @@ function iniciarTimerEnchufeDomotica() {
   }, 15000);
 }
 
-// ─── Controles Televisor Android TV (IR) ──────────────────────────────────────
+// ─── Controles Televisor Android TV (Mando Infrarrojo IR sin estado ciego) ────
+function domEncenderTV() {
+  animarFeedbackDomotica('dom-tv-icon-box');
+  actualizarUltimaOrdenDomotica('dom-tv-subtitle', 'Encender TV');
+  enviarComandoSmartLife('TV (Control IR)', 'Encender Android TV (Power IR)', { key: 'power' });
+  showToast('Señal enviada: Encender TV', 'ok');
+}
+
+function domApagarTV() {
+  animarFeedbackDomotica('dom-tv-icon-box');
+  actualizarUltimaOrdenDomotica('dom-tv-subtitle', 'Apagar TV');
+  enviarComandoSmartLife('TV (Control IR)', 'Apagar Android TV (Power IR)', { key: 'power' });
+  showToast('Señal enviada: Apagar TV', 'ok');
+}
+
 function domCmdTV(cmd) {
   let descripcion = cmd;
-  // Mapeo directo al key_name real de Tuya IR para que nunca caiga en fallback a Power
   const tuyaKeyAlias = {
     power: 'power',
     home: 'home',
@@ -15865,36 +15958,33 @@ function domCmdTV(cmd) {
   };
   const keyToSend = tuyaKeyAlias[cmd] || cmd;
 
+  animarFeedbackDomotica('dom-tv-icon-box');
+
   if (cmd === 'power') {
-    domState.tv.power = !domState.tv.power;
-    descripcion = domState.tv.power ? 'Encender Android TV (Power IR)' : 'Apagar Android TV (Power IR)';
-    showToast(domState.tv.power ? 'TV encendida' : 'TV apagada', 'ok');
+    descripcion = 'Power Android TV (IR)';
+    actualizarUltimaOrdenDomotica('dom-tv-subtitle', 'Power TV');
+    showToast('Señal Power enviada a la TV', 'ok');
   } else if (cmd === 'home') {
-    domState.tv.power = true;
-    domState.tv.activeApp = 'home';
-    descripcion = 'Volver a Pantalla de Inicio (Home Android TV)';
-    showToast('Pantalla de Inicio (Android TV)', 'ok');
+    descripcion = 'Ir a Pantalla de Inicio (Home Android TV)';
+    actualizarUltimaOrdenDomotica('dom-tv-subtitle', 'Ir a Home');
+    showToast('Señal Home enviada a la TV', 'ok');
   } else if (cmd === 'mute') {
-    domState.tv.power = true;
-    domState.tv.muted = !domState.tv.muted;
-    descripcion = domState.tv.muted ? 'Silenciar (Mute)' : 'Activar sonido';
+    descripcion = 'Silenciar / Activar sonido (Mute)';
+    actualizarUltimaOrdenDomotica('dom-tv-subtitle', 'Silenciar (Mute)');
+    showToast('Señal Mute enviada a la TV', 'ok');
   } else if (cmd === 'vol_up') {
-    domState.tv.power = true;
-    domState.tv.muted = false;
-    domState.tv.volume = Math.min(100, domState.tv.volume + 1);
-    descripcion = `Subir volumen (${domState.tv.volume})`;
+    descripcion = 'Subir volumen (+)';
+    actualizarUltimaOrdenDomotica('dom-tv-subtitle', 'Volumen +');
+    showToast('Volumen +', 'ok');
   } else if (cmd === 'vol_down') {
-    domState.tv.power = true;
-    domState.tv.muted = false;
-    domState.tv.volume = Math.max(0, domState.tv.volume - 1);
-    descripcion = `Bajar volumen (${domState.tv.volume})`;
+    descripcion = 'Bajar volumen (-)';
+    actualizarUltimaOrdenDomotica('dom-tv-subtitle', 'Volumen -');
+    showToast('Volumen -', 'ok');
   } else {
-    domState.tv.power = true;
     descripcion = `Tecla IR: ${cmd.toUpperCase()}`;
+    actualizarUltimaOrdenDomotica('dom-tv-subtitle', `Tecla ${cmd.toUpperCase()}`);
   }
 
-  guardarEstadoDomotica();
-  renderDomoticaUI();
   enviarComandoSmartLife('TV (Control IR)', descripcion, { key: keyToSend });
 }
 
@@ -15913,10 +16003,8 @@ async function domAbrirAppTV(appKey, silentToast = false) {
   };
   const info = appsConfig[appKey] || { nombre: appKey, pasosDerecha: 0 };
 
-  domState.tv.power = true;
-  domState.tv.activeApp = appKey;
-  guardarEstadoDomotica();
-  renderDomoticaUI();
+  animarFeedbackDomotica('dom-tv-icon-box');
+  actualizarUltimaOrdenDomotica('dom-tv-subtitle', `Abrir ${info.nombre}`);
 
   if (!silentToast) {
     showToast(`Abriendo ${info.nombre} en Android TV...`, 'ok');
