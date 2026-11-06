@@ -170,7 +170,7 @@ function doPost(e) {
     let sheet = ss.getSheetByName('operaciones');
     if (!sheet) {
       sheet = ss.insertSheet('operaciones');
-      sheet.appendRow(['Fecha','Operacion','Tipo','Ticker','Descripcion','Cantidad','Precio','PrecioCompra','TotalARS','PnL']);
+      sheet.appendRow(['Fecha','Operacion','Tipo','Ticker','Descripcion','Cantidad','Precio','PrecioCompra','TotalARS','PnL','Moneda']);
     }
     const nextRow = sheet.getLastRow() + 1;
     const formulaCotizacion = data.ticker 
@@ -187,7 +187,8 @@ function doPost(e) {
       data.precio       || 0,
       data.precioCompra || 0,
       data.totalARS     || 0,
-      data.pnl          || 0
+      data.pnl          || 0,
+      data.moneda       || 'ARS'
     ]);
     return ok();
   }
@@ -240,6 +241,7 @@ function doPost(e) {
           sheet.getRange(rowNum, 8).setValue(nvo.precioCompra != null ? nvo.precioCompra : rows[i][7]);
           sheet.getRange(rowNum, 9).setValue(nvo.totalARS    || (nvo.cantidad * nvo.precio));
           sheet.getRange(rowNum, 10).setValue(nvo.pnl != null ? nvo.pnl : rows[i][9]);
+          sheet.getRange(rowNum, 11).setValue(nvo.moneda || ant.moneda || 'ARS');
           
           break;
         }

@@ -2441,23 +2441,22 @@
                 <span class="text-[9px] text-slate-500 font-normal">Broker / Exchange / Banco</span>
               </label>
               <input type="text" id="ah-plataforma" list="ah-plataforma-list"
-                     placeholder="Ej: Balanz, IOL, Binance, Cocos..."
+                     placeholder="Ej: Balanz, IOL, Binance o nueva..."
                      class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-sm text-white font-bold">
-              <datalist id="ah-plataforma-list">
-                <option value="Balanz"></option>
-                <option value="IOL (InvertirOnline)"></option>
-                <option value="Binance"></option>
-                <option value="Cocos Capital"></option>
-                <option value="Bull Market"></option>
-                <option value="Lemon Cash"></option>
-                <option value="Buenbit"></option>
-                <option value="Belo"></option>
-                <option value="Santander"></option>
-                <option value="Galicia"></option>
-                <option value="BBVA"></option>
-                <option value="Brubank"></option>
-                <option value="Efectivo"></option>
-              </datalist>
+              <datalist id="ah-plataforma-list"></datalist>
+            </div>
+
+            <!-- Selector de Moneda de Cotización (ARS vs USD) -->
+            <div class="p-3 bg-slate-900 border border-slate-700/80 rounded-xl flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <input type="checkbox" id="ah-moneda-usd" onchange="onMonedaCotizacionChange()"
+                       class="w-4 h-4 rounded bg-slate-800 border-slate-600 text-emerald-500 focus:ring-emerald-500/30 cursor-pointer">
+                <label for="ah-moneda-usd" class="text-xs font-bold text-white cursor-pointer select-none flex items-center gap-1.5">
+                  <span>Cotiza en Dólares (USD)</span>
+                  <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-black mono">U$S</span>
+                </label>
+              </div>
+              <span id="ah-moneda-badge" class="text-[10px] font-bold mono text-slate-400">Precio en ARS</span>
             </div>
 
             <div class="space-y-1.5">
@@ -2467,15 +2466,15 @@
             </div>
 
             <div id="ah-precio-group" class="space-y-1.5" style="display:block">
-              <label class="text-[10px] font-bold text-white uppercase ml-1">
-                Precio de compra <span class="text-slate-500">(ARS por unidad)</span>
+              <label id="ah-precio-label" class="text-[10px] font-bold text-white uppercase ml-1">
+                Precio de compra <span id="ah-precio-moneda-txt" class="text-slate-500">(ARS por unidad)</span>
               </label>
               <div class="relative">
                 <span id="ah-precio-simbolo" class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-400 mono">$</span>
                 <input type="number" id="ah-precio-manual" placeholder="0.00" step="any" min="0" oninput="calcularInversionPreview()"
                        class="w-full h-12 pl-8 pr-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-xl font-black text-white mono">
               </div>
-              <p class="text-[10px] text-slate-400 px-1">Podés editar el precio al que compraste.</p>
+              <p id="ah-precio-hint" class="text-[10px] text-slate-400 px-1">Podés editar el precio al que compraste en pesos.</p>
             </div>
 
             <!-- Preview Inversión en tiempo real -->
@@ -2634,13 +2633,23 @@
                 <p class="text-[11px] text-slate-400 mono">Cargando...</p>
               </div>
             </div>
-            <div id="ah-cotizaciones-bottom" class="relative z-10 mt-3 pt-2.5 border-t border-slate-800/90">
+            <div id="ah-cotizaciones-bottom" class="relative z-10 mt-3 pt-2.5 border-t border-slate-800/90 flex flex-col gap-1.5">
               <button onclick="abrirModalCotizaciones()" class="w-full py-1.5 px-2 bg-violet-950/40 hover:bg-violet-900/50 border border-violet-700/40 hover:border-violet-600/60 rounded-xl flex items-center justify-between text-[9px] font-black text-violet-300 hover:text-white transition-all uppercase tracking-wider group">
                 <span class="flex items-center gap-1.5 truncate">
                   <i class="fas fa-layer-group text-violet-400 text-[10px]"></i>
                   <span class="truncate">Mercado &amp; CEDEARs</span>
                 </span>
                 <i class="fas fa-arrow-right text-[9px] transform group-hover:translate-x-1 transition-transform shrink-0 ml-1"></i>
+              </button>
+              <button onclick="abrirModalCotizaciones('futuras')" class="w-full py-1.5 px-2 bg-amber-950/30 hover:bg-amber-900/40 border border-amber-700/40 hover:border-amber-600/60 rounded-xl flex items-center justify-between text-[9px] font-black text-amber-300 hover:text-white transition-all uppercase tracking-wider group">
+                <span class="flex items-center gap-1.5 truncate">
+                  <i class="fas fa-bookmark text-amber-400 text-[10px]"></i>
+                  <span class="truncate">Futuras Inversiones</span>
+                </span>
+                <span class="flex items-center gap-1">
+                  <span id="badge-futuras-inversiones-count" class="px-1.5 py-0.2 rounded-full text-[9px] bg-amber-500/20 text-amber-300 mono font-bold">0</span>
+                  <i class="fas fa-arrow-right text-[9px] transform group-hover:translate-x-1 transition-transform shrink-0 text-amber-400"></i>
+                </span>
               </button>
             </div>
           </div>
@@ -4448,6 +4457,7 @@
         <button onclick="setTabCotizaciones('acciones')" id="tab-cot-acciones" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Acciones BYMA</button>
         <button onclick="setTabCotizaciones('cedears')" id="tab-cot-cedears" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">CEDEARs</button>
         <button onclick="setTabCotizaciones('cartera')" id="tab-cot-cartera" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Mi Cartera</button>
+        <button onclick="setTabCotizaciones('futuras')" id="tab-cot-futuras" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap flex items-center gap-1.5"><i class="fas fa-bookmark text-amber-400 text-[10px]"></i><span>Futuras Compras</span><span id="tab-cot-futuras-count" class="px-1.5 py-0.2 rounded-full text-[9px] bg-amber-500/20 text-amber-300 mono font-bold">0</span></button>
       </div>
     </div>
 
@@ -4675,20 +4685,31 @@
         <input type="text" id="op-edit-descripcion" list="op-edit-descripcion-list" placeholder="Ej: Balanz, IOL, Binance" class="w-full h-11 px-4 bg-slate-800 border border-slate-700 rounded-lg outline-none text-sm text-white">
         <datalist id="op-edit-descripcion-list"></datalist>
       </div>
+      <div class="p-3 bg-slate-900 border border-slate-700/80 rounded-lg flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <input type="checkbox" id="op-edit-moneda-usd" onchange="onOpEditMonedaChange()"
+                 class="w-4 h-4 rounded bg-slate-800 border-slate-600 text-emerald-500 focus:ring-emerald-500/30 cursor-pointer">
+          <label for="op-edit-moneda-usd" class="text-xs font-bold text-white cursor-pointer select-none flex items-center gap-1.5">
+            <span>Cotiza en Dólares (USD)</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-black mono">U$S</span>
+          </label>
+        </div>
+        <span id="op-edit-moneda-badge" class="text-[10px] font-bold mono text-slate-400">ARS</span>
+      </div>
       <div class="grid grid-cols-2 gap-3">
         <div class="space-y-1.5">
           <label class="text-[10px] font-bold text-white uppercase ml-1">Cantidad</label>
           <input type="number" id="op-edit-cantidad" step="any" min="0" class="w-full h-11 px-4 bg-slate-800 border border-slate-700 rounded-lg outline-none text-sm font-bold text-white mono">
         </div>
         <div class="space-y-1.5">
-          <label class="text-[10px] font-bold text-white uppercase ml-1">Precio ARS</label>
-          <div class="relative"><span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-400 mono text-xs">$</span>
+          <label id="op-edit-precio-label" class="text-[10px] font-bold text-white uppercase ml-1">Precio ARS</label>
+          <div class="relative"><span id="op-edit-precio-simbolo" class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-400 mono text-xs">$</span>
           <input type="number" id="op-edit-precio" step="any" min="0" class="w-full h-11 pl-7 pr-3 bg-slate-800 border border-slate-700 rounded-lg outline-none text-sm font-bold text-white mono"></div>
         </div>
       </div>
       <div class="space-y-1.5">
-        <label class="text-[10px] font-bold text-white uppercase ml-1">Precio de compra original <span class="text-slate-500 normal-case font-normal">(para P&L, solo ventas)</span></label>
-        <div class="relative"><span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-400 mono text-xs">$</span>
+        <label id="op-edit-precio-compra-label" class="text-[10px] font-bold text-white uppercase ml-1">Precio de compra original <span class="text-slate-500 normal-case font-normal">(para P&L, solo ventas)</span></label>
+        <div class="relative"><span id="op-edit-precio-compra-simbolo" class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-400 mono text-xs">$</span>
         <input type="number" id="op-edit-precio-compra" step="any" min="0" class="w-full h-11 pl-7 pr-3 bg-slate-800 border border-slate-700 rounded-lg outline-none text-sm font-bold text-white mono"></div>
       </div>
     </div>
@@ -7309,6 +7330,7 @@ function isDolarActivo(a) {
   const tipo = (typeof a === 'string' ? a : (a.tipo || '')).toUpperCase();
   const ticker = (typeof a === 'object' && a.ticker ? a.ticker : '').toUpperCase();
   const desc = (typeof a === 'object' && (a.plataforma || a.descripcion) ? (a.plataforma || a.descripcion) : '').toUpperCase();
+  if (tipo.includes('OBLIGACI') || tipo === 'ON' || tipo === 'ACCION' || tipo === 'ACCIÓN' || tipo === 'CEDEAR' || tipo === 'BONO') return false;
   if (ticker === 'EUR' || ticker === 'BRL' || ticker === 'GBP') return false;
   return tipo === 'USD' || ticker === 'USD' || (tipo.includes('DIVISA') && (ticker === 'USD' || !ticker)) || tipo.includes('DOLAR') || tipo.includes('DÓLAR') || desc.includes('DOLAR') || desc.includes('DÓLAR') || desc.includes('USD');
 }
@@ -7330,13 +7352,14 @@ function isCriptoActivo(a) {
 function tipoRequiereTicker(tipo) {
   if (!tipo) return false;
   const t = tipo.toUpperCase();
-  return t === 'ACCION' || t === 'ACCIÓN' || t === 'CEDEAR' || t === 'BONO';
+  return t === 'ACCION' || t === 'ACCIÓN' || t === 'CEDEAR' || t === 'BONO' || t.includes('OBLIGACI') || t === 'ON';
 }
 
 async function iniciarAhorros() {
   if (ahorrosIniciado) return;
   ahorrosIniciado = true;
   fillTiposActivo();
+  actualizarDatalistActivos();
 
   const cachedCot = leerCacheModulo('cotizaciones');
   if (cachedCot && !cotizaciones.USD) {
@@ -7564,6 +7587,12 @@ function getPrecioARS(activo) {
     const btcUsd = cotizaciones.BTC_USD || activo.precioManual;
     return btcUsd ? btcUsd * (cotizaciones.USD || 1) : 0;
   }
+  // Si el activo cotiza en USD (ej. Obligación Negociable en dólares)
+  if (activo.moneda === 'USD') {
+    const pUsd = getPrecioUSD(activo);
+    const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
+    return (pUsd || 0) * usdRate;
+  }
   const t = (activo.ticker || '').trim().toUpperCase();
   if (t) {
     if (marketData.cedears[t]?.c) return marketData.cedears[t].c;
@@ -7578,6 +7607,14 @@ function getPrecioUSD(activo) {
   // REGLA FUNDAMENTAL: Para divisa dólar (USD), 1 USD siempre vale exactamente 1 USD
   if (isDolarActivo(activo)) return 1;
   if (isCriptoActivo(activo)) return cotizaciones.BTC_USD || null;
+
+  // Si el activo cotiza en USD (ej. Obligación Negociable en dólares), su precio base está en dólares
+  if (activo.moneda === 'USD') {
+    const t = (activo.ticker || '').trim().toUpperCase();
+    if (t && cotizaciones.tickers[t]) return cotizaciones.tickers[t];
+    return activo.precioManual != null ? activo.precioManual : (activo.precioRef != null ? activo.precioRef : (activo.precioPromCompra || null));
+  }
+
   const ars     = getPrecioARS(activo);
   const usdRate = cotizaciones.USD_MEP || cotizaciones.USD;
   if (!ars || !usdRate) return null;
@@ -7613,13 +7650,135 @@ function renderCotizacionesBadge() {
       </div>
     </div>
   `;
+  actualizarBadgesFuturasCompras();
 }
 
 // ─── CONTROL DEL MODAL DE COTIZACIONES ─────────────────────────────────────────
-function abrirModalCotizaciones() {
+// === GESTIÓN DE FUTURAS COMPRAS / LISTA DE SEGUIMIENTO ======================
+function leerFuturasCompras() {
+  try {
+    const raw = localStorage.getItem('gm_futuras_compras');
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function guardarFuturasCompras(map) {
+  try {
+    localStorage.setItem('gm_futuras_compras', JSON.stringify(map || {}));
+  } catch (e) {}
+  actualizarBadgesFuturasCompras();
+}
+
+function esFuturaCompra(symbol) {
+  if (!symbol) return false;
+  const map = leerFuturasCompras();
+  return !!map[String(symbol).trim().toUpperCase()];
+}
+
+function toggleFuturaCompra(symbol, tipo, precio) {
+  if (!symbol) return;
+  const sym = String(symbol).trim().toUpperCase();
+  const map = leerFuturasCompras();
+  if (map[sym]) {
+    delete map[sym];
+    showToast(`Eliminado de futuras compras: ${sym}`, 'info');
+  } else {
+    map[sym] = {
+      symbol: sym,
+      tipo: tipo || 'Acción',
+      precioRef: precio || 0,
+      fecha: new Date().toISOString()
+    };
+    showToast(`Agregado a futuras compras: ${sym}`, 'ok');
+  }
+  guardarFuturasCompras(map);
+  renderModalCotizaciones();
+}
+
+function esActivoComprado(symbol, tipo) {
+  if (!symbol) return false;
+  const symClean = String(symbol).trim().toUpperCase();
+
+  // 1. En cartera con cantidad > 0
+  try {
+    const posiciones = (typeof calcularPosicionesNetas === 'function') ? calcularPosicionesNetas() : [];
+    for (const p of posiciones) {
+      if (p.cantidad > 0) {
+        const pTicker = String(p.ticker || '').trim().toUpperCase();
+        const isDol = typeof isDolarActivo === 'function' ? isDolarActivo(p) : false;
+        const isCr  = typeof isCriptoActivo === 'function' ? isCriptoActivo(p) : false;
+        const pSym  = (isDol ? 'USD' : (isCr ? (p.ticker || 'BTC') : (p.ticker || p.tipo || ''))).trim().toUpperCase();
+
+        if (pTicker === symClean || pSym === symClean) return true;
+        if ((symClean.includes('DOLAR') || symClean.includes('DÓLAR') || symClean === 'USD') && isDol) return true;
+        if ((symClean.includes('BTC') || symClean.includes('BITCOIN')) && isCr) return true;
+      }
+    }
+  } catch (e) {}
+
+  // 2. Operación de 'Compra' registrada en el historial
+  if (Array.isArray(window.operacionesData)) {
+    for (const op of window.operacionesData) {
+      if (String(op.operacion || '').trim().toLowerCase() === 'compra') {
+        const opTicker = String(op.ticker || '').trim().toUpperCase();
+        if (opTicker && opTicker === symClean) return true;
+
+        const opTipo = String(op.tipo || '').toLowerCase();
+        if ((opTicker === 'USD' || opTipo.includes('divisa')) &&
+            (symClean.includes('DOLAR') || symClean.includes('DÓLAR') || symClean === 'USD')) {
+          return true;
+        }
+        if ((opTicker === 'BTC' || opTipo.includes('cripto')) &&
+            (symClean.includes('BTC') || symClean.includes('BITCOIN'))) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+function depurarFuturasComprasCompradas() {
+  const map = leerFuturasCompras();
+  const keys = Object.keys(map);
+  if (!keys.length) {
+    actualizarBadgesFuturasCompras();
+    return;
+  }
+  let huboCambio = false;
+  keys.forEach(sym => {
+    if (esActivoComprado(sym, map[sym]?.tipo)) {
+      delete map[sym];
+      huboCambio = true;
+    }
+  });
+  if (huboCambio) {
+    guardarFuturasCompras(map);
+  } else {
+    actualizarBadgesFuturasCompras();
+  }
+}
+
+function actualizarBadgesFuturasCompras() {
+  const map = leerFuturasCompras();
+  const count = Object.keys(map).length;
+  const badgeCard = document.getElementById('badge-futuras-inversiones-count');
+  if (badgeCard) badgeCard.textContent = count;
+  const badgeTab = document.getElementById('tab-cot-futuras-count');
+  if (badgeTab) badgeTab.textContent = count;
+}
+
+function abrirModalCotizaciones(tabInicial) {
+  depurarFuturasComprasCompradas();
   const modal = document.getElementById('modal-cotizaciones');
   if (modal) modal.classList.remove('hidden');
-  renderModalCotizaciones();
+  if (tabInicial) {
+    setTabCotizaciones(tabInicial);
+  } else {
+    renderModalCotizaciones();
+  }
 }
 
 function cerrarModalCotizaciones() {
@@ -7629,13 +7788,17 @@ function cerrarModalCotizaciones() {
 
 function setTabCotizaciones(tab) {
   marketData.tabActual = tab;
-  ['todos', 'dolar', 'acciones', 'cedears', 'cartera'].forEach(t => {
+  ['todos', 'dolar', 'acciones', 'cedears', 'cartera', 'futuras'].forEach(t => {
     const btn = document.getElementById(`tab-cot-${t}`);
     if (btn) {
       if (t === tab) {
-        btn.className = 'px-3 py-1.5 rounded-lg bg-violet-600 text-white border border-violet-500/50 transition-colors whitespace-nowrap font-bold shadow-sm';
+        btn.className = (t === 'futuras')
+          ? 'px-3 py-1.5 rounded-lg bg-amber-600 text-white border border-amber-500/50 transition-colors whitespace-nowrap font-bold shadow-sm flex items-center gap-1.5'
+          : 'px-3 py-1.5 rounded-lg bg-violet-600 text-white border border-violet-500/50 transition-colors whitespace-nowrap font-bold shadow-sm';
       } else {
-        btn.className = 'px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap font-bold';
+        btn.className = (t === 'futuras')
+          ? 'px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap font-bold flex items-center gap-1.5'
+          : 'px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap font-bold';
       }
     }
   });
@@ -7649,6 +7812,7 @@ function filtrarModalCotizaciones() {
 }
 
 function renderModalCotizaciones() {
+  depurarFuturasComprasCompradas();
   const lista = document.getElementById('modal-cotizaciones-lista');
   const countEl = document.getElementById('modal-cotizaciones-count');
   const subEl = document.getElementById('modal-cotizaciones-subtitle');
@@ -7737,7 +7901,7 @@ function renderModalCotizaciones() {
       const sym   = isDol ? 'USD' : (isCr ? (p.ticker || 'BTC') : (p.ticker || p.tipo));
       if (q && !sym.toLowerCase().includes(q) && !(p.plataforma || '').toLowerCase().includes(q)) return;
       const pArs = getPrecioARS(p);
-      const mkt = marketData.cedears[sym.toUpperCase()] || marketData.stocks[sym.toUpperCase()];
+      const mkt = (marketData.cedears && marketData.cedears[sym.toUpperCase()]) || (marketData.stocks && marketData.stocks[sym.toUpperCase()]);
       items.push({
         tipo: p.tipo,
         badgeColor: isDol ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30',
@@ -7751,9 +7915,69 @@ function renderModalCotizaciones() {
     });
   }
 
+  // 5. Futuras Compras
+  if (tab === 'futuras') {
+    const mapFuturas = leerFuturasCompras();
+    const symbols = Object.keys(mapFuturas);
+    symbols.forEach(sym => {
+      const symUp = sym.toUpperCase();
+      if (q && !symUp.toLowerCase().includes(q)) return;
+
+      const fInfo = mapFuturas[sym] || {};
+      const cedear = marketData.cedears ? marketData.cedears[symUp] : null;
+      const stock = marketData.stocks ? marketData.stocks[symUp] : null;
+      const dolarMatch = (marketData.dolares || []).find(d => (d.nombre || d.casa || '').toUpperCase().includes(symUp));
+
+      if (cedear) {
+        items.push({
+          tipo: 'CEDEAR',
+          badgeColor: 'bg-violet-500/15 text-violet-300 border-violet-500/30',
+          symbol: symUp,
+          sub: cedear.v ? `Vol: ${Math.round(cedear.v).toLocaleString('es-AR')} ops · CEDEAR BYMA` : 'CEDEAR BYMA',
+          precio: fmtARS(cedear.c),
+          rawPrecio: cedear.c,
+          pct: cedear.pct_change,
+          vol: cedear.v || 0
+        });
+      } else if (stock) {
+        items.push({
+          tipo: 'Acción BYMA',
+          badgeColor: 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30',
+          symbol: symUp,
+          sub: stock.v ? `Vol: ${Math.round(stock.v).toLocaleString('es-AR')} ops · Mercado BYMA` : 'Mercado BYMA',
+          precio: fmtARS(stock.c),
+          rawPrecio: stock.c,
+          pct: stock.pct_change,
+          vol: stock.v || 0
+        });
+      } else if (dolarMatch) {
+        items.push({
+          tipo: 'Dólar',
+          badgeColor: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
+          symbol: symUp,
+          sub: `Compra: ${fmtARS(dolarMatch.compra)} · Venta: ${fmtARS(dolarMatch.venta)}`,
+          precio: fmtARS(dolarMatch.venta),
+          rawPrecio: dolarMatch.venta,
+          pct: null,
+          vol: null
+        });
+      } else {
+        items.push({
+          tipo: fInfo.tipo || 'Futura Inversión',
+          badgeColor: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
+          symbol: symUp,
+          sub: 'Guardado para futura compra',
+          precio: fInfo.precioRef ? fmtARS(fInfo.precioRef) : '—',
+          rawPrecio: fInfo.precioRef || 0,
+          pct: null,
+          vol: 0
+        });
+      }
+    });
+  }
+
   // Ordenamiento: si es tab 'todos' o 'acciones'/'cedears', ordenar por volumen o los más populares primero
   if (tab === 'todos' && !q) {
-    // En todos, poner dólares primero, luego acciones con mayor volumen y CEDEARs populares
     const dolaresPart = items.filter(it => it.tipo === 'Dólar' || it.tipo === 'Cripto');
     const resto = items.filter(it => it.tipo !== 'Dólar' && it.tipo !== 'Cripto')
       .sort((a, b) => (b.vol || 0) - (a.vol || 0));
@@ -7767,12 +7991,24 @@ function renderModalCotizaciones() {
   if (subEl && timeStr) subEl.textContent = `Precios en vivo BYMA & DólarApi (${timeStr})`;
 
   if (!items.length) {
-    lista.innerHTML = `
-      <div class="py-12 text-center text-slate-500 text-xs">
-        <i class="fas fa-search text-2xl mb-2 block opacity-40"></i>
-        No se encontraron cotizaciones para "${q}"
-      </div>
-    `;
+    if (tab === 'futuras' && !q) {
+      lista.innerHTML = `
+        <div class="py-12 px-6 text-center text-slate-400 text-xs flex flex-col items-center">
+          <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 mb-3 text-lg">
+            <i class="far fa-bookmark"></i>
+          </div>
+          <p class="font-bold text-white text-sm mb-1">Sin futuras compras anotadas</p>
+          <p class="text-slate-400 max-w-sm">Explora las pestañas <b>Todos</b>, <b>Acciones</b> o <b>CEDEARs</b> y haz clic en el botón <b>🔖 Guardar</b> en cualquier activo que quieras comprar a futuro.</p>
+        </div>
+      `;
+    } else {
+      lista.innerHTML = `
+        <div class="py-12 text-center text-slate-500 text-xs">
+          <i class="fas fa-search text-2xl mb-2 block opacity-40"></i>
+          No se encontraron cotizaciones para "${q}"
+        </div>
+      `;
+    }
     return;
   }
 
@@ -7781,29 +8017,46 @@ function renderModalCotizaciones() {
     if (it.pct != null) {
       const pos = it.pct >= 0;
       pctBadge = `
-        <span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-[10px] font-black mono ${pos ? 'bg-emerald-500/15 text-emerald-300' : 'bg-rose-500/15 text-rose-300'}">
+        <span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-[10px] font-black mono ${pos ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/15 text-rose-400 border border-rose-500/30'}">
           ${pos ? '▲ +' : '▼ '}${it.pct.toFixed(2)}%
         </span>
       `;
     }
 
+    const isFutura = esFuturaCompra(it.symbol);
+    const btnFutura = `
+      <button onclick="toggleFuturaCompra('${it.symbol}', '${it.tipo}', ${it.rawPrecio || 0}); event.stopPropagation();"
+              title="${isFutura ? 'Quitar de futuras compras' : 'Marcar como futura compra'}"
+              class="h-7 px-2 rounded-lg text-xs flex items-center gap-1 font-bold transition-all ${
+                isFutura
+                  ? 'bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/50 text-amber-300 shadow-sm'
+                  : 'bg-slate-800/80 hover:bg-slate-700 border border-slate-700/80 text-slate-400 hover:text-amber-300'
+              }">
+        <i class="${isFutura ? 'fas fa-bookmark text-amber-400' : 'far fa-bookmark text-slate-400'} text-[11px]"></i>
+        <span class="text-[10px] hidden sm:inline">${isFutura ? 'Marcado' : 'Guardar'}</span>
+      </button>
+    `;
+
     return `
       <div class="flex items-center justify-between py-2.5 px-2 hover:bg-slate-800/40 rounded-xl transition-colors">
         <div class="flex items-center gap-3 min-w-0">
-          <span class="px-2 py-0.5 rounded-full text-[9px] font-bold border ${it.badgeColor} whitespace-nowrap flex-shrink-0">${it.tipo}</span>
+          <span class="px-2 py-0.5 rounded-full text-[9px] font-bold border ${it.badgeColor} whitespace-nowrap flex-shrink-0">
+            ${it.tipo}
+          </span>
           <div class="flex flex-col min-w-0">
             <span class="text-xs font-black text-white truncate mono">${it.symbol}</span>
             <span class="text-[10px] text-slate-400 truncate">${it.sub}</span>
           </div>
         </div>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2">
           <div class="flex flex-col items-end">
             <span class="mono text-sm font-black text-white whitespace-nowrap">${it.precio}</span>
             ${pctBadge}
           </div>
+          ${btnFutura}
           ${it.rawPrecio ? `
-            <button onclick="usarCotizacionEnFormulario('${it.symbol}', ${it.rawPrecio}, '${it.tipo}')" title="Cargar en formulario de inversión"
-                    class="h-7 px-2.5 bg-violet-600/30 hover:bg-violet-600 border border-violet-500/40 text-violet-300 hover:text-white rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all">
+            <button onclick="usarCotizacionEnFormulario('${it.symbol}', ${it.rawPrecio}, '${it.tipo}')" title="Cargar en formulario"
+                    class="h-7 px-2.5 bg-violet-600/30 hover:bg-violet-600 border border-violet-500/40 text-violet-300 hover:text-white rounded-lg text-xs font-bold transition-colors">
               Usar
             </button>
           ` : ''}
@@ -7859,20 +8112,39 @@ function actualizarCotizacionDesdeVenta() {
   }
 }
 
-// Poblar datalists con plataformas y activos cargados
+// Poblar datalists únicamente con las plataformas donde ya se registraron compras
 function actualizarDatalistActivos() {
-  const defaultPlataformas = [
-    'Balanz', 'IOL (InvertirOnline)', 'Binance', 'Cocos Capital',
-    'Bull Market', 'Lemon Cash', 'Buenbit', 'Belo',
-    'Santander', 'Galicia', 'BBVA', 'Brubank', 'Efectivo'
-  ];
-  const customPlats = operacionesData.map(op => (op.plataforma || op.descripcion)).filter(Boolean);
-  const todasPlataformas = [...new Set([...defaultPlataformas, ...customPlats])].sort();
+  const customPlats = operacionesData
+    .filter(op => !op.operacion || String(op.operacion).trim().toLowerCase() === 'compra')
+    .map(op => {
+      const plat = (op.plataforma || op.descripcion || '').trim();
+      const ticker = (op.ticker || '').trim();
+      const tipo = (op.tipo || '').trim();
+      if (!plat) return '';
+      if (plat.toLowerCase() === 'general') return '';
+      // Si la descripción fue autocompletada con el ticker o tipo (fallback), no considerarla plataforma
+      if (ticker && plat.toUpperCase() === ticker.toUpperCase()) return '';
+      if (tipo && plat.toUpperCase() === tipo.toUpperCase()) return '';
+      return plat;
+    })
+    .filter(Boolean);
+
+  const seen = new Set();
+  const plataformasUnicas = [];
+  for (const p of customPlats) {
+    const key = p.toLowerCase();
+    if (!seen.has(key)) {
+      seen.add(key);
+      plataformasUnicas.push(p);
+    }
+  }
+  plataformasUnicas.sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
+
   const ids = ['ah-plataforma-list', 'op-edit-descripcion-list', 'ah-edit-descripcion-list', 'ah-descripcion-list'];
   ids.forEach(id => {
     const dl = document.getElementById(id);
     if (!dl) return;
-    dl.innerHTML = todasPlataformas.map(p => `<option value="${p}">`).join('');
+    dl.innerHTML = plataformasUnicas.map(p => `<option value="${p}">`).join('');
   });
 }
 
@@ -7884,7 +8156,8 @@ function calcularPosicionesNetas() {
   for (let i = operacionesData.length - 1; i >= 0; i--) {
     const op = operacionesData[i];
     const plat = (op.plataforma || op.descripcion || '').trim();
-    const key = `${op.tipo}||${(op.ticker||'').toUpperCase()}||${plat}`;
+    const opMoneda = op.moneda || (isDolarActivo(op) ? 'USD' : 'ARS');
+    const key = `${op.tipo}||${(op.ticker||'').toUpperCase()}||${plat}||${opMoneda}`;
 
     if (!mapa[key]) {
       mapa[key] = {
@@ -7892,6 +8165,7 @@ function calcularPosicionesNetas() {
         ticker: op.ticker || '',
         descripcion: plat,
         plataforma: plat,
+        moneda: opMoneda,
         cantidad: 0,
         precioRef: 0,
         precioPromCompra: 0,
@@ -7901,6 +8175,7 @@ function calcularPosicionesNetas() {
     }
 
     const activo = mapa[key];
+    if (op.moneda) activo.moneda = op.moneda;
 
     if (op.operacion === 'Compra') {
       const cantPrevia = activo.cantidad;
@@ -7934,7 +8209,11 @@ const COLORES_TIPOS_ACTIVO = {
   USD: '#10b981',
   BTC: '#eab308',
   Accion: '#6366f1',
+  'Acción': '#6366f1',
   Bono: '#06b6d4',
+  'Obligación Negociable': '#38bdf8',
+  'Obligacion Negociable': '#38bdf8',
+  ON: '#38bdf8',
   CEDEAR: '#8b5cf6',
   FCI: '#f97316',
   Cripto: '#eab308'
@@ -7990,6 +8269,7 @@ function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
     Accion: '📈', 'Acción': '📈',
     CEDEAR: '🌐',
     Bono: '📄',
+    'Obligación Negociable': '📑', 'Obligacion Negociable': '📑', ON: '📑',
     FCI: '📊'
   };
 
@@ -8018,6 +8298,7 @@ function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
       if (a.tipo === 'CEDEAR') icon = '🌐';
       else if (a.tipo === 'Accion' || a.tipo === 'Acción') icon = '📈';
       else if (a.tipo === 'Bono') icon = '📄';
+      else if (a.tipo === 'Obligación Negociable' || a.tipo === 'ON') icon = '📑';
     } else {
       key = (a.tipo || 'OTRO').toUpperCase();
       nombreActivo = a.tipo || 'Activo';
@@ -8229,12 +8510,24 @@ function renderTablaAhorros() {
     return;
   }
 
-  const tipoIcon  = { USD: '💵', BTC: '₿', Accion: '📈', Bono: '📄' };
+  const tipoIcon  = {
+    USD: '💵', Divisa: '💵', Dólar: '💵', Dolar: '💵',
+    BTC: '₿', Cripto: '🪙',
+    Accion: '📈', 'Acción': '📈',
+    CEDEAR: '🌐',
+    Bono: '📄',
+    'Obligación Negociable': '📑', 'Obligacion Negociable': '📑', ON: '📑'
+  };
   const tipoColor = {
     USD:    'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
     BTC:    'bg-yellow-500/15 text-yellow-300 border-yellow-500/30',
     Accion: 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30',
-    Bono:   'bg-cyan-500/15 text-cyan-300 border-cyan-500/30'
+    'Acción': 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30',
+    CEDEAR: 'bg-purple-500/15 text-purple-300 border-purple-500/30',
+    Bono:   'bg-cyan-500/15 text-cyan-300 border-cyan-500/30',
+    'Obligación Negociable': 'bg-sky-500/15 text-sky-300 border-sky-500/30',
+    'Obligacion Negociable': 'bg-sky-500/15 text-sky-300 border-sky-500/30',
+    ON:     'bg-sky-500/15 text-sky-300 border-sky-500/30'
   };
   let totalARS = 0, totalUSD = 0;
 
@@ -8243,7 +8536,8 @@ function renderTablaAhorros() {
     const esDolar = isDolarActivo(a);
     const activoProxy = {
       tipo: a.tipo, ticker: a.ticker, descripcion: a.descripcion, plataforma: a.plataforma,
-      cantidad: a.cantidad, precioManual: a.precioRef, precioPromCompra: a.precioPromCompra
+      cantidad: a.cantidad, precioManual: a.precioRef, precioPromCompra: a.precioPromCompra,
+      moneda: a.moneda || (esDolar ? 'USD' : 'ARS')
     };
     const precioARS = getPrecioARS(activoProxy);
     const precioUSD = esDolar ? 1 : getPrecioUSD(activoProxy);
@@ -8264,6 +8558,7 @@ function renderTablaAhorros() {
       if (esDolar) return fmtARS(precioARS) + ' <span class="text-slate-500 text-[9px]">ARS</span>';
       if (isCriptoActivo(a)) return 'U$S ' + (cotizaciones.BTC_USD?.toLocaleString('en-US', { maximumFractionDigits: 0 }) || '—');
       if (sinPrecio) return '<span class="text-amber-400 text-[10px]">⚠ Sin precio</span>';
+      if (a.moneda === 'USD') return fmtUSD(precioUSD) + ' <span class="text-slate-500 text-[9px]">USD</span>';
       return fmtARS(precioARS) + ' <span class="text-slate-500 text-[9px]">ARS</span>';
     };
 
@@ -8277,7 +8572,8 @@ function renderTablaAhorros() {
       badgeTicker = `<span class="ml-1.5 px-1.5 py-0.5 bg-yellow-500/15 text-yellow-300 border border-yellow-500/30 rounded text-[9px] font-black mono">${(a.ticker||'BTC').toUpperCase()}</span>`;
     } else if (a.ticker) {
       nombreActivo = a.ticker.toUpperCase();
-      badgeTicker = `<span class="ml-1.5 px-1.5 py-0.5 ${sinPrecio ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-indigo-500/15 text-indigo-300 border border-indigo-500/30'} rounded text-[9px] font-black mono">${a.ticker.toUpperCase()}</span>`;
+      const badgeMon = a.moneda === 'USD' ? '<span class="ml-1 px-1 py-0.2 bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 rounded text-[8px] font-black mono">USD</span>' : '';
+      badgeTicker = `<span class="ml-1.5 px-1.5 py-0.5 ${sinPrecio ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-indigo-500/15 text-indigo-300 border border-indigo-500/30'} rounded text-[9px] font-black mono">${a.ticker.toUpperCase()}</span>${badgeMon}`;
     } else {
       nombreActivo = a.tipo || 'Activo';
     }
@@ -8296,6 +8592,8 @@ function renderTablaAhorros() {
       let costoUSD = null;
       if (esDolar) {
         costoUSD = a.cantidad; // Dólar divisa compra = valor exacto en USD
+      } else if (a.moneda === 'USD') {
+        costoUSD = a.cantidad * (a.precioPromCompra || a.precioRef || 0);
       } else if (a.precioPromCompra && a.precioPromCompra > 0) {
         const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
         costoUSD = (a.precioPromCompra * a.cantidad) / usdRate;
@@ -8336,7 +8634,7 @@ function renderTablaAhorros() {
           </div>
         </td>
         <td class="px-2 py-2.5 text-xs text-right mono font-bold text-white whitespace-nowrap">${a.cantidad.toLocaleString('es-AR',{maximumFractionDigits:8})}</td>
-        <td class="px-2 py-2.5 text-xs text-right mono text-slate-400 whitespace-nowrap">${fmtARS(a.precioPromCompra)}</td>
+        <td class="px-2 py-2.5 text-xs text-right mono text-slate-400 whitespace-nowrap">${a.moneda === 'USD' ? fmtUSD(a.precioPromCompra) : fmtARS(a.precioPromCompra)}</td>
         <td class="px-2 py-2.5 text-xs text-right mono text-slate-300 whitespace-nowrap">${fmtPrecio()}</td>
         <td class="px-2.5 py-2.5 text-xs text-right mono font-black text-white whitespace-nowrap">${fmtARS(valorARS)}</td>
         <td class="px-2.5 py-2.5 text-xs text-right mono font-bold text-emerald-300 whitespace-nowrap">${fmtUSD(valorUSD)}</td>
@@ -8347,9 +8645,17 @@ function renderTablaAhorros() {
   renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD);
 
   // 1. Neto Invertido Real de las posiciones activas actuales (costo de adquisición)
-  const netoInvertidoARS = enriquecidas.reduce((s, a) => s + (a.cantidad * (a.precioPromCompra || a.precioRef || 0)), 0);
+  const netoInvertidoARS = enriquecidas.reduce((s, a) => {
+    if (a.moneda === 'USD') {
+      const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
+      return s + (a.cantidad * (a.precioPromCompra || a.precioRef || 0) * usdRate);
+    }
+    return s + (a.cantidad * (a.precioPromCompra || a.precioRef || 0));
+  }, 0);
+
   const netoInvertidoUSD = enriquecidas.reduce((s, a) => {
     if (isDolarActivo(a)) return s + a.cantidad;
+    if (a.moneda === 'USD') return s + (a.cantidad * (a.precioPromCompra || a.precioRef || 0));
     const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
     return s + ((a.cantidad * (a.precioPromCompra || a.precioRef || 0)) / usdRate);
   }, 0);
@@ -8650,7 +8956,12 @@ function fillTiposActivo() {
 
   let opciones = null;
   if (datosCargados) {
-    opciones = (tiposActivo && tiposActivo.length > 0) ? tiposActivo : ['Divisa', 'Accion', 'CEDEAR', 'Bono', 'Cripto'];
+    opciones = (tiposActivo && tiposActivo.length > 0) ? [...tiposActivo] : ['Divisa', 'Accion', 'CEDEAR', 'Bono', 'Obligación Negociable', 'Cripto'];
+    if (!opciones.some(t => t.toLowerCase().includes('obligaci') || t.toUpperCase() === 'ON')) {
+      const idxBono = opciones.indexOf('Bono');
+      if (idxBono >= 0) opciones.splice(idxBono + 1, 0, 'Obligación Negociable');
+      else opciones.push('Obligación Negociable');
+    }
   }
 
   [selCompra, selEdit].forEach(sel => {
@@ -8672,6 +8983,57 @@ function fillTiposActivo() {
     });
     if (valorActual && opciones.includes(valorActual)) sel.value = valorActual;
   });
+}
+
+function onMonedaCotizacionChange() {
+  const esUSD = !!document.getElementById('ah-moneda-usd')?.checked;
+  const badge = document.getElementById('ah-moneda-badge');
+  const txt   = document.getElementById('ah-precio-moneda-txt');
+  const sim   = document.getElementById('ah-precio-simbolo');
+  const inp   = document.getElementById('ah-precio-manual');
+  const hint  = document.getElementById('ah-precio-hint');
+
+  if (esUSD) {
+    if (badge) badge.innerHTML = '<span class="text-emerald-400 font-bold">Precio en U$S</span>';
+    if (txt)   txt.innerHTML   = '<span class="text-emerald-400 font-bold">(USD por unidad)</span>';
+    if (sim) {
+      sim.textContent = 'U$S';
+      sim.className   = 'absolute left-3.5 top-1/2 -translate-y-1/2 font-bold text-emerald-400 mono text-xs';
+    }
+    if (inp) {
+      inp.className   = 'w-full h-12 pl-12 pr-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-xl font-black text-white mono';
+      inp.placeholder = '1.00';
+    }
+    if (hint)  hint.textContent = 'Precio unitario en dólares estadounidenses.';
+  } else {
+    if (badge) badge.textContent = 'Precio en ARS';
+    if (txt)   txt.textContent   = '(ARS por unidad)';
+    if (sim) {
+      sim.textContent = '$';
+      sim.className   = 'absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-400 mono';
+    }
+    if (inp) {
+      inp.className   = 'w-full h-12 pl-8 pr-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-xl font-black text-white mono';
+      inp.placeholder = '0.00';
+    }
+    if (hint)  hint.textContent = 'Podés editar el precio al que compraste en pesos.';
+  }
+  calcularInversionPreview();
+}
+
+function onOpEditMonedaChange() {
+  const esUSD = !!document.getElementById('op-edit-moneda-usd')?.checked;
+  const badge = document.getElementById('op-edit-moneda-badge');
+  const lbl   = document.getElementById('op-edit-precio-label');
+  const sim   = document.getElementById('op-edit-precio-simbolo');
+  const cLbl  = document.getElementById('op-edit-precio-compra-label');
+  const cSim  = document.getElementById('op-edit-precio-compra-simbolo');
+
+  if (badge) badge.textContent = esUSD ? 'USD' : 'ARS';
+  if (lbl)   lbl.textContent   = esUSD ? 'Precio USD' : 'Precio ARS';
+  if (sim)   sim.textContent   = esUSD ? 'U$S' : '$';
+  if (cLbl)  cLbl.innerHTML    = esUSD ? 'Precio de compra original <span class="text-slate-500 normal-case font-normal">(USD, solo ventas)</span>' : 'Precio de compra original <span class="text-slate-500 normal-case font-normal">(para P&L, solo ventas)</span>';
+  if (cSim)  cSim.textContent  = esUSD ? 'U$S' : '$';
 }
 
 function aplicarColorTipoCompraAhorro(tipo) {
@@ -8729,6 +9091,7 @@ function onAhTipoChange() {
   const tLabel = document.getElementById('ah-ticker-label');
   const tHint  = document.getElementById('ah-ticker-hint');
   const tInp   = document.getElementById('ah-ticker');
+  const chkUsd = document.getElementById('ah-moneda-usd');
 
   if (isDivisaActivo(tipo)) {
     if (tLabel) tLabel.innerHTML = 'Moneda / Divisa';
@@ -8736,6 +9099,10 @@ function onAhTipoChange() {
     if (tInp) {
       tInp.placeholder = 'USD';
       if (!tInp.value) tInp.value = 'USD';
+    }
+    if (chkUsd && !chkUsd.checked) {
+      chkUsd.checked = true;
+      onMonedaCotizacionChange();
     }
     preCargarPrecioEspecial('USD');
   } else if (isCriptoActivo(tipo)) {
@@ -8750,10 +9117,22 @@ function onAhTipoChange() {
     if (tLabel) tLabel.innerHTML = 'Ticker de Acción / CEDEAR';
     if (tHint) tHint.innerHTML = '(ej: KO, AAPL, GGAL, YPFD, SPY)';
     if (tInp) tInp.placeholder = 'KO';
+    if (chkUsd && chkUsd.checked) {
+      chkUsd.checked = false;
+      onMonedaCotizacionChange();
+    }
   } else if (tipo === 'Bono') {
     if (tLabel) tLabel.innerHTML = 'Ticker del Bono';
     if (tHint) tHint.innerHTML = '(ej: AL30, GD30)';
     if (tInp) tInp.placeholder = 'AL30';
+  } else if (tipo === 'Obligación Negociable' || tipo === 'ON') {
+    if (tLabel) tLabel.innerHTML = 'Ticker de la ON';
+    if (tHint) tHint.innerHTML = '(ej: YMCIO, MGC3O, TLC1O)';
+    if (tInp) tInp.placeholder = 'YMCIO';
+    if (chkUsd && !chkUsd.checked) {
+      chkUsd.checked = true;
+      onMonedaCotizacionChange();
+    }
   } else {
     if (tLabel) tLabel.innerHTML = 'Ticker / Símbolo';
     if (tHint) tHint.innerHTML = '(ej: símbolo)';
@@ -8787,9 +9166,18 @@ function calcularInversionPreview() {
     return;
   }
 
-  const total = cant * precio;
+  const esUSD = !!document.getElementById('ah-moneda-usd')?.checked;
+  const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
+
   preview.classList.remove('hidden');
-  valorEl.textContent = '$' + Math.round(total).toLocaleString('es-AR');
+  if (esUSD) {
+    const totalUSD = cant * precio;
+    const totalARS = totalUSD * usdRate;
+    valorEl.innerHTML = `U$S ${totalUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span class="text-xs text-slate-400 block font-normal mt-0.5">≈ $${Math.round(totalARS).toLocaleString('es-AR')} ARS (TC: $${Math.round(usdRate).toLocaleString('es-AR')})</span>`;
+  } else {
+    const total = cant * precio;
+    valorEl.textContent = '$' + Math.round(total).toLocaleString('es-AR');
+  }
 }
 
 function poblarSelectorCompraExistente() {
@@ -8800,11 +9188,12 @@ function poblarSelectorCompraExistente() {
   posiciones.forEach((a, i) => {
     const plat = (a.plataforma || a.descripcion || '').trim();
     const platStr = plat ? ` · ${plat}` : '';
+    const monStr = a.moneda === 'USD' ? ' [USD]' : '';
     let tickerLabel = a.ticker ? a.ticker.toUpperCase() : '';
     if (isDivisaActivo(a)) tickerLabel = (a.ticker || 'USD').toUpperCase();
     else if (isCriptoActivo(a)) tickerLabel = (a.ticker || 'BTC').toUpperCase();
     
-    const label = `${tickerLabel || a.tipo} (${a.tipo})${platStr} · Cant: ${a.cantidad.toLocaleString('es-AR', { maximumFractionDigits: 4 })}`;
+    const label = `${tickerLabel || a.tipo} (${a.tipo})${monStr}${platStr} · Cant: ${a.cantidad.toLocaleString('es-AR', { maximumFractionDigits: 4 })}`;
     const opt   = new Option(label, i);
     sel.appendChild(opt);
   });
@@ -8822,6 +9211,11 @@ function onCompraActivoExistenteChange() {
     const platInput = document.getElementById('ah-plataforma');
     if (platInput) platInput.value = '';
     document.getElementById('ah-precio-manual').value = '';
+    const chkUsd = document.getElementById('ah-moneda-usd');
+    if (chkUsd) {
+      chkUsd.checked = false;
+      onMonedaCotizacionChange();
+    }
     calcularInversionPreview();
     return;
   }
@@ -8836,6 +9230,17 @@ function onCompraActivoExistenteChange() {
   }
   const platInput = document.getElementById('ah-plataforma');
   if (platInput) platInput.value = a.plataforma || a.descripcion || '';
+
+  const chkUsd = document.getElementById('ah-moneda-usd');
+  if (chkUsd) {
+    chkUsd.checked = (a.moneda === 'USD');
+    onMonedaCotizacionChange();
+  }
+
+  // Si tiene precio de referencia en USD o ARS:
+  if (a.precioPromCompra || a.precioRef) {
+    document.getElementById('ah-precio-manual').value = a.precioRef || a.precioPromCompra;
+  }
 
   // Actualizar cotización y precio en vivo
   buscarTicker();
@@ -8866,20 +9271,27 @@ document.getElementById('ahorrosForm').addEventListener('submit', async e => {
   btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i><span>Guardando...</span>';
 
   const descripcionFinal = plataforma || ticker || tipo;
+  const esUSD = !!document.getElementById('ah-moneda-usd')?.checked;
+  const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
+  const totalARS = esUSD ? (cant * precioActual * usdRate) : (cant * precioActual);
+
   const opCompra = {
     fecha: new Date().toISOString(), operacion: 'Compra', tipo, ticker,
     descripcion: descripcionFinal, plataforma: descripcionFinal, cantidad: cant, precio: precioActual,
-    precioCompra: precioActual, totalARS: cant * precioActual, pnl: 0
+    precioCompra: precioActual, totalARS, pnl: 0, moneda: esUSD ? 'USD' : 'ARS'
   };
 
   try {
     await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ accion: 'registrarOperacion', ...opCompra }) });
     operacionesData.unshift(opCompra);
+    depurarFuturasComprasCompradas();
     renderTablaOperaciones();
     renderPnlTotal();
     actualizarDatalistActivos();
     showToast('Inversión registrada ✓', 'ok');
     document.getElementById('ahorrosForm').reset();
+    const chkUsd = document.getElementById('ah-moneda-usd');
+    if (chkUsd) { chkUsd.checked = false; onMonedaCotizacionChange(); }
     aplicarColorTipoCompraAhorro('');
     onAhTipoChange();
     document.getElementById('compra-pnl-preview').classList.add('hidden');
@@ -8919,11 +9331,12 @@ function poblarSelectorVenta() {
   posiciones.forEach((a, i) => {
     const plat = (a.plataforma || a.descripcion || '').trim();
     const platStr = plat ? ` · ${plat}` : '';
+    const monStr = a.moneda === 'USD' ? ' [USD]' : '';
     let nom = a.tipo;
     if (isDivisaActivo(a)) nom = 'Dólar (USD)';
     else if (isCriptoActivo(a)) nom = (a.ticker || 'BTC').toUpperCase();
     else if (a.ticker) nom = `${a.tipo} (${a.ticker.toUpperCase()})`;
-    const label = `${nom}${platStr} (${a.cantidad.toLocaleString('es-AR', {maximumFractionDigits:8})})`;
+    const label = `${nom}${monStr}${platStr} (${a.cantidad.toLocaleString('es-AR', {maximumFractionDigits:8})})`;
     const opt   = new Option(label, i);
     sel.appendChild(opt);
   });
@@ -8942,6 +9355,16 @@ function actualizarDisponible() {
     el.textContent = `Disponible: ${a.cantidad.toLocaleString('es-AR', { maximumFractionDigits: 8 })}`;
     const precioRef = a.precioPromCompra || a.precioRef || 0;
     if (precioRef) document.getElementById('venta-precio-compra').value = precioRef;
+
+    const esUSD = a.moneda === 'USD';
+    const vMon = document.getElementById('venta-precio-moneda');
+    const vSim = document.getElementById('venta-precio-simbolo');
+    const cMon = document.getElementById('venta-compra-moneda');
+    const cSim = document.getElementById('venta-compra-simbolo');
+    if (vMon) vMon.textContent = esUSD ? '(USD por unidad)' : '(ARS por unidad)';
+    if (vSim) vSim.textContent = esUSD ? 'U$S' : '$';
+    if (cMon) cMon.textContent = esUSD ? '(USD por unidad)' : '(ARS por unidad)';
+    if (cSim) cSim.textContent = esUSD ? 'U$S' : '$';
   } else {
     el.textContent = 'Disponible: —';
   }
@@ -8959,13 +9382,22 @@ function calcularPnlPreview() {
 
   if (!cant || !precioVenta || !precioComp) { preview.classList.add('hidden'); return; }
 
-  const pnl = (precioVenta - precioComp) * cant;
-  const pct = ((precioVenta - precioComp) / precioComp) * 100;
-  const esGanancia = pnl >= 0;
+  const sel        = document.getElementById('venta-activo');
+  const idx        = parseInt(sel?.value);
+  const posiciones = sel?._posiciones || calcularPosicionesNetas();
+  const a          = (!isNaN(idx) && posiciones) ? posiciones[idx] : null;
+  const esUSD      = a && a.moneda === 'USD';
+  const usdRate    = cotizaciones.USD_MEP || cotizaciones.USD || 1;
+
+  const pnlUnit = precioVenta - precioComp;
+  const pnlUSD = esUSD ? (pnlUnit * cant) : (usdRate > 0 ? (pnlUnit * cant) / usdRate : 0);
+  const pnlARS = esUSD ? (pnlUnit * cant * usdRate) : (pnlUnit * cant);
+  const pct = precioComp > 0 ? (pnlUnit / precioComp) * 100 : 0;
+  const esGanancia = pnlUnit >= 0;
 
   preview.classList.remove('hidden');
   preview.className = `rounded-xl p-3 border text-center ${esGanancia ? 'bg-green-900/30 border-green-800/50' : 'bg-red-900/30 border-red-800/50'}`;
-  valorEl.textContent = (esGanancia ? '+' : '') + '$' + Math.round(pnl).toLocaleString('es-AR');
+  valorEl.textContent = (esGanancia ? '+' : '') + (esUSD ? `U$S ${pnlUSD.toFixed(2)} (~$${Math.round(pnlARS).toLocaleString('es-AR')})` : '$' + Math.round(pnlARS).toLocaleString('es-AR'));
   valorEl.className   = `text-lg font-black mono ${esGanancia ? 'text-green-300' : 'text-red-400'}`;
   pctEl.textContent   = (esGanancia ? '+' : '') + pct.toFixed(2) + '%';
   pctEl.className     = `text-[10px] font-bold mt-0.5 ${esGanancia ? 'text-green-400' : 'text-red-400'}`;
@@ -8988,8 +9420,10 @@ document.getElementById('ventaForm').addEventListener('submit', async e => {
   const activo = posiciones[idx];
   if (cant > activo.cantidad)           return showToast(`Cantidad mayor a disponible (${activo.cantidad.toLocaleString('es-AR', {maximumFractionDigits:8})})`, 'error');
 
-  const pnl      = (precioVenta - precioComp) * cant;
-  const totalARS = precioVenta * cant;
+  const esUSD    = activo.moneda === 'USD';
+  const usdRate  = cotizaciones.USD_MEP || cotizaciones.USD || 1;
+  const pnl      = esUSD ? ((precioVenta - precioComp) * cant * usdRate) : ((precioVenta - precioComp) * cant);
+  const totalARS = esUSD ? (precioVenta * cant * usdRate) : (precioVenta * cant);
   const btn      = document.getElementById('btn-registrar-venta');
   const orig     = btn.innerHTML;
   btn.disabled   = true;
@@ -9007,6 +9441,7 @@ document.getElementById('ventaForm').addEventListener('submit', async e => {
     precioCompra: precioComp,
     totalARS,
     pnl,
+    moneda:       esUSD ? 'USD' : 'ARS'
   };
 
   try {
@@ -9038,20 +9473,44 @@ async function cargarOperacionesSheet() {
   try {
     const res  = await fetch(scriptURL + '?sheet=operaciones');
     const data = await res.json();
-    operacionesData = (data.operaciones || []).map(r => ({
-      fecha:        r[0] || '',
-      operacion:    r[1] || 'Compra',
-      tipo:         r[2] || '',
-      ticker:       r[3] || '',
-      descripcion:  r[4] || '',
-      plataforma:   r[4] || '',
-      cantidad:     parseFloat(r[5]) || 0,
-      precio:       parseFloat(r[6]) || 0,
-      precioCompra: parseFloat(r[7]) || 0,
-      totalARS:     parseFloat(r[8]) || 0,
-      pnl:          parseFloat(r[9]) || 0
-    }));
+    operacionesData = (data.operaciones || []).map(r => {
+      const tipo = r[2] || '';
+      const ticker = r[3] || '';
+      const desc = r[4] || '';
+      const cant = parseFloat(r[5]) || 0;
+      const precio = parseFloat(r[6]) || 0;
+      const precioCompra = parseFloat(r[7]) || 0;
+      const totalARS = parseFloat(r[8]) || 0;
+      const pnl = parseFloat(r[9]) || 0;
+      const colMon = (r[10] || '').toString().trim().toUpperCase();
+      let moneda = 'ARS';
+      if (colMon === 'USD' || colMon === 'U$S') {
+        moneda = 'USD';
+      } else if (isDolarActivo({ tipo, ticker, descripcion: desc })) {
+        moneda = 'USD';
+      } else if (desc.includes('[USD]')) {
+        moneda = 'USD';
+      } else if (cant > 0 && precio > 0 && totalARS > 0 && Math.abs(totalARS - (cant * precio)) > 5 && (totalARS / (cant * precio)) > 50) {
+        moneda = 'USD';
+      }
+
+      return {
+        fecha:        r[0] || '',
+        operacion:    r[1] || 'Compra',
+        tipo,
+        ticker,
+        descripcion:  desc,
+        plataforma:   desc,
+        cantidad:     cant,
+        precio,
+        precioCompra,
+        totalARS,
+        pnl,
+        moneda
+      };
+    });
     guardarCacheModulo('operaciones', operacionesData);
+    depurarFuturasComprasCompradas();
     renderTablaOperaciones();
     renderPnlTotal();
     actualizarDatalistActivos();
@@ -9090,7 +9549,14 @@ function renderTablaOperaciones() {
 
   if (count) count.textContent = `${operacionesData.length} operación${operacionesData.length !== 1 ? 'es' : ''}`;
   const fmt = n => '$' + Math.round(Math.abs(n)).toLocaleString('es-AR');
-  const tipoIcon = { USD: '💵', BTC: '₿', Accion: '📈', Bono: '📄' };
+  const tipoIcon = {
+    USD: '💵', Divisa: '💵', Dólar: '💵', Dolar: '💵',
+    BTC: '₿', Cripto: '🪙',
+    Accion: '📈', 'Acción': '📈',
+    CEDEAR: '🌐',
+    Bono: '📄',
+    'Obligación Negociable': '📑', 'Obligacion Negociable': '📑', ON: '📑'
+  };
   tbody.innerHTML = operacionesData.map((op, i) => {
     const esVenta    = op.operacion === 'Venta';
     const hasPnl     = esVenta && op.pnl !== 0;
@@ -9110,14 +9576,16 @@ function renderTablaOperaciones() {
     const nombreAct  = op.ticker ? op.ticker.toUpperCase() : (platStr || op.tipo);
     const platBadge  = platStr ? `<span class="text-[10px] text-slate-400 font-normal flex items-center gap-1 mt-0.5"><i class="fas fa-landmark text-emerald-400/80 text-[9px]"></i>${platStr}</span>` : '';
     const icon       = tipoIcon[op.tipo] || '💎';
-    const tickerBadge = op.ticker ? `<span class="ml-1.5 px-1.5 py-0.5 bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 rounded text-[9px] font-black mono">${op.ticker.toUpperCase()}</span>` : '';
+    const badgeMon   = op.moneda === 'USD' ? '<span class="ml-1 px-1 py-0.2 bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 rounded text-[8px] font-black mono">USD</span>' : '';
+    const tickerBadge = op.ticker ? `<span class="ml-1.5 px-1.5 py-0.5 bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 rounded text-[9px] font-black mono">${op.ticker.toUpperCase()}</span>${badgeMon}` : (badgeMon);
+    const precioStr  = op.moneda === 'USD' ? ('U$S ' + op.precio.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })) : fmt(op.precio);
     return `
       <tr class="table-row border-b border-slate-800 fade-row" style="animation-delay:${i*0.03}s">
         <td class="px-2.5 py-2.5 text-xs text-slate-400 mono whitespace-nowrap">${fechaStr}</td>
         <td class="px-2 py-2.5 text-xs whitespace-nowrap">${opBadge}</td>
         <td class="px-2.5 py-2.5 text-xs text-slate-200 font-bold"><div class="flex flex-col"><span class="flex items-center"><span class="mr-1">${icon}</span>${nombreAct}${tickerBadge}</span>${platBadge}</div></td>
         <td class="px-2.5 py-2.5 text-xs text-right mono text-slate-300 font-semibold whitespace-nowrap">${op.cantidad.toLocaleString('es-AR', {maximumFractionDigits:8})}</td>
-        <td class="px-2.5 py-2.5 text-xs text-right mono text-slate-400 whitespace-nowrap">${fmt(op.precio)}</td>
+        <td class="px-2.5 py-2.5 text-xs text-right mono text-slate-400 whitespace-nowrap">${precioStr}</td>
         <td class="px-2.5 py-2.5 text-xs text-right mono font-black text-white whitespace-nowrap">${fmt(op.totalARS)}</td>
         <td class="px-2.5 py-2.5 text-xs text-right whitespace-nowrap">${pnlCell}</td>
         <td class="px-2 py-2.5 text-xs text-center whitespace-nowrap">
@@ -9204,6 +9672,7 @@ async function confirmarEliminarOperacion() {
   renderTablaAhorros();
   renderPnlTotal();
   renderCotizacionesBadge();
+  actualizarDatalistActivos();
   showToast('Inversión eliminada', 'ok');
   try {
     await fetch(scriptURL, {
@@ -9239,6 +9708,12 @@ function abrirModalEditarOperacion(idx) {
   document.getElementById('op-edit-precio').value        = op.precio || '';
   document.getElementById('op-edit-precio-compra').value = op.precioCompra || '';
 
+  const chkUsd = document.getElementById('op-edit-moneda-usd');
+  if (chkUsd) {
+    chkUsd.checked = (op.moneda === 'USD');
+    onOpEditMonedaChange();
+  }
+
   document.getElementById('modal-editar-op').classList.remove('hidden');
 }
 
@@ -9265,19 +9740,24 @@ async function guardarEdicionOperacion() {
   btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Guardando...';
 
   const fechaISO = fechaVal ? new Date(fechaVal + 'T12:00:00').toISOString() : new Date().toISOString();
-  const totalARS = cantidad * precio;
-  const pnl      = operacion === 'Venta' && precioComp ? (precio - precioComp) * cantidad : 0;
+  const esUSD    = !!document.getElementById('op-edit-moneda-usd')?.checked;
+  const usdRate  = cotizaciones.USD_MEP || cotizaciones.USD || 1;
+  const totalARS = esUSD ? (cantidad * precio * usdRate) : (cantidad * precio);
+  const pnl      = operacion === 'Venta' && precioComp ? (
+    esUSD ? (precio - precioComp) * cantidad * usdRate : (precio - precioComp) * cantidad
+  ) : 0;
 
   const anterior = { ...operacionesData[pendingEditOpIdx] };
   operacionesData[pendingEditOpIdx] = {
     ...anterior, fecha: fechaISO, operacion, descripcion, plataforma: descripcion,
-    cantidad, precio, precioCompra: precioComp, totalARS, pnl
+    cantidad, precio, precioCompra: precioComp, totalARS, pnl, moneda: esUSD ? 'USD' : 'ARS'
   };
 
   cerrarModalEditarOp();
   renderTablaOperaciones();
   renderTablaAhorros();
   renderPnlTotal();
+  actualizarDatalistActivos();
   showToast('Inversión actualizada ✓', 'ok');
 
   try {
@@ -9286,7 +9766,7 @@ async function guardarEdicionOperacion() {
       body: JSON.stringify({
         accion: 'editarOperacion',
         anterior: { fecha: anterior.fecha, operacion: anterior.operacion, tipo: anterior.tipo, ticker: anterior.ticker, descripcion: anterior.descripcion, cantidad: anterior.cantidad, precio: anterior.precio },
-        nuevo:    { fecha: fechaISO, operacion, tipo: anterior.tipo, ticker: anterior.ticker, descripcion, cantidad, precio, precioCompra: precioComp, totalARS, pnl }
+        nuevo:    { fecha: fechaISO, operacion, tipo: anterior.tipo, ticker: anterior.ticker, descripcion, cantidad, precio, precioCompra: precioComp, totalARS, pnl, moneda: esUSD ? 'USD' : 'ARS' }
       })
     });
   } catch { /* silencioso */ }
