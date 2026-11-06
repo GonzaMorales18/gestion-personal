@@ -3812,29 +3812,35 @@
     <!-- Grid Principal de Artefactos (2 columnas en desktop) -->
     <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
-      <!-- 1. AIRE ACONDICIONADO (CONTROLADOR IR) -->
+      <!-- 1. AIRE ACONDICIONADO (MANDO INFRARROJO IR) -->
       <div id="dom-card-ac" class="bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all">
-        <div id="dom-ac-glow" class="absolute inset-0 bg-gradient-to-br from-cyan-900/15 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none"></div>
-
         <!-- Cabecera A/C -->
-        <div class="flex items-center justify-between mb-6 relative z-10">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 relative z-10">
           <div class="flex items-center gap-3">
-            <div id="dom-ac-icon-box" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-colors">
-              <i id="dom-ac-icon" class="fas fa-snowflake text-slate-400 text-base"></i>
+            <div id="dom-ac-icon-box" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-all">
+              <i id="dom-ac-icon" class="fas fa-snowflake text-cyan-400 text-base"></i>
             </div>
             <div>
               <div class="flex items-center gap-2">
                 <span class="text-xs font-black text-white uppercase tracking-[0.18em]">Aire Acondicionado</span>
                 <span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">Hub IR</span>
               </div>
-              <p id="dom-ac-subtitle" class="text-[11px] text-slate-400 mt-0.5">Apagado</p>
+              <p id="dom-ac-subtitle" class="text-[11px] text-slate-400 mt-0.5">Mando Infrarrojo · Listo para enviar señal</p>
             </div>
           </div>
 
-          <button onclick="domToggleAC()" id="dom-ac-power-btn" title="Encender / Apagar Aire"
-                  class="w-11 h-11 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 flex items-center justify-center transition-all active:scale-95">
-            <i class="fas fa-power-off text-sm"></i>
-          </button>
+          <div class="flex items-center gap-2">
+            <button onclick="domEncenderAC()" title="Enviar señal de Encendido"
+                    class="h-10 px-3.5 rounded-xl bg-cyan-600/20 hover:bg-cyan-600 text-cyan-300 hover:text-white border border-cyan-500/40 flex items-center gap-1.5 font-black text-xs uppercase tracking-wider transition-all active:scale-95 shadow-sm">
+              <i class="fas fa-power-off text-xs"></i>
+              <span>Encender</span>
+            </button>
+            <button onclick="domApagarAC()" title="Enviar señal de Apagado"
+                    class="h-10 px-3.5 rounded-xl bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-500/40 flex items-center gap-1.5 font-black text-xs uppercase tracking-wider transition-all active:scale-95 shadow-sm">
+              <i class="fas fa-power-off text-xs"></i>
+              <span>Apagar</span>
+            </button>
+          </div>
         </div>
 
         <!-- Display Central de Temperatura -->
@@ -3906,72 +3912,41 @@
         </div>
       </div>
 
-      <!-- 2. ASPIRADORA ROBOT (SMART LIFE) -->
+      <!-- 2. ASPIRADORA ROBOT (CONTROL REMOTO TUYA) -->
       <div id="dom-card-vacuum" class="bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all">
-        <div id="dom-vac-glow" class="absolute inset-0 bg-gradient-to-br from-emerald-900/15 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none"></div>
-
         <!-- Cabecera Aspiradora -->
         <div class="flex items-center justify-between mb-6 relative z-10">
           <div class="flex items-center gap-3">
-            <div id="dom-vac-icon-box" class="w-10 h-10 rounded-xl bg-emerald-900/40 border border-emerald-500/30 flex items-center justify-center transition-colors">
+            <div id="dom-vac-icon-box" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-all">
               <i id="dom-vac-icon" class="fas fa-robot text-emerald-400 text-base"></i>
             </div>
             <div>
               <div class="flex items-center gap-2">
                 <span class="text-xs font-black text-white uppercase tracking-[0.18em]">Aspiradora Robot</span>
-                <span id="dom-vac-badge" class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">En Base</span>
+                <span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">Tuya Cloud</span>
               </div>
-              <p id="dom-vac-subtitle" class="text-[11px] text-slate-400 mt-0.5">Carga completa — Lista para limpiar</p>
+              <p id="dom-vac-subtitle" class="text-[11px] text-slate-400 mt-0.5">Control Remoto · Listo para enviar órdenes</p>
             </div>
-          </div>
-
-          <div class="flex items-center gap-2">
-            <!-- Batería -->
-            <div class="flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800 h-11">
-              <i id="dom-vac-bat-icon" class="fas fa-battery-full text-emerald-400 text-sm"></i>
-              <span id="dom-vac-battery" class="text-xs font-black mono text-white">100%</span>
-            </div>
-
-            <button onclick="domToggleAspiradoraPower()" id="dom-vac-power-btn" title="Iniciar / Pausar Aspiradora"
-                    class="w-11 h-11 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 flex items-center justify-center transition-all active:scale-95">
-              <i class="fas fa-power-off text-sm"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- Métricas de Sesión de Limpieza -->
-        <div class="grid grid-cols-3 gap-3 mb-5 relative z-10">
-          <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-3 text-center">
-            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Estado</span>
-            <span id="dom-vac-state-text" class="text-xs font-black text-emerald-400 uppercase mt-1 block">Cargada</span>
-          </div>
-          <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-3 text-center">
-            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Área Limpia</span>
-            <span id="dom-vac-area" class="text-sm font-black mono text-white mt-0.5 block">42 m²</span>
-          </div>
-          <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-3 text-center">
-            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Tiempo</span>
-            <span id="dom-vac-time" class="text-sm font-black mono text-white mt-0.5 block">38 min</span>
           </div>
         </div>
 
         <!-- Botones Principales de Acción -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-5 relative z-10">
-          <button onclick="domAccionAspiradora('start')" id="dom-vac-btn-start" class="py-3 px-3 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95">
-            <i class="fas fa-power-off text-xs"></i>
-            <span id="dom-vac-btn-start-txt">Iniciar</span>
+          <button onclick="domAccionAspiradora('start')" class="py-3.5 px-3 rounded-xl bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/40 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-2 transition-all active:scale-95 shadow-sm">
+            <i class="fas fa-play text-sm"></i>
+            <span>Iniciar</span>
           </button>
-          <button onclick="domAccionAspiradora('pause')" id="dom-vac-btn-pause" class="py-3 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95">
-            <i class="fas fa-pause text-xs text-amber-400"></i>
+          <button onclick="domAccionAspiradora('pause')" class="py-3.5 px-3 rounded-xl bg-amber-600/20 hover:bg-amber-600 text-amber-300 hover:text-white border border-amber-500/40 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-2 transition-all active:scale-95 shadow-sm">
+            <i class="fas fa-pause text-sm"></i>
             <span>Pausar</span>
           </button>
-          <button onclick="domAccionAspiradora('dock')" id="dom-vac-btn-dock" class="py-3 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95">
-            <i class="fas fa-charging-station text-xs text-cyan-400"></i>
+          <button onclick="domAccionAspiradora('dock')" class="py-3.5 px-3 rounded-xl bg-sky-600/20 hover:bg-sky-600 text-sky-300 hover:text-white border border-sky-500/40 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-2 transition-all active:scale-95 shadow-sm">
+            <i class="fas fa-charging-station text-sm"></i>
             <span>A la Base</span>
           </button>
-          <button onclick="domAccionAspiradora('locate')" class="py-3 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95">
-            <i class="fas fa-volume-up text-xs text-violet-400"></i>
-            <span>Buscar</span>
+          <button onclick="domAccionAspiradora('locate')" class="py-3.5 px-3 rounded-xl bg-purple-600/20 hover:bg-purple-600 text-purple-300 hover:text-white border border-purple-500/40 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-2 transition-all active:scale-95 shadow-sm">
+            <i class="fas fa-volume-up text-sm"></i>
+            <span>Localizar</span>
           </button>
         </div>
 
@@ -15519,14 +15494,9 @@ function renderDomoticaUI() {
   const redPowerOffClass = 'w-11 h-11 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 flex items-center justify-center transition-all active:scale-95';
   const redPowerOnClass  = 'w-11 h-11 rounded-xl bg-red-600 hover:bg-red-500 text-white border border-red-400/50 flex items-center justify-center transition-all active:scale-95 shadow-lg shadow-red-600/30';
 
-  // 1. Render Aire Acondicionado (IR)
+  // 1. Render Aire Acondicionado (Mando Infrarrojo IR - Sin asumir estado ciego)
   const ac = domState.ac;
   const acCard = document.getElementById('dom-card-ac');
-  const acGlow = document.getElementById('dom-ac-glow');
-  const acIconBox = document.getElementById('dom-ac-icon-box');
-  const acIcon = document.getElementById('dom-ac-icon');
-  const acSub = document.getElementById('dom-ac-subtitle');
-  const acPowerBtn = document.getElementById('dom-ac-power-btn');
   const acTemp = document.getElementById('dom-ac-temp');
   const acModePill = document.getElementById('dom-ac-mode-pill');
   const acFanPill = document.getElementById('dom-ac-fan-pill');
@@ -15543,22 +15513,7 @@ function renderDomoticaUI() {
   if (acTemp) acTemp.textContent = ac.temp;
   if (acModePill) acModePill.textContent = (modeLabels[ac.mode] || modeLabels.cool).txt;
   if (acFanPill) acFanPill.textContent = `🌀 Fan: ${fanLabels[ac.fan] || 'Auto'}${ac.swing ? ' • Swing' : ''}`;
-
-  if (ac.power) {
-    if (acCard) acCard.className = 'bg-black rounded-2xl border border-cyan-500/50 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all shadow-lg shadow-cyan-950/30';
-    if (acGlow) acGlow.classList.replace('opacity-0', 'opacity-100');
-    if (acIconBox) acIconBox.className = 'w-10 h-10 rounded-xl bg-cyan-900/50 border border-cyan-500/40 flex items-center justify-center transition-colors';
-    if (acIcon) acIcon.className = `fas ${(modeLabels[ac.mode] || modeLabels.cool).icon} text-base`;
-    if (acSub) acSub.innerHTML = `<span class="text-cyan-400 font-bold">Encendido</span> — ${(modeLabels[ac.mode] || modeLabels.cool).name} a ${ac.temp}°C`;
-    if (acPowerBtn) acPowerBtn.className = redPowerOnClass;
-  } else {
-    if (acCard) acCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all';
-    if (acGlow) acGlow.classList.replace('opacity-100', 'opacity-0');
-    if (acIconBox) acIconBox.className = 'w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-colors';
-    if (acIcon) acIcon.className = 'fas fa-snowflake text-slate-500 text-base';
-    if (acSub) acSub.textContent = 'Apagado — Listo para enviar señal IR';
-    if (acPowerBtn) acPowerBtn.className = redPowerOffClass;
-  }
+  if (acCard) acCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all';
 
   ['cool', 'heat', 'auto', 'fan', 'dry'].forEach(m => {
     const btn = document.getElementById('dom-ac-mode-' + m);
@@ -15585,48 +15540,10 @@ function renderDomoticaUI() {
     }`;
   }
 
-  // 2. Render Aspiradora Robot
+  // 2. Render Aspiradora Robot (Mando de Acciones Tuya - Sin asumir estado ciego)
   const vac = domState.vacuum;
   const vacCard = document.getElementById('dom-card-vacuum');
-  const vacGlow = document.getElementById('dom-vac-glow');
-  const vacBadge = document.getElementById('dom-vac-badge');
-  const vacSub = document.getElementById('dom-vac-subtitle');
-  const vacStateTxt = document.getElementById('dom-vac-state-text');
-  const vacBat = document.getElementById('dom-vac-battery');
-  const vacArea = document.getElementById('dom-vac-area');
-  const vacTime = document.getElementById('dom-vac-time');
-  const vacPowerBtn = document.getElementById('dom-vac-power-btn');
-  const vacStartBtn = document.getElementById('dom-vac-btn-start');
-
-  const vacStatusMap = {
-    docked:    { badge: 'En Base', state: 'Cargada', sub: 'En base de carga — Lista para aspirar', color: 'text-emerald-400', active: false },
-    cleaning:  { badge: 'Limpiando', state: 'Aspirando', sub: 'Limpieza en progreso por la casa', color: 'text-cyan-400', active: true },
-    paused:    { badge: 'En Pausa', state: 'Pausada', sub: 'Recorrido en pausa temporal', color: 'text-amber-400', active: false },
-    returning: { badge: 'Volviendo', state: 'A la Base', sub: 'Regresando al cargador automáticamente', color: 'text-violet-400', active: true }
-  };
-  const vInfo = vacStatusMap[vac.status] || vacStatusMap.docked;
-
-  if (vacBadge) vacBadge.textContent = vInfo.badge;
-  if (vacSub) vacSub.textContent = vInfo.sub;
-  if (vacStateTxt) {
-    vacStateTxt.textContent = vInfo.state;
-    vacStateTxt.className = `text-xs font-black uppercase mt-1 block ${vInfo.color}`;
-  }
-  if (vacBat) vacBat.textContent = `${vac.battery}%`;
-  if (vacArea) vacArea.textContent = `${vac.area} m²`;
-  if (vacTime) vacTime.textContent = `${vac.time} min`;
-
-  if (vInfo.active) {
-    if (vacCard) vacCard.className = 'bg-black rounded-2xl border border-emerald-500/50 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all shadow-lg shadow-emerald-950/30';
-    if (vacGlow) vacGlow.classList.replace('opacity-0', 'opacity-100');
-    if (vacPowerBtn) vacPowerBtn.className = redPowerOnClass;
-    if (vacStartBtn) vacStartBtn.className = 'py-3 px-3 rounded-xl bg-red-600 hover:bg-red-500 text-white border border-red-400/50 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 shadow-lg shadow-red-600/30';
-  } else {
-    if (vacCard) vacCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all';
-    if (vacGlow) vacGlow.classList.replace('opacity-100', 'opacity-0');
-    if (vacPowerBtn) vacPowerBtn.className = redPowerOffClass;
-    if (vacStartBtn) vacStartBtn.className = 'py-3 px-3 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 font-black text-[11px] uppercase tracking-wider flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95';
-  }
+  if (vacCard) vacCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all';
 
   ['smart', 'wall_follow', 'spiral', 'single'].forEach(m => {
     const btn = document.getElementById('dom-vac-mode-' + m);
@@ -15763,95 +15680,123 @@ function renderDomoticaUI() {
   }
 }
 
-// ─── Controles Aire Acondicionado (IR) ────────────────────────────────────────
-function domToggleAC() {
-  domState.ac.power = !domState.ac.power;
-  guardarEstadoDomotica();
-  renderDomoticaUI();
-  // En este equipo IR, el pulso de "Apagar" (power: false / 0) actúa como Power Toggle (prende y apaga)
+function animarFeedbackDomotica(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add('scale-110', 'ring-2', 'ring-cyan-400');
+  setTimeout(() => {
+    el.classList.remove('scale-110', 'ring-2', 'ring-cyan-400');
+  }, 400);
+}
+
+function actualizarUltimaOrdenDomotica(elementId, orden) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  const hora = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+  el.innerHTML = `<span class="text-slate-300 font-semibold">Última orden: ${orden}</span> <span class="text-slate-500">[${hora}]</span>`;
+}
+
+// ─── Controles Aire Acondicionado (Mando Interactivo IR) ────────────────────────
+function domEncenderAC() {
+  animarFeedbackDomotica('dom-ac-icon-box');
   enviarComandoSmartLife(
     'Aire Acondicionado (IR)',
-    domState.ac.power ? `Encender (vía pulso Apagar IR — ${domState.ac.temp}°C)` : 'Apagar (vía pulso Apagar IR)',
+    `Encender A/C (${domState.ac.temp}°C · ${(domState.ac.mode || 'cool').toUpperCase()})`,
+    { ...domState.ac, power: true }
+  );
+  actualizarUltimaOrdenDomotica('dom-ac-subtitle', `Encender a ${domState.ac.temp}°C`);
+  showToast(`Señal enviada: Encender Aire (${domState.ac.temp}°C)`, 'ok');
+}
+
+function domApagarAC() {
+  animarFeedbackDomotica('dom-ac-icon-box');
+  enviarComandoSmartLife(
+    'Aire Acondicionado (IR)',
+    'Apagar A/C (Señal IR de apagado)',
     { ...domState.ac, power: false }
   );
-  showToast(domState.ac.power ? `Aire encendido (${domState.ac.temp}°C)` : 'Aire apagado', 'ok');
+  actualizarUltimaOrdenDomotica('dom-ac-subtitle', 'Apagar Aire');
+  showToast('Señal enviada: Apagar Aire', 'ok');
+}
+
+function domToggleAC() {
+  domEncenderAC();
 }
 
 function domCambiarTempAC(delta) {
   const nueva = Math.max(16, Math.min(30, (domState.ac.temp || 24) + delta));
   domState.ac.temp = nueva;
-  domState.ac.power = true;
   guardarEstadoDomotica();
-  renderDomoticaUI();
-  enviarComandoSmartLife('Aire Acondicionado (IR)', `Temperatura ajustada a ${nueva}°C`, { ...domState.ac });
+  const tempEl = document.getElementById('dom-ac-temp');
+  if (tempEl) tempEl.textContent = nueva;
+  animarFeedbackDomotica('dom-ac-icon-box');
+  enviarComandoSmartLife('Aire Acondicionado (IR)', `Temperatura ajustada a ${nueva}°C`, { ...domState.ac, power: true });
+  actualizarUltimaOrdenDomotica('dom-ac-subtitle', `Ajustar a ${nueva}°C`);
+  showToast(`Aire ajustado a ${nueva}°C`, 'ok');
 }
 
 function domSetTempAC(temp) {
   domState.ac.temp = temp;
-  domState.ac.power = true;
   guardarEstadoDomotica();
-  renderDomoticaUI();
-  enviarComandoSmartLife('Aire Acondicionado (IR)', `Temperatura fijada en ${temp}°C`, { ...domState.ac });
+  const tempEl = document.getElementById('dom-ac-temp');
+  if (tempEl) tempEl.textContent = temp;
+  animarFeedbackDomotica('dom-ac-icon-box');
+  enviarComandoSmartLife('Aire Acondicionado (IR)', `Temperatura fijada en ${temp}°C`, { ...domState.ac, power: true });
+  actualizarUltimaOrdenDomotica('dom-ac-subtitle', `Fijar en ${temp}°C`);
   showToast(`Aire en ${temp}°C`, 'ok');
 }
 
 function domSetModoAC(modo) {
   domState.ac.mode = modo;
-  domState.ac.power = true;
   guardarEstadoDomotica();
   renderDomoticaUI();
-  enviarComandoSmartLife('Aire Acondicionado (IR)', `Modo cambiado a ${modo.toUpperCase()}`, { ...domState.ac });
+  animarFeedbackDomotica('dom-ac-icon-box');
+  enviarComandoSmartLife('Aire Acondicionado (IR)', `Modo cambiado a ${modo.toUpperCase()}`, { ...domState.ac, power: true });
+  actualizarUltimaOrdenDomotica('dom-ac-subtitle', `Modo ${modo.toUpperCase()}`);
 }
 
 function domSetFanAC(fan) {
   domState.ac.fan = fan;
-  domState.ac.power = true;
   guardarEstadoDomotica();
   renderDomoticaUI();
-  enviarComandoSmartLife('Aire Acondicionado (IR)', `Velocidad de turbina: ${fan.toUpperCase()}`, { ...domState.ac });
+  animarFeedbackDomotica('dom-ac-icon-box');
+  enviarComandoSmartLife('Aire Acondicionado (IR)', `Velocidad de turbina: ${fan.toUpperCase()}`, { ...domState.ac, power: true });
+  actualizarUltimaOrdenDomotica('dom-ac-subtitle', `Turbina ${fan.toUpperCase()}`);
 }
 
 function domToggleSwingAC() {
   domState.ac.swing = !domState.ac.swing;
-  domState.ac.power = true;
   guardarEstadoDomotica();
   renderDomoticaUI();
-  enviarComandoSmartLife('Aire Acondicionado (IR)', `Swing (Oscilación): ${domState.ac.swing ? 'ON' : 'OFF'}`, { ...domState.ac });
+  animarFeedbackDomotica('dom-ac-icon-box');
+  enviarComandoSmartLife('Aire Acondicionado (IR)', `Swing (Oscilación): ${domState.ac.swing ? 'ON' : 'OFF'}`, { ...domState.ac, power: true });
+  actualizarUltimaOrdenDomotica('dom-ac-subtitle', `Swing ${domState.ac.swing ? 'ON' : 'OFF'}`);
 }
 
-// ─── Controles Aspiradora Robot ───────────────────────────────────────────────
+// ─── Controles Aspiradora Robot (Mando de Acciones Directas) ───────────────────
 function domToggleAspiradoraPower() {
-  const estaActiva = domState.vacuum.status === 'cleaning' || domState.vacuum.status === 'returning';
-  domAccionAspiradora(estaActiva ? 'pause' : 'start');
+  domAccionAspiradora('start');
 }
 
 function domAccionAspiradora(accion) {
+  animarFeedbackDomotica('dom-vac-icon-box');
   if (accion === 'start') {
-    domState.vacuum.status = 'cleaning';
     enviarComandoSmartLife('Aspiradora Robot', `Iniciar limpieza (${domState.vacuum.mode})`, { command: 'start', mode: domState.vacuum.mode });
-    showToast('Aspiradora iniciando limpieza', 'ok');
+    actualizarUltimaOrdenDomotica('dom-vac-subtitle', 'Iniciar limpieza');
+    showToast('Comando enviado: Iniciar limpieza', 'ok');
   } else if (accion === 'pause') {
-    domState.vacuum.status = 'paused';
     enviarComandoSmartLife('Aspiradora Robot', 'Pausar limpieza', { command: 'pause' });
-    showToast('Aspiradora en pausa', 'ok');
+    actualizarUltimaOrdenDomotica('dom-vac-subtitle', 'Pausar limpieza');
+    showToast('Comando enviado: Pausar limpieza', 'ok');
   } else if (accion === 'dock') {
-    domState.vacuum.status = 'returning';
     enviarComandoSmartLife('Aspiradora Robot', 'Volver a la base de carga', { command: 'charge_go' });
-    showToast('Aspiradora volviendo a la base', 'ok');
-    setTimeout(() => {
-      if (domState.vacuum.status === 'returning') {
-        domState.vacuum.status = 'docked';
-        domState.vacuum.battery = 100;
-        guardarEstadoDomotica();
-        renderDomoticaUI();
-      }
-    }, 4000);
+    actualizarUltimaOrdenDomotica('dom-vac-subtitle', 'Volver a la Base');
+    showToast('Comando enviado: Volver a la base', 'ok');
   } else if (accion === 'locate') {
     enviarComandoSmartLife('Aspiradora Robot', 'Emitir sonido de localización (Seek)', { command: 'seek' });
+    actualizarUltimaOrdenDomotica('dom-vac-subtitle', 'Localizar aspiradora');
     showToast('Buscando aspiradora (sonido emitido)', 'ok');
   }
-  guardarEstadoDomotica();
-  renderDomoticaUI();
 }
 
 function domSetModoAspiradora(modo) {
