@@ -3793,7 +3793,7 @@
           </div>
           <div class="overflow-hidden">
             <p class="text-xs font-black text-white uppercase tracking-wider truncate">Salir de Casa</p>
-            <p class="text-[10px] text-slate-400 truncate mt-0.5">Inicia limpieza de Aspiradora Robot</p>
+            <p class="text-[10px] text-slate-400 truncate mt-0.5">Inicia aspiradora en Auto a Máxima Potencia</p>
           </div>
         </button>
 
@@ -3951,13 +3951,13 @@
             <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Estado</span>
             <span id="dom-vac-state-text" class="text-xs font-black text-emerald-400 uppercase mt-1 block">Cargada</span>
           </div>
-          <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-3 text-center">
+          <div onclick="domEditarMetricaAspiradora('area')" class="bg-slate-900/70 hover:bg-slate-900 rounded-xl border border-slate-800 hover:border-slate-700 p-3 text-center cursor-pointer transition-all" title="Click para ajustar área limpia">
             <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Área Limpia</span>
-            <span id="dom-vac-area" class="text-sm font-black mono text-white mt-0.5 block">42 m²</span>
+            <span id="dom-vac-area" class="text-sm font-black mono text-white mt-0.5 block">34 m²</span>
           </div>
-          <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-3 text-center">
+          <div onclick="domEditarMetricaAspiradora('time')" class="bg-slate-900/70 hover:bg-slate-900 rounded-xl border border-slate-800 hover:border-slate-700 p-3 text-center cursor-pointer transition-all" title="Click para ajustar tiempo de limpieza">
             <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Tiempo</span>
-            <span id="dom-vac-time" class="text-sm font-black mono text-white mt-0.5 block">38 min</span>
+            <span id="dom-vac-time" class="text-sm font-black mono text-white mt-0.5 block">32 min</span>
           </div>
         </div>
 
@@ -15309,10 +15309,10 @@ let domState = {
   vacuum: {
     status: 'docked', // docked, cleaning, paused, returning
     battery: 100,
-    area: 42,
-    time: 38,
+    area: 34,
+    time: 32,
     mode: 'smart',    // smart, wall_follow, spiral, single
-    suction: 'normal' // gentle, normal, strong
+    suction: 'strong' // gentle, normal, strong (máxima potencia disponible / Turbo)
   },
   plug: {
     power: false,
@@ -15352,9 +15352,19 @@ function iniciarDomotica() {
         plug: { ...domState.plug, ...(parsed.plug || {}) },
         tv: { ...domState.tv, ...(parsed.tv || {}) }
       };
-      if (domState.vacuum.suction === 'max') {
+      if (domState.vacuum.area === 42 || !domState.vacuum.area) {
+        domState.vacuum.area = 34;
+      }
+      if (domState.vacuum.time === 38 || !domState.vacuum.time) {
+        domState.vacuum.time = 32;
+      }
+      if (domState.vacuum.suction === 'max' || domState.vacuum.suction === 'normal' || !domState.vacuum.suction) {
         domState.vacuum.suction = 'strong';
       }
+      if (!domState.vacuum.mode) {
+        domState.vacuum.mode = 'smart';
+      }
+      guardarEstadoDomotica();
     }
     const savedCfg = localStorage.getItem(DOMOTICA_CONFIG_KEY);
     if (savedCfg) {
@@ -15518,13 +15528,13 @@ async function enviarComandoSmartLife(dispositivo, accion, payload = {}) {
 
       // 2. Metros cuadrados reales limpiados (clean_area)
       const area = res.find(d => d.code === 'clean_area' || d.code === 'clean_area_total');
-      if (area && typeof area.value === 'number') {
+      if (area && typeof area.value === 'number' && area.value > 0) {
         domState.vacuum.area = area.value > 500 ? Math.round(area.value / 100) : area.value;
       }
 
       // 3. Tiempo real de limpieza en minutos (clean_time)
       const time = res.find(d => d.code === 'clean_time' || d.code === 'clean_time_total');
-      if (time && typeof time.value === 'number') {
+      if (time && typeof time.value === 'number' && time.value > 0) {
         domState.vacuum.time = time.value;
       }
 
@@ -15857,8 +15867,19 @@ function domToggleAspiradoraPower() {
 function domAccionAspiradora(accion) {
   if (accion === 'start') {
     domState.vacuum.status = 'cleaning';
-    enviarComandoSmartLife('Aspiradora Robot', `Iniciar limpieza (${domState.vacuum.mode})`, { command: 'start', mode: domState.vacuum.mode });
-    showToast('Aspiradora iniciando limpieza', 'ok');
+    domState.vacuum.mode = 'smart';     // Limpieza automático
+    domState.vacuum.suction = 'strong'; // Máxima potencia disponible (Turbo)
+    if (!domState.vacuum.area || domState.vacuum.area === 42) domState.vacuum.area = 34;
+    if (!domState.vacuum.time || domState.vacuum.time === 38) domState.vacuum.time = 32;
+    guardarEstadoDomotica();
+    renderDomoticaUI();
+    enviarComandoSmartLife('Aspiradora Robot', 'Iniciar limpieza automática en máxima potencia (Turbo)', {
+      command: 'start',
+      mode: 'smart',
+      suction: 'strong',
+      cistern: 'strong'
+    });
+    showToast('Aspiradora: Limpieza automática a máxima potencia (Turbo)', 'ok');
   } else if (accion === 'pause') {
     domState.vacuum.status = 'paused';
     enviarComandoSmartLife('Aspiradora Robot', 'Pausar limpieza', { command: 'pause' });
@@ -15877,6 +15898,34 @@ function domAccionAspiradora(accion) {
   }
   guardarEstadoDomotica();
   renderDomoticaUI();
+}
+
+function domEditarMetricaAspiradora(tipo) {
+  if (tipo === 'area') {
+    const actual = domState.vacuum.area || 34;
+    const val = prompt('Ajustar área limpia estimada (m²):', actual);
+    if (val !== null) {
+      const num = parseInt(val, 10);
+      if (!isNaN(num) && num > 0) {
+        domState.vacuum.area = num;
+        guardarEstadoDomotica();
+        renderDomoticaUI();
+        showToast(`Área de limpieza fijada en ${num} m²`, 'ok');
+      }
+    }
+  } else if (tipo === 'time') {
+    const actual = domState.vacuum.time || 32;
+    const val = prompt('Ajustar tiempo de limpieza estimado (minutos):', actual);
+    if (val !== null) {
+      const num = parseInt(val, 10);
+      if (!isNaN(num) && num > 0) {
+        domState.vacuum.time = num;
+        guardarEstadoDomotica();
+        renderDomoticaUI();
+        showToast(`Tiempo de limpieza fijado en ${num} min`, 'ok');
+      }
+    }
+  }
 }
 
 function domSetModoAspiradora(modo) {
@@ -16050,12 +16099,18 @@ async function ejecutarEscenaDomotica(escena) {
   } else if (escena === 'salir_casa') {
     // Solo inicia la aspiradora robot; NO envía pulsos IR al Aire ni a la TV para no encenderlos si ya estaban apagados
     domState.vacuum.status = 'cleaning';
+    domState.vacuum.mode = 'smart';
+    domState.vacuum.suction = 'strong';
+    if (!domState.vacuum.area || domState.vacuum.area === 42) domState.vacuum.area = 34;
+    if (!domState.vacuum.time || domState.vacuum.time === 38) domState.vacuum.time = 32;
     guardarEstadoDomotica();
     renderDomoticaUI();
-    showToast('Salir de Casa: Aspiradora iniciada', 'ok');
-    await enviarComandoSmartLife('Aspiradora Robot', 'Escena "Salir de Casa": Iniciar limpieza automática', {
+    showToast('Salir de Casa: Aspiradora iniciada a máxima potencia', 'ok');
+    await enviarComandoSmartLife('Aspiradora Robot', 'Escena "Salir de Casa": Iniciar limpieza automática (Turbo)', {
       command: 'start',
-      mode: domState.vacuum.mode
+      mode: 'smart',
+      suction: 'strong',
+      cistern: 'strong'
     });
   } else if (escena === 'modo_cine') {
     domState.ac.power = true;
@@ -16208,12 +16263,16 @@ function ejecutarComandoTuyaSmartLife(data) {
       if (cmds.length) apiResult = tuyaRequest('POST', '/v1.0/iot-03/devices/' + cfg.plugId + '/commands', { commands: cmds });
     } else if (disp.indexOf('Aspiradora') !== -1 && cfg.vacId) {
       const cmds = [];
-      if (p.command === 'start') { cmds.push({ code: 'power_go', value: true }); if (p.mode) cmds.push({ code: 'mode', value: p.mode }); }
+      if (p.command === 'start') {
+        cmds.push({ code: 'power_go', value: true });
+        cmds.push({ code: 'mode', value: p.mode || 'smart' });
+        cmds.push({ code: 'suction', value: p.suction || p.cistern || 'strong' });
+      }
       else if (p.command === 'pause') cmds.push({ code: 'power_go', value: false });
       else if (p.command === 'charge_go') cmds.push({ code: 'mode', value: 'chargego' });
       else if (p.command === 'seek') cmds.push({ code: 'seek', value: true });
       if (p.mode && !p.command) cmds.push({ code: 'mode', value: p.mode });
-      if (p.cistern) cmds.push({ code: 'suction', value: p.cistern });
+      if ((p.cistern || p.suction) && !p.command) cmds.push({ code: 'suction', value: p.cistern || p.suction });
       if (cmds.length) apiResult = tuyaRequest('POST', '/v1.0/iot-03/devices/' + cfg.vacId + '/commands', { commands: cmds });
     } else if (disp.indexOf('Aire Acondicionado') !== -1 && cfg.irHubId && cfg.acId) {
       const modeMap = { cool: 0, heat: 1, auto: 2, fan: 3, dry: 4 };

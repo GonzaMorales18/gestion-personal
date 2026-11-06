@@ -671,6 +671,11 @@ function ejecutarComandoTuyaSmartLife(data) {
     else if (disp.indexOf('Aspiradora') !== -1 && cfg.vacId) {
       if (p.command === 'start') {
         apiResult = sendSmartDeviceCommand(cfg.vacId, 'power_go', true, ['switch_go', 'power', 'switch']);
+        // Iniciar en modo de limpieza automático y a máxima potencia de succión disponible (strong / fan_speed_enum)
+        const targetMode = p.mode || 'smart';
+        sendSmartDeviceCommand(cfg.vacId, 'mode', targetMode, []);
+        const targetSuction = p.suction || p.cistern || 'strong';
+        sendSmartDeviceCommand(cfg.vacId, 'suction', targetSuction, ['fan_speed_enum', 'cistern']);
       } else if (p.command === 'pause') {
         apiResult = sendSmartDeviceCommand(cfg.vacId, 'power_go', false, ['switch_go', 'power', 'switch']);
       } else if (p.command === 'charge_go') {
@@ -682,8 +687,8 @@ function ejecutarComandoTuyaSmartLife(data) {
         apiResult = sendSmartDeviceCommand(cfg.vacId, 'seek', true, ['find']);
       } else if (p.mode) {
         apiResult = sendSmartDeviceCommand(cfg.vacId, 'mode', p.mode, []);
-      } else if (p.cistern) {
-        apiResult = sendSmartDeviceCommand(cfg.vacId, 'suction', p.cistern, ['fan_speed_enum', 'cistern']);
+      } else if (p.cistern || p.suction) {
+        apiResult = sendSmartDeviceCommand(cfg.vacId, 'suction', p.cistern || p.suction, ['fan_speed_enum', 'cistern']);
       }
     }
 
@@ -798,7 +803,11 @@ function ejecutarComandoTuyaSmartLife(data) {
       } else if (p.scene === 'salir_casa') {
         if (cfg.plugId) results.push(sendSmartDeviceCommand(cfg.plugId, 'switch_1', false, ['switch']));
         if (cfg.irHubId && cfg.acId) results.push(tuyaRequest('POST', '/v2.0/infrareds/' + cfg.irHubId + '/air-conditioners/' + cfg.acId + '/scenes/command', { power: 0, mode: 0, temp: 24, wind: 0 }));
-        if (cfg.vacId) results.push(sendSmartDeviceCommand(cfg.vacId, 'power_go', true, ['switch_go', 'power']));
+        if (cfg.vacId) {
+          results.push(sendSmartDeviceCommand(cfg.vacId, 'power_go', true, ['switch_go', 'power']));
+          sendSmartDeviceCommand(cfg.vacId, 'mode', 'smart', []);
+          sendSmartDeviceCommand(cfg.vacId, 'suction', 'strong', ['fan_speed_enum', 'cistern']);
+        }
       } else if (p.scene === 'modo_cine') {
         if (cfg.plugId) results.push(sendSmartDeviceCommand(cfg.plugId, 'switch_1', true, ['switch']));
         if (cfg.irHubId && cfg.acId) results.push(tuyaRequest('POST', '/v2.0/infrareds/' + cfg.irHubId + '/air-conditioners/' + cfg.acId + '/scenes/command', { power: 0, mode: 0, temp: 23, wind: 1 }));
