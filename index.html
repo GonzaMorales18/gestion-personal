@@ -320,9 +320,13 @@
   #fullcalendar-container .fc-daygrid-bg-harness {
     display: none !important;
   }
+  #fullcalendar-container .fc-daygrid-day-top {
+    cursor: pointer;
+  }
   #fullcalendar-container .fc-event,
   #fullcalendar-container .fc-daygrid-dot-event,
   #fullcalendar-container .fc-daygrid-block-event {
+    cursor: pointer !important;
     border: none !important;
     border-radius: 5px !important;
     padding: 2px 5px !important;
@@ -3576,8 +3580,67 @@
   <!-- SECCIÓN CALENDARIO -->
   <main id="section-calendario" class="hidden p-4 md:p-8 max-w-[1400px] mx-auto w-full space-y-6">
 
+    <!-- ALERTA DE CONEXIÓN GOOGLE -->
+    <div id="calendar-alert" class="hidden bg-gradient-to-r from-pink-950/40 via-purple-950/30 to-slate-900 border border-pink-500/30 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-pink-500/20 border border-pink-500/40 flex items-center justify-center text-pink-400 shrink-0">
+          <i class="fab fa-google text-lg"></i>
+        </div>
+        <div>
+          <h4 class="text-xs font-black text-white uppercase tracking-wider">Conectar con Google Calendar</h4>
+          <p class="text-[11px] text-slate-400">Inicia sesión con Google para ver, crear y eliminar eventos sincronizados en tiempo real.</p>
+        </div>
+      </div>
+      <button onclick="conectarGoogle(true)" class="px-4 py-2 bg-pink-600 hover:bg-pink-500 text-white rounded-xl text-xs font-bold uppercase tracking-wider shadow-[0_0_15px_rgba(219,39,119,0.35)] transition-all active:scale-95 shrink-0 flex items-center gap-2">
+        <i class="fas fa-plug text-xs"></i>
+        <span>Conectar Google</span>
+      </button>
+    </div>
 
+    <!-- BARRA SUPERIOR CALENDARIO (ABM & CONTROLES) -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-black/60 p-4 rounded-2xl border border-slate-700/60 shadow-lg">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-pink-500/15 border border-pink-500/30 flex items-center justify-center text-pink-400 shadow-[0_0_15px_rgba(236,72,153,0.2)]">
+          <i class="far fa-calendar-alt text-base"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 class="text-sm font-black text-white tracking-wide uppercase">Google Calendar</h2>
+            <span id="gcal-eventos-count" class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-pink-500/15 text-pink-300 border border-pink-500/30">
+              0 eventos
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-400">Sincronización bidireccional en tiempo real</p>
+        </div>
+      </div>
 
+      <div class="flex items-center gap-2.5 flex-wrap">
+        <!-- Selector / Filtro de Calendario -->
+        <div class="relative">
+          <select id="gcal-filtro-calendario" onchange="filtrarEventosPorCalendario(this.value)"
+                  class="h-10 pl-3 pr-8 bg-slate-900 border border-slate-700/80 rounded-xl text-xs font-bold text-white outline-none focus:border-pink-500 transition-colors appearance-none cursor-pointer">
+            <option value="todos">Todos los calendarios</option>
+          </select>
+          <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-[10px] pointer-events-none"></i>
+        </div>
+
+        <!-- Botón Sincronizar -->
+        <button onclick="sincronizarGcalManual()" title="Sincronizar eventos con Google"
+                class="h-10 px-3 bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 active:scale-95">
+          <i id="btn-sync-gcal-icon" class="fas fa-sync-alt text-xs"></i>
+          <span class="hidden md:inline">Sincronizar</span>
+        </button>
+
+        <!-- Botón Nuevo Evento -->
+        <button onclick="abrirModalCrearEventoGoogle()" title="Crear nuevo evento en Google Calendar"
+                class="h-10 px-4 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 shadow-[0_0_15px_rgba(219,39,119,0.35)] transition-all active:scale-95">
+          <i class="fas fa-plus text-xs"></i>
+          <span>Nuevo Evento</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- CONTENEDOR DEL CALENDARIO -->
     <div class="bg-black rounded-2xl border border-slate-700/60 p-4 md:p-6 overflow-hidden">
       <div id="fullcalendar-container" class="min-h-[600px]"></div>
     </div>
@@ -4404,6 +4467,210 @@
             <span>Guardar Configuración</span>
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL GOOGLE CALENDAR: CREAR / EDITAR EVENTO -->
+<div id="modal-gcal-evento" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[350] flex items-center justify-center p-4">
+  <div class="bg-black border border-pink-500/30 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden">
+    <!-- Header -->
+    <div class="px-6 py-4 border-b border-slate-700/80 bg-slate-900/60 flex items-center justify-between flex-shrink-0">
+      <div class="flex items-center gap-3">
+        <div id="gcal-modal-header-icon" class="w-8 h-8 rounded-xl bg-pink-900/50 border border-pink-500/30 flex items-center justify-center text-pink-400">
+          <i class="far fa-calendar-plus text-sm"></i>
+        </div>
+        <div>
+          <h3 id="gcal-modal-title" class="font-black text-white text-sm uppercase tracking-wider">Nuevo Evento</h3>
+          <p class="text-[10px] text-slate-400 mt-0.5">Sincronización directa con Google Calendar</p>
+        </div>
+      </div>
+      <button onclick="cerrarModalGcalEvento()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors">
+        <i class="fas fa-times text-sm"></i>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="p-6 space-y-4 overflow-y-auto">
+      <input type="hidden" id="gcal-ev-id" value="">
+      <input type="hidden" id="gcal-ev-edit-mode" value="create">
+      <input type="hidden" id="gcal-ev-color-id" value="">
+
+      <!-- Título -->
+      <div>
+        <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Título del evento *</label>
+        <input type="text" id="gcal-ev-titulo" placeholder="Ej: Turno médico, Reunión de trabajo, Cumpleaños..."
+               class="w-full h-11 px-3.5 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-pink-500 transition-colors font-semibold">
+      </div>
+
+      <!-- Calendario Destino -->
+      <div>
+        <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Calendario de Google</label>
+        <select id="gcal-ev-calendario"
+                class="w-full h-11 px-3 bg-slate-900 border border-slate-700/80 rounded-xl text-xs font-semibold text-white outline-none focus:border-pink-500 transition-colors">
+          <option value="primary">Principal</option>
+        </select>
+      </div>
+
+      <!-- Todo el día checkbox -->
+      <div class="flex items-center justify-between p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+        <div class="flex items-center gap-2">
+          <i class="far fa-clock text-slate-400 text-xs"></i>
+          <span class="text-xs font-bold text-slate-300">Evento de todo el día</span>
+        </div>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="gcal-ev-allday" onchange="toggleGcalAllDay(this.checked)" class="sr-only peer">
+          <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-pink-600"></div>
+        </label>
+      </div>
+
+      <!-- Fechas y Horas -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <!-- Inicio -->
+        <div class="p-3 bg-slate-900/50 rounded-xl border border-slate-800 space-y-2">
+          <label class="block text-[10px] font-black uppercase tracking-wider text-slate-400">Inicio</label>
+          <input type="date" id="gcal-ev-fecha-inicio" onchange="onGcalFechaInicioChange()"
+                 class="w-full h-9 px-2.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white font-medium outline-none focus:border-pink-500">
+          <div id="gcal-ev-hora-inicio-wrap">
+            <input type="time" id="gcal-ev-hora-inicio"
+                   class="w-full h-9 px-2.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white font-medium outline-none focus:border-pink-500">
+          </div>
+        </div>
+
+        <!-- Fin -->
+        <div class="p-3 bg-slate-900/50 rounded-xl border border-slate-800 space-y-2">
+          <label class="block text-[10px] font-black uppercase tracking-wider text-slate-400">Fin</label>
+          <input type="date" id="gcal-ev-fecha-fin"
+                 class="w-full h-9 px-2.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white font-medium outline-none focus:border-pink-500">
+          <div id="gcal-ev-hora-fin-wrap">
+            <input type="time" id="gcal-ev-hora-fin"
+                   class="w-full h-9 px-2.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white font-medium outline-none focus:border-pink-500">
+          </div>
+        </div>
+      </div>
+
+      <!-- Selector de Color de Google -->
+      <div>
+        <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Color de Etiqueta</label>
+        <div class="flex items-center gap-2 flex-wrap" id="gcal-color-picker-container"></div>
+      </div>
+
+      <!-- Ubicación -->
+      <div>
+        <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Ubicación (opcional)</label>
+        <div class="relative">
+          <i class="fas fa-map-marker-alt absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+          <input type="text" id="gcal-ev-ubicacion" placeholder="Lugar, dirección o enlace de reunión..."
+                 class="w-full h-10 pl-9 pr-3.5 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-pink-500 transition-colors font-medium">
+        </div>
+      </div>
+
+      <!-- Descripción -->
+      <div>
+        <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Descripción / Notas (opcional)</label>
+        <textarea id="gcal-ev-descripcion" rows="3" placeholder="Detalles adicionales, recordatorios o notas..."
+                  class="w-full p-3 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-pink-500 transition-colors resize-none font-medium"></textarea>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="px-6 py-4 border-t border-slate-700/80 bg-slate-900/60 flex items-center justify-end gap-2.5 flex-shrink-0">
+      <button type="button" onclick="cerrarModalGcalEvento()"
+              class="h-10 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs uppercase tracking-wider transition-colors">
+        Cancelar
+      </button>
+      <button type="button" id="gcal-btn-guardar" onclick="guardarEventoGcal()"
+              class="h-10 px-5 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-black text-xs uppercase tracking-wider shadow-[0_0_15px_rgba(219,39,119,0.35)] flex items-center gap-2 transition-all active:scale-95">
+        <i class="fas fa-save text-xs"></i>
+        <span id="gcal-btn-guardar-text">Guardar Evento</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL GOOGLE CALENDAR: DETALLE DE EVENTO -->
+<div id="modal-gcal-detalle" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[350] flex items-center justify-center p-4">
+  <div class="bg-black border border-slate-700/80 rounded-2xl shadow-2xl w-full max-w-md max-h-[88vh] flex flex-col overflow-hidden">
+    <!-- Barra superior de color de evento -->
+    <div id="gcal-det-color-bar" class="h-2 w-full bg-pink-500"></div>
+
+    <!-- Header -->
+    <div class="px-6 py-4 border-b border-slate-800 bg-slate-900/60 flex items-start justify-between gap-3">
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 mb-1 flex-wrap">
+          <span id="gcal-det-cal-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-pink-500/20 text-pink-300 border border-pink-500/30 truncate max-w-[200px]">
+            Personal
+          </span>
+          <span id="gcal-det-allday-badge" class="hidden px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">
+            Todo el día
+          </span>
+        </div>
+        <h3 id="gcal-det-titulo" class="font-black text-white text-base leading-tight break-words">Título</h3>
+      </div>
+      <button onclick="cerrarModalGcalDetalle()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors shrink-0">
+        <i class="fas fa-times text-sm"></i>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="p-6 space-y-4 overflow-y-auto text-xs">
+      <!-- Horario / Fecha -->
+      <div class="flex items-start gap-3 p-3 bg-slate-900/60 rounded-xl border border-slate-800">
+        <div class="w-8 h-8 rounded-lg bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-pink-400 shrink-0">
+          <i class="far fa-clock text-xs"></i>
+        </div>
+        <div>
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Fecha y Hora</span>
+          <span id="gcal-det-fechahora" class="font-bold text-slate-200 text-xs"></span>
+        </div>
+      </div>
+
+      <!-- Ubicación -->
+      <div id="gcal-det-ubicacion-wrap" class="hidden flex items-start gap-3 p-3 bg-slate-900/60 rounded-xl border border-slate-800">
+        <div class="w-8 h-8 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 shrink-0">
+          <i class="fas fa-map-marker-alt text-xs"></i>
+        </div>
+        <div class="min-w-0 flex-1">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Ubicación</span>
+          <span id="gcal-det-ubicacion" class="font-semibold text-slate-200 text-xs break-words"></span>
+        </div>
+      </div>
+
+      <!-- Descripción -->
+      <div id="gcal-det-descripcion-wrap" class="hidden space-y-1">
+        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Descripción</span>
+        <div id="gcal-det-descripcion" class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 text-slate-300 font-medium whitespace-pre-wrap leading-relaxed max-h-40 overflow-y-auto"></div>
+      </div>
+
+      <!-- Enlace externo a Google Calendar -->
+      <div class="pt-1">
+        <a id="gcal-det-link" href="#" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center gap-1.5 text-pink-400 hover:text-pink-300 font-bold text-xs transition-colors">
+          <i class="fas fa-external-link-alt text-[10px]"></i>
+          <span>Abrir en la web de Google Calendar</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Footer Acciones -->
+    <div class="px-6 py-4 border-t border-slate-800 bg-slate-900/60 flex items-center justify-between gap-2.5 flex-shrink-0">
+      <div>
+        <span id="gcal-det-readonly-note" class="hidden text-[11px] text-slate-400 italic">
+          <i class="fas fa-lock mr-1 text-[10px]"></i> Calendario de solo lectura
+        </span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="gcal-det-btn-eliminar" onclick="eliminarEventoActualGcal()"
+                class="h-9 px-3.5 rounded-xl bg-rose-600/20 hover:bg-rose-600 border border-rose-500/30 text-rose-300 hover:text-white font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all">
+          <i class="fas fa-trash-alt text-[11px]"></i>
+          <span>Eliminar</span>
+        </button>
+        <button id="gcal-det-btn-editar" onclick="editarEventoActualGcal()"
+                class="h-9 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all">
+          <i class="fas fa-pencil-alt text-[11px]"></i>
+          <span>Editar</span>
+        </button>
       </div>
     </div>
   </div>
@@ -12617,7 +12884,7 @@ window.eliminarTenisUI = function(rowIndex) {
 const CALENDAR_CLIENT_ID = '153589356690-gk27a6fhfn1tv19mdeqpac9pdfcvjfuc.apps.googleusercontent.com'; // <--- REEMPLAZAR AQUÍ
 const CALENDAR_API_KEY = 'AIzaSyAqO2e2L2cuqgVu1wYT5iIh8eYeDAgsnFI'; // <--- REEMPLAZAR AQUÍ
 const CALENDAR_DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
-const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/fitness.activity.read https://www.googleapis.com/auth/fitness.body.read https://www.googleapis.com/auth/fitness.location.read https://www.googleapis.com/auth/fitness.sleep.read https://www.googleapis.com/auth/tasks';
+const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/fitness.activity.read https://www.googleapis.com/auth/fitness.body.read https://www.googleapis.com/auth/fitness.location.read https://www.googleapis.com/auth/fitness.sleep.read https://www.googleapis.com/auth/tasks';
 
 let tokenClient;
 let gapiInited = false;
@@ -12701,6 +12968,21 @@ async function iniciarCalendario(hacerScroll = false) {
     },
     buttonText: {
       today: 'Hoy', month: 'Mes', week: 'Semana', day: 'Día'
+    },
+    selectable: true,
+    selectMirror: true,
+    dateClick: function(info) {
+      if (typeof abrirModalCrearEventoGoogle === 'function') {
+        abrirModalCrearEventoGoogle(info.dateStr);
+      }
+    },
+    eventClick: function(info) {
+      if (info.jsEvent) {
+        info.jsEvent.preventDefault();
+      }
+      if (typeof abrirModalDetalleEventoGoogle === 'function') {
+        abrirModalDetalleEventoGoogle(info.event);
+      }
     },
     events: []
   });
@@ -12914,6 +13196,10 @@ document.addEventListener('click', (e) => {
 }, { passive: true });
 
 function checkGoogleApis() {
+  if (localStorage.getItem('gcal_scope_version') !== 'v2_events') {
+    localStorage.removeItem('gcal_token');
+    localStorage.setItem('gcal_scope_version', 'v2_events');
+  }
   if (gisInited && gapiInited) return;
   if (typeof gapi !== 'undefined' && typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
     if (!gisInited) {
@@ -13062,11 +13348,17 @@ function desconectarGoogle() {
 }
 
 async function fetchGoogleEvents() {
-  try {
-    if (!tieneTokenGoogleValido()) return;
-    showToast('Sincronizando servicios de Google...', 'ok');
+  const syncIcon = document.getElementById('btn-sync-gcal-icon');
+  if (syncIcon) syncIcon.classList.add('fa-spin');
 
-    // Fetch last 3 months and next 1 year
+  try {
+    if (!tieneTokenGoogleValido()) {
+      if (syncIcon) syncIcon.classList.remove('fa-spin');
+      return;
+    }
+    showToast('Sincronizando Google Calendar...', 'ok');
+
+    // Rango: últimos 3 meses y próximo 1 año
     const timeMin = new Date();
     timeMin.setMonth(timeMin.getMonth() - 3);
     const timeMax = new Date();
@@ -13074,10 +13366,14 @@ async function fetchGoogleEvents() {
 
     // Obtener la lista de todos los calendarios del usuario
     const calendarListResponse = await gapi.client.calendar.calendarList.list();
-    const calendars = calendarListResponse.result.items;
+    const calendars = calendarListResponse.result.items || [];
 
-    if (!calendars || calendars.length === 0) {
-      showToast('No se encontraron calendarios', 'ok');
+    window.globalGoogleCalendars = calendars;
+    actualizarSelectorCalendariosUI(calendars);
+
+    if (calendars.length === 0) {
+      showToast('No se encontraron calendarios de Google', 'ok');
+      if (syncIcon) syncIcon.classList.remove('fa-spin');
       return;
     }
 
@@ -13095,7 +13391,14 @@ async function fetchGoogleEvents() {
         'orderBy': 'startTime'
       }).then(res => {
          const items = res.result.items || [];
-         return items.map(ev => ({ ...ev, _calColor: cal.backgroundColor }));
+         return items.map(ev => ({
+           ...ev,
+           _calColor: cal.backgroundColor || '#db2777',
+           _calId: cal.id,
+           _calSummary: cal.summary || 'Calendario',
+           _calAccessRole: cal.accessRole || 'owner',
+           _isPrimary: !!cal.primary
+         }));
       }).catch(e => {
          console.warn(`No se pudo cargar el calendario: ${cal.summary}`, e);
          return [];
@@ -13107,24 +13410,19 @@ async function fetchGoogleEvents() {
        allEvents = allEvents.concat(evArray);
     });
 
-    if (allEvents.length === 0) {
-      showToast('No se encontraron eventos en tus calendarios', 'ok');
-      return;
-    }
-
     const fcEvents = [];
     allEvents.forEach(ev => {
-      let color = ev._calColor || '#db2777'; // Fallback a color del calendario
+      let color = ev._calColor || '#db2777';
 
-      // Si el evento tiene color propio (colorId)
+      // Si el evento tiene color propio (colorId de Google)
       if (ev.colorId) {
-        if (ev.colorId === '11') color = '#dc2626'; // Red
-        else if (ev.colorId === '10') color = '#16a34a'; // Green
-        else if (ev.colorId === '9') color = '#2563eb'; // Blue
-        else if (ev.colorId === '8') color = '#57534e'; // Gray
-        else if (ev.colorId === '7') color = '#0ea5e9'; // Light blue
-        else if (ev.colorId === '6') color = '#f97316'; // Orange
-        else if (ev.colorId === '5') color = '#eab308'; // Yellow
+        const colorMap = {
+          '11': '#dc2626', '10': '#16a34a', '9': '#2563eb',
+          '8': '#57534e', '7': '#0ea5e9', '6': '#f97316',
+          '5': '#eab308', '4': '#e11d48', '3': '#9333ea',
+          '2': '#10b981', '1': '#38bdf8'
+        };
+        if (colorMap[ev.colorId]) color = colorMap[ev.colorId];
       }
 
       const isAllDay = !ev.start.dateTime;
@@ -13143,50 +13441,682 @@ async function fetchGoogleEvents() {
           const dayIso = `${yyyy}-${mm}-${dd}`;
           fcEvents.push({
             id: `${ev.id}_${idx}`,
-            title: ev.summary,
+            title: ev.summary || '(Sin título)',
             start: dayIso,
             end: dayIso,
             allDay: true,
             backgroundColor: color,
             borderColor: color,
             url: ev.htmlLink,
+            extendedProps: {
+              rawEventId: ev.id,
+              calId: ev._calId,
+              calSummary: ev._calSummary,
+              description: ev.description || '',
+              location: ev.location || '',
+              colorId: ev.colorId || '',
+              colorHex: color,
+              accessRole: ev._calAccessRole,
+              isAllDay: true,
+              origStart: ev.start.date,
+              origEnd: ev.end.date
+            }
           });
           cur.setDate(cur.getDate() + 1);
           idx++;
         }
       } else {
         const startVal = ev.start.dateTime || ev.start.date;
+        const endVal = ev.end ? (ev.end.dateTime || ev.end.date) : startVal;
         fcEvents.push({
           id: ev.id,
-          title: ev.summary,
+          title: ev.summary || '(Sin título)',
           start: startVal,
-          end: startVal,
+          end: endVal,
           allDay: isAllDay,
           backgroundColor: color,
           borderColor: color,
           url: ev.htmlLink,
+          extendedProps: {
+            rawEventId: ev.id,
+            calId: ev._calId,
+            calSummary: ev._calSummary,
+            description: ev.description || '',
+            location: ev.location || '',
+            colorId: ev.colorId || '',
+            colorHex: color,
+            accessRole: ev._calAccessRole,
+            isAllDay: isAllDay,
+            origStart: startVal,
+            origEnd: endVal
+          }
         });
       }
     });
 
-    if (fullCalendarInst) {
-      fullCalendarInst.removeAllEvents();
-      fullCalendarInst.addEventSource(fcEvents);
-    }
-
+    window.globalGoogleAllFcEvents = fcEvents;
     globalGoogleEvents = allEvents;
+
+    // Aplicar filtro actual si existe
+    const filtroSelect = document.getElementById('gcal-filtro-calendario');
+    const filtroCalId = filtroSelect ? filtroSelect.value : 'todos';
+    aplicarFiltroFcEvents(filtroCalId);
+
     guardarCacheModulo('calendario', { fcEvents, rawEvents: allEvents });
     renderMiniCalendar();
 
-    showToast('Datos de Google sincronizados', 'ok');
+    showToast(`Google Calendar sincronizado (${allEvents.length} eventos)`, 'ok');
 
   } catch (err) {
-    console.error(err);
+    console.error('Error en fetchGoogleEvents:', err);
     if (err && (err.status === 401 || err.status === 403 || (err.result && err.result.error && (err.result.error.code === 401 || err.result.error.code === 403)))) {
       invalidarYReconectarGoogle();
       return;
     }
-    showToast('Error al buscar eventos', 'error');
+    showToast('Error al buscar eventos de Google', 'error');
+  } finally {
+    if (syncIcon) syncIcon.classList.remove('fa-spin');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// GOOGLE CALENDAR: MÓDULO ABM (ALTA, BAJA, MODIFICACIÓN & FILTROS)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+window.globalGoogleCalendars = [];
+window.globalGoogleAllFcEvents = [];
+window.currentGcalDetailEvent = null;
+
+const GCAL_COLOR_PALETTE = [
+  { id: '', name: 'Predeterminado', hex: '#db2777' },
+  { id: '11', name: 'Rojo (Tomate)', hex: '#dc2626' },
+  { id: '4', name: 'Rosa (Flamenco)', hex: '#e11d48' },
+  { id: '6', name: 'Naranja (Mandarina)', hex: '#f97316' },
+  { id: '5', name: 'Amarillo (Banana)', hex: '#eab308' },
+  { id: '10', name: 'Verde (Albahaca)', hex: '#16a34a' },
+  { id: '2', name: 'Salvia', hex: '#10b981' },
+  { id: '7', name: 'Celeste (Pavo real)', hex: '#0ea5e9' },
+  { id: '9', name: 'Azul (Arándano)', hex: '#2563eb' },
+  { id: '1', name: 'Lavanda', hex: '#38bdf8' },
+  { id: '3', name: 'Uva (Violeta)', hex: '#9333ea' },
+  { id: '8', name: 'Grafito (Gris)', hex: '#57534e' }
+];
+
+function pad2Num(n) { return String(n).padStart(2, '0'); }
+
+function getLocalDateStr(d) {
+  return `${d.getFullYear()}-${pad2Num(d.getMonth() + 1)}-${pad2Num(d.getDate())}`;
+}
+
+function getLocalTimeStr(d) {
+  return `${pad2Num(d.getHours())}:${pad2Num(d.getMinutes())}`;
+}
+
+function addDaysToDateStr(dateStr, days = 1) {
+  const parts = dateStr.split('-').map(Number);
+  const d = new Date(parts[0], parts[1] - 1, parts[2] + days);
+  return getLocalDateStr(d);
+}
+
+function toLocalIsoWithOffsetRFC3339(dateObj) {
+  const tzo = -dateObj.getTimezoneOffset();
+  const dif = tzo >= 0 ? '+' : '-';
+  const pad = num => String(Math.floor(Math.abs(num))).padStart(2, '0');
+  return dateObj.getFullYear() +
+    '-' + pad(dateObj.getMonth() + 1) +
+    '-' + pad(dateObj.getDate()) +
+    'T' + pad(dateObj.getHours()) +
+    ':' + pad(dateObj.getMinutes()) +
+    ':' + pad(dateObj.getSeconds()) +
+    dif + pad(tzo / 60) +
+    ':' + pad(tzo % 60);
+}
+
+function sincronizarGcalManual() {
+  if (typeof fetchGoogleEvents === 'function') {
+    fetchGoogleEvents();
+  }
+}
+
+function actualizarSelectorCalendariosUI(calendars) {
+  // 1. Selector de filtro en la barra superior
+  const filtroSel = document.getElementById('gcal-filtro-calendario');
+  if (filtroSel) {
+    const curVal = filtroSel.value || 'todos';
+    filtroSel.innerHTML = '<option value="todos">Todos los calendarios</option>';
+    (calendars || []).forEach(cal => {
+      const opt = document.createElement('option');
+      opt.value = cal.id;
+      opt.textContent = `${cal.summary}${cal.primary ? ' (Principal)' : ''}`;
+      if (cal.id === curVal) opt.selected = true;
+      filtroSel.appendChild(opt);
+    });
+  }
+
+  // 2. Selector de calendario en el modal de nuevo/editar evento
+  const modalCalSel = document.getElementById('gcal-ev-calendario');
+  if (modalCalSel) {
+    const curVal = modalCalSel.value || 'primary';
+    modalCalSel.innerHTML = '';
+    const writable = (calendars || []).filter(c => c.accessRole === 'owner' || c.accessRole === 'writer' || !c.accessRole);
+    const list = writable.length > 0 ? writable : (calendars || []);
+    list.forEach(cal => {
+      const opt = document.createElement('option');
+      opt.value = cal.id;
+      opt.textContent = `${cal.summary}${cal.primary ? ' (Principal)' : ''}`;
+      if (cal.primary || cal.id === curVal) opt.selected = true;
+      modalCalSel.appendChild(opt);
+    });
+  }
+}
+
+function actualizarContadorEventosGcal(total) {
+  const badge = document.getElementById('gcal-eventos-count');
+  if (badge) {
+    badge.textContent = `${total} ${total === 1 ? 'evento' : 'eventos'}`;
+  }
+}
+
+function aplicarFiltroFcEvents(calId) {
+  const allEvents = window.globalGoogleAllFcEvents || [];
+  let filtrados = allEvents;
+  if (calId && calId !== 'todos') {
+    filtrados = allEvents.filter(e => e.extendedProps && e.extendedProps.calId === calId);
+  }
+  if (fullCalendarInst) {
+    fullCalendarInst.removeAllEvents();
+    fullCalendarInst.addEventSource(filtrados);
+  }
+  actualizarContadorEventosGcal(filtrados.length);
+}
+
+function filtrarEventosPorCalendario(calId) {
+  aplicarFiltroFcEvents(calId);
+}
+
+function renderGcalColorPicker(selectedColorId = '') {
+  const container = document.getElementById('gcal-color-picker-container');
+  if (!container) return;
+
+  container.innerHTML = GCAL_COLOR_PALETTE.map(c => {
+    const isSelected = String(c.id) === String(selectedColorId || '');
+    return `
+      <button type="button" onclick="selectGcalColor('${c.id}')" title="${c.name}"
+              class="w-7 h-7 rounded-full flex items-center justify-center transition-all ${isSelected ? 'ring-2 ring-white scale-110 shadow-md' : 'opacity-80 hover:opacity-100 hover:scale-105'}"
+              style="background-color: ${c.hex};">
+        ${isSelected ? '<i class="fas fa-check text-white text-[10px] drop-shadow"></i>' : ''}
+      </button>
+    `;
+  }).join('');
+}
+
+function selectGcalColor(colorId) {
+  const hidden = document.getElementById('gcal-ev-color-id');
+  if (hidden) hidden.value = colorId;
+  renderGcalColorPicker(colorId);
+}
+
+function toggleGcalAllDay(isAllDay) {
+  const wStart = document.getElementById('gcal-ev-hora-inicio-wrap');
+  const wEnd = document.getElementById('gcal-ev-hora-fin-wrap');
+  if (isAllDay) {
+    if (wStart) wStart.classList.add('hidden');
+    if (wEnd) wEnd.classList.add('hidden');
+  } else {
+    if (wStart) wStart.classList.remove('hidden');
+    if (wEnd) wEnd.classList.remove('hidden');
+  }
+}
+
+function onGcalFechaInicioChange() {
+  const fIni = document.getElementById('gcal-ev-fecha-inicio');
+  const fFin = document.getElementById('gcal-ev-fecha-fin');
+  if (fIni && fFin && fIni.value) {
+    if (!fFin.value || fFin.value < fIni.value) {
+      fFin.value = fIni.value;
+    }
+  }
+}
+
+function abrirModalCrearEventoGoogle(fechaStr = null, rawEvToEdit = null) {
+  const modal = document.getElementById('modal-gcal-evento');
+  if (!modal) return;
+
+  const titleEl = document.getElementById('gcal-modal-title');
+  const headerIcon = document.getElementById('gcal-modal-header-icon');
+  const btnGuardarText = document.getElementById('gcal-btn-guardar-text');
+  const inpId = document.getElementById('gcal-ev-id');
+  const inpMode = document.getElementById('gcal-ev-edit-mode');
+  const inpTitulo = document.getElementById('gcal-ev-titulo');
+  const selCal = document.getElementById('gcal-ev-calendario');
+  const chkAllDay = document.getElementById('gcal-ev-allday');
+  const fIni = document.getElementById('gcal-ev-fecha-inicio');
+  const hIni = document.getElementById('gcal-ev-hora-inicio');
+  const fFin = document.getElementById('gcal-ev-fecha-fin');
+  const hFin = document.getElementById('gcal-ev-hora-fin');
+  const inpUbic = document.getElementById('gcal-ev-ubicacion');
+  const inpDesc = document.getElementById('gcal-ev-descripcion');
+
+  // Asegurar selector de calendarios poblado
+  if (window.globalGoogleCalendars && window.globalGoogleCalendars.length) {
+    actualizarSelectorCalendariosUI(window.globalGoogleCalendars);
+  }
+
+  if (rawEvToEdit) {
+    // ══════ MODO EDICIÓN ══════
+    if (titleEl) titleEl.textContent = 'Editar Evento';
+    if (headerIcon) headerIcon.innerHTML = '<i class="fas fa-pencil-alt text-sm"></i>';
+    if (btnGuardarText) btnGuardarText.textContent = 'Guardar Cambios';
+    if (inpId) inpId.value = rawEvToEdit.id;
+    if (inpMode) inpMode.value = 'edit';
+    if (inpTitulo) inpTitulo.value = rawEvToEdit.summary || '';
+    if (selCal && rawEvToEdit._calId) selCal.value = rawEvToEdit._calId;
+
+    const isAllDay = !rawEvToEdit.start.dateTime;
+    if (chkAllDay) chkAllDay.checked = isAllDay;
+    toggleGcalAllDay(isAllDay);
+
+    if (isAllDay) {
+      const sDate = rawEvToEdit.start.date;
+      let eDate = rawEvToEdit.end ? rawEvToEdit.end.date : sDate;
+      // Google Calendar end.date es exclusivo en all-day: si end > start, restar 1 día para mostrarlo amigable
+      if (eDate && eDate > sDate) {
+        const parts = eDate.split('-').map(Number);
+        const d = new Date(parts[0], parts[1] - 1, parts[2] - 1);
+        eDate = getLocalDateStr(d);
+      }
+      if (fIni) fIni.value = sDate;
+      if (fFin) fFin.value = eDate;
+    } else {
+      const dStart = new Date(rawEvToEdit.start.dateTime);
+      const dEnd = new Date(rawEvToEdit.end ? rawEvToEdit.end.dateTime : rawEvToEdit.start.dateTime);
+      if (fIni) fIni.value = getLocalDateStr(dStart);
+      if (hIni) hIni.value = getLocalTimeStr(dStart);
+      if (fFin) fFin.value = getLocalDateStr(dEnd);
+      if (hFin) hFin.value = getLocalTimeStr(dEnd);
+    }
+
+    if (inpUbic) inpUbic.value = rawEvToEdit.location || '';
+    if (inpDesc) inpDesc.value = rawEvToEdit.description || '';
+
+    const colorId = rawEvToEdit.colorId || '';
+    selectGcalColor(colorId);
+
+  } else {
+    // ══════ MODO CREAR NUEVO ══════
+    if (titleEl) titleEl.textContent = 'Nuevo Evento';
+    if (headerIcon) headerIcon.innerHTML = '<i class="far fa-calendar-plus text-sm"></i>';
+    if (btnGuardarText) btnGuardarText.textContent = 'Guardar Evento';
+    if (inpId) inpId.value = '';
+    if (inpMode) inpMode.value = 'create';
+    if (inpTitulo) inpTitulo.value = '';
+    if (inpUbic) inpUbic.value = '';
+    if (inpDesc) inpDesc.value = '';
+
+    if (chkAllDay) chkAllDay.checked = false;
+    toggleGcalAllDay(false);
+
+    let baseDate = new Date();
+    if (fechaStr) {
+      const parts = fechaStr.split('-').map(Number);
+      baseDate = new Date(parts[0], parts[1] - 1, parts[2], 10, 0, 0);
+    } else {
+      // Redondear a la siguiente media hora
+      const m = baseDate.getMinutes();
+      baseDate.setMinutes(m >= 30 ? 60 : 30, 0, 0);
+    }
+
+    const endDate = new Date(baseDate.getTime() + 60 * 60 * 1000); // 1 hora después
+
+    if (fIni) fIni.value = getLocalDateStr(baseDate);
+    if (hIni) hIni.value = getLocalTimeStr(baseDate);
+    if (fFin) fFin.value = getLocalDateStr(endDate);
+    if (hFin) hFin.value = getLocalTimeStr(endDate);
+
+    selectGcalColor('');
+  }
+
+  modal.classList.remove('hidden');
+  setTimeout(() => { if (inpTitulo) inpTitulo.focus(); }, 80);
+}
+
+function cerrarModalGcalEvento() {
+  const modal = document.getElementById('modal-gcal-evento');
+  if (modal) modal.classList.add('hidden');
+}
+
+function abrirModalDetalleEventoGoogle(evOrFcEvent) {
+  const modal = document.getElementById('modal-gcal-detalle');
+  if (!modal) return;
+
+  let rawEv = null;
+  const rawId = evOrFcEvent?.extendedProps?.rawEventId || evOrFcEvent?.id;
+  if (rawId && Array.isArray(globalGoogleEvents)) {
+    rawEv = globalGoogleEvents.find(e => e.id === rawId || `${e.id}_0` === rawId);
+  }
+  if (!rawEv && evOrFcEvent?.start) {
+    rawEv = evOrFcEvent;
+  }
+  if (!rawEv) return;
+
+  window.currentGcalDetailEvent = rawEv;
+
+  const barColor = document.getElementById('gcal-det-color-bar');
+  const calBadge = document.getElementById('gcal-det-cal-badge');
+  const alldayBadge = document.getElementById('gcal-det-allday-badge');
+  const tituloEl = document.getElementById('gcal-det-titulo');
+  const fechaHoraEl = document.getElementById('gcal-det-fechahora');
+  const ubicWrap = document.getElementById('gcal-det-ubicacion-wrap');
+  const ubicEl = document.getElementById('gcal-det-ubicacion');
+  const descWrap = document.getElementById('gcal-det-descripcion-wrap');
+  const descEl = document.getElementById('gcal-det-descripcion');
+  const linkEl = document.getElementById('gcal-det-link');
+  const btnEdit = document.getElementById('gcal-det-btn-editar');
+  const btnDel = document.getElementById('gcal-det-btn-eliminar');
+  const readonlyNote = document.getElementById('gcal-det-readonly-note');
+
+  const color = rawEv._calColor || '#db2777';
+  if (barColor) barColor.style.backgroundColor = color;
+
+  if (calBadge) {
+    calBadge.textContent = rawEv._calSummary || 'Google Calendar';
+    calBadge.style.borderColor = color + '55';
+    calBadge.style.color = color;
+  }
+
+  if (tituloEl) tituloEl.textContent = rawEv.summary || '(Sin título)';
+
+  const isAllDay = !rawEv.start.dateTime;
+  if (alldayBadge) {
+    if (isAllDay) alldayBadge.classList.remove('hidden');
+    else alldayBadge.classList.add('hidden');
+  }
+
+  if (fechaHoraEl) {
+    if (isAllDay) {
+      const sDate = rawEv.start.date;
+      const sParts = sDate.split('-').map(Number);
+      const dObj = new Date(sParts[0], sParts[1] - 1, sParts[2]);
+      const diaTexto = dObj.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      fechaHoraEl.textContent = diaTexto.charAt(0).toUpperCase() + diaTexto.slice(1) + ' · Todo el día';
+    } else {
+      const dStart = new Date(rawEv.start.dateTime);
+      const dEnd = new Date(rawEv.end ? rawEv.end.dateTime : rawEv.start.dateTime);
+      const diaTexto = dStart.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' });
+      const hIni = dStart.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+      const hFin = dEnd.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+      fechaHoraEl.textContent = `${diaTexto.charAt(0).toUpperCase() + diaTexto.slice(1)} · ${hIni} - ${hFin} hs`;
+    }
+  }
+
+  if (ubicWrap && ubicEl) {
+    if (rawEv.location && rawEv.location.trim()) {
+      ubicEl.textContent = rawEv.location;
+      ubicWrap.classList.remove('hidden');
+    } else {
+      ubicWrap.classList.add('hidden');
+    }
+  }
+
+  if (descWrap && descEl) {
+    if (rawEv.description && rawEv.description.trim()) {
+      descEl.textContent = rawEv.description;
+      descWrap.classList.remove('hidden');
+    } else {
+      descWrap.classList.add('hidden');
+    }
+  }
+
+  if (linkEl) {
+    if (rawEv.htmlLink) {
+      linkEl.href = rawEv.htmlLink;
+      linkEl.classList.remove('hidden');
+    } else {
+      linkEl.classList.add('hidden');
+    }
+  }
+
+  // Verificación de permisos de escritura
+  const isReader = rawEv._calAccessRole === 'reader' || rawEv._calAccessRole === 'freeBusyReader';
+  if (isReader) {
+    if (btnEdit) btnEdit.classList.add('hidden');
+    if (btnDel) btnDel.classList.add('hidden');
+    if (readonlyNote) readonlyNote.classList.remove('hidden');
+  } else {
+    if (btnEdit) btnEdit.classList.remove('hidden');
+    if (btnDel) btnDel.classList.remove('hidden');
+    if (readonlyNote) readonlyNote.classList.add('hidden');
+  }
+
+  modal.classList.remove('hidden');
+}
+
+function cerrarModalGcalDetalle() {
+  const modal = document.getElementById('modal-gcal-detalle');
+  if (modal) modal.classList.add('hidden');
+}
+
+function editarEventoActualGcal() {
+  const ev = window.currentGcalDetailEvent;
+  if (!ev) return;
+  cerrarModalGcalDetalle();
+  abrirModalCrearEventoGoogle(null, ev);
+}
+
+async function eliminarEventoActualGcal() {
+  const ev = window.currentGcalDetailEvent;
+  if (!ev) return;
+
+  const titulo = ev.summary || 'este evento';
+  if (!confirm(`¿Eliminar "${titulo}" de Google Calendar?`)) {
+    return;
+  }
+
+  const btnDel = document.getElementById('gcal-det-btn-eliminar');
+  if (btnDel) {
+    btnDel.disabled = true;
+    btnDel.innerHTML = '<i class="fas fa-spinner fa-spin text-xs"></i> <span>Eliminando...</span>';
+  }
+
+  try {
+    await apiGcalDeleteEvent(ev._calId || 'primary', ev.id);
+    cerrarModalGcalDetalle();
+    showToast(`Evento "${titulo}" eliminado`, 'ok');
+    if (typeof fetchGoogleEvents === 'function') {
+      fetchGoogleEvents();
+    }
+  } catch (err) {
+    console.error('Error al eliminar evento de Google:', err);
+    if (err && (err.status === 403 || err.message?.includes('insufficient'))) {
+      showToast('Permisos insuficientes. Reconecta Google para autorizar la eliminación de eventos.', 'error');
+    } else {
+      showToast('Error al eliminar el evento: ' + (err.message || ''), 'error');
+    }
+  } finally {
+    if (btnDel) {
+      btnDel.disabled = false;
+      btnDel.innerHTML = '<i class="fas fa-trash-alt text-[11px]"></i> <span>Eliminar</span>';
+    }
+  }
+}
+
+async function guardarEventoGcal() {
+  const inpTitulo = document.getElementById('gcal-ev-titulo');
+  const titulo = inpTitulo ? inpTitulo.value.trim() : '';
+  if (!titulo) {
+    showToast('Ingresa un título para el evento', 'error');
+    if (inpTitulo) inpTitulo.focus();
+    return;
+  }
+
+  const inpId = document.getElementById('gcal-ev-id');
+  const eventId = inpId ? inpId.value : '';
+  const inpMode = document.getElementById('gcal-ev-edit-mode');
+  const editMode = inpMode ? inpMode.value : 'create';
+  const selCal = document.getElementById('gcal-ev-calendario');
+  const calId = selCal ? selCal.value || 'primary' : 'primary';
+
+  const chkAllDay = document.getElementById('gcal-ev-allday');
+  const isAllDay = chkAllDay ? chkAllDay.checked : false;
+
+  const fIni = document.getElementById('gcal-ev-fecha-inicio')?.value;
+  let fFin = document.getElementById('gcal-ev-fecha-fin')?.value;
+  const hIni = document.getElementById('gcal-ev-hora-inicio')?.value || '10:00';
+  let hFin = document.getElementById('gcal-ev-hora-fin')?.value || '11:00';
+
+  if (!fIni) {
+    showToast('Selecciona una fecha de inicio', 'error');
+    return;
+  }
+  if (!fFin) fFin = fIni;
+
+  const colorId = document.getElementById('gcal-ev-color-id')?.value || undefined;
+  const ubicacion = document.getElementById('gcal-ev-ubicacion')?.value.trim() || undefined;
+  const descripcion = document.getElementById('gcal-ev-descripcion')?.value.trim() || undefined;
+
+  let resource = {
+    summary: titulo,
+    description: descripcion,
+    location: ubicacion,
+    colorId: colorId || undefined
+  };
+
+  if (isAllDay) {
+    resource.start = { date: fIni };
+    // Google Calendar all-day end.date es exclusivo (no inclusivo): sumamos 1 día
+    resource.end = { date: addDaysToDateStr(fFin, 1) };
+  } else {
+    const dStart = new Date(`${fIni}T${hIni}:00`);
+    let dEnd = new Date(`${fFin}T${hFin}:00`);
+    if (dEnd <= dStart) {
+      dEnd = new Date(dStart.getTime() + 60 * 60 * 1000);
+    }
+    resource.start = { dateTime: toLocalIsoWithOffsetRFC3339(dStart) };
+    resource.end = { dateTime: toLocalIsoWithOffsetRFC3339(dEnd) };
+  }
+
+  const btnGuardar = document.getElementById('gcal-btn-guardar');
+  const btnGuardarText = document.getElementById('gcal-btn-guardar-text');
+  if (btnGuardar) btnGuardar.disabled = true;
+  if (btnGuardarText) btnGuardarText.textContent = 'Guardando...';
+
+  try {
+    if (editMode === 'edit' && eventId) {
+      await apiGcalPatchEvent(calId, eventId, resource);
+      showToast('Evento actualizado en Google Calendar', 'ok');
+    } else {
+      await apiGcalInsertEvent(calId, resource);
+      showToast('Evento creado en Google Calendar', 'ok');
+    }
+
+    cerrarModalGcalEvento();
+    if (typeof fetchGoogleEvents === 'function') {
+      fetchGoogleEvents();
+    }
+  } catch (err) {
+    console.error('Error al guardar evento en Google Calendar:', err);
+    if (err && (err.status === 403 || err.message?.includes('insufficient'))) {
+      showToast('Permisos insuficientes. Reconecta Google para autorizar la creación de eventos.', 'error');
+    } else {
+      showToast('Error al guardar el evento: ' + (err.message || ''), 'error');
+    }
+  } finally {
+    if (btnGuardar) btnGuardar.disabled = false;
+    if (btnGuardarText) btnGuardarText.textContent = editMode === 'edit' ? 'Guardar Cambios' : 'Guardar Evento';
+  }
+}
+
+// ══════ SERVICIOS DE API DIRECTA DE GOOGLE CALENDAR ══════
+
+async function apiGcalInsertEvent(calId, resource) {
+  const token = (typeof gapi !== 'undefined' && gapi.client) ? gapi.client.getToken() : null;
+  const accessToken = token?.access_token || JSON.parse(localStorage.getItem('gcal_token') || '{}').access_token;
+  if (!accessToken) throw new Error('No hay sesión activa de Google');
+
+  if (typeof gapi !== 'undefined' && gapi.client && gapi.client.calendar && gapi.client.calendar.events) {
+    const res = await gapi.client.calendar.events.insert({
+      calendarId: calId || 'primary',
+      resource: resource
+    });
+    return res.result;
+  } else {
+    const res = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calId || 'primary')}/events`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(resource)
+    });
+    if (!res.ok) {
+      const errJson = await res.json().catch(() => ({}));
+      const err = new Error(errJson.error?.message || 'Error al crear evento');
+      err.status = res.status;
+      err.result = errJson;
+      throw err;
+    }
+    return await res.json();
+  }
+}
+
+async function apiGcalPatchEvent(calId, eventId, resource) {
+  const token = (typeof gapi !== 'undefined' && gapi.client) ? gapi.client.getToken() : null;
+  const accessToken = token?.access_token || JSON.parse(localStorage.getItem('gcal_token') || '{}').access_token;
+  if (!accessToken) throw new Error('No hay sesión activa de Google');
+
+  if (typeof gapi !== 'undefined' && gapi.client && gapi.client.calendar && gapi.client.calendar.events) {
+    const res = await gapi.client.calendar.events.patch({
+      calendarId: calId || 'primary',
+      eventId: eventId,
+      resource: resource
+    });
+    return res.result;
+  } else {
+    const res = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calId || 'primary')}/events/${encodeURIComponent(eventId)}`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(resource)
+    });
+    if (!res.ok) {
+      const errJson = await res.json().catch(() => ({}));
+      const err = new Error(errJson.error?.message || 'Error al actualizar evento');
+      err.status = res.status;
+      err.result = errJson;
+      throw err;
+    }
+    return await res.json();
+  }
+}
+
+async function apiGcalDeleteEvent(calId, eventId) {
+  const token = (typeof gapi !== 'undefined' && gapi.client) ? gapi.client.getToken() : null;
+  const accessToken = token?.access_token || JSON.parse(localStorage.getItem('gcal_token') || '{}').access_token;
+  if (!accessToken) throw new Error('No hay sesión activa de Google');
+
+  if (typeof gapi !== 'undefined' && gapi.client && gapi.client.calendar && gapi.client.calendar.events) {
+    await gapi.client.calendar.events.delete({
+      calendarId: calId || 'primary',
+      eventId: eventId
+    });
+    return true;
+  } else {
+    const res = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calId || 'primary')}/events/${encodeURIComponent(eventId)}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+    if (!res.ok) {
+      const errJson = await res.json().catch(() => ({}));
+      const err = new Error(errJson.error?.message || 'Error al eliminar evento');
+      err.status = res.status;
+      err.result = errJson;
+      throw err;
+    }
+    return true;
   }
 }
 
