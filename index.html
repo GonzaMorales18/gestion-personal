@@ -9374,7 +9374,7 @@ function fillTiposActivo() {
   }
 }
 
-function onMonedaCotizacionChangefunction onMonedaCotizacionChange() {
+function onMonedaCotizacionChange() {
   const esUSD = !!document.getElementById('ah-moneda-usd')?.checked;
   const badge = document.getElementById('ah-moneda-badge');
   const txt   = document.getElementById('ah-precio-moneda-txt');
@@ -9529,7 +9529,7 @@ function onAhTipoChange() {
   }
 }
 
-async function preCargarPrecioEspecialasync function preCargarPrecioEspecial(tipo) {
+async function preCargarPrecioEspecial(tipo) {
   let p = 0;
   if (tipo === 'USD' || isDivisaActivo(tipo)) {
     if (!cotizaciones.USD) await fetchMarketQuotes();
