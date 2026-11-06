@@ -7875,19 +7875,105 @@ function renderModalCotizaciones() {
   const q = marketData.filtroTexto || '';
   let items = [];
 
-  // ONs corporativas reconocidas con datos de emisor
+  // Catálogo de Bonos Soberanos y Subsoberanos más operados
+  const BONOS_DESTACADOS = [
+    // Bonares en Dólares (Ley Argentina)
+    { symbol: 'AL30',  nombre: 'Bonar 2030 (Ley Local)', emisor: 'Gobierno Nacional', tipoBono: 'Soberano ARS', moneda: 'ARS', ref: 81100 },
+    { symbol: 'AL30D', nombre: 'Bonar 2030 USD (Ley Local)', emisor: 'Gobierno Nacional', tipoBono: 'Soberano USD', moneda: 'USD', ref: 51.47 },
+    { symbol: 'AL29',  nombre: 'Bonar 2029 (Ley Local)', emisor: 'Gobierno Nacional', tipoBono: 'Soberano ARS', moneda: 'ARS', ref: 79500 },
+    { symbol: 'AL29D', nombre: 'Bonar 2029 USD (Ley Local)', emisor: 'Gobierno Nacional', tipoBono: 'Soberano USD', moneda: 'USD', ref: 52.80 },
+    { symbol: 'AL35',  nombre: 'Bonar 2035 (Ley Local)', emisor: 'Gobierno Nacional', tipoBono: 'Soberano ARS', moneda: 'ARS', ref: 100200 },
+    { symbol: 'AL35D', nombre: 'Bonar 2035 USD (Ley Local)', emisor: 'Gobierno Nacional', tipoBono: 'Soberano USD', moneda: 'USD', ref: 53.80 },
+    { symbol: 'AE38',  nombre: 'Bonar 2038 (Ley Local)', emisor: 'Gobierno Nacional', tipoBono: 'Soberano ARS', moneda: 'ARS', ref: 105550 },
+    { symbol: 'AE38D', nombre: 'Bonar 2038 USD (Ley Local)', emisor: 'Gobierno Nacional', tipoBono: 'Soberano USD', moneda: 'USD', ref: 58.20 },
+    { symbol: 'AL41',  nombre: 'Bonar 2041 (Ley Local)', emisor: 'Gobierno Nacional', tipoBono: 'Soberano ARS', moneda: 'ARS', ref: 95000 },
+    { symbol: 'AL41D', nombre: 'Bonar 2041 USD (Ley Local)', emisor: 'Gobierno Nacional', tipoBono: 'Soberano USD', moneda: 'USD', ref: 50.10 },
+
+    // Globales en Dólares (Ley Extranjera / NY)
+    { symbol: 'GD30',  nombre: 'Global 2030 (Ley New York)', emisor: 'Gobierno Nacional', tipoBono: 'Global ARS', moneda: 'ARS', ref: 83980 },
+    { symbol: 'GD30D', nombre: 'Global 2030 USD (Ley New York)', emisor: 'Gobierno Nacional', tipoBono: 'Global USD', moneda: 'USD', ref: 53.07 },
+    { symbol: 'GD29',  nombre: 'Global 2029 (Ley New York)', emisor: 'Gobierno Nacional', tipoBono: 'Global ARS', moneda: 'ARS', ref: 81200 },
+    { symbol: 'GD29D', nombre: 'Global 2029 USD (Ley New York)', emisor: 'Gobierno Nacional', tipoBono: 'Global USD', moneda: 'USD', ref: 54.10 },
+    { symbol: 'GD35',  nombre: 'Global 2035 (Ley New York)', emisor: 'Gobierno Nacional', tipoBono: 'Global ARS', moneda: 'ARS', ref: 108010 },
+    { symbol: 'GD35D', nombre: 'Global 2035 USD (Ley New York)', emisor: 'Gobierno Nacional', tipoBono: 'Global USD', moneda: 'USD', ref: 54.50 },
+    { symbol: 'GD38',  nombre: 'Global 2038 (Ley New York)', emisor: 'Gobierno Nacional', tipoBono: 'Global ARS', moneda: 'ARS', ref: 112000 },
+    { symbol: 'GD38D', nombre: 'Global 2038 USD (Ley New York)', emisor: 'Gobierno Nacional', tipoBono: 'Global USD', moneda: 'USD', ref: 62.50 },
+    { symbol: 'GD41',  nombre: 'Global 2041 (Ley New York)', emisor: 'Gobierno Nacional', tipoBono: 'Global ARS', moneda: 'ARS', ref: 98000 },
+    { symbol: 'GD41D', nombre: 'Global 2041 USD (Ley New York)', emisor: 'Gobierno Nacional', tipoBono: 'Global USD', moneda: 'USD', ref: 51.90 },
+    { symbol: 'GD46',  nombre: 'Global 2046 (Ley New York)', emisor: 'Gobierno Nacional', tipoBono: 'Global ARS', moneda: 'ARS', ref: 96000 },
+    { symbol: 'GD46D', nombre: 'Global 2046 USD (Ley New York)', emisor: 'Gobierno Nacional', tipoBono: 'Global USD', moneda: 'USD', ref: 52.00 },
+
+    // Bopreales (Banco Central - BCRA)
+    { symbol: 'BPOD7', nombre: 'Bopreal Serie 1 (2027)', emisor: 'Banco Central (BCRA)', tipoBono: 'Bopreal ARS', moneda: 'ARS', ref: 161740 },
+    { symbol: 'BPOA7', nombre: 'Bopreal Serie 1 - Tira A', emisor: 'Banco Central (BCRA)', tipoBono: 'Bopreal ARS', moneda: 'ARS', ref: 161400 },
+    { symbol: 'BPOB7', nombre: 'Bopreal Serie 1 - Tira B', emisor: 'Banco Central (BCRA)', tipoBono: 'Bopreal ARS', moneda: 'ARS', ref: 158000 },
+    { symbol: 'BPOC7', nombre: 'Bopreal Serie 1 - Tira C', emisor: 'Banco Central (BCRA)', tipoBono: 'Bopreal ARS', moneda: 'ARS', ref: 159500 },
+
+    // Bonos CER (Ajustables por Inflación)
+    { symbol: 'T2X5',  nombre: 'Boncer CER Vto. 2025', emisor: 'Tesoro Nacional', tipoBono: 'Bono CER', moneda: 'ARS', ref: 1550 },
+    { symbol: 'TX26',  nombre: 'Boncer 2.0% Vto. 2026', emisor: 'Tesoro Nacional', tipoBono: 'Bono CER', moneda: 'ARS', ref: 1850 },
+    { symbol: 'TX28',  nombre: 'Boncer 2.25% Vto. 2028', emisor: 'Tesoro Nacional', tipoBono: 'Bono CER', moneda: 'ARS', ref: 1424 },
+    { symbol: 'TX31',  nombre: 'Boncer Vto. 2031', emisor: 'Tesoro Nacional', tipoBono: 'Bono CER', moneda: 'ARS', ref: 980 },
+    { symbol: 'DICP',  nombre: 'Bono Discount CER 2033', emisor: 'Gobierno Nacional', tipoBono: 'Bono CER', moneda: 'ARS', ref: 49385 },
+    { symbol: 'PARP',  nombre: 'Bono Par CER 2038', emisor: 'Gobierno Nacional', tipoBono: 'Bono CER', moneda: 'ARS', ref: 31500 },
+    { symbol: 'CUAP',  nombre: 'Bono Cuasipar CER', emisor: 'Gobierno Nacional', tipoBono: 'Bono CER', moneda: 'ARS', ref: 24500 }
+  ];
+
+  // Catálogo ampliado de Obligaciones Negociables Corporativas
   const ONS_DESTACADAS = [
-    { symbol: 'YMCXO', emisor: 'YPF Clase 16', venc: '2026', refUsd: 1.01 },
-    { symbol: 'YCA6O', emisor: 'YPF Clase 26', venc: '2029', refUsd: 0.99 },
-    { symbol: 'TLC1O', emisor: 'Telecom Clase 1', venc: '2026', refUsd: 1.00 },
-    { symbol: 'TLC5O', emisor: 'Telecom Clase 5', venc: '2027', refUsd: 0.98 },
-    { symbol: 'IRCFO', emisor: 'IRSA Clase 14', venc: '2028', refUsd: 1.02 },
-    { symbol: 'VSC3O', emisor: 'Vista Energy Clase 3', venc: '2027', refUsd: 1.03 },
-    { symbol: 'CS38O', emisor: 'Cresud Clase 38', venc: '2026', refUsd: 1.00 },
-    { symbol: 'MRCAO', emisor: 'Genneia Clase 36', venc: '2027', refUsd: 0.99 },
-    { symbol: 'MGC1O', emisor: 'Pampa Energía Clase 1', venc: '2026', refUsd: 1.01 },
-    { symbol: 'CAC2O', emisor: 'Aluar Clase 2', venc: '2025', refUsd: 1.00 },
-    { symbol: 'CP17O', emisor: 'Capex Clase 17', venc: '2028', refUsd: 0.97 }
+    // YPF
+    { symbol: 'YMCXO', emisor: 'YPF Clase 16 (8.5% 2026)', empresa: 'YPF', moneda: 'USD', ref: 1.01 },
+    { symbol: 'YCA6O', emisor: 'YPF Clase 26 (9.0% 2029)', empresa: 'YPF', moneda: 'USD', ref: 0.99 },
+    { symbol: 'YMCQO', emisor: 'YPF Clase 39 (7.0% 2033)', empresa: 'YPF', moneda: 'USD', ref: 0.96 },
+    { symbol: 'YMCHO', emisor: 'YPF Clase 53 (4.0% 2026)', empresa: 'YPF', moneda: 'USD', ref: 0.98 },
+    { symbol: 'YFC3O', emisor: 'YPF Luz Clase 3 (2026)',   empresa: 'YPF Luz', moneda: 'USD', ref: 1.00 },
+
+    // Pan American Energy (PAE)
+    { symbol: 'PN39O', emisor: 'PAE Clase 9 (8.5% 2032)',   empresa: 'Pan American Energy', moneda: 'USD', ref: 1.02 },
+    { symbol: 'PNDCO', emisor: 'PAE Clase 10 (2027)',       empresa: 'Pan American Energy', moneda: 'USD', ref: 1.01 },
+
+    // Pampa Energía
+    { symbol: 'MGC1O', emisor: 'Pampa Energía Clase 1 (9.5% 2026)', empresa: 'Pampa Energía', moneda: 'USD', ref: 1.02 },
+    { symbol: 'MGCLO', emisor: 'Pampa Energía Clase 12 (7.95% 2031)', empresa: 'Pampa Energía', moneda: 'USD', ref: 1.01 },
+    { symbol: 'MGC3O', emisor: 'Pampa Energía Clase 3 (2028)', empresa: 'Pampa Energía', moneda: 'USD', ref: 1.00 },
+
+    // Telecom Argentina
+    { symbol: 'TLC1O', emisor: 'Telecom Clase 1 (8.0% 2026)', empresa: 'Telecom Argentina', moneda: 'USD', ref: 1.00 },
+    { symbol: 'TLC5O', emisor: 'Telecom Clase 5 (8.5% 2027)', empresa: 'Telecom Argentina', moneda: 'USD', ref: 0.98 },
+    { symbol: 'TLCSO', emisor: 'Telecom Clase 6 (9.5% 2031)', empresa: 'Telecom Argentina', moneda: 'USD', ref: 0.99 },
+
+    // Vista Energy
+    { symbol: 'VSC3O', emisor: 'Vista Energy Clase 3 (9.25% 2027)', empresa: 'Vista Energy', moneda: 'USD', ref: 1.03 },
+    { symbol: 'VSC4O', emisor: 'Vista Energy Clase 4 (8.5% 2029)',  empresa: 'Vista Energy', moneda: 'USD', ref: 1.02 },
+    { symbol: 'VSC2O', emisor: 'Vista Energy Clase 2 (2025)',       empresa: 'Vista Energy', moneda: 'USD', ref: 1.00 },
+
+    // IRSA / Cresud
+    { symbol: 'IRCFO', emisor: 'IRSA Clase 14 (8.75% 2028)', empresa: 'IRSA', moneda: 'USD', ref: 1.02 },
+    { symbol: 'IRCSO', emisor: 'IRSA Clase 17 (8.75% 2031)', empresa: 'IRSA', moneda: 'USD', ref: 1.01 },
+    { symbol: 'CS38O', emisor: 'Cresud Clase 38 (8.0% 2026)', empresa: 'Cresud', moneda: 'USD', ref: 1.00 },
+    { symbol: 'CS42O', emisor: 'Cresud Clase 42 (8.0% 2028)', empresa: 'Cresud', moneda: 'USD', ref: 0.99 },
+
+    // Genneia (Energías Renovables)
+    { symbol: 'MRCAO', emisor: 'Genneia Clase 36 (8.75% 2027)', empresa: 'Genneia', moneda: 'USD', ref: 0.99 },
+    { symbol: 'GNCXO', emisor: 'Genneia Clase 41 (2030)',    empresa: 'Genneia', moneda: 'USD', ref: 0.98 },
+    { symbol: 'GN34O', emisor: 'Genneia Clase 44 (2033)',    empresa: 'Genneia', moneda: 'USD', ref: 0.97 },
+
+    // Transportadora de Gas del Sur (TGS)
+    { symbol: 'TSC3O', emisor: 'TGS Clase 3 (8.5% 2025)',     empresa: 'TGS', moneda: 'USD', ref: 1.00 },
+    { symbol: 'TSCAO', emisor: 'TGS Clase 4 (6.75% 2031)',    empresa: 'TGS', moneda: 'USD', ref: 0.99 },
+
+    // Edenor
+    { symbol: 'DNC2O', emisor: 'Edenor Clase 2 (9.75% 2026)', empresa: 'Edenor', moneda: 'USD', ref: 0.98 },
+    { symbol: 'DNC3O', emisor: 'Edenor Clase 3 (2025)',       empresa: 'Edenor', moneda: 'USD', ref: 1.00 },
+
+    // Aluar / Arcor / Capex / AA2000 / Mastellone / Tecpetrol
+    { symbol: 'CAC2O', emisor: 'Aluar Clase 2 (2025)',        empresa: 'Aluar', moneda: 'USD', ref: 1.00 },
+    { symbol: 'LMS6O', emisor: 'Aluar Clase 6 (2026)',        empresa: 'Aluar', moneda: 'USD', ref: 0.99 },
+    { symbol: 'RCCMO', emisor: 'Arcor Clase 18 (8.25% 2027)', empresa: 'Arcor', moneda: 'USD', ref: 1.03 },
+    { symbol: 'CP17O', emisor: 'Capex Clase 17 (2028)',       empresa: 'Capex', moneda: 'USD', ref: 0.97 },
+    { symbol: 'ARC1O', emisor: 'AA2000 Clase 1 (8.5% 2031)',  empresa: 'Aeropuertos Arg 2000', moneda: 'USD', ref: 1.01 },
+    { symbol: 'MTCGO', emisor: 'Mastellone Hnos (10.95% 2026)', empresa: 'Mastellone', moneda: 'USD', ref: 0.98 },
+    { symbol: 'TTC1O', emisor: 'Tecpetrol Clase 1 (2026)',    empresa: 'Tecpetrol', moneda: 'USD', ref: 1.01 }
   ];
 
   // 1. DIVISAS (Dólares, Euro, Real, etc.)
@@ -8038,19 +8124,48 @@ function renderModalCotizaciones() {
     });
   }
 
-  // 5. BONOS SOBERANOS
+  // 5. BONOS SOBERANOS Y SUBSOBERANOS
   if (tab === 'todos' || tab === 'bonos') {
+    // A) Bonos destacados con nombres oficiales
+    BONOS_DESTACADOS.forEach(b => {
+      if (q && !b.symbol.toLowerCase().includes(q) &&
+               !b.nombre.toLowerCase().includes(q) &&
+               !b.emisor.toLowerCase().includes(q) &&
+               !b.tipoBono.toLowerCase().includes(q)) return;
+
+      const live = marketData.bonds[b.symbol] || cotizaciones.tickers[b.symbol];
+      const p = typeof live === 'object' ? live.c : (parseFloat(live) || b.ref);
+      const pct = typeof live === 'object' ? live.pct_change : null;
+      const vol = typeof live === 'object' ? (live.v || 0) : 0;
+      const esUsd = b.moneda === 'USD';
+
+      items.push({
+        tipo: 'Bonos',
+        moneda: b.moneda,
+        badgeColor: esUsd ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30',
+        symbol: b.symbol,
+        tickerForm: b.symbol,
+        sub: `${b.nombre} · ${b.tipoBono}${vol ? ' · Vol: ' + Math.round(vol).toLocaleString('es-AR') : ''}`,
+        precio: esUsd ? fmtUSD(p) : fmtARS(p),
+        rawPrecio: p,
+        pct: pct,
+        vol: vol
+      });
+    });
+
+    // B) Todos los demás bonos de data912 que no estén en destacados
     Object.values(marketData.bonds || {}).forEach(b => {
       if (!b || !b.symbol) return;
+      if (BONOS_DESTACADOS.some(d => d.symbol === b.symbol)) return;
       if (q && !b.symbol.toLowerCase().includes(q)) return;
       const esUsd = b.symbol.endsWith('D');
       items.push({
         tipo: 'Bonos',
         moneda: esUsd ? 'USD' : 'ARS',
-        badgeColor: 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30',
+        badgeColor: esUsd ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30',
         symbol: b.symbol,
         tickerForm: b.symbol,
-        sub: esUsd ? 'Bono Soberano USD · BYMA' : (b.v ? `Vol: ${Math.round(b.v).toLocaleString('es-AR')} ops · BYMA` : 'Bono Soberano BYMA'),
+        sub: esUsd ? 'Bono Soberano USD · BYMA' : (b.v ? `Vol: ${Math.round(b.v).toLocaleString('es-AR')} ops · BYMA` : 'Bono BYMA'),
         precio: esUsd ? fmtUSD(b.c) : fmtARS(b.c),
         rawPrecio: b.c,
         pct: b.pct_change,
@@ -8061,19 +8176,24 @@ function renderModalCotizaciones() {
 
   // 6. OBLIGACIONES NEGOCIABLES
   if (tab === 'todos' || tab === 'ons') {
+    // A) ONs destacadas de empresas líderes con metadata enriquecida
     ONS_DESTACADAS.forEach(on => {
-      if (q && !on.symbol.toLowerCase().includes(q) && !on.emisor.toLowerCase().includes(q)) return;
+      if (q && !on.symbol.toLowerCase().includes(q) &&
+               !on.emisor.toLowerCase().includes(q) &&
+               !on.empresa.toLowerCase().includes(q)) return;
+
       const live = marketData.notes[on.symbol] || marketData.bonds[on.symbol] || cotizaciones.tickers[on.symbol];
-      const p = typeof live === 'object' ? live.c : (parseFloat(live) || on.refUsd);
+      const p = typeof live === 'object' ? live.c : (parseFloat(live) || on.ref);
       const pct = typeof live === 'object' ? live.pct_change : null;
       const vol = typeof live === 'object' ? (live.v || 0) : 0;
+
       items.push({
         tipo: 'Obligaciones Negociables',
         moneda: 'USD',
         badgeColor: 'bg-sky-500/15 text-sky-300 border-sky-500/30',
         symbol: on.symbol,
         tickerForm: on.symbol,
-        sub: `${on.emisor} · Vencimiento ${on.venc}`,
+        sub: `${on.emisor} · ${on.empresa}${vol ? ' · Vol: ' + Math.round(vol).toLocaleString('es-AR') : ''}`,
         precio: fmtUSD(p),
         rawPrecio: p,
         pct: pct,
@@ -8081,6 +8201,7 @@ function renderModalCotizaciones() {
       });
     });
 
+    // B) Demás ONs de data912 notes que no estén en destacadas
     Object.values(marketData.notes || {}).forEach(n => {
       if (!n || !n.symbol) return;
       if (ONS_DESTACADAS.some(o => o.symbol === n.symbol)) return;
@@ -8100,7 +8221,7 @@ function renderModalCotizaciones() {
     });
   }
 
-  // 7. MI CARTERA
+  // 7. MI CARTERA// 7. MI CARTERA
   if (tab === 'cartera') {
     const posiciones = calcularPosicionesNetas();
     posiciones.forEach(p => {
