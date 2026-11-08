@@ -14739,7 +14739,7 @@ async function fetchGoogleFitness() {
       window.fitnessData.weight.push({ date: currentDay, value: w ? w.value : null });
 
       const sl = sleepByDate.get(dateKey);
-      window.fitnessData.sleep.push({ date: currentDay, value: sl ? Number(sl.toFixed(1)) : 0 });
+      window.fitnessData.sleep.push({ date: currentDay, value: sl ? Number(sl.toFixed(2)) : 0 });
 
       iter.setDate(iter.getDate() + 1);
     }
@@ -14826,6 +14826,22 @@ async function diagnosticoGoogleFit() {
   return filas;
 }
 window.diagnosticoGoogleFit = diagnosticoGoogleFit;
+
+function formatHorasMinutosSimple(valDecimal) {
+  if (valDecimal === null || valDecimal === undefined || isNaN(valDecimal) || Number(valDecimal) <= 0) return '--';
+  const totalMin = Math.round(Number(valDecimal) * 60);
+  const hs = Math.floor(totalMin / 60);
+  const mins = totalMin % 60;
+  return `${hs}:${String(mins).padStart(2, '0')}`;
+}
+
+function formatHorasMinutosTexto(valDecimal) {
+  if (valDecimal === null || valDecimal === undefined || isNaN(valDecimal) || Number(valDecimal) <= 0) return '--';
+  const totalMin = Math.round(Number(valDecimal) * 60);
+  const hs = Math.floor(totalMin / 60);
+  const mins = totalMin % 60;
+  return `${hs}:${String(mins).padStart(2, '0')} hs`;
+}
 
 function renderHealthCard(type, period) {
   if (!window.fitnessData[type] || window.fitnessData[type].length === 0) return;
@@ -15034,7 +15050,12 @@ function renderHealthCard(type, period) {
     }
 
     let diffStr;
-    if (decimals > 0) {
+    if (metricType === 'sleep') {
+      const absDiffMin = Math.round(Math.abs(diff) * 60);
+      const hDiff = Math.floor(absDiffMin / 60);
+      const mDiff = absDiffMin % 60;
+      diffStr = (diff >= 0 ? '+' : '-') + `${hDiff}:${String(mDiff).padStart(2, '0')}` + suffix;
+    } else if (decimals > 0) {
       const formattedDiff = Math.abs(diff).toLocaleString('es-ES', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
       diffStr = (diff >= 0 ? '+' : '-') + formattedDiff + suffix;
     } else {
@@ -15091,7 +15112,7 @@ function renderHealthCard(type, period) {
     const txt = aggregatedValue > 0 ? Math.floor(aggregatedValue).toLocaleString('es-ES') : '--';
     if (valEl) valEl.textContent = txt;
   } else if (type === 'sleep') {
-    const txt = aggregatedValue > 0 ? aggregatedValue.toFixed(1) : '--';
+    const txt = aggregatedValue > 0 ? formatHorasMinutosSimple(aggregatedValue) : '--';
     if (valEl) valEl.textContent = txt;
   }
 
@@ -15127,7 +15148,7 @@ function renderHealthCard(type, period) {
     } else if (type === 'calories' || type === 'activeMinutes') {
       valElInicio.textContent = hoyAggValue > 0 ? Math.floor(hoyAggValue).toLocaleString('es-ES') : '--';
     } else if (type === 'sleep') {
-      valElInicio.textContent = hoyAggValue > 0 ? hoyAggValue.toFixed(1) : '--';
+      valElInicio.textContent = hoyAggValue > 0 ? formatHorasMinutosSimple(hoyAggValue) : '--';
     }
   }
 
@@ -15195,7 +15216,7 @@ function renderHealthTable(type, period, filtered, labels, values) {
     if (type === 'weight') return Number(raw).toFixed(1) + ' kg';
     if (type === 'calories') return Math.floor(raw).toLocaleString('es-ES') + ' kcal';
     if (type === 'activeMinutes') return Math.floor(raw).toLocaleString('es-ES') + ' min';
-    if (type === 'sleep') return Number(raw).toFixed(1) + ' hs';
+    if (type === 'sleep') return formatHorasMinutosTexto(raw);
     return raw;
   };
 
@@ -15338,7 +15359,7 @@ function drawHealthChart(type, labels, data, startPhysChangeIndex = -1) {
               if (type === 'weight') return val.toFixed(1) + ' kg';
               if (type === 'calories') return Math.floor(val).toLocaleString('es-ES') + ' kcal';
               if (type === 'activeMinutes') return Math.floor(val).toLocaleString('es-ES') + ' min';
-              if (type === 'sleep') return val.toFixed(1) + ' hs';
+              if (type === 'sleep') return formatHorasMinutosTexto(val);
             }
           }
         }
