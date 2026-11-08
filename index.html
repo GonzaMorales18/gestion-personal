@@ -2407,88 +2407,92 @@
 
           <!-- Formulario: Nuevo Activo / Compra -->
         <div id="ahorrosFormContainer">
-          <form id="ahorrosForm" class="p-6 space-y-4">
+          <form id="ahorrosForm" class="p-5 space-y-3">
 
             <!-- Opción C: Comprar más de activo existente -->
-            <div class="space-y-1.5 pb-5 mb-2 border-b border-slate-700/60">
+            <div class="space-y-1 pb-3 mb-1 border-b border-slate-700/60">
               <label class="text-[10px] font-bold text-white uppercase ml-1">Activo Existente</label>
-              <select id="compra-activo-existente" onchange="onCompraActivoExistenteChange()" class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-sm text-white font-bold">
+              <select id="compra-activo-existente" onchange="onCompraActivoExistenteChange()" class="w-full h-10 px-3 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-xs text-white font-bold">
                 <option value="">— Seleccioná un activo o cargá uno nuevo abajo —</option>
               </select>
             </div>
 
-            <div class="space-y-1.5">
+            <div class="space-y-1">
               <label class="text-[10px] font-bold text-white uppercase ml-1">Tipo de Activo a comprar</label>
-              <select id="ah-tipo" onchange="onAhTipoChange()" class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-sm text-white font-bold">
+              <select id="ah-tipo" onchange="onAhTipoChange()" class="w-full h-10 px-3 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-xs text-white font-bold">
                 <option value="">— Seleccioná —</option>
               </select>
             </div>
 
-            <div id="ah-ticker-group" class="space-y-1.5">
+            <div id="ah-ticker-group" class="space-y-1">
               <label id="ah-ticker-label" class="text-[10px] font-bold text-white uppercase ml-1">
                 Ticker / Símbolo <span id="ah-ticker-hint" class="text-slate-500 font-normal">(ej: KO, AAPL, USD, BTC)</span>
               </label>
               <div class="flex gap-2">
                 <input type="text" id="ah-ticker" placeholder="Ej: KO, USD, BTC" oninput="resetTickerStatus()"
-                       class="flex-1 h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-sm text-white uppercase font-bold tracking-widest">
+                       class="flex-1 h-10 px-3 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-xs text-white uppercase font-bold tracking-widest">
                 <button type="button" onclick="buscarTicker()" id="btn-buscar-ticker" title="Buscar cotización"
-                        class="h-11 px-4 bg-black text-white rounded-xl text-[11px] font-bold uppercase hover:bg-violet-600 transition-colors">
+                        class="h-10 px-3.5 bg-black text-white rounded-xl text-[11px] font-bold uppercase hover:bg-violet-600 transition-colors">
                   <i class="fas fa-search"></i>
                 </button>
               </div>
-              <p id="ah-ticker-status" class="text-[11px] mono px-1 text-slate-400"></p>
+              <p id="ah-ticker-status" class="text-[10px] mono px-1 text-slate-400"></p>
             </div>
 
-            <div class="space-y-1.5">
-              <label class="text-[10px] font-bold text-white uppercase ml-1 flex items-center justify-between">
-                <span>Plataforma</span>
-                <span class="text-[9px] text-slate-500 font-normal">Broker / Exchange / Banco</span>
-              </label>
-              <input type="text" id="ah-plataforma" list="ah-plataforma-list"
-                     placeholder="Ej: Balanz, IOL, Binance o nueva..."
-                     class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-sm text-white font-bold">
-              <datalist id="ah-plataforma-list"></datalist>
-            </div>
-
-            <!-- Selector de Moneda de Cotización (ARS vs USD) -->
-            <div class="p-3 bg-slate-900 border border-slate-700/80 rounded-xl flex items-center justify-between">
-              <div class="flex items-center gap-2.5">
-                <input type="checkbox" id="ah-moneda-usd" onchange="onMonedaCotizacionChange()"
-                       class="w-4 h-4 rounded bg-slate-800 border-slate-600 text-emerald-500 focus:ring-emerald-500/30 cursor-pointer">
-                <label for="ah-moneda-usd" class="text-xs font-bold text-white cursor-pointer select-none flex items-center gap-1.5">
-                  <span>Cotiza en Dólares (USD)</span>
-                  <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-black mono">U$S</span>
+            <!-- Fila: Plataforma (mitad) + Cotiza en USD (mitad, sin recuadro con tilde) -->
+            <div class="grid grid-cols-2 gap-3 items-end">
+              <div class="space-y-1">
+                <label class="text-[10px] font-bold text-white uppercase ml-1 flex items-center justify-between">
+                  <span>Plataforma</span>
+                  <span class="text-[9px] text-slate-500 font-normal truncate">Broker / Banco</span>
                 </label>
+                <input type="text" id="ah-plataforma" list="ah-plataforma-list"
+                       placeholder="Balanz, IOL..."
+                       class="w-full h-10 px-3 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-xs text-white font-bold">
+                <datalist id="ah-plataforma-list"></datalist>
               </div>
-              <span id="ah-moneda-badge" class="text-[10px] font-bold mono text-slate-400">Precio en ARS</span>
+
+              <!-- Selector Cotiza en USD (sin recuadro) -->
+              <div class="h-10 flex items-center justify-between px-1 pb-1">
+                <label class="flex items-center gap-2 cursor-pointer select-none text-xs font-bold text-white hover:text-emerald-300 transition-colors">
+                  <input type="checkbox" id="ah-moneda-usd" onchange="onMonedaCotizacionChange()"
+                         class="w-4 h-4 rounded bg-slate-800 border-slate-600 text-emerald-500 focus:ring-emerald-500/30 cursor-pointer accent-emerald-500">
+                  <span class="text-[11px]">Cotiza en USD</span>
+                </label>
+                <span id="ah-moneda-badge" class="text-[9px] font-bold mono text-slate-400">ARS</span>
+              </div>
             </div>
 
-            <div class="space-y-1.5">
-              <label class="text-[10px] font-bold text-white uppercase ml-1">Cantidad comprada</label>
-              <input type="number" id="ah-cantidad" placeholder="0" step="any" min="0" oninput="calcularInversionPreview()"
-                     class="w-full h-14 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-2xl font-black text-white mono">
-            </div>
-
-            <div id="ah-precio-group" class="space-y-1.5" style="display:block">
-              <label id="ah-precio-label" class="text-[10px] font-bold text-white uppercase ml-1">
-                Precio de compra <span id="ah-precio-moneda-txt" class="text-slate-500">(ARS por unidad)</span>
-              </label>
-              <div class="relative">
-                <span id="ah-precio-simbolo" class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-400 mono">$</span>
-                <input type="number" id="ah-precio-manual" placeholder="0.00" step="any" min="0" oninput="calcularInversionPreview()"
-                       class="w-full h-12 pl-8 pr-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-xl font-black text-white mono">
+            <!-- Fila: Cantidad comprada (mitad) + Precio de compra (mitad) -->
+            <div class="grid grid-cols-2 gap-3">
+              <div class="space-y-1">
+                <label class="text-[10px] font-bold text-white uppercase ml-1">Cantidad</label>
+                <input type="number" id="ah-cantidad" placeholder="0" step="any" min="0" oninput="calcularInversionPreview()"
+                       class="w-full h-11 px-3 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-base font-black text-white mono">
               </div>
-              <p id="ah-precio-hint" class="text-[10px] text-slate-400 px-1">Podés editar el precio al que compraste en pesos.</p>
+
+              <div id="ah-precio-group" class="space-y-1" style="display:block">
+                <label id="ah-precio-label" class="text-[10px] font-bold text-white uppercase ml-1 flex items-center justify-between">
+                  <span>Precio compra</span>
+                  <span id="ah-precio-moneda-txt" class="text-[9px] text-slate-500 font-normal truncate">(ARS/u)</span>
+                </label>
+                <div class="relative">
+                  <span id="ah-precio-simbolo" class="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400 mono text-xs">$</span>
+                  <input type="number" id="ah-precio-manual" placeholder="0.00" step="any" min="0" oninput="calcularInversionPreview()"
+                         class="w-full h-11 pl-7 pr-3 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-base font-black text-white mono">
+                </div>
+                <p id="ah-precio-hint" class="hidden"></p>
+              </div>
             </div>
 
             <!-- Preview Inversión en tiempo real -->
-            <div id="compra-pnl-preview" class="hidden rounded-xl p-3 border border-green-900/60 bg-green-900/20 text-center">
-              <p class="text-[9px] font-bold uppercase tracking-widest text-green-400/70 mb-1">Total a Invertir</p>
-              <p id="compra-pnl-valor" class="text-lg font-black mono text-green-400">$0</p>
+            <div id="compra-pnl-preview" class="hidden rounded-xl p-2.5 border border-green-900/60 bg-green-900/20 text-center">
+              <p class="text-[9px] font-bold uppercase tracking-widest text-green-400/70 mb-0.5">Total a Invertir</p>
+              <p id="compra-pnl-valor" class="text-base font-black mono text-green-400">$0</p>
             </div>
 
             <button type="submit" id="btn-guardar-ahorro"
-                    class="w-full bg-green-600 hover:opacity-90 text-white font-black py-4 rounded-xl border border-white/20 active:scale-95 transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-widest mt-2">
+                    class="w-full bg-green-600 hover:opacity-90 text-white font-black py-3 rounded-xl border border-white/20 active:scale-95 transition-all flex items-center justify-center gap-2 text-xs uppercase tracking-widest mt-1">
               <i class="fas fa-save"></i><span>Registrar Inversión</span>
             </button>
           </form>
@@ -9744,26 +9748,26 @@ function onMonedaCotizacionChange() {
   const hint  = document.getElementById('ah-precio-hint');
 
   if (esUSD) {
-    if (badge) badge.innerHTML = '<span class="text-emerald-400 font-bold">Precio en U$S</span>';
-    if (txt)   txt.innerHTML   = '<span class="text-emerald-400 font-bold">(USD por unidad)</span>';
+    if (badge) badge.innerHTML = '<span class="text-emerald-400 font-bold">U$S</span>';
+    if (txt)   txt.innerHTML   = '<span class="text-emerald-400 font-bold">(USD/u)</span>';
     if (sim) {
       sim.textContent = 'U$S';
-      sim.className   = 'absolute left-3.5 top-1/2 -translate-y-1/2 font-bold text-emerald-400 mono text-xs';
+      sim.className   = 'absolute left-2.5 top-1/2 -translate-y-1/2 font-bold text-emerald-400 mono text-xs';
     }
     if (inp) {
-      inp.className   = 'w-full h-12 pl-12 pr-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-xl font-black text-white mono';
+      inp.className   = 'w-full h-11 pl-10 pr-3 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-base font-black text-white mono';
       inp.placeholder = '1.00';
     }
     if (hint)  hint.textContent = 'Precio unitario en dólares estadounidenses.';
   } else {
-    if (badge) badge.textContent = 'Precio en ARS';
-    if (txt)   txt.textContent   = '(ARS por unidad)';
+    if (badge) badge.textContent = 'ARS';
+    if (txt)   txt.textContent   = '(ARS/u)';
     if (sim) {
       sim.textContent = '$';
-      sim.className   = 'absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-400 mono';
+      sim.className   = 'absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400 mono text-xs';
     }
     if (inp) {
-      inp.className   = 'w-full h-12 pl-8 pr-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-xl font-black text-white mono';
+      inp.className   = 'w-full h-11 pl-7 pr-3 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-base font-black text-white mono';
       inp.placeholder = '0.00';
     }
     if (hint)  hint.textContent = 'Podés editar el precio al que compraste en pesos.';
