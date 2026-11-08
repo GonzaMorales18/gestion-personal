@@ -9190,7 +9190,7 @@ function renderTablaAhorros() {
     tfoot.classList.add('hidden');
     document.getElementById('ah-total-ars').textContent = '$0';
     document.getElementById('ah-total-usd').textContent = 'U$S 0.00';
-    document.getElementById('ah-ars-sub').textContent = '0 activos en cartera';
+    document.getElementById('ah-ars-sub').textContent = 'Sin inversiones';
     document.getElementById('ah-usd-sub').textContent = 'Sin inversiones';
     const elIntArs = document.getElementById('ah-interes-anual-val');
     if (elIntArs) elIntArs.textContent = '0.0% anual';
@@ -9452,9 +9452,9 @@ function renderTablaAhorros() {
   document.getElementById('ah-total-ars').textContent = '$' + Math.round(totalARS).toLocaleString('es-AR');
   document.getElementById('ah-total-usd').textContent = 'U$S ' + totalUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-  const n = posiciones.length;
-  document.getElementById('ah-ars-sub').innerHTML = `${n} activo${n !== 1 ? 's' : ''} · <span class="${colorClsARS} mono font-bold">${diffStrARS} (${pctStrARS} ARS)</span>`;
-  document.getElementById('ah-usd-sub').innerHTML = `${n} activo${n !== 1 ? 's' : ''} · <span class="${colorClsUSD} mono font-bold">${diffStrUSD} (${pctStrUSD} USD)</span>`;
+
+  document.getElementById('ah-ars-sub').innerHTML = `<span class="${colorClsARS} mono font-bold">${diffStrARS} (${pctStrARS})</span>`;
+  document.getElementById('ah-usd-sub').innerHTML = `<span class="${colorClsUSD} mono font-bold">${diffStrUSD} (${pctStrUSD})</span>`;
 
   // Interés anual en tarjetas de Inversiones (diferenciado por moneda)
   const elIntArs = document.getElementById('ah-interes-anual-val');
