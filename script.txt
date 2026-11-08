@@ -185,7 +185,7 @@ function doPost(e) {
       data.descripcion  || '',
       data.cantidad     || 0,
       data.precio       || 0,
-      data.precioCompra || 0,
+      data.precioUSD != null ? data.precioUSD : (data.precioCompra != null ? data.precioCompra : 0),
       data.totalARS     || 0,
       data.pnl          || 0,
       data.moneda       || 'ARS'
@@ -238,7 +238,7 @@ function doPost(e) {
           sheet.getRange(rowNum, 5).setValue(nvo.descripcion || ant.descripcion || '');
           sheet.getRange(rowNum, 6).setValue(nvo.cantidad    || ant.cantidad);
           sheet.getRange(rowNum, 7).setValue(nvo.precio      || ant.precio);
-          sheet.getRange(rowNum, 8).setValue(nvo.precioCompra != null ? nvo.precioCompra : rows[i][7]);
+          sheet.getRange(rowNum, 8).setValue(nvo.precioUSD != null ? nvo.precioUSD : (nvo.precioCompra != null ? nvo.precioCompra : rows[i][7]));
           sheet.getRange(rowNum, 9).setValue(nvo.totalARS    || (nvo.cantidad * nvo.precio));
           sheet.getRange(rowNum, 10).setValue(nvo.pnl != null ? nvo.pnl : rows[i][9]);
           sheet.getRange(rowNum, 11).setValue(nvo.moneda || ant.moneda || 'ARS');

@@ -8863,7 +8863,11 @@ function calcularPosicionesNetas() {
         if (!opARS) {
           opARS = nuevaCant * nuevoPrecio;
         }
-        opUSD = usdRate > 0 ? (opARS / usdRate) : 0;
+        if (op.precioUSD && op.precioUSD > 0) {
+          opUSD = nuevaCant * op.precioUSD;
+        } else {
+          opUSD = usdRate > 0 ? (opARS / usdRate) : 0;
+        }
       }
 
       activo.costoTotalARS = (activo.costoTotalARS || 0) + opARS;
@@ -9912,6 +9916,7 @@ function calcularInversionPreview() {
 
   const esUSD = !!document.getElementById('ah-moneda-usd')?.checked;
   const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
+  const dolarOficial = cotizaciones.USD || cotizaciones.USD_MEP || 1;
 
   preview.classList.remove('hidden');
   if (esUSD) {
@@ -9919,8 +9924,10 @@ function calcularInversionPreview() {
     const totalARS = totalUSD * usdRate;
     valorEl.innerHTML = `U$S ${totalUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span class="text-xs text-slate-400 block font-normal mt-0.5">≈ $${Math.round(totalARS).toLocaleString('es-AR')} ARS (TC: $${Math.round(usdRate).toLocaleString('es-AR')})</span>`;
   } else {
-    const total = cant * precio;
-    valorEl.textContent = '$' + Math.round(total).toLocaleString('es-AR');
+    const totalARS = cant * precio;
+    const precioUSDOficial = dolarOficial > 0 ? (precio / dolarOficial) : 0;
+    const totalUSDOficial = cant * precioUSDOficial;
+    valorEl.innerHTML = `$${Math.round(totalARS).toLocaleString('es-AR')} <span class="text-xs text-slate-400 block font-normal mt-0.5">≈ U$S ${totalUSDOficial.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (USD Oficial: $${Math.round(dolarOficial).toLocaleString('es-AR')})</span>`;
   }
 }
 
@@ -10014,15 +10021,54 @@ document.getElementById('ahorrosForm').addEventListener('submit', async e => {
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i><span>Guardando...</span>';
 
+  // Obtener cotización Dólar Oficial asegurada
+  let dolarOficial = cotizaciones.USD;
+  if (!dolarOficial || dolarOficial <= 0) {
+    try {
+      const r = await fetch('https://dolarapi.com/v1/dolares/oficial');
+      const d = await r.json();
+      dolarOficial = parseFloat(d.venta);
+      if (dolarOficial) cotizaciones.USD = dolarOficial;
+    } catch { /* fallback */ }
+  }
+  if (!dolarOficial || dolarOficial <= 0) {
+    dolarOficial = cotizaciones.USD_MEP || 1;
+  }
+
   const descripcionFinal = plataforma || ticker || tipo;
   const esUSD = !!document.getElementById('ah-moneda-usd')?.checked;
-  const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
-  const totalARS = esUSD ? (cant * precioActual * usdRate) : (cant * precioActual);
+  const usdRate = cotizaciones.USD_MEP || dolarOficial || 1;
 
+  let precioARS = 0;
+  let precioUSD = 0;
+  let totalARS  = 0;
+
+  if (esUSD) {
+    precioUSD = precioActual;
+    precioARS = Number((precioActual * dolarOficial).toFixed(2));
+    totalARS  = cant * precioActual * usdRate;
+  } else {
+    precioARS = precioActual;
+    precioUSD = Number((precioActual / dolarOficial).toFixed(4));
+    totalARS  = cant * precioActual;
+  }
+
+  // Columna G: Precio en ARS (op.precio)
+  // Columna H: Precio en USD calculado por Dólar Oficial (op.precioCompra / op.precioUSD)
   const opCompra = {
-    fecha: new Date().toISOString(), operacion: 'Compra', tipo, ticker,
-    descripcion: descripcionFinal, plataforma: descripcionFinal, cantidad: cant, precio: precioActual,
-    precioCompra: precioActual, totalARS, pnl: 0, moneda: esUSD ? 'USD' : 'ARS'
+    fecha: new Date().toISOString(),
+    operacion: 'Compra',
+    tipo,
+    ticker,
+    descripcion: descripcionFinal,
+    plataforma: descripcionFinal,
+    cantidad: cant,
+    precio: precioARS,
+    precioCompra: precioUSD,
+    precioUSD: precioUSD,
+    totalARS,
+    pnl: 0,
+    moneda: esUSD ? 'USD' : 'ARS'
   };
 
   try {
@@ -10238,6 +10284,18 @@ async function cargarOperacionesSheet() {
         moneda = 'USD';
       }
 
+      // Si es Compra y precioCompra difiere de precio (o precio > 50), calcular/usar precioUSD oficial
+      let precioUSD = 0;
+      if (r[1] === 'Compra' || !r[1]) {
+        if (precioCompra > 0 && Math.abs(precioCompra - precio) > 0.01) {
+          precioUSD = precioCompra;
+        } else if (precioCompra > 0 && precio > 50) {
+          // Fila histórica previa donde ambas columnas tenían el precio en ARS
+          const dOf = cotizaciones.USD || cotizaciones.USD_MEP || 1;
+          precioUSD = dOf > 0 ? Number((precio / dOf).toFixed(4)) : 0;
+        }
+      }
+
       return {
         fecha:        r[0] || '',
         operacion:    r[1] || 'Compra',
@@ -10248,6 +10306,7 @@ async function cargarOperacionesSheet() {
         cantidad:     cant,
         precio,
         precioCompra,
+        precioUSD,
         totalARS,
         pnl,
         moneda
@@ -10324,13 +10383,18 @@ function renderTablaOperaciones() {
     const badgeMon   = op.moneda === 'USD' ? '<span class="ml-1 px-1 py-0.2 bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 rounded text-[8px] font-black mono">USD</span>' : '';
     const tickerBadge = op.ticker ? `<span class="ml-1.5 px-1.5 py-0.5 bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 rounded text-[9px] font-black mono">${op.ticker.toUpperCase()}</span>${badgeMon}` : (badgeMon);
     const precioStr  = op.moneda === 'USD' ? ('U$S ' + op.precio.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })) : fmt(op.precio);
+    const pUSD = op.precioUSD || (op.operacion === 'Compra' && op.precioCompra > 0 && Math.abs(op.precioCompra - op.precio) > 0.01 ? op.precioCompra : 0);
+    const pUSDFmt = pUSD > 0 ? `U$S ${pUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}` : '';
     return `
       <tr class="table-row border-b border-slate-800 fade-row" style="animation-delay:${i*0.03}s">
         <td class="px-2.5 py-2.5 text-xs text-slate-400 mono whitespace-nowrap">${fechaStr}</td>
         <td class="px-2 py-2.5 text-xs whitespace-nowrap">${opBadge}</td>
         <td class="px-2.5 py-2.5 text-xs text-slate-200 font-bold"><div class="flex flex-col"><span class="flex items-center"><span class="mr-1">${icon}</span>${nombreAct}${tickerBadge}</span>${platBadge}</div></td>
         <td class="px-2.5 py-2.5 text-xs text-right mono text-slate-300 font-semibold whitespace-nowrap">${op.cantidad.toLocaleString('es-AR', {maximumFractionDigits:8})}</td>
-        <td class="px-2.5 py-2.5 text-xs text-right mono text-slate-400 whitespace-nowrap">${precioStr}</td>
+        <td class="px-2.5 py-2.5 text-xs text-right mono whitespace-nowrap">
+          <div class="font-bold text-slate-300">${precioStr}</div>
+          ${pUSDFmt ? `<div class="text-[9px] text-emerald-400/80 font-bold mono">${pUSDFmt}</div>` : ''}
+        </td>
         <td class="px-2.5 py-2.5 text-xs text-right mono font-black text-white whitespace-nowrap">${fmt(op.totalARS)}</td>
         <td class="px-2.5 py-2.5 text-xs text-right whitespace-nowrap">${pnlCell}</td>
         <td class="px-2 py-2.5 text-xs text-center whitespace-nowrap">
@@ -10493,9 +10557,13 @@ async function guardarEdicionOperacion() {
   ) : 0;
 
   const anterior = { ...operacionesData[pendingEditOpIdx] };
+  const dOficial = cotizaciones.USD || cotizaciones.USD_MEP || 1;
+  const precioUSDCalc = operacion === 'Compra' ? (esUSD ? precio : (dOficial > 0 ? Number((precio / dOficial).toFixed(4)) : precioComp)) : (precioComp || 0);
+
   operacionesData[pendingEditOpIdx] = {
     ...anterior, fecha: fechaISO, operacion, descripcion, plataforma: descripcion,
-    cantidad, precio, precioCompra: precioComp, totalARS, pnl, moneda: esUSD ? 'USD' : 'ARS'
+    cantidad, precio, precioCompra: (precioComp > 0 && Math.abs(precioComp - precio) > 0.01) ? precioComp : precioUSDCalc,
+    precioUSD: precioUSDCalc, totalARS, pnl, moneda: esUSD ? 'USD' : 'ARS'
   };
 
   cerrarModalEditarOp();
