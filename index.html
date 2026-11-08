@@ -14311,6 +14311,11 @@ function setActividadFiltro(period) {
 
 function restaurarCacheFitness() {
   try {
+    if (localStorage.getItem('gp_fitness_cache_v') !== '2') {
+      localStorage.removeItem('gp_fitness_cache');
+      localStorage.setItem('gp_fitness_cache_v', '2');
+      return;
+    }
     if (window.fitnessData && window.fitnessData.steps && window.fitnessData.steps.length > 0) return;
     const raw = localStorage.getItem('gp_fitness_cache');
     if (!raw) return;
@@ -14578,6 +14583,8 @@ async function fetchGoogleFitness() {
       let sleepPageToken = '';
       const startIso = new Date(startOfToday.getTime() - (360 * 86400000)).toISOString();
       const endIso = new Date(endOfToday).toISOString();
+      const rawSleepIntervals = [];
+      const seenSessionIds = new Set();
 
       do {
         let sUrl = `https://www.googleapis.com/fitness/v1/users/me/sessions?startTime=${encodeURIComponent(startIso)}&endTime=${encodeURIComponent(endIso)}&activityType=72`;
@@ -14588,14 +14595,18 @@ async function fetchGoogleFitness() {
           const sData = await sRes.json();
           const sessions = sData.session || [];
           sessions.forEach(s => {
-            const startMs = parseInt(s.startTimeMillis);
-            const endMs = parseInt(s.endTimeMillis);
-            if (endMs > startMs) {
+            if (s.id) {
+              if (seenSessionIds.has(s.id)) return;
+              seenSessionIds.add(s.id);
+            }
+            const startMs = parseInt(s.startTimeMillis, 10);
+            const endMs = parseInt(s.endTimeMillis, 10);
+            if (!isNaN(startMs) && !isNaN(endMs) && endMs > startMs) {
               const durHours = (endMs - startMs) / 3600000;
-              const dObj = new Date(endMs);
-              const dateKey = `${dObj.getFullYear()}-${String(dObj.getMonth() + 1).padStart(2, '0')}-${String(dObj.getDate()).padStart(2, '0')}`;
-              const prev = sleepByDate.get(dateKey) || 0;
-              sleepByDate.set(dateKey, Math.min(24, prev + durHours));
+              // Descartar sesiones anómalas mayores a 24 horas
+              if (durHours > 0 && durHours <= 24) {
+                rawSleepIntervals.push({ start: startMs, end: endMs });
+              }
             }
           });
           sleepPageToken = sData.nextPageToken || '';
@@ -14603,6 +14614,37 @@ async function fetchGoogleFitness() {
           sleepPageToken = '';
         }
       } while (sleepPageToken);
+
+      if (rawSleepIntervals.length > 0) {
+        // Ordenar cronológicamente
+        rawSleepIntervals.sort((a, b) => a.start - b.start || a.end - b.end);
+
+        // Fusionar intervalos solapados o contiguos (tolerancia de 5 min para apps duplicadas como Health Connect / Samsung Health)
+        const mergedIntervals = [];
+        for (const item of rawSleepIntervals) {
+          if (mergedIntervals.length === 0) {
+            mergedIntervals.push({ start: item.start, end: item.end });
+          } else {
+            const last = mergedIntervals[mergedIntervals.length - 1];
+            if (item.start <= (last.end + 5 * 60 * 1000)) {
+              last.end = Math.max(last.end, item.end);
+            } else {
+              mergedIntervals.push({ start: item.start, end: item.end });
+            }
+          }
+        }
+
+        // Asignar duración por día de despertar (endMs)
+        mergedIntervals.forEach(intv => {
+          const durHours = (intv.end - intv.start) / 3600000;
+          if (durHours > 0) {
+            const dObj = new Date(intv.end);
+            const dateKey = `${dObj.getFullYear()}-${String(dObj.getMonth() + 1).padStart(2, '0')}-${String(dObj.getDate()).padStart(2, '0')}`;
+            const prev = sleepByDate.get(dateKey) || 0;
+            sleepByDate.set(dateKey, Math.min(24, prev + durHours));
+          }
+        });
+      }
     } catch (errSleep) {
       console.warn('[Google Fit] Error obteniendo sesiones de sueño:', errSleep);
     }
@@ -14621,6 +14663,7 @@ async function fetchGoogleFitness() {
 
           const startNs = BigInt(startOfToday.getTime() - (360 * 86400000)) * 1000000n;
           const endNs = BigInt(endOfToday) * 1000000n;
+          const rawFallbackIntervals = [];
 
           for (const ss of sleepSources) {
             try {
@@ -14634,16 +14677,43 @@ async function fetchGoogleFitness() {
                   if (sNs && eNs && eNs > sNs) {
                     const stage = pt.value?.[0]?.intVal;
                     if (stage === 1 || stage === 3) return; // Despierto / fuera de cama
-                    const durHours = Number(eNs - sNs) / (1e9 * 3600);
-                    const timeMs = Number(eNs / 1000000n);
-                    const d = new Date(timeMs);
-                    const dateKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-                    const prev = sleepByDate.get(dateKey) || 0;
-                    sleepByDate.set(dateKey, Math.min(24, prev + durHours));
+                    const startMs = Number(sNs / 1000000n);
+                    const endMs = Number(eNs / 1000000n);
+                    const durHours = (endMs - startMs) / 3600000;
+                    if (durHours > 0 && durHours <= 24) {
+                      rawFallbackIntervals.push({ start: startMs, end: endMs });
+                    }
                   }
                 });
               }
             } catch (err) {}
+          }
+
+          if (rawFallbackIntervals.length > 0) {
+            rawFallbackIntervals.sort((a, b) => a.start - b.start || a.end - b.end);
+            const mergedFallback = [];
+            for (const item of rawFallbackIntervals) {
+              if (mergedFallback.length === 0) {
+                mergedFallback.push({ start: item.start, end: item.end });
+              } else {
+                const last = mergedFallback[mergedFallback.length - 1];
+                if (item.start <= (last.end + 5 * 60 * 1000)) {
+                  last.end = Math.max(last.end, item.end);
+                } else {
+                  mergedFallback.push({ start: item.start, end: item.end });
+                }
+              }
+            }
+
+            mergedFallback.forEach(intv => {
+              const durHours = (intv.end - intv.start) / 3600000;
+              if (durHours > 0) {
+                const dObj = new Date(intv.end);
+                const dateKey = `${dObj.getFullYear()}-${String(dObj.getMonth() + 1).padStart(2, '0')}-${String(dObj.getDate()).padStart(2, '0')}`;
+                const prev = sleepByDate.get(dateKey) || 0;
+                sleepByDate.set(dateKey, Math.min(24, prev + durHours));
+              }
+            });
           }
         }
       } catch (e) {
@@ -14683,6 +14753,7 @@ async function fetchGoogleFitness() {
 
     try {
       localStorage.setItem('gp_fitness_cache', JSON.stringify(window.fitnessData));
+      localStorage.setItem('gp_fitness_cache_v', '2');
     } catch (e) {}
 
     // Actualizar inmediatamente las tarjetas de Salud en el Panel de Control (Inicio) y en Actividad
