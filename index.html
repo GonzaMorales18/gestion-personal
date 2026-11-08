@@ -14886,11 +14886,11 @@ function renderHealthCard(type, period) {
     });
     values = filtered.map(d => d.value || 0);
 
-    if (type === 'weight' || type === 'sleep') {
+    if (type === 'weight') {
       const validVals = values.filter(v => v > 0);
       if (validVals.length > 0) {
         aggregatedValue = validVals.reduce((a,b)=>a+b,0)/validVals.length;
-        subtitle = type === 'sleep' ? 'Promedio diario (Semanal)' : 'Promedio 7 días';
+        subtitle = 'Promedio 7 días';
       } else {
         const lastEntry = [...dataArray].reverse().find(d => d.value !== null && d.value > 0);
         aggregatedValue = lastEntry ? lastEntry.value : 0;
@@ -14912,11 +14912,11 @@ function renderHealthCard(type, period) {
     labels = filtered.map(d => d.date.getDate().toString());
     values = filtered.map(d => d.value || 0);
 
-    if (type === 'weight' || type === 'sleep') {
+    if (type === 'weight') {
       const validVals = values.filter(v => v > 0);
       if (validVals.length > 0) {
         aggregatedValue = validVals.reduce((a,b)=>a+b,0)/validVals.length;
-        subtitle = type === 'sleep' ? 'Promedio diario (Mensual)' : 'Promedio mensual';
+        subtitle = 'Promedio mensual';
       } else {
         const lastEntry = [...dataArray].reverse().find(d => d.value !== null && d.value > 0);
         aggregatedValue = lastEntry ? lastEntry.value : 0;
@@ -14945,18 +14945,18 @@ function renderHealthCard(type, period) {
     values = labels.map(key => {
       const arr = monthlyGroups[key];
       if (arr.length === 0) return 0;
-      if (type === 'weight' || type === 'sleep') {
+      if (type === 'weight') {
         const valids = arr.filter(v => v > 0);
         return valids.length > 0 ? valids.reduce((a,b)=>a+b,0) / valids.length : 0;
       }
       return isAvgMode ? arr.reduce((a,b)=>a+b,0) / arr.length : arr.reduce((a,b)=>a+b,0);
     });
 
-    if (type === 'weight' || type === 'sleep') {
+    if (type === 'weight') {
       const validVals = dataArray.filter(v => (v.value || 0) > 0);
       if (validVals.length > 0) {
         aggregatedValue = validVals.reduce((a,b)=>a+(b.value||0),0)/validVals.length;
-        subtitle = type === 'sleep' ? 'Promedio diario (Anual)' : 'Promedio anual';
+        subtitle = 'Promedio anual';
       } else {
         const lastEntry = [...dataArray].reverse().find(d => d.value !== null && d.value > 0);
         aggregatedValue = lastEntry ? lastEntry.value : 0;
@@ -14999,7 +14999,7 @@ function renderHealthCard(type, period) {
       values = labels.map(key => {
         const arr = monthlyGroups[key];
         if (arr.length === 0) return 0;
-        if (type === 'weight' || type === 'sleep') {
+        if (type === 'weight') {
           const valids = arr.filter(v => v > 0);
           return valids.length > 0 ? valids.reduce((a,b)=>a+b,0) / valids.length : 0;
         }
@@ -15011,7 +15011,7 @@ function renderHealthCard(type, period) {
       values = filtered.map(d => d.value || 0);
     }
 
-    if (type === 'weight' || type === 'sleep') {
+    if (type === 'weight') {
       const validVals = filtered.filter(v => (v.value || 0) > 0);
       if (validVals.length > 0) {
         aggregatedValue = validVals.reduce((a,b)=>a+(b.value||0),0)/validVals.length;
@@ -15033,16 +15033,22 @@ function renderHealthCard(type, period) {
     }
   }
 
-  const formatHealthGoal = (metricType, rawVal) => {
+  const numDaysGoal = (!isAvgMode && period !== 'hoy' && type !== 'weight')
+    ? (period === 'semana' ? 7 : (period === 'mes' ? 30 : (period === 'año' ? 365 : (filtered && filtered.length > 0 ? filtered.length : 1))))
+    : 1;
+
+  const formatHealthGoal = (metricType, rawVal, daysMultiplier = 1) => {
     const val = (metricType === 'distance') ? (rawVal / 1000) : (rawVal || 0);
-    let goal = 0, suffix = '', isReverse = false, decimals = 0;
-    if (metricType === 'steps') { goal = 10000; suffix = ' pasos'; isReverse = false; decimals = 0; }
-    else if (metricType === 'distance') { goal = 8; suffix = ' km'; isReverse = false; decimals = 1; }
-    else if (metricType === 'weight') { goal = 75; suffix = ' kg'; isReverse = true; decimals = 1; }
-    else if (metricType === 'calories') { goal = 2000; suffix = ' kcal'; isReverse = false; decimals = 0; }
-    else if (metricType === 'activeMinutes') { goal = 120; suffix = ' min'; isReverse = false; decimals = 0; }
-    else if (metricType === 'sleep') { goal = 8; suffix = ' hs'; isReverse = false; decimals = 1; }
+    let baseGoal = 0, suffix = '', isReverse = false, decimals = 0;
+    if (metricType === 'steps') { baseGoal = 10000; suffix = ' pasos'; isReverse = false; decimals = 0; }
+    else if (metricType === 'distance') { baseGoal = 8; suffix = ' km'; isReverse = false; decimals = 1; }
+    else if (metricType === 'weight') { baseGoal = 75; suffix = ' kg'; isReverse = true; decimals = 1; }
+    else if (metricType === 'calories') { baseGoal = 2000; suffix = ' kcal'; isReverse = false; decimals = 0; }
+    else if (metricType === 'activeMinutes') { baseGoal = 120; suffix = ' min'; isReverse = false; decimals = 0; }
+    else if (metricType === 'sleep') { baseGoal = 8; suffix = ' hs'; isReverse = false; decimals = 1; }
     else return '';
+
+    const goal = (metricType === 'weight') ? baseGoal : (baseGoal * daysMultiplier);
 
     const diff = val - goal;
     let color = 'text-slate-400';
@@ -15085,22 +15091,22 @@ function renderHealthCard(type, period) {
   const subEl = document.getElementById('health-' + type + '-subtitle');
   const barEl = document.getElementById('health-' + type + '-bar');
 
-  if (subEl) subEl.innerHTML = formatHealthGoal(type, aggregatedValue);
-  const calcHealthBarPct = (metricType, rawVal) => {
+  if (subEl) subEl.innerHTML = formatHealthGoal(type, aggregatedValue, numDaysGoal);
+  const calcHealthBarPct = (metricType, rawVal, daysMultiplier = 1) => {
     const v = (metricType === 'distance') ? (rawVal / 1000) : (rawVal || 0);
     if (v <= 0) return 0;
-    if (metricType === 'steps') return Math.min(100, Math.round((v / 10000) * 100));
-    if (metricType === 'distance') return Math.min(100, Math.round((v / 8) * 100));
-    if (metricType === 'calories') return Math.min(100, Math.round((v / 2000) * 100));
-    if (metricType === 'activeMinutes') return Math.min(100, Math.round((v / 120) * 100));
-    if (metricType === 'sleep') return Math.min(100, Math.round((v / 8) * 100));
+    if (metricType === 'steps') return Math.min(100, Math.round((v / (10000 * daysMultiplier)) * 100));
+    if (metricType === 'distance') return Math.min(100, Math.round((v / (8 * daysMultiplier)) * 100));
+    if (metricType === 'calories') return Math.min(100, Math.round((v / (2000 * daysMultiplier)) * 100));
+    if (metricType === 'activeMinutes') return Math.min(100, Math.round((v / (120 * daysMultiplier)) * 100));
+    if (metricType === 'sleep') return Math.min(100, Math.round((v / (8 * daysMultiplier)) * 100));
     if (metricType === 'weight') {
       const diff = Math.abs(v - 75);
       return Math.max(15, Math.min(100, Math.round(100 - (diff * 8))));
     }
     return 0;
   };
-  if (barEl) barEl.style.width = calcHealthBarPct(type, aggregatedValue) + '%';
+  if (barEl) barEl.style.width = calcHealthBarPct(type, aggregatedValue, numDaysGoal) + '%';
 
   if (type === 'steps') {
     const txt = aggregatedValue > 0 ? Math.floor(aggregatedValue).toLocaleString('es-ES') : '--';
