@@ -1947,7 +1947,7 @@
               <div class="relative">
                 <span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-400 mono">$</span>
                 <input type="number" id="monto" placeholder="0.00" step="0.01" min="0"
-                       class="w-full h-14 pl-8 pr-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/60 text-2xl font-black text-white mono" required>
+                       class="w-full h-11 pl-8 pr-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/60 text-base font-black text-white mono" required>
               </div>
             </div>
 
@@ -2412,14 +2412,14 @@
             <!-- Opción C: Comprar más de activo existente -->
             <div class="space-y-1 pb-3 mb-1 border-b border-slate-700/60">
               <label class="text-[10px] font-bold text-white uppercase ml-1">Activo Existente</label>
-              <select id="compra-activo-existente" onchange="onCompraActivoExistenteChange()" class="w-full h-10 px-3 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-xs text-white font-bold">
+              <select id="compra-activo-existente" onchange="onCompraActivoExistenteChange()" class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-sm text-white font-bold">
                 <option value="">— Seleccioná un activo o cargá uno nuevo abajo —</option>
               </select>
             </div>
 
             <div class="space-y-1">
               <label class="text-[10px] font-bold text-white uppercase ml-1">Tipo de Activo a comprar</label>
-              <select id="ah-tipo" onchange="onAhTipoChange()" class="w-full h-10 px-3 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-xs text-white font-bold">
+              <select id="ah-tipo" onchange="onAhTipoChange()" class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-sm text-white font-bold">
                 <option value="">— Seleccioná —</option>
               </select>
             </div>
@@ -2430,16 +2430,16 @@
               </label>
               <div class="flex gap-2">
                 <input type="text" id="ah-ticker" placeholder="Ej: KO, USD, BTC" oninput="resetTickerStatus()"
-                       class="flex-1 h-10 px-3 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-xs text-white uppercase font-bold tracking-widest">
+                       class="flex-1 h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-sm text-white uppercase font-bold tracking-widest">
                 <button type="button" onclick="buscarTicker()" id="btn-buscar-ticker" title="Buscar cotización"
-                        class="h-10 px-3.5 bg-black text-white rounded-xl text-[11px] font-bold uppercase hover:bg-violet-600 transition-colors">
+                        class="h-11 px-4 bg-black text-white rounded-xl text-[11px] font-bold uppercase hover:bg-violet-600 transition-colors">
                   <i class="fas fa-search"></i>
                 </button>
               </div>
               <p id="ah-ticker-status" class="text-[10px] mono px-1 text-slate-400"></p>
             </div>
 
-            <!-- Fila: Plataforma (mitad) + Cotiza en USD (mitad, sin recuadro con tilde) -->
+            <!-- Fila: Plataforma (mitad) + Cotiza en USD (mitad) -->
             <div class="grid grid-cols-2 gap-3 items-end">
               <div class="space-y-1">
                 <label class="text-[10px] font-bold text-white uppercase ml-1 flex items-center justify-between">
@@ -2448,18 +2448,25 @@
                 </label>
                 <input type="text" id="ah-plataforma" list="ah-plataforma-list"
                        placeholder="Balanz, IOL..."
-                       class="w-full h-10 px-3 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-xs text-white font-bold">
+                       class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-sm text-white font-bold">
                 <datalist id="ah-plataforma-list"></datalist>
               </div>
 
-              <!-- Selector Cotiza en USD (sin recuadro) -->
-              <div class="h-10 flex items-center justify-between px-1 pb-1">
-                <label class="flex items-center gap-2 cursor-pointer select-none text-xs font-bold text-white hover:text-emerald-300 transition-colors">
-                  <input type="checkbox" id="ah-moneda-usd" onchange="onMonedaCotizacionChange()"
-                         class="w-4 h-4 rounded bg-slate-800 border-slate-600 text-emerald-500 focus:ring-emerald-500/30 cursor-pointer accent-emerald-500">
-                  <span class="text-[11px]">Cotiza en USD</span>
+              <!-- Selector Cotiza en USD alineado a la misma altura -->
+              <div class="space-y-1">
+                <label class="text-[10px] font-bold text-white uppercase ml-1 flex items-center justify-between">
+                  <span>Moneda</span>
+                  <span id="ah-moneda-badge" class="text-[9px] font-bold mono text-slate-400">ARS</span>
                 </label>
-                <span id="ah-moneda-badge" class="text-[9px] font-bold mono text-slate-400">ARS</span>
+                <label for="ah-moneda-usd" id="ah-moneda-usd-box"
+                       class="w-full h-11 px-3 bg-slate-900 border border-slate-700/80 rounded-xl flex items-center justify-between cursor-pointer select-none hover:border-slate-600 transition-colors">
+                  <div class="flex items-center gap-2">
+                    <input type="checkbox" id="ah-moneda-usd" onchange="onMonedaCotizacionChange()"
+                           class="w-4 h-4 rounded bg-slate-800 border-slate-600 text-emerald-500 focus:ring-emerald-500/30 cursor-pointer accent-emerald-500">
+                    <span class="text-[11px] font-bold text-white">Cotiza en USD</span>
+                  </div>
+                  <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-black mono">U$S</span>
+                </label>
               </div>
             </div>
 
@@ -2468,7 +2475,7 @@
               <div class="space-y-1">
                 <label class="text-[10px] font-bold text-white uppercase ml-1">Cantidad</label>
                 <input type="number" id="ah-cantidad" placeholder="0" step="any" min="0" oninput="calcularInversionPreview()"
-                       class="w-full h-11 px-3 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-base font-black text-white mono">
+                       class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-base font-black text-white mono">
               </div>
 
               <div id="ah-precio-group" class="space-y-1" style="display:block">
@@ -2510,7 +2517,7 @@
             <div class="space-y-1.5">
               <label class="text-[10px] font-bold text-white uppercase ml-1">Cantidad vendida</label>
               <input type="number" id="venta-cantidad" placeholder="0" step="any" min="0"
-                     class="w-full h-14 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-2xl font-black text-white mono">
+                     class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-base font-black text-white mono">
               <p id="venta-disponible" class="text-[10px] text-slate-400 px-1">Disponible: —</p>
             </div>
             <div class="space-y-1.5">
@@ -2518,7 +2525,7 @@
               <div class="relative">
                 <span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-400 mono">$</span>
                 <input type="number" id="venta-precio" placeholder="0.00" step="any" min="0"
-                       class="w-full h-12 pl-8 pr-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-xl font-black text-white mono">
+                       class="w-full h-11 pl-8 pr-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-base font-black text-white mono">
               </div>
             </div>
             <div class="space-y-1.5">
@@ -2899,7 +2906,7 @@
               <div class="relative">
                 <span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-400 mono">$</span>
                 <input type="number" id="su-bruto" placeholder="0" step="1" min="0" oninput="suRecalcular()"
-                       class="w-full h-14 pl-8 pr-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-yellow-500/30 focus:border-yellow-500/60 text-2xl font-black text-white mono" required>
+                       class="w-full h-11 pl-8 pr-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-yellow-500/30 focus:border-yellow-500/60 text-base font-black text-white mono" required>
               </div>
             </div>
             <!-- Coeficiente descuento -->
@@ -3135,29 +3142,29 @@
                 <div class="flex items-center justify-center gap-3">
                   <span class="text-[10px] font-bold text-slate-500 uppercase w-8 text-right">Set 1</span>
                   <input type="number" id="te-s1-yo" placeholder="Yo" min="0" required
-                         class="w-16 h-10 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/60 text-sm font-bold text-white mono">
+                         class="w-16 h-11 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/60 text-sm font-bold text-white mono">
                   <span class="text-slate-500 font-bold">-</span>
                   <input type="number" id="te-s1-ri" placeholder="Riv" min="0" required
-                         class="w-16 h-10 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/60 text-sm font-bold text-white mono">
+                         class="w-16 h-11 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/60 text-sm font-bold text-white mono">
                 </div>
                 <!-- Set 2 -->
                 <div class="flex items-center justify-center gap-3">
                   <span class="text-[10px] font-bold text-slate-500 uppercase w-8 text-right">Set 2</span>
                   <input type="number" id="te-s2-yo" placeholder="Yo" min="0"
-                         class="w-16 h-10 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/60 text-sm font-bold text-white mono">
+                         class="w-16 h-11 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/60 text-sm font-bold text-white mono">
                   <span class="text-slate-500 font-bold">-</span>
                   <input type="number" id="te-s2-ri" placeholder="Riv" min="0"
-                         class="w-16 h-10 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/60 text-sm font-bold text-white mono">
+                         class="w-16 h-11 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/60 text-sm font-bold text-white mono">
                 </div>
                 <!-- Set 3 -->
                 <div class="flex items-center justify-center gap-3">
                   <span class="text-[10px] font-bold text-slate-500 uppercase w-8 text-right">Set 3</span>
                   <input type="number" id="te-s3-yo" placeholder="Yo" min="0"
-                         class="w-16 h-10 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/60 text-sm font-bold text-white mono"
+                         class="w-16 h-11 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/60 text-sm font-bold text-white mono"
                          title="Super Tie-break u otro set">
                   <span class="text-slate-500 font-bold">-</span>
                   <input type="number" id="te-s3-ri" placeholder="Riv" min="0"
-                         class="w-16 h-10 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/60 text-sm font-bold text-white mono">
+                         class="w-16 h-11 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/60 text-sm font-bold text-white mono">
                 </div>
               </div>
             </div>
@@ -3400,13 +3407,13 @@
                 <div class="flex flex-col items-center">
                   <span class="text-[10px] font-bold text-slate-500 uppercase mb-1">Mi Eq.</span>
                   <input type="number" id="pa-goles-favor" placeholder="0" min="0" required
-                         class="w-16 h-12 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/60 text-lg font-black text-white mono">
+                         class="w-16 h-11 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/60 text-base font-black text-white mono">
                 </div>
                 <span class="text-slate-500 font-bold text-xl">-</span>
                 <div class="flex flex-col items-center">
                   <span class="text-[10px] font-bold text-slate-500 uppercase mb-1">Rival</span>
                   <input type="number" id="pa-goles-contra" placeholder="0" min="0" required
-                         class="w-16 h-12 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/60 text-lg font-black text-white mono">
+                         class="w-16 h-11 text-center bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/60 text-base font-black text-white mono">
                 </div>
               </div>
             </div>
@@ -4823,7 +4830,7 @@
         <label class="text-[10px] font-bold text-white uppercase ml-1">Importe</label>
         <div class="relative">
           <span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-400 mono">$</span>
-          <input type="number" id="edit-monto" step="0.01" min="0" class="w-full h-14 pl-8 pr-4 bg-slate-800 border border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 text-2xl font-black text-white mono">
+          <input type="number" id="edit-monto" step="0.01" min="0" class="w-full h-11 pl-8 pr-4 bg-slate-800 border border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 text-base font-black text-white mono">
         </div>
       </div>
       <div class="grid grid-cols-2 gap-3 items-end">
@@ -5050,7 +5057,7 @@
       </div>
       <div class="space-y-1.5">
         <label class="text-[10px] font-bold text-white uppercase ml-1">Cantidad</label>
-        <input type="number" id="ah-edit-cantidad" step="any" min="0" class="w-full h-12 px-4 bg-slate-800 border border-slate-700 rounded-lg outline-none text-xl font-black text-white mono">
+        <input type="number" id="ah-edit-cantidad" step="any" min="0" class="w-full h-11 px-4 bg-slate-800 border border-slate-700 rounded-lg outline-none text-base font-black text-white mono">
       </div>
       <div class="space-y-1.5">
         <label class="text-[10px] font-bold text-white uppercase ml-1">Precio de referencia <span class="text-slate-500 normal-case font-normal">(ARS)</span></label>
