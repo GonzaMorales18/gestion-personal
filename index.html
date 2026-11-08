@@ -8798,13 +8798,15 @@ function actualizarDatalistActivos() {
 
 function calcularPosicionesNetas() {
   const mapa = {};
+  const usdRate = (typeof cotizaciones !== 'undefined' && (cotizaciones.USD_MEP || cotizaciones.USD)) || 1;
 
   // Procesar operaciones cronológicamente (desde la más antigua)
   // Como operacionesData está newest-first, lo recorremos al revés
   for (let i = operacionesData.length - 1; i >= 0; i--) {
     const op = operacionesData[i];
     const plat = (op.plataforma || op.descripcion || '').trim();
-    const opMoneda = op.moneda || (isDolarActivo(op) ? 'USD' : 'ARS');
+    const esDolar = isDolarActivo(op);
+    const opMoneda = op.moneda || (esDolar ? 'USD' : 'ARS');
     const key = `${op.tipo}||${(op.ticker||'').toUpperCase()}||${plat}||${opMoneda}`;
 
     if (!mapa[key]) {
@@ -8817,6 +8819,8 @@ function calcularPosicionesNetas() {
         cantidad: 0,
         precioRef: 0,
         precioPromCompra: 0,
+        costoTotalARS: 0,
+        costoTotalUSD: 0,
         fechaPrimerCompra: op.fecha || null,
         fechaUltimaCompra: op.fecha || null
       };
@@ -8838,7 +8842,39 @@ function calcularPosicionesNetas() {
       activo.precioRef = nuevoPrecio; // Último precio de compra se usa como ref manual
       activo.fechaUltimaCompra = op.fecha || activo.fechaUltimaCompra;
       if (!activo.fechaPrimerCompra && op.fecha) activo.fechaPrimerCompra = op.fecha;
+
+      // Calcular costo de adquisición real de la compra en ARS y USD
+      let opARS = op.totalARS || 0;
+      let opUSD = 0;
+
+      if (esDolar) {
+        // En divisa Dólar (USD), la cantidad adquirida son los dólares directos
+        opUSD = nuevaCant;
+        if (!opARS) {
+          opARS = nuevoPrecio > 50 ? (nuevaCant * nuevoPrecio) : (nuevaCant * usdRate);
+        }
+      } else if (op.moneda === 'USD') {
+        opUSD = nuevaCant * nuevoPrecio;
+        if (!opARS) {
+          opARS = opUSD * usdRate;
+        }
+      } else {
+        // Moneda ARS
+        if (!opARS) {
+          opARS = nuevaCant * nuevoPrecio;
+        }
+        opUSD = usdRate > 0 ? (opARS / usdRate) : 0;
+      }
+
+      activo.costoTotalARS = (activo.costoTotalARS || 0) + opARS;
+      activo.costoTotalUSD = (activo.costoTotalUSD || 0) + opUSD;
     } else if (op.operacion === 'Venta') {
+      const cantPrevia = activo.cantidad;
+      if (cantPrevia > 0) {
+        const fraccion = Math.min(1, op.cantidad / cantPrevia);
+        activo.costoTotalARS = Math.max(0, (activo.costoTotalARS || 0) * (1 - fraccion));
+        activo.costoTotalUSD = Math.max(0, (activo.costoTotalUSD || 0) * (1 - fraccion));
+      }
       activo.cantidad -= op.cantidad;
     }
   }
@@ -9196,6 +9232,7 @@ function renderTablaAhorros() {
     const activoProxy = {
       tipo: a.tipo, ticker: a.ticker, descripcion: a.descripcion, plataforma: a.plataforma,
       cantidad: a.cantidad, precioManual: a.precioRef, precioPromCompra: a.precioPromCompra,
+      costoTotalARS: a.costoTotalARS, costoTotalUSD: a.costoTotalUSD,
       moneda: a.moneda || (esDolar ? 'USD' : 'ARS')
     };
     const precioARS = getPrecioARS(activoProxy);
@@ -9248,14 +9285,16 @@ function renderTablaAhorros() {
     // Rendimiento en USD (comparando valorUSD actual vs costoUSD de compra)
     let rendHtml = '<span class="text-slate-500 text-xs">—</span>';
     if (valorUSD != null && a.cantidad > 0) {
-      let costoUSD = null;
-      if (esDolar) {
-        costoUSD = a.cantidad; // Dólar divisa compra = valor exacto en USD
-      } else if (a.moneda === 'USD') {
-        costoUSD = a.cantidad * (a.precioPromCompra || a.precioRef || 0);
-      } else if (a.precioPromCompra && a.precioPromCompra > 0) {
-        const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
-        costoUSD = (a.precioPromCompra * a.cantidad) / usdRate;
+      let costoUSD = (a.costoTotalUSD && a.costoTotalUSD > 0) ? a.costoTotalUSD : null;
+      if (costoUSD == null) {
+        if (esDolar) {
+          costoUSD = a.cantidad; // Dólar divisa compra = valor exacto en USD
+        } else if (a.moneda === 'USD') {
+          costoUSD = a.cantidad * (a.precioPromCompra || a.precioRef || 0);
+        } else if (a.precioPromCompra && a.precioPromCompra > 0) {
+          const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
+          costoUSD = (a.precioPromCompra * a.cantidad) / usdRate;
+        }
       }
 
       if (costoUSD != null && costoUSD > 0) {
@@ -9293,7 +9332,7 @@ function renderTablaAhorros() {
           </div>
         </td>
         <td class="px-2 py-2.5 text-xs text-right mono font-bold text-white whitespace-nowrap">${a.cantidad.toLocaleString('es-AR',{maximumFractionDigits:8})}</td>
-        <td class="px-2 py-2.5 text-xs text-right mono text-slate-400 whitespace-nowrap">${a.moneda === 'USD' ? fmtUSD(a.precioPromCompra) : fmtARS(a.precioPromCompra)}</td>
+        <td class="px-2 py-2.5 text-xs text-right mono text-slate-400 whitespace-nowrap">${(a.moneda === 'USD' && !esDolar) ? fmtUSD(a.precioPromCompra) : fmtARS(a.precioPromCompra)}</td>
         <td class="px-2 py-2.5 text-xs text-right mono text-slate-300 whitespace-nowrap">${fmtPrecio()}</td>
         <td class="px-2.5 py-2.5 text-xs text-right mono font-black text-white whitespace-nowrap">${fmtARS(valorARS)}</td>
         <td class="px-2.5 py-2.5 text-xs text-right mono font-bold text-emerald-300 whitespace-nowrap">${fmtUSD(valorUSD)}</td>
@@ -9304,20 +9343,45 @@ function renderTablaAhorros() {
   renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD);
 
   // 1. Neto Invertido Real de las posiciones activas actuales (costo de adquisición)
-  const netoInvertidoARS = enriquecidas.reduce((s, a) => {
-    if (a.moneda === 'USD') {
-      const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
-      return s + (a.cantidad * (a.precioPromCompra || a.precioRef || 0) * usdRate);
-    }
-    return s + (a.cantidad * (a.precioPromCompra || a.precioRef || 0));
-  }, 0);
+  let netoInvertidoARS = enriquecidas.reduce((s, a) => s + (a.costoTotalARS || 0), 0);
+  let netoInvertidoUSD = enriquecidas.reduce((s, a) => s + (a.costoTotalUSD || 0), 0);
 
-  const netoInvertidoUSD = enriquecidas.reduce((s, a) => {
-    if (isDolarActivo(a)) return s + a.cantidad;
-    if (a.moneda === 'USD') return s + (a.cantidad * (a.precioPromCompra || a.precioRef || 0));
-    const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
-    return s + ((a.cantidad * (a.precioPromCompra || a.precioRef || 0)) / usdRate);
-  }, 0);
+  // Fallback si costoTotal no estuviera disponible
+  if (netoInvertidoARS <= 0) {
+    if (typeof operacionesData !== 'undefined' && operacionesData.length > 0) {
+      let comprasARS = 0, ventasARS = 0;
+      operacionesData.forEach(op => {
+        if (op.operacion === 'Compra') comprasARS += op.totalARS || 0;
+        else if (op.operacion === 'Venta') ventasARS += op.totalARS || 0;
+      });
+      netoInvertidoARS = Math.max(0, comprasARS - ventasARS);
+      const usdRate = (typeof cotizaciones !== 'undefined' && (cotizaciones.USD_MEP || cotizaciones.USD)) || 1;
+      netoInvertidoUSD = usdRate > 0 ? (netoInvertidoARS / usdRate) : 0;
+    } else {
+      netoInvertidoARS = enriquecidas.reduce((s, a) => {
+        if (isDolarActivo(a)) {
+          const p = a.precioPromCompra || a.precioRef || 0;
+          return s + (p > 50 ? a.cantidad * p : a.cantidad * (cotizaciones.USD || cotizaciones.USD_MEP || 1));
+        }
+        if (a.moneda === 'USD') {
+          const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
+          return s + (a.cantidad * (a.precioPromCompra || a.precioRef || 0) * usdRate);
+        }
+        return s + (a.cantidad * (a.precioPromCompra || a.precioRef || 0));
+      }, 0);
+      netoInvertidoUSD = enriquecidas.reduce((s, a) => {
+        if (isDolarActivo(a)) return s + a.cantidad;
+        if (a.moneda === 'USD') return s + (a.cantidad * (a.precioPromCompra || a.precioRef || 0));
+        const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
+        return s + ((a.cantidad * (a.precioPromCompra || a.precioRef || 0)) / usdRate);
+      }, 0);
+    }
+  }
+
+  if (netoInvertidoUSD <= 0 && netoInvertidoARS > 0) {
+    const usdRate = (typeof cotizaciones !== 'undefined' && (cotizaciones.USD_MEP || cotizaciones.USD)) || 1;
+    netoInvertidoUSD = usdRate > 0 ? (netoInvertidoARS / usdRate) : 0;
+  }
 
   // 2. Diferencia entre el total actual y el neto invertido (P&L no realizado)
   const diffARS = totalARS - netoInvertidoARS;
@@ -9348,7 +9412,7 @@ function renderTablaAhorros() {
       if (!isNaN(parsed)) fTime = parsed;
     }
     const dias = Math.max(1, (ahora - fTime) / (1000 * 60 * 60 * 24));
-    const peso = Math.max(0.01, a.cantidad * (a.precioPromCompra || 1));
+    const peso = Math.max(0.01, a.costoTotalARS || (a.cantidad * (a.precioPromCompra || 1)));
     sumaDiasPonderados += dias * peso;
   });
   const diasEfectivos = netoInvertidoARS > 0 ? Math.max(1, sumaDiasPonderados / netoInvertidoARS) : 1;
