@@ -2775,16 +2775,17 @@
                   <th class="px-2.5 py-3 text-[10px] text-left font-black text-white uppercase tracking-wider">Tipo</th>
                   <th class="px-2.5 py-3 text-[10px] text-left font-black text-white uppercase tracking-wider">Activo &amp; Peso %</th>
                   <th class="px-2 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider">Cant.</th>
-                  <th class="px-2 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider">PPC</th>
-                  <th class="px-2 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider">Precio unit.</th>
+                  <th class="px-2 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider">P. Promedio</th>
+                  <th class="px-2 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider">Precio Hoy</th>
                   <th class="px-2.5 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider">Valor ARS</th>
                   <th class="px-2.5 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider">Valor USD</th>
-                  <th class="px-2.5 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider">Rendimiento</th>
+                  <th class="px-2.5 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider">Rend. ARS</th>
+                  <th class="px-2.5 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider">Rend. USD</th>
                 </tr>
               </thead>
               <tbody id="tabla-ahorros">
                 <tr>
-                  <td colspan="8" class="text-center py-12 text-slate-500 text-sm">
+                  <td colspan="9" class="text-center py-12 text-slate-500 text-sm">
                     <i class="fas fa-piggy-bank text-3xl mb-3 block"></i>
                     Sin inversiones cargadas
                   </td>
@@ -2793,9 +2794,10 @@
               <tfoot id="tfoot-ahorros" class="hidden">
                 <tr class="border-t-2 border-slate-700 bg-slate-800">
                   <td colspan="5" class="px-5 py-3 text-[10px] font-black text-white uppercase tracking-widest">Total Inversiones</td>
-                  <td id="ah-footer-ars" class="px-5 py-3 text-right font-black text-white mono text-sm"></td>
-                  <td id="ah-footer-usd" class="px-5 py-3 text-right font-black text-white mono text-sm"></td>
-                  <td id="ah-footer-rend" class="px-2.5 py-3 text-right whitespace-nowrap"></td>
+                  <td id="ah-footer-ars" class="px-2.5 py-3 text-right font-black text-white mono text-xs whitespace-nowrap"></td>
+                  <td id="ah-footer-usd" class="px-2.5 py-3 text-right font-black text-emerald-300 mono text-xs whitespace-nowrap"></td>
+                  <td id="ah-footer-rend-ars" class="px-2.5 py-3 text-right whitespace-nowrap"></td>
+                  <td id="ah-footer-rend-usd" class="px-2.5 py-3 text-right whitespace-nowrap"></td>
                 </tr>
               </tfoot>
             </table>
@@ -2819,19 +2821,23 @@
                   <th class="px-2 py-3 text-[10px] text-left font-black text-white uppercase tracking-wider">Tipo</th>
                   <th class="px-2.5 py-3 text-[10px] text-left font-black text-white uppercase tracking-wider">Activo</th>
                   <th class="px-2.5 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider">Cant.</th>
-                  <th class="px-2.5 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider">Precio</th>
-                  <th class="px-2.5 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider">Total</th>
+                  <th class="px-2.5 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider">Precio ARS</th>
+                  <th class="px-2.5 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider">Precio USD</th>
+                  <th class="px-2.5 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider">Total ARS</th>
+                  <th class="px-2.5 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider">Total USD</th>
                   <th class="px-2.5 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider">P&amp;L</th>
                   <th class="px-2 py-3 text-[10px] text-center font-black text-white uppercase tracking-wider">Acc.</th>
                 </tr>
               </thead>
               <tbody id="tabla-operaciones">
-                <tr><td colspan="8" class="text-center py-8 text-slate-500 text-xs">Sin operaciones registradas</td></tr>
+                <tr><td colspan="10" class="text-center py-8 text-slate-500 text-xs">Sin operaciones registradas</td></tr>
               </tbody>
               <tfoot id="tfoot-operaciones" class="hidden">
                 <tr class="border-t-2 border-slate-700 bg-slate-800">
-                  <td colspan="5" class="px-5 py-3 text-[10px] font-black text-white uppercase tracking-widest text-right">Neto Invertido</td>
-                  <td id="ops-footer-neto" class="px-5 py-3 text-right font-black text-white mono text-[13px]"></td>
+                  <td colspan="4" class="px-5 py-3 text-[10px] font-black text-white uppercase tracking-widest text-right">Neto Invertido</td>
+                  <td colspan="2"></td>
+                  <td id="ops-footer-neto-ars" class="px-2.5 py-3 text-right font-black text-white mono text-xs whitespace-nowrap"></td>
+                  <td id="ops-footer-neto-usd" class="px-2.5 py-3 text-right font-black text-emerald-300 mono text-xs whitespace-nowrap"></td>
                   <td colspan="2"></td>
                 </tr>
               </tfoot>
@@ -5544,12 +5550,15 @@ function exportarCSV() {
   if (seccionActiva === 'ahorros') {
     const posiciones = typeof calcularPosicionesNetas === 'function' ? calcularPosicionesNetas() : [];
     if (!posiciones.length) return showToast('No hay datos para exportar', 'error');
-    const cabecera = ['Tipo','Activo','Cantidad','Precio_Prom_Compra'];
+    const cabecera = ['Tipo','Activo','Cantidad','Precio_Prom_ARS','Precio_Prom_USD','Costo_Total_ARS','Costo_Total_USD'];
     const filas = posiciones.map(r => [
       r.tipo || '',
       `"${(r.descripcion || r.ticker || '').replace(/"/g, '""')}"`,
       r.cantidad || 0,
-      r.precioPromCompra || 0
+      Math.round(r.precioPromCompra || 0),
+      Number((r.precioPromUSD || 0).toFixed(4)),
+      Math.round(r.costoTotalARS || 0),
+      Number((r.costoTotalUSD || 0).toFixed(2))
     ].join(','));
     const csv  = [cabecera.join(','), ...filas].join('\n');
     descargarCSV(csv, `inversiones_${new Date().toISOString().slice(0,10)}.csv`);
@@ -8799,6 +8808,7 @@ function actualizarDatalistActivos() {
 function calcularPosicionesNetas() {
   const mapa = {};
   const usdRate = (typeof cotizaciones !== 'undefined' && (cotizaciones.USD_MEP || cotizaciones.USD)) || 1;
+  const dOficial = (typeof cotizaciones !== 'undefined' && (cotizaciones.USD || cotizaciones.USD_MEP)) || 1;
 
   // Procesar operaciones cronológicamente (desde la más antigua)
   // Como operacionesData está newest-first, lo recorremos al revés
@@ -8819,6 +8829,7 @@ function calcularPosicionesNetas() {
         cantidad: 0,
         precioRef: 0,
         precioPromCompra: 0,
+        precioPromUSD: 0,
         costoTotalARS: 0,
         costoTotalUSD: 0,
         fechaPrimerCompra: op.fecha || null,
@@ -8831,47 +8842,33 @@ function calcularPosicionesNetas() {
 
     if (op.operacion === 'Compra') {
       const cantPrevia = activo.cantidad;
-      const promPrevio = activo.precioPromCompra || activo.precioRef || 0;
       const nuevaCant = op.cantidad;
-      const nuevoPrecio = op.precio || op.precioCompra || 0;
+      const nuevoPrecioARS = op.precio || op.precioCompra || 0;
+      const nuevoPrecioUSD = op.precioUSD || (esDolar ? 1 : (dOficial > 0 ? nuevoPrecioARS / dOficial : 0));
 
       activo.cantidad += nuevaCant;
-      if (cantPrevia + nuevaCant > 0) {
-        activo.precioPromCompra = ((cantPrevia * promPrevio) + (nuevaCant * nuevoPrecio)) / (cantPrevia + nuevaCant);
-      }
-      activo.precioRef = nuevoPrecio; // Último precio de compra se usa como ref manual
+      activo.precioRef = nuevoPrecioARS;
       activo.fechaUltimaCompra = op.fecha || activo.fechaUltimaCompra;
       if (!activo.fechaPrimerCompra && op.fecha) activo.fechaPrimerCompra = op.fecha;
 
       // Calcular costo de adquisición real de la compra en ARS y USD
-      let opARS = op.totalARS || 0;
-      let opUSD = 0;
+      let opARS = op.totalARS || (nuevaCant * nuevoPrecioARS);
+      let opUSD = op.totalUSD || (nuevaCant * nuevoPrecioUSD);
 
       if (esDolar) {
-        // En divisa Dólar (USD), la cantidad adquirida son los dólares directos
         opUSD = nuevaCant;
         if (!opARS) {
-          opARS = nuevoPrecio > 50 ? (nuevaCant * nuevoPrecio) : (nuevaCant * usdRate);
-        }
-      } else if (op.moneda === 'USD') {
-        opUSD = nuevaCant * nuevoPrecio;
-        if (!opARS) {
-          opARS = opUSD * usdRate;
-        }
-      } else {
-        // Moneda ARS
-        if (!opARS) {
-          opARS = nuevaCant * nuevoPrecio;
-        }
-        if (op.precioUSD && op.precioUSD > 0) {
-          opUSD = nuevaCant * op.precioUSD;
-        } else {
-          opUSD = usdRate > 0 ? (opARS / usdRate) : 0;
+          opARS = nuevoPrecioARS > 50 ? (nuevaCant * nuevoPrecioARS) : (nuevaCant * usdRate);
         }
       }
 
       activo.costoTotalARS = (activo.costoTotalARS || 0) + opARS;
       activo.costoTotalUSD = (activo.costoTotalUSD || 0) + opUSD;
+
+      if (activo.cantidad > 0) {
+        activo.precioPromCompra = activo.costoTotalARS / activo.cantidad;
+        activo.precioPromUSD    = activo.costoTotalUSD / activo.cantidad;
+      }
     } else if (op.operacion === 'Venta') {
       const cantPrevia = activo.cantidad;
       if (cantPrevia > 0) {
@@ -8880,6 +8877,10 @@ function calcularPosicionesNetas() {
         activo.costoTotalUSD = Math.max(0, (activo.costoTotalUSD || 0) * (1 - fraccion));
       }
       activo.cantidad -= op.cantidad;
+      if (activo.cantidad > 0) {
+        activo.precioPromCompra = activo.costoTotalARS / activo.cantidad;
+        activo.precioPromUSD    = activo.costoTotalUSD / activo.cantidad;
+      }
     }
   }
 
@@ -9254,13 +9255,6 @@ function renderTablaAhorros() {
     const sinPrecio = tipoRequiereTicker(a.tipo) && !precioARS;
     const fmtARS = v => v != null ? '$' + Math.round(v).toLocaleString('es-AR') : '<span class="text-slate-500">—</span>';
     const fmtUSD = v => v != null ? 'U$S ' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '<span class="text-slate-500">—</span>';
-    const fmtPrecio = () => {
-      if (esDolar) return fmtARS(precioARS) + ' <span class="text-slate-500 text-[9px]">ARS</span>';
-      if (isCriptoActivo(a)) return 'U$S ' + (cotizaciones.BTC_USD?.toLocaleString('en-US', { maximumFractionDigits: 0 }) || '—');
-      if (sinPrecio) return '<span class="text-amber-400 text-[10px]">⚠ Sin precio</span>';
-      if (a.moneda === 'USD') return fmtUSD(precioUSD) + ' <span class="text-slate-500 text-[9px]">USD</span>';
-      return fmtARS(precioARS) + ' <span class="text-slate-500 text-[9px]">ARS</span>';
-    };
 
     let nombreActivo = '';
     let badgeTicker = '';
@@ -9286,33 +9280,36 @@ function renderTablaAhorros() {
     const pesoPct = (totalARS > 0 && valorARS != null) ? ((valorARS / totalARS) * 100) : 0;
     const barColor = getColorActivoAhorro(a, i);
 
-    // Rendimiento en USD (comparando valorUSD actual vs costoUSD de compra)
-    let rendHtml = '<span class="text-slate-500 text-xs">—</span>';
-    if (valorUSD != null && a.cantidad > 0) {
-      let costoUSD = (a.costoTotalUSD && a.costoTotalUSD > 0) ? a.costoTotalUSD : null;
-      if (costoUSD == null) {
-        if (esDolar) {
-          costoUSD = a.cantidad; // Dólar divisa compra = valor exacto en USD
-        } else if (a.moneda === 'USD') {
-          costoUSD = a.cantidad * (a.precioPromCompra || a.precioRef || 0);
-        } else if (a.precioPromCompra && a.precioPromCompra > 0) {
-          const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
-          costoUSD = (a.precioPromCompra * a.cantidad) / usdRate;
-        }
-      }
+    // 1. Rendimiento independiente en ARS
+    const costoARS = a.costoTotalARS || (a.cantidad * (a.precioPromCompra || 0));
+    let rendARSHtml = '<span class="text-slate-500 text-xs">—</span>';
+    if (valorARS != null && costoARS > 0) {
+      const diffARS = valorARS - costoARS;
+      const pctARS  = (diffARS / costoARS) * 100;
+      const esPosA  = diffARS >= -0.01;
+      rendARSHtml = `
+        <div class="flex flex-col items-end">
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black mono border ${esPosA ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-rose-500/15 text-rose-300 border-rose-500/30'}">
+            ${esPosA ? '▲ +' : '▼ '}${Math.abs(pctARS).toFixed(1)}%
+          </span>
+          <span class="text-[9px] font-bold mono mt-0.5 ${esPosA ? 'text-emerald-400/80' : 'text-rose-400/80'}">${esPosA ? '+' : '-'}$${Math.round(Math.abs(diffARS)).toLocaleString('es-AR')}</span>
+        </div>`;
+    }
 
-      if (costoUSD != null && costoUSD > 0) {
-        const diffUSD = valorUSD - costoUSD;
-        const diffPct = ((valorUSD - costoUSD) / costoUSD) * 100;
-        const esPos   = diffUSD >= -0.001;
-        rendHtml = `
-          <div class="flex flex-col items-end">
-            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black mono border ${esPos ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-rose-500/15 text-rose-300 border-rose-500/30'}">
-              ${esPos ? '▲ +' : '▼ '}${diffPct.toFixed(1)}%
-            </span>
-            <span class="text-[9px] font-bold mono mt-0.5 ${esPos ? 'text-emerald-400/80' : 'text-rose-400/80'}">${esPos ? '+' : '-'}U$S ${Math.abs(diffUSD).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-          </div>`;
-      }
+    // 2. Rendimiento independiente en USD
+    const costoUSD = a.costoTotalUSD || (esDolar ? a.cantidad : (a.precioPromUSD ? a.cantidad * a.precioPromUSD : 0));
+    let rendUSDHtml = '<span class="text-slate-500 text-xs">—</span>';
+    if (valorUSD != null && costoUSD > 0) {
+      const diffUSD = valorUSD - costoUSD;
+      const pctUSD  = (diffUSD / costoUSD) * 100;
+      const esPosU  = diffUSD >= -0.001;
+      rendUSDHtml = `
+        <div class="flex flex-col items-end">
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black mono border ${esPosU ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-rose-500/15 text-rose-300 border-rose-500/30'}">
+            ${esPosU ? '▲ +' : '▼ '}${Math.abs(pctUSD).toFixed(1)}%
+          </span>
+          <span class="text-[9px] font-bold mono mt-0.5 ${esPosU ? 'text-emerald-400/80' : 'text-rose-400/80'}">${esPosU ? '+' : '-'}U$S ${Math.abs(diffUSD).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+        </div>`;
     }
 
     const pillCls = tipoColor[a.tipo] || 'bg-slate-800 text-slate-300 border-slate-700';
@@ -9336,11 +9333,18 @@ function renderTablaAhorros() {
           </div>
         </td>
         <td class="px-2 py-2.5 text-xs text-right mono font-bold text-white whitespace-nowrap">${a.cantidad.toLocaleString('es-AR',{maximumFractionDigits:8})}</td>
-        <td class="px-2 py-2.5 text-xs text-right mono text-slate-400 whitespace-nowrap">${(a.moneda === 'USD' && !esDolar) ? fmtUSD(a.precioPromCompra) : fmtARS(a.precioPromCompra)}</td>
-        <td class="px-2 py-2.5 text-xs text-right mono text-slate-300 whitespace-nowrap">${fmtPrecio()}</td>
+        <td class="px-2 py-2.5 text-xs text-right mono whitespace-nowrap">
+          <div class="font-bold text-slate-300">${fmtARS(a.precioPromCompra)}</div>
+          <div class="text-[9px] text-emerald-400/80 font-bold">${fmtUSD(a.precioPromUSD)}</div>
+        </td>
+        <td class="px-2 py-2.5 text-xs text-right mono whitespace-nowrap">
+          <div class="font-bold text-slate-200">${fmtARS(precioARS)}</div>
+          <div class="text-[9px] text-emerald-400/80 font-bold">${fmtUSD(precioUSD)}</div>
+        </td>
         <td class="px-2.5 py-2.5 text-xs text-right mono font-black text-white whitespace-nowrap">${fmtARS(valorARS)}</td>
-        <td class="px-2.5 py-2.5 text-xs text-right mono font-bold text-emerald-300 whitespace-nowrap">${fmtUSD(valorUSD)}</td>
-        <td class="px-2.5 py-2.5 text-xs text-right whitespace-nowrap">${rendHtml}</td>
+        <td class="px-2.5 py-2.5 text-xs text-right mono font-black text-emerald-300 whitespace-nowrap">${fmtUSD(valorUSD)}</td>
+        <td class="px-2.5 py-2.5 text-xs text-right whitespace-nowrap">${rendARSHtml}</td>
+        <td class="px-2.5 py-2.5 text-xs text-right whitespace-nowrap">${rendUSDHtml}</td>
       </tr>`;
   }).join('');
 
@@ -9351,50 +9355,32 @@ function renderTablaAhorros() {
   let netoInvertidoUSD = enriquecidas.reduce((s, a) => s + (a.costoTotalUSD || 0), 0);
 
   // Fallback si costoTotal no estuviera disponible
-  if (netoInvertidoARS <= 0) {
+  if (netoInvertidoARS <= 0 || netoInvertidoUSD <= 0) {
     if (typeof operacionesData !== 'undefined' && operacionesData.length > 0) {
-      let comprasARS = 0, ventasARS = 0;
+      let cARS = 0, vARS = 0;
+      let cUSD = 0, vUSD = 0;
       operacionesData.forEach(op => {
-        if (op.operacion === 'Compra') comprasARS += op.totalARS || 0;
-        else if (op.operacion === 'Venta') ventasARS += op.totalARS || 0;
+        if (op.operacion === 'Compra') {
+          cARS += op.totalARS || 0;
+          cUSD += op.totalUSD || 0;
+        } else if (op.operacion === 'Venta') {
+          vARS += op.totalARS || 0;
+          vUSD += op.totalUSD || 0;
+        }
       });
-      netoInvertidoARS = Math.max(0, comprasARS - ventasARS);
-      const usdRate = (typeof cotizaciones !== 'undefined' && (cotizaciones.USD_MEP || cotizaciones.USD)) || 1;
-      netoInvertidoUSD = usdRate > 0 ? (netoInvertidoARS / usdRate) : 0;
-    } else {
-      netoInvertidoARS = enriquecidas.reduce((s, a) => {
-        if (isDolarActivo(a)) {
-          const p = a.precioPromCompra || a.precioRef || 0;
-          return s + (p > 50 ? a.cantidad * p : a.cantidad * (cotizaciones.USD || cotizaciones.USD_MEP || 1));
-        }
-        if (a.moneda === 'USD') {
-          const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
-          return s + (a.cantidad * (a.precioPromCompra || a.precioRef || 0) * usdRate);
-        }
-        return s + (a.cantidad * (a.precioPromCompra || a.precioRef || 0));
-      }, 0);
-      netoInvertidoUSD = enriquecidas.reduce((s, a) => {
-        if (isDolarActivo(a)) return s + a.cantidad;
-        if (a.moneda === 'USD') return s + (a.cantidad * (a.precioPromCompra || a.precioRef || 0));
-        const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
-        return s + ((a.cantidad * (a.precioPromCompra || a.precioRef || 0)) / usdRate);
-      }, 0);
+      if (netoInvertidoARS <= 0) netoInvertidoARS = Math.max(0, cARS - vARS);
+      if (netoInvertidoUSD <= 0) netoInvertidoUSD = Math.max(0, cUSD - vUSD);
     }
   }
 
-  if (netoInvertidoUSD <= 0 && netoInvertidoARS > 0) {
-    const usdRate = (typeof cotizaciones !== 'undefined' && (cotizaciones.USD_MEP || cotizaciones.USD)) || 1;
-    netoInvertidoUSD = usdRate > 0 ? (netoInvertidoARS / usdRate) : 0;
-  }
-
-  // 2. Diferencia entre el total actual y el neto invertido (P&L no realizado)
+  // 2. Rendimientos separados y reales en ARS y USD
   const diffARS = totalARS - netoInvertidoARS;
   const pctARS  = netoInvertidoARS > 0 ? ((diffARS / netoInvertidoARS) * 100) : 0;
   const esPosARS = diffARS >= -0.01;
 
   const diffUSD = totalUSD - netoInvertidoUSD;
   const pctUSD  = netoInvertidoUSD > 0 ? ((diffUSD / netoInvertidoUSD) * 100) : 0;
-  const esPosUSD = diffUSD >= -0.01;
+  const esPosUSD = diffUSD >= -0.001;
 
   const signoARS = esPosARS ? '+' : '-';
   const diffStrARS = `${signoARS}$${Math.round(Math.abs(diffARS)).toLocaleString('es-AR')}`;
@@ -9406,9 +9392,10 @@ function renderTablaAhorros() {
   const pctStrUSD = `${signoUSD}${Math.abs(pctUSD).toFixed(1)}%`;
   const colorClsUSD = esPosUSD ? 'text-emerald-400' : 'text-rose-400';
 
-  // 3. Cálculo de días promedio ponderados e Interés Anual (TNA estimada)
+  // 3. Cálculo de días promedio ponderados e Interés Anual (TNA estimada) individual por moneda
   const ahora = Date.now();
-  let sumaDiasPonderados = 0;
+  let sumaDiasPonderadosARS = 0;
+  let sumaDiasPonderadosUSD = 0;
   enriquecidas.forEach(a => {
     let fTime = ahora;
     if (a.fechaPrimerCompra) {
@@ -9416,14 +9403,17 @@ function renderTablaAhorros() {
       if (!isNaN(parsed)) fTime = parsed;
     }
     const dias = Math.max(1, (ahora - fTime) / (1000 * 60 * 60 * 24));
-    const peso = Math.max(0.01, a.costoTotalARS || (a.cantidad * (a.precioPromCompra || 1)));
-    sumaDiasPonderados += dias * peso;
+    const pesoARS = Math.max(0.01, a.costoTotalARS || (a.cantidad * (a.precioPromCompra || 1)));
+    const pesoUSD = Math.max(0.01, a.costoTotalUSD || (a.cantidad * (a.precioPromUSD || 1)));
+    sumaDiasPonderadosARS += dias * pesoARS;
+    sumaDiasPonderadosUSD += dias * pesoUSD;
   });
-  const diasEfectivos = netoInvertidoARS > 0 ? Math.max(1, sumaDiasPonderados / netoInvertidoARS) : 1;
+  const diasEfectivosARS = netoInvertidoARS > 0 ? Math.max(1, sumaDiasPonderadosARS / netoInvertidoARS) : 1;
+  const diasEfectivosUSD = netoInvertidoUSD > 0 ? Math.max(1, sumaDiasPonderadosUSD / netoInvertidoUSD) : 1;
 
-  // Interés Anual (% anual / TNA estimada)
-  const tasaAnualARS = (pctARS / diasEfectivos) * 365;
-  const tasaAnualUSD = (pctUSD / diasEfectivos) * 365;
+  // Interés Anual (% anual / TNA estimada) genuino e independiente para cada moneda
+  const tasaAnualARS = (pctARS / diasEfectivosARS) * 365;
+  const tasaAnualUSD = (pctUSD / diasEfectivosUSD) * 365;
 
   const tasaAnualARSStr = `${tasaAnualARS >= 0 ? '+' : ''}${tasaAnualARS.toFixed(1)}% anual`;
   const tasaAnualUSDStr = `${tasaAnualUSD >= 0 ? '+' : ''}${tasaAnualUSD.toFixed(1)}% anual`;
@@ -9432,13 +9422,25 @@ function renderTablaAhorros() {
   tfoot.classList.remove('hidden');
   document.getElementById('ah-footer-ars').textContent = '$' + Math.round(totalARS).toLocaleString('es-AR');
   document.getElementById('ah-footer-usd').textContent = 'U$S ' + totalUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const footRend = document.getElementById('ah-footer-rend');
-  if (footRend) {
-    footRend.innerHTML = `
-      <div class="flex justify-end">
+  
+  const footRendARS = document.getElementById('ah-footer-rend-ars');
+  if (footRendARS) {
+    footRendARS.innerHTML = `
+      <div class="flex flex-col items-end">
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black mono border ${esPosARS ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-rose-500/15 text-rose-300 border-rose-500/30'}">
+          ${esPosARS ? '▲ +' : '▼ '}${Math.abs(pctARS).toFixed(1)}% ARS
+        </span>
+        <span class="text-[9px] font-bold mono mt-0.5 ${esPosARS ? 'text-emerald-400/80' : 'text-rose-400/80'}">${diffStrARS}</span>
+      </div>`;
+  }
+  const footRendUSD = document.getElementById('ah-footer-rend-usd');
+  if (footRendUSD) {
+    footRendUSD.innerHTML = `
+      <div class="flex flex-col items-end">
         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black mono border ${esPosUSD ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-rose-500/15 text-rose-300 border-rose-500/30'}">
           ${esPosUSD ? '▲ +' : '▼ '}${Math.abs(pctUSD).toFixed(1)}% USD
         </span>
+        <span class="text-[9px] font-bold mono mt-0.5 ${esPosUSD ? 'text-emerald-400/80' : 'text-rose-400/80'}">${diffStrUSD}</span>
       </div>`;
   }
 
@@ -9447,18 +9449,18 @@ function renderTablaAhorros() {
   document.getElementById('ah-total-usd').textContent = 'U$S ' + totalUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   const n = posiciones.length;
-  document.getElementById('ah-ars-sub').innerHTML = `${n} activo${n !== 1 ? 's' : ''} · <span class="${colorClsARS} mono font-bold">${diffStrARS} (${pctStrARS})</span>`;
-  document.getElementById('ah-usd-sub').innerHTML = `${n} activo${n !== 1 ? 's' : ''} · <span class="${colorClsUSD} mono font-bold">${diffStrUSD} (${pctStrUSD})</span>`;
+  document.getElementById('ah-ars-sub').innerHTML = `${n} activo${n !== 1 ? 's' : ''} · <span class="${colorClsARS} mono font-bold">${diffStrARS} (${pctStrARS} ARS)</span>`;
+  document.getElementById('ah-usd-sub').innerHTML = `${n} activo${n !== 1 ? 's' : ''} · <span class="${colorClsUSD} mono font-bold">${diffStrUSD} (${pctStrUSD} USD)</span>`;
 
-  // Interés anual en tarjetas de Inversiones
+  // Interés anual en tarjetas de Inversiones (diferenciado por moneda)
   const elIntArs = document.getElementById('ah-interes-anual-val');
   if (elIntArs) {
-    elIntArs.textContent = tasaAnualARSStr;
+    elIntArs.textContent = `${tasaAnualARSStr} (ARS)`;
     elIntArs.className = `mono font-black ${tasaAnualARS >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
   }
   const elIntUsd = document.getElementById('ah-interes-anual-usd-val');
   if (elIntUsd) {
-    elIntUsd.textContent = tasaAnualUSDStr;
+    elIntUsd.textContent = `${tasaAnualUSDStr} (USD)`;
     elIntUsd.className = `mono font-black ${tasaAnualUSD >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
   }
 
@@ -9467,7 +9469,7 @@ function renderTablaAhorros() {
   const elHeaderTxt   = document.getElementById('ah-interes-anual-header-txt');
   if (elHeaderBadge && elHeaderTxt) {
     elHeaderBadge.classList.remove('hidden');
-    elHeaderTxt.textContent = `Interés: ${tasaAnualARSStr}`;
+    elHeaderTxt.textContent = `TNA: ${tasaAnualARSStr} ARS · ${tasaAnualUSDStr} USD`;
   }
 
   // 6. Actualizar Tarjeta de Inicio / Dashboard Principal
@@ -10055,6 +10057,8 @@ document.getElementById('ahorrosForm').addEventListener('submit', async e => {
 
   // Columna G: Precio en ARS (op.precio)
   // Columna H: Precio en USD calculado por Dólar Oficial (op.precioCompra / op.precioUSD)
+  const totalUSD = isDivisaActivo(tipo) ? cant : (cant * precioUSD);
+
   const opCompra = {
     fecha: new Date().toISOString(),
     operacion: 'Compra',
@@ -10067,6 +10071,7 @@ document.getElementById('ahorrosForm').addEventListener('submit', async e => {
     precioCompra: precioUSD,
     precioUSD: precioUSD,
     totalARS,
+    totalUSD,
     pnl: 0,
     moneda: esUSD ? 'USD' : 'ARS'
   };
@@ -10212,8 +10217,12 @@ document.getElementById('ventaForm').addEventListener('submit', async e => {
 
   const esUSD    = activo.moneda === 'USD';
   const usdRate  = cotizaciones.USD_MEP || cotizaciones.USD || 1;
+  const dOficial = cotizaciones.USD || usdRate || 1;
   const pnl      = esUSD ? ((precioVenta - precioComp) * cant * usdRate) : ((precioVenta - precioComp) * cant);
   const totalARS = esUSD ? (precioVenta * cant * usdRate) : (precioVenta * cant);
+  const precioUSD = esUSD ? precioVenta : (dOficial > 0 ? Number((precioVenta / dOficial).toFixed(4)) : 0);
+  const totalUSD = isDolarActivo(activo) ? cant : (cant * precioUSD);
+
   const btn      = document.getElementById('btn-registrar-venta');
   const orig     = btn.innerHTML;
   btn.disabled   = true;
@@ -10229,7 +10238,9 @@ document.getElementById('ventaForm').addEventListener('submit', async e => {
     cantidad:     cant,
     precio:       precioVenta,
     precioCompra: precioComp,
+    precioUSD,
     totalARS,
+    totalUSD,
     pnl,
     moneda:       esUSD ? 'USD' : 'ARS'
   };
@@ -10332,26 +10343,39 @@ function renderTablaOperaciones() {
   const count = document.getElementById('ah-ops-count');
   if (!tbody) return;
   if (!operacionesData.length) {
-    tbody.innerHTML = '<tr><td colspan="8" class="text-center py-8 text-slate-500 text-xs">Sin operaciones registradas</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10" class="text-center py-8 text-slate-500 text-xs">Sin operaciones registradas</td></tr>';
     if (count) count.textContent = '— operaciones';
     if (tfoot) tfoot.classList.add('hidden');
     return;
   }
 
-  let comprasARS = 0;
-  let ventasARS = 0;
+  let comprasARS = 0, ventasARS = 0;
+  let comprasUSD = 0, ventasUSD = 0;
   operacionesData.forEach(op => {
-    if (op.operacion === 'Compra') comprasARS += op.totalARS || 0;
-    else if (op.operacion === 'Venta') ventasARS += op.totalARS || 0;
+    const tARS = op.totalARS || 0;
+    const tUSD = op.totalUSD || 0;
+    if (op.operacion === 'Compra') {
+      comprasARS += tARS;
+      comprasUSD += tUSD;
+    } else if (op.operacion === 'Venta') {
+      ventasARS += tARS;
+      ventasUSD += tUSD;
+    }
   });
-  const netoInvertido = comprasARS - ventasARS;
+  const netoInvertidoARS = comprasARS - ventasARS;
+  const netoInvertidoUSD = comprasUSD - ventasUSD;
+
   if (tfoot) {
     tfoot.classList.remove('hidden');
-    document.getElementById('ops-footer-neto').textContent = '$' + Math.round(netoInvertido).toLocaleString('es-AR');
+    const elNetoARS = document.getElementById('ops-footer-neto-ars');
+    const elNetoUSD = document.getElementById('ops-footer-neto-usd');
+    if (elNetoARS) elNetoARS.textContent = '$' + Math.round(netoInvertidoARS).toLocaleString('es-AR');
+    if (elNetoUSD) elNetoUSD.textContent = 'U$S ' + netoInvertidoUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
   if (count) count.textContent = `${operacionesData.length} operación${operacionesData.length !== 1 ? 'es' : ''}`;
-  const fmt = n => '$' + Math.round(Math.abs(n)).toLocaleString('es-AR');
+  const fmtARS = n => '$' + Math.round(Math.abs(n)).toLocaleString('es-AR');
+  const fmtUSD = n => n != null && n > 0 ? ('U$S ' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })) : '<span class="text-slate-500">—</span>';
   const tipoIcon = {
     USD: '💵', Divisa: '💵', Divisas: '💵', 'Dólar': '💵', Dolar: '💵', Euro: '💶', Real: '🪙',
     BTC: '₿', Cripto: '🪙', Criptomonedas: '🪙',
@@ -10361,6 +10385,7 @@ function renderTablaOperaciones() {
     'Obligación Negociable': '📑', 'Obligaciones Negociables': '📑', 'Obligacion Negociable': '📑', ON: '📑',
     FCI: '📊'
   };
+
   tbody.innerHTML = operacionesData.map((op, i) => {
     const esVenta    = op.operacion === 'Venta';
     const hasPnl     = esVenta && op.pnl !== 0;
@@ -10372,7 +10397,7 @@ function renderTablaOperaciones() {
     const pctOp      = (hasPnl && op.precioCompra > 0) ? (((op.precio - op.precioCompra) / op.precioCompra) * 100) : null;
     const pnlCell    = hasPnl
       ? `<div class="flex flex-col items-end">
-           <span class="font-black mono text-xs ${pnlPos ? 'text-emerald-400' : 'text-rose-400'}">${pnlPos ? '+' : '-'}${fmt(op.pnl)}</span>
+           <span class="font-black mono text-xs ${pnlPos ? 'text-emerald-400' : 'text-rose-400'}">${pnlPos ? '+' : '-'}${fmtARS(op.pnl)}</span>
            ${pctOp !== null ? `<span class="text-[9px] font-bold mono px-1.5 py-0.2 rounded ${pnlPos ? 'bg-emerald-500/15 text-emerald-300' : 'bg-rose-500/15 text-rose-300'}">${pnlPos ? '+' : ''}${pctOp.toFixed(1)}%</span>` : ''}
          </div>`
       : '<span class="text-slate-500">—</span>';
@@ -10382,20 +10407,24 @@ function renderTablaOperaciones() {
     const icon       = tipoIcon[op.tipo] || '💎';
     const badgeMon   = op.moneda === 'USD' ? '<span class="ml-1 px-1 py-0.2 bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 rounded text-[8px] font-black mono">USD</span>' : '';
     const tickerBadge = op.ticker ? `<span class="ml-1.5 px-1.5 py-0.5 bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 rounded text-[9px] font-black mono">${op.ticker.toUpperCase()}</span>${badgeMon}` : (badgeMon);
-    const precioStr  = op.moneda === 'USD' ? ('U$S ' + op.precio.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })) : fmt(op.precio);
-    const pUSD = op.precioUSD || (op.operacion === 'Compra' && op.precioCompra > 0 && Math.abs(op.precioCompra - op.precio) > 0.01 ? op.precioCompra : 0);
-    const pUSDFmt = pUSD > 0 ? `U$S ${pUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}` : '';
+
+    const precioARSStr = fmtARS(op.precio);
+    const precioUSDVal = op.precioUSD || 0;
+    const precioUSDStr = fmtUSD(precioUSDVal);
+    const totalARSStr  = fmtARS(op.totalARS);
+    const totalUSDVal  = op.totalUSD || 0;
+    const totalUSDStr  = totalUSDVal > 0 ? ('U$S ' + totalUSDVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })) : '<span class="text-slate-500">—</span>';
+
     return `
       <tr class="table-row border-b border-slate-800 fade-row" style="animation-delay:${i*0.03}s">
         <td class="px-2.5 py-2.5 text-xs text-slate-400 mono whitespace-nowrap">${fechaStr}</td>
         <td class="px-2 py-2.5 text-xs whitespace-nowrap">${opBadge}</td>
         <td class="px-2.5 py-2.5 text-xs text-slate-200 font-bold"><div class="flex flex-col"><span class="flex items-center"><span class="mr-1">${icon}</span>${nombreAct}${tickerBadge}</span>${platBadge}</div></td>
         <td class="px-2.5 py-2.5 text-xs text-right mono text-slate-300 font-semibold whitespace-nowrap">${op.cantidad.toLocaleString('es-AR', {maximumFractionDigits:8})}</td>
-        <td class="px-2.5 py-2.5 text-xs text-right mono whitespace-nowrap">
-          <div class="font-bold text-slate-300">${precioStr}</div>
-          ${pUSDFmt ? `<div class="text-[9px] text-emerald-400/80 font-bold mono">${pUSDFmt}</div>` : ''}
-        </td>
-        <td class="px-2.5 py-2.5 text-xs text-right mono font-black text-white whitespace-nowrap">${fmt(op.totalARS)}</td>
+        <td class="px-2.5 py-2.5 text-xs text-right mono font-semibold text-slate-300 whitespace-nowrap">${precioARSStr}</td>
+        <td class="px-2.5 py-2.5 text-xs text-right mono font-semibold text-emerald-400 whitespace-nowrap">${precioUSDStr}</td>
+        <td class="px-2.5 py-2.5 text-xs text-right mono font-black text-white whitespace-nowrap">${totalARSStr}</td>
+        <td class="px-2.5 py-2.5 text-xs text-right mono font-black text-emerald-300 whitespace-nowrap">${totalUSDStr}</td>
         <td class="px-2.5 py-2.5 text-xs text-right whitespace-nowrap">${pnlCell}</td>
         <td class="px-2 py-2.5 text-xs text-center whitespace-nowrap">
           <div class="flex items-center justify-center gap-2.5">
@@ -10560,10 +10589,12 @@ async function guardarEdicionOperacion() {
   const dOficial = cotizaciones.USD || cotizaciones.USD_MEP || 1;
   const precioUSDCalc = operacion === 'Compra' ? (esUSD ? precio : (dOficial > 0 ? Number((precio / dOficial).toFixed(4)) : precioComp)) : (precioComp || 0);
 
+  const totalUSDCalc = isDolarActivo(anterior) ? cantidad : (cantidad * precioUSDCalc);
+
   operacionesData[pendingEditOpIdx] = {
     ...anterior, fecha: fechaISO, operacion, descripcion, plataforma: descripcion,
     cantidad, precio, precioCompra: (precioComp > 0 && Math.abs(precioComp - precio) > 0.01) ? precioComp : precioUSDCalc,
-    precioUSD: precioUSDCalc, totalARS, pnl, moneda: esUSD ? 'USD' : 'ARS'
+    precioUSD: precioUSDCalc, totalARS, totalUSD: totalUSDCalc, pnl, moneda: esUSD ? 'USD' : 'ARS'
   };
 
   cerrarModalEditarOp();
