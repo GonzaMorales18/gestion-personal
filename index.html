@@ -10023,7 +10023,7 @@ document.getElementById('ahorrosForm').addEventListener('submit', async e => {
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i><span>Guardando...</span>';
 
-  // Obtener cotización Dólar Oficial asegurada
+  // Obtener cotización Dólar Oficial asegurada en el instante de la compra
   let dolarOficial = cotizaciones.USD;
   if (!dolarOficial || dolarOficial <= 0) {
     try {
@@ -10039,13 +10039,20 @@ document.getElementById('ahorrosForm').addEventListener('submit', async e => {
 
   const descripcionFinal = plataforma || ticker || tipo;
   const esUSD = !!document.getElementById('ah-moneda-usd')?.checked;
+  const esDolar = isDivisaActivo(tipo);
   const usdRate = cotizaciones.USD_MEP || dolarOficial || 1;
 
   let precioARS = 0;
   let precioUSD = 0;
   let totalARS  = 0;
 
-  if (esUSD) {
+  if (esDolar) {
+    // Para Dólar Divisa: precioActual es la cotización en ARS pagada por cada dólar (ej: $1.565)
+    // El precio unitario en USD es 1 (1 USD = 1 USD)
+    precioARS = precioActual;
+    precioUSD = 1;
+    totalARS  = cant * precioActual;
+  } else if (esUSD) {
     precioUSD = precioActual;
     precioARS = Number((precioActual * dolarOficial).toFixed(2));
     totalARS  = cant * precioActual * usdRate;
@@ -10055,10 +10062,10 @@ document.getElementById('ahorrosForm').addEventListener('submit', async e => {
     totalARS  = cant * precioActual;
   }
 
-  // Columna G: Precio en ARS (op.precio)
-  // Columna H: Precio en USD calculado por Dólar Oficial (op.precioCompra / op.precioUSD)
-  const totalUSD = isDivisaActivo(tipo) ? cant : (cant * precioUSD);
+  const totalUSD = esDolar ? cant : (cant * precioUSD);
 
+  // Columna G: Precio en ARS (op.precio)
+  // Columna H: Precio en USD guardado de forma fija (op.precioCompra)
   const opCompra = {
     fecha: new Date().toISOString(),
     operacion: 'Compra',
@@ -10295,17 +10302,16 @@ async function cargarOperacionesSheet() {
         moneda = 'USD';
       }
 
-      // Si es Compra y precioCompra difiere de precio (o precio > 50), calcular/usar precioUSD oficial
-      let precioUSD = 0;
-      if (r[1] === 'Compra' || !r[1]) {
-        if (precioCompra > 0 && Math.abs(precioCompra - precio) > 0.01) {
-          precioUSD = precioCompra;
-        } else if (precioCompra > 0 && precio > 50) {
-          // Fila histórica previa donde ambas columnas tenían el precio en ARS
-          const dOf = cotizaciones.USD || cotizaciones.USD_MEP || 1;
-          precioUSD = dOf > 0 ? Number((precio / dOf).toFixed(4)) : 0;
-        }
+      const esDolar = isDolarActivo({ tipo, ticker, descripcion: desc });
+      // Columna G (r[6]): Precio en ARS
+      // Columna H (r[7]): Precio en USD guardado en la planilla. Se lee directamente sin recalcular con el dólar actual.
+      let precioUSD = precioCompra;
+      if (esDolar) {
+        // En divisa dólar, si la columna H tiene un valor razonable (ej 1) se usa, o por defecto 1 USD
+        precioUSD = (precioCompra > 0 && precioCompra <= 50) ? precioCompra : 1;
       }
+
+      const totalUSD = esDolar ? cant : (cant * (precioUSD || 0));
 
       return {
         fecha:        r[0] || '',
@@ -10319,6 +10325,7 @@ async function cargarOperacionesSheet() {
         precioCompra,
         precioUSD,
         totalARS,
+        totalUSD,
         pnl,
         moneda
       };
