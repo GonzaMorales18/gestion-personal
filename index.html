@@ -3928,7 +3928,7 @@
         <!-- Cabecera Aspiradora -->
         <div class="flex items-center justify-between mb-6 relative z-10">
           <div class="flex items-center gap-3">
-            <div id="dom-vac-icon-box" class="w-10 h-10 rounded-xl bg-emerald-900/40 border border-emerald-500/30 flex items-center justify-center transition-colors">
+            <div id="dom-vac-icon-box" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-all">
               <i id="dom-vac-icon" class="fas fa-robot text-emerald-400 text-base"></i>
             </div>
             <div>
@@ -15623,6 +15623,9 @@ function iniciarDomotica() {
         plug: { ...domState.plug, ...(parsed.plug || {}) },
         tv: { ...domState.tv, ...(parsed.tv || {}) }
       };
+      if (domState.vacuum.status === 'returning' || domState.vacuum.status === 'charging') {
+        domState.vacuum.status = 'docked';
+      }
       if (domState.vacuum.area === 42 || !domState.vacuum.area) {
         domState.vacuum.area = 34;
       }
@@ -15817,9 +15820,9 @@ async function enviarComandoSmartLife(dispositivo, accion, payload = {}) {
           domState.vacuum.status = 'cleaning';
         } else if (['paused'].includes(val)) {
           domState.vacuum.status = 'paused';
-        } else if (['goto_charge', 'charging', 'returning'].includes(val)) {
+        } else if (['goto_charge', 'returning'].includes(val)) {
           domState.vacuum.status = 'returning';
-        } else if (['charge_done', 'standby', 'sleep', 'docked'].includes(val)) {
+        } else if (['charging', 'charge_done', 'standby', 'sleep', 'docked'].includes(val)) {
           domState.vacuum.status = 'docked';
         }
       }
@@ -15918,10 +15921,41 @@ function renderDomoticaUI() {
   const vacStartBtn = document.getElementById('dom-vac-btn-start');
 
   const vacStatusMap = {
-    docked:    { badge: 'En Base', state: 'Cargada', sub: 'En base de carga — Lista para aspirar', color: 'text-emerald-400', active: false },
-    cleaning:  { badge: 'Limpiando', state: 'Aspirando', sub: 'Limpieza en progreso por la casa', color: 'text-cyan-400', active: true },
-    paused:    { badge: 'En Pausa', state: 'Pausada', sub: 'Recorrido en pausa temporal', color: 'text-amber-400', active: false },
-    returning: { badge: 'Volviendo', state: 'A la Base', sub: 'Regresando al cargador automáticamente', color: 'text-violet-400', active: true }
+    docked: {
+      badge: 'En Base',
+      state: (vac.battery < 95) ? 'Cargando' : 'Cargada',
+      sub: (vac.battery < 95) ? `En base de carga · Cargando (${vac.battery}%)` : 'En base de carga · Lista para aspirar',
+      color: 'text-emerald-400',
+      active: false
+    },
+    charging: {
+      badge: 'En Base',
+      state: 'Cargando',
+      sub: `En base de carga · Cargando (${vac.battery}%)`,
+      color: 'text-emerald-400',
+      active: false
+    },
+    cleaning: {
+      badge: 'Limpiando',
+      state: 'Aspirando',
+      sub: 'Limpieza en progreso por la casa',
+      color: 'text-cyan-400',
+      active: true
+    },
+    paused: {
+      badge: 'En Pausa',
+      state: 'Pausada',
+      sub: 'Recorrido en pausa temporal',
+      color: 'text-amber-400',
+      active: false
+    },
+    returning: {
+      badge: 'Volviendo',
+      state: 'A la Base',
+      sub: 'Regresando al cargador automáticamente',
+      color: 'text-violet-400',
+      active: false
+    }
   };
   const vInfo = vacStatusMap[vac.status] || vacStatusMap.docked;
 
@@ -15940,6 +15974,13 @@ function renderDomoticaUI() {
   }
   if (vacArea) vacArea.textContent = `${vac.area} m²`;
   if (vacTime) vacTime.textContent = `${vac.time} min`;
+
+  const vacIconBox = document.getElementById('dom-vac-icon-box');
+  if (vacIconBox) {
+    vacIconBox.className = vInfo.active
+      ? 'w-10 h-10 rounded-xl bg-emerald-900/40 border border-emerald-500/30 flex items-center justify-center transition-colors'
+      : 'w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-all';
+  }
 
   if (vInfo.active) {
     if (vacCard) vacCard.className = 'bg-black rounded-2xl border border-emerald-500/50 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all shadow-lg shadow-emerald-950/30';
@@ -16124,7 +16165,7 @@ function domToggleSwingAC() {
 
 // ─── Controles Aspiradora Robot (Smart Life / Tuya Cloud) ─────────────────────
 function domToggleAspiradoraPower() {
-  const estaActiva = domState.vacuum.status === 'cleaning' || domState.vacuum.status === 'returning';
+  const estaActiva = domState.vacuum.status === 'cleaning';
   domAccionAspiradora(estaActiva ? 'pause' : 'start');
 }
 
