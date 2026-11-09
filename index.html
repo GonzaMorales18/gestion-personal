@@ -4081,7 +4081,7 @@
         <div id="dom-tv-glow" class="absolute inset-0 bg-gradient-to-br from-violet-900/15 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none"></div>
 
         <!-- Cabecera TV (Mando Infrarrojo IR) -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 relative z-10">
+        <div class="flex items-center justify-between mb-5 relative z-10">
           <div class="flex items-center gap-3">
             <div id="dom-tv-icon-box" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-all">
               <i id="dom-tv-icon" class="fas fa-tv text-violet-400 text-sm"></i>
@@ -4095,18 +4095,10 @@
             </div>
           </div>
 
-          <div class="flex items-center gap-2">
-            <button onclick="domEncenderTV()" title="Enviar señal de Encendido"
-                    class="h-10 px-3.5 rounded-xl bg-violet-600/20 hover:bg-violet-600 text-violet-300 hover:text-white border border-violet-500/40 flex items-center gap-1.5 font-black text-xs uppercase tracking-wider transition-all active:scale-95 shadow-sm">
-              <i class="fas fa-power-off text-xs"></i>
-              <span>Encender</span>
-            </button>
-            <button onclick="domApagarTV()" title="Enviar señal de Apagado"
-                    class="h-10 px-3.5 rounded-xl bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-500/40 flex items-center gap-1.5 font-black text-xs uppercase tracking-wider transition-all active:scale-95 shadow-sm">
-              <i class="fas fa-power-off text-xs"></i>
-              <span>Apagar</span>
-            </button>
-          </div>
+          <button onclick="domToggleTV()" id="dom-tv-power-btn" title="Encender / Apagar TV"
+                  class="w-11 h-11 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 flex items-center justify-center transition-all active:scale-95">
+            <i class="fas fa-power-off text-sm"></i>
+          </button>
         </div>
 
         <!-- Barra Superior: Botón Home (Arriba) + Volumen Compacto a la Derecha -->
@@ -16254,18 +16246,19 @@ function iniciarTimerEnchufeDomotica() {
 }
 
 // ─── Controles Televisor Android TV (Mando Infrarrojo IR sin estado ciego) ────
-function domEncenderTV() {
+function domToggleTV() {
   animarFeedbackDomotica('dom-tv-icon-box');
-  actualizarUltimaOrdenDomotica('dom-tv-subtitle', 'Encender TV');
-  enviarComandoSmartLife('TV (Control IR)', 'Encender Android TV (Power IR)', { key: 'power' });
-  showToast('Señal enviada: Encender TV', 'ok');
+  actualizarUltimaOrdenDomotica('dom-tv-subtitle', 'Encender / Apagar');
+  enviarComandoSmartLife('TV (Control IR)', 'Conmutar Android TV (Power IR)', { key: 'power' });
+  showToast('Señal enviada: Encender / Apagar TV', 'ok');
+}
+
+function domEncenderTV() {
+  domToggleTV();
 }
 
 function domApagarTV() {
-  animarFeedbackDomotica('dom-tv-icon-box');
-  actualizarUltimaOrdenDomotica('dom-tv-subtitle', 'Apagar TV');
-  enviarComandoSmartLife('TV (Control IR)', 'Apagar Android TV (Power IR)', { key: 'power' });
-  showToast('Señal enviada: Apagar TV', 'ok');
+  domToggleTV();
 }
 
 function domCmdTV(cmd) {
