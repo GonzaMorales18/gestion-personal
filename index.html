@@ -3832,7 +3832,7 @@
       <!-- 1. AIRE ACONDICIONADO (MANDO INFRARROJO IR) -->
       <div id="dom-card-ac" class="bg-black rounded-2xl border border-slate-700/60 p-5 md:p-6 relative overflow-hidden flex flex-col justify-between transition-all">
         <!-- Cabecera A/C -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 relative z-10">
+        <div class="flex items-center justify-between mb-6 relative z-10">
           <div class="flex items-center gap-3">
             <div id="dom-ac-icon-box" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-all">
               <i id="dom-ac-icon" class="fas fa-snowflake text-cyan-400 text-base"></i>
@@ -3846,18 +3846,10 @@
             </div>
           </div>
 
-          <div class="flex items-center gap-2">
-            <button onclick="domEncenderAC()" title="Enviar señal de Encendido"
-                    class="h-10 px-3.5 rounded-xl bg-cyan-600/20 hover:bg-cyan-600 text-cyan-300 hover:text-white border border-cyan-500/40 flex items-center gap-1.5 font-black text-xs uppercase tracking-wider transition-all active:scale-95 shadow-sm">
-              <i class="fas fa-power-off text-xs"></i>
-              <span>Encender</span>
-            </button>
-            <button onclick="domApagarAC()" title="Enviar señal de Apagado"
-                    class="h-10 px-3.5 rounded-xl bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-500/40 flex items-center gap-1.5 font-black text-xs uppercase tracking-wider transition-all active:scale-95 shadow-sm">
-              <i class="fas fa-power-off text-xs"></i>
-              <span>Apagar</span>
-            </button>
-          </div>
+          <button onclick="domToggleAC()" id="dom-ac-power-btn" title="Encender / Apagar Aire"
+                  class="w-11 h-11 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 flex items-center justify-center transition-all active:scale-95">
+            <i class="fas fa-power-off text-sm"></i>
+          </button>
         </div>
 
         <!-- Display Central de Temperatura -->
@@ -16069,30 +16061,23 @@ function actualizarUltimaOrdenDomotica(elementId, orden) {
 }
 
 // ─── Controles Aire Acondicionado (Mando Interactivo IR) ────────────────────────
-function domEncenderAC() {
+function domToggleAC() {
   animarFeedbackDomotica('dom-ac-icon-box');
   enviarComandoSmartLife(
     'Aire Acondicionado (IR)',
-    `Encender A/C (${domState.ac.temp}°C · ${(domState.ac.mode || 'cool').toUpperCase()})`,
-    { ...domState.ac, power: true }
+    'Conmutar A/C (Encender / Apagar)',
+    { ...domState.ac, power: false }
   );
-  actualizarUltimaOrdenDomotica('dom-ac-subtitle', `Encender a ${domState.ac.temp}°C`);
-  showToast(`Señal enviada: Encender Aire (${domState.ac.temp}°C)`, 'ok');
+  actualizarUltimaOrdenDomotica('dom-ac-subtitle', 'Encender / Apagar');
+  showToast('Señal enviada: Encender / Apagar Aire', 'ok');
 }
 
 function domApagarAC() {
-  animarFeedbackDomotica('dom-ac-icon-box');
-  enviarComandoSmartLife(
-    'Aire Acondicionado (IR)',
-    'Apagar A/C (Señal IR de apagado)',
-    { ...domState.ac, power: false }
-  );
-  actualizarUltimaOrdenDomotica('dom-ac-subtitle', 'Apagar Aire');
-  showToast('Señal enviada: Apagar Aire', 'ok');
+  domToggleAC();
 }
 
-function domToggleAC() {
-  domEncenderAC();
+function domEncenderAC() {
+  domToggleAC();
 }
 
 function domCambiarTempAC(delta) {
