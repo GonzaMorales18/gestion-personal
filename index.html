@@ -3886,37 +3886,37 @@
         </div>
 
         <!-- Selector de Modo y Velocidad -->
-        <div class="space-y-1.5 md:space-y-2 relative z-10">
+        <div class="space-y-1.5 md:space-y-2 relative z-10 max-w-[500px] mx-auto w-full">
           <div>
             <span class="text-[8px] md:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Modo de Operación</span>
-            <div class="grid grid-cols-5 gap-1 md:gap-1.5">
-              <button onclick="domSetModoAC('cool')" id="dom-ac-mode-cool" class="h-7 md:h-7.5 rounded-lg border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 md:gap-1.5 transition-all">
-                <i class="fas fa-snowflake text-[8.5px]"></i><span>Frío</span>
+            <div class="grid grid-cols-5 gap-1.5 md:gap-2">
+              <button onclick="domSetModoAC('cool')" id="dom-ac-mode-cool" class="h-11 md:h-12 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 md:gap-1.5 transition-all">
+                <i class="fas fa-snowflake text-[9px] md:text-[10px]"></i><span>Frío</span>
               </button>
-              <button onclick="domSetModoAC('heat')" id="dom-ac-mode-heat" class="h-7 md:h-7.5 rounded-lg border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 md:gap-1.5 transition-all">
-                <i class="fas fa-sun text-[8.5px]"></i><span>Calor</span>
+              <button onclick="domSetModoAC('heat')" id="dom-ac-mode-heat" class="h-11 md:h-12 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 md:gap-1.5 transition-all">
+                <i class="fas fa-sun text-[9px] md:text-[10px]"></i><span>Calor</span>
               </button>
-              <button onclick="domSetModoAC('auto')" id="dom-ac-mode-auto" class="h-7 md:h-7.5 rounded-lg border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 md:gap-1.5 transition-all">
-                <i class="fas fa-magic text-[8.5px]"></i><span>Auto</span>
+              <button onclick="domSetModoAC('auto')" id="dom-ac-mode-auto" class="h-11 md:h-12 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 md:gap-1.5 transition-all">
+                <i class="fas fa-magic text-[9px] md:text-[10px]"></i><span>Auto</span>
               </button>
-              <button onclick="domSetModoAC('fan')" id="dom-ac-mode-fan" class="h-7 md:h-7.5 rounded-lg border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 md:gap-1.5 transition-all">
-                <i class="fas fa-fan text-[8.5px]"></i><span>Vent.</span>
+              <button onclick="domSetModoAC('fan')" id="dom-ac-mode-fan" class="h-11 md:h-12 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 md:gap-1.5 transition-all">
+                <i class="fas fa-fan text-[9px] md:text-[10px]"></i><span>Vent.</span>
               </button>
-              <button onclick="domSetModoAC('dry')" id="dom-ac-mode-dry" class="h-7 md:h-7.5 rounded-lg border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 md:gap-1.5 transition-all">
-                <i class="fas fa-tint-slash text-[8.5px]"></i><span>Seco</span>
+              <button onclick="domSetModoAC('dry')" id="dom-ac-mode-dry" class="h-11 md:h-12 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 md:gap-1.5 transition-all">
+                <i class="fas fa-tint-slash text-[9px] md:text-[10px]"></i><span>Seco</span>
               </button>
             </div>
           </div>
 
           <div>
             <span class="text-[8px] md:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Velocidad y Swing</span>
-            <div class="grid grid-cols-5 gap-1 md:gap-1.5">
-              <button onclick="domSetFanAC('auto')" id="dom-ac-fan-auto" class="h-7 md:h-7.5 rounded-lg border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all">Auto</button>
-              <button onclick="domSetFanAC('low')" id="dom-ac-fan-low" class="h-7 md:h-7.5 rounded-lg border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all">Baja</button>
-              <button onclick="domSetFanAC('med')" id="dom-ac-fan-med" class="h-7 md:h-7.5 rounded-lg border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all">Media</button>
-              <button onclick="domSetFanAC('high')" id="dom-ac-fan-high" class="h-7 md:h-7.5 rounded-lg border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all">Alta</button>
-              <button onclick="domToggleSwingAC()" id="dom-ac-swing-btn" class="h-7 md:h-7.5 rounded-lg border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1">
-                <i class="fas fa-arrows-alt-v text-[8px]"></i><span>Swing</span>
+            <div class="grid grid-cols-5 gap-1.5 md:gap-2">
+              <button onclick="domSetFanAC('auto')" id="dom-ac-fan-auto" class="h-11 md:h-12 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all">Auto</button>
+              <button onclick="domSetFanAC('low')" id="dom-ac-fan-low" class="h-11 md:h-12 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all">Baja</button>
+              <button onclick="domSetFanAC('med')" id="dom-ac-fan-med" class="h-11 md:h-12 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all">Media</button>
+              <button onclick="domSetFanAC('high')" id="dom-ac-fan-high" class="h-11 md:h-12 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all">Alta</button>
+              <button onclick="domToggleSwingAC()" id="dom-ac-swing-btn" class="h-11 md:h-12 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1">
+                <i class="fas fa-arrows-alt-v text-[9px] md:text-[10px]"></i><span>Swing</span>
               </button>
             </div>
           </div>
@@ -3994,23 +3994,23 @@
         </div>
 
         <!-- Modos de Limpieza y Potencia de Succión -->
-        <div class="space-y-1.5 md:space-y-2 relative z-10">
+        <div class="space-y-1.5 md:space-y-2 relative z-10 max-w-[460px] mx-auto w-full">
           <div>
             <span class="text-[8px] md:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Modo de Limpieza</span>
-            <div class="grid grid-cols-4 gap-1 md:gap-1.5">
-              <button onclick="domSetModoAspiradora('smart')" id="dom-vac-mode-smart" class="h-7 md:h-7.5 rounded-lg border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Auto</button>
-              <button onclick="domSetModoAspiradora('wall_follow')" id="dom-vac-mode-wall_follow" class="h-7 md:h-7.5 rounded-lg border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Bordes</button>
-              <button onclick="domSetModoAspiradora('spiral')" id="dom-vac-mode-spiral" class="h-7 md:h-7.5 rounded-lg border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Punto</button>
-              <button onclick="domSetModoAspiradora('single')" id="dom-vac-mode-single" class="h-7 md:h-7.5 rounded-lg border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Habit.</button>
+            <div class="grid grid-cols-4 gap-1.5 md:gap-2">
+              <button onclick="domSetModoAspiradora('smart')" id="dom-vac-mode-smart" class="h-11 md:h-12 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Auto</button>
+              <button onclick="domSetModoAspiradora('wall_follow')" id="dom-vac-mode-wall_follow" class="h-11 md:h-12 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Bordes</button>
+              <button onclick="domSetModoAspiradora('spiral')" id="dom-vac-mode-spiral" class="h-11 md:h-12 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Punto</button>
+              <button onclick="domSetModoAspiradora('single')" id="dom-vac-mode-single" class="h-11 md:h-12 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Habit.</button>
             </div>
           </div>
 
-          <div>
+          <div class="max-w-[360px] mx-auto w-full">
             <span class="text-[8px] md:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Potencia de Succión</span>
-            <div class="grid grid-cols-3 gap-1 md:gap-1.5">
-              <button onclick="domSetSuccionAspiradora('gentle')" id="dom-vac-suction-gentle" class="h-7 md:h-7.5 rounded-lg border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Silencioso</button>
-              <button onclick="domSetSuccionAspiradora('normal')" id="dom-vac-suction-normal" class="h-7 md:h-7.5 rounded-lg border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Estándar</button>
-              <button onclick="domSetSuccionAspiradora('strong')" id="dom-vac-suction-strong" class="h-7 md:h-7.5 rounded-lg border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Turbo</button>
+            <div class="grid grid-cols-3 gap-1.5 md:gap-2">
+              <button onclick="domSetSuccionAspiradora('gentle')" id="dom-vac-suction-gentle" class="h-11 md:h-12 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Silencioso</button>
+              <button onclick="domSetSuccionAspiradora('normal')" id="dom-vac-suction-normal" class="h-11 md:h-12 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Estándar</button>
+              <button onclick="domSetSuccionAspiradora('strong')" id="dom-vac-suction-strong" class="h-11 md:h-12 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Turbo</button>
             </div>
           </div>
         </div>
@@ -4068,13 +4068,13 @@
         </div>
 
         <!-- Temporizador rápido (Countdown Smart Life) -->
-        <div class="relative z-10">
+        <div class="relative z-10 max-w-[460px] mx-auto w-full">
           <span class="text-[8px] md:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Temporizador Countdown</span>
-          <div class="grid grid-cols-4 gap-1 md:gap-1.5">
-            <button onclick="domSetTimerPlug(30)" class="h-7 md:h-7.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[9px] md:text-[9.5px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">30 min</button>
-            <button onclick="domSetTimerPlug(60)" class="h-7 md:h-7.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[9px] md:text-[9.5px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">1 Hora</button>
-            <button onclick="domSetTimerPlug(120)" class="h-7 md:h-7.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[9px] md:text-[9.5px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">2 Horas</button>
-            <button onclick="domSetTimerPlug(0)" class="h-7 md:h-7.5 rounded-lg bg-slate-900 hover:bg-red-950/50 border border-slate-800 hover:border-red-500/40 text-[9px] md:text-[9.5px] font-black uppercase tracking-wider text-slate-400 hover:text-red-300 transition-colors flex items-center justify-center">Cancelar</button>
+          <div class="grid grid-cols-4 gap-1.5 md:gap-2">
+            <button onclick="domSetTimerPlug(30)" class="h-11 md:h-12 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[9px] md:text-[9.5px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">30 min</button>
+            <button onclick="domSetTimerPlug(60)" class="h-11 md:h-12 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[9px] md:text-[9.5px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">1 Hora</button>
+            <button onclick="domSetTimerPlug(120)" class="h-11 md:h-12 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[9px] md:text-[9.5px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">2 Horas</button>
+            <button onclick="domSetTimerPlug(0)" class="h-11 md:h-12 rounded-xl bg-slate-900 hover:bg-red-950/50 border border-slate-800 hover:border-red-500/40 text-[9px] md:text-[9.5px] font-black uppercase tracking-wider text-slate-400 hover:text-red-300 transition-colors flex items-center justify-center">Cancelar</button>
           </div>
         </div>
       </div>
@@ -4133,42 +4133,42 @@
         </div>
 
         <!-- Panel de Aplicaciones Android TV (2 filas de 4 apps) -->
-        <div class="relative z-10">
+        <div class="relative z-10 max-w-[460px] mx-auto w-full">
           <div class="flex items-center justify-between mb-1">
             <span class="text-[8px] md:text-[8.5px] font-black text-slate-400 uppercase tracking-widest">Aplicaciones Android TV</span>
             <span id="dom-tv-active-app-badge" class="text-[8px] md:text-[8.5px] font-bold text-slate-400 uppercase tracking-wider">Macros IR</span>
           </div>
-          <div class="grid grid-cols-4 gap-1 md:gap-1.5">
-            <button onclick="domAbrirAppTV('flow')" id="dom-tv-app-flow" class="group h-7 md:h-7.5 px-1.5 rounded-lg bg-slate-900/90 hover:bg-emerald-950/40 border border-slate-800 hover:border-emerald-500/50 flex items-center gap-1.5 transition-all active:scale-95 text-left">
-              <i class="fas fa-play-circle text-emerald-400 text-[9.5px] shrink-0"></i>
+          <div class="grid grid-cols-4 gap-1.5 md:gap-2">
+            <button onclick="domAbrirAppTV('flow')" id="dom-tv-app-flow" class="group h-11 md:h-12 px-1.5 rounded-xl bg-slate-900/90 hover:bg-emerald-950/40 border border-slate-800 hover:border-emerald-500/50 flex items-center justify-center gap-1.5 transition-all active:scale-95">
+              <i class="fas fa-play-circle text-emerald-400 text-xs md:text-sm shrink-0"></i>
               <span class="text-[8.5px] md:text-[9px] font-black text-white uppercase tracking-wider block truncate">Flow</span>
             </button>
-            <button onclick="domAbrirAppTV('youtube')" id="dom-tv-app-youtube" class="group h-7 md:h-7.5 px-1.5 rounded-lg bg-slate-900/90 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-500/50 flex items-center gap-1.5 transition-all active:scale-95 text-left">
-              <i class="fab fa-youtube text-rose-500 text-[9.5px] shrink-0"></i>
+            <button onclick="domAbrirAppTV('youtube')" id="dom-tv-app-youtube" class="group h-11 md:h-12 px-1.5 rounded-xl bg-slate-900/90 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-500/50 flex items-center justify-center gap-1.5 transition-all active:scale-95">
+              <i class="fab fa-youtube text-rose-500 text-xs md:text-sm shrink-0"></i>
               <span class="text-[8.5px] md:text-[9px] font-black text-white uppercase tracking-wider block truncate">YouTube</span>
             </button>
-            <button onclick="domAbrirAppTV('stremio')" id="dom-tv-app-stremio" class="group h-7 md:h-7.5 px-1.5 rounded-lg bg-slate-900/90 hover:bg-violet-950/40 border border-slate-800 hover:border-violet-500/50 flex items-center gap-1.5 transition-all active:scale-95 text-left">
-              <i class="fas fa-play text-violet-400 text-[9.5px] shrink-0"></i>
+            <button onclick="domAbrirAppTV('stremio')" id="dom-tv-app-stremio" class="group h-11 md:h-12 px-1.5 rounded-xl bg-slate-900/90 hover:bg-violet-950/40 border border-slate-800 hover:border-violet-500/50 flex items-center justify-center gap-1.5 transition-all active:scale-95">
+              <i class="fas fa-play text-violet-400 text-xs md:text-sm shrink-0"></i>
               <span class="text-[8.5px] md:text-[9px] font-black text-white uppercase tracking-wider block truncate">Stremio</span>
             </button>
-            <button onclick="domAbrirAppTV('disney')" id="dom-tv-app-disney" class="group h-7 md:h-7.5 px-1.5 rounded-lg bg-slate-900/90 hover:bg-blue-950/40 border border-slate-800 hover:border-blue-500/50 flex items-center gap-1.5 transition-all active:scale-95 text-left">
-              <i class="fas fa-star text-blue-400 text-[9.5px] shrink-0"></i>
+            <button onclick="domAbrirAppTV('disney')" id="dom-tv-app-disney" class="group h-11 md:h-12 px-1.5 rounded-xl bg-slate-900/90 hover:bg-blue-950/40 border border-slate-800 hover:border-blue-500/50 flex items-center justify-center gap-1.5 transition-all active:scale-95">
+              <i class="fas fa-star text-blue-400 text-xs md:text-sm shrink-0"></i>
               <span class="text-[8.5px] md:text-[9px] font-black text-white uppercase tracking-wider block truncate">Disney+</span>
             </button>
-            <button onclick="domAbrirAppTV('paramount')" id="dom-tv-app-paramount" class="group h-7 md:h-7.5 px-1.5 rounded-lg bg-slate-900/90 hover:bg-sky-950/40 border border-slate-800 hover:border-sky-500/50 flex items-center gap-1.5 transition-all active:scale-95 text-left">
-              <i class="fas fa-mountain text-sky-400 text-[9.5px] shrink-0"></i>
+            <button onclick="domAbrirAppTV('paramount')" id="dom-tv-app-paramount" class="group h-11 md:h-12 px-1.5 rounded-xl bg-slate-900/90 hover:bg-sky-950/40 border border-slate-800 hover:border-sky-500/50 flex items-center justify-center gap-1.5 transition-all active:scale-95">
+              <i class="fas fa-mountain text-sky-400 text-xs md:text-sm shrink-0"></i>
               <span class="text-[8.5px] md:text-[9px] font-black text-white uppercase tracking-wider block truncate">Paramount</span>
             </button>
-            <button onclick="domAbrirAppTV('netflix')" id="dom-tv-app-netflix" class="group h-7 md:h-7.5 px-1.5 rounded-lg bg-slate-900/90 hover:bg-red-950/40 border border-slate-800 hover:border-red-500/50 flex items-center gap-1.5 transition-all active:scale-95 text-left">
-              <span class="font-black text-red-500 text-[9.5px] mono shrink-0">N</span>
+            <button onclick="domAbrirAppTV('netflix')" id="dom-tv-app-netflix" class="group h-11 md:h-12 px-1.5 rounded-xl bg-slate-900/90 hover:bg-red-950/40 border border-slate-800 hover:border-red-500/50 flex items-center justify-center gap-1.5 transition-all active:scale-95">
+              <span class="font-black text-red-500 text-xs md:text-sm mono shrink-0">N</span>
               <span class="text-[8.5px] md:text-[9px] font-black text-white uppercase tracking-wider block truncate">Netflix</span>
             </button>
-            <button onclick="domAbrirAppTV('ytmusic')" id="dom-tv-app-ytmusic" class="group h-7 md:h-7.5 px-1.5 rounded-lg bg-slate-900/90 hover:bg-pink-950/40 border border-slate-800 hover:border-pink-500/50 flex items-center gap-1.5 transition-all active:scale-95 text-left">
-              <i class="fas fa-compact-disc text-pink-400 text-[9.5px] shrink-0"></i>
+            <button onclick="domAbrirAppTV('ytmusic')" id="dom-tv-app-ytmusic" class="group h-11 md:h-12 px-1.5 rounded-xl bg-slate-900/90 hover:bg-pink-950/40 border border-slate-800 hover:border-pink-500/50 flex items-center justify-center gap-1.5 transition-all active:scale-95">
+              <i class="fas fa-compact-disc text-pink-400 text-xs md:text-sm shrink-0"></i>
               <span class="text-[8.5px] md:text-[9px] font-black text-white uppercase tracking-wider block truncate">YT Music</span>
             </button>
-            <button onclick="domAbrirAppTV('kick')" id="dom-tv-app-kick" class="group h-7 md:h-7.5 px-1.5 rounded-lg bg-slate-900/90 hover:bg-lime-950/40 border border-slate-800 hover:border-lime-500/50 flex items-center gap-1.5 transition-all active:scale-95 text-left">
-              <span class="font-black text-lime-400 text-[9.5px] mono shrink-0">K</span>
+            <button onclick="domAbrirAppTV('kick')" id="dom-tv-app-kick" class="group h-11 md:h-12 px-1.5 rounded-xl bg-slate-900/90 hover:bg-lime-950/40 border border-slate-800 hover:border-lime-500/50 flex items-center justify-center gap-1.5 transition-all active:scale-95">
+              <span class="font-black text-lime-400 text-xs md:text-sm mono shrink-0">K</span>
               <span class="text-[8.5px] md:text-[9px] font-black text-white uppercase tracking-wider block truncate">Kick</span>
             </button>
           </div>
@@ -15826,7 +15826,7 @@ function renderDomoticaUI() {
     const btn = document.getElementById('dom-ac-mode-' + m);
     if (!btn) return;
     const active = ac.mode === m;
-    btn.className = `h-7 md:h-7.5 rounded-lg border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 md:gap-1.5 transition-all ${
+    btn.className = `h-11 md:h-12 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 md:gap-1.5 transition-all ${
       active ? 'bg-cyan-600/25 border-cyan-400 text-cyan-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
     }`;
   });
@@ -15835,14 +15835,14 @@ function renderDomoticaUI() {
     const btn = document.getElementById('dom-ac-fan-' + f);
     if (!btn) return;
     const active = ac.fan === f;
-    btn.className = `h-7 md:h-7.5 rounded-lg border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all ${
+    btn.className = `h-11 md:h-12 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
       active ? 'bg-cyan-600/25 border-cyan-400 text-cyan-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
     }`;
   });
 
   const swingBtn = document.getElementById('dom-ac-swing-btn');
   if (swingBtn) {
-    swingBtn.className = `h-7 md:h-7.5 rounded-lg border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1 ${
+    swingBtn.className = `h-11 md:h-12 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1 ${
       ac.swing ? 'bg-cyan-600/25 border-cyan-400 text-cyan-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
     }`;
   }
@@ -15939,7 +15939,7 @@ function renderDomoticaUI() {
     const btn = document.getElementById('dom-vac-mode-' + m);
     if (!btn) return;
     const active = vac.mode === m;
-    btn.className = `h-7 md:h-7.5 rounded-lg border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
+    btn.className = `h-11 md:h-12 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
       active ? 'bg-emerald-600/25 border-emerald-400 text-emerald-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
     }`;
   });
@@ -15948,7 +15948,7 @@ function renderDomoticaUI() {
     const btn = document.getElementById('dom-vac-suction-' + s);
     if (!btn) return;
     const active = vac.suction === s;
-    btn.className = `h-7 md:h-7.5 rounded-lg border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
+    btn.className = `h-11 md:h-12 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
       active ? 'bg-emerald-600/25 border-emerald-400 text-emerald-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
     }`;
   });
