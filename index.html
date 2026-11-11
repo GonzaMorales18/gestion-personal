@@ -3050,20 +3050,18 @@
             </div>
           </div>
           <div class="overflow-x-auto">
-            <table class="w-full text-sm min-w-[980px]">
+            <table class="w-full text-sm">
               <thead>
                 <tr class="border-b border-slate-700/60 bg-slate-800/80">
                   <th class="px-3 py-3 text-[10px] text-left font-black text-white uppercase tracking-wider whitespace-nowrap">Mes</th>
-                  <th class="px-3 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider whitespace-nowrap">Bruto ARS</th>
-                  <th class="px-3 py-3 text-[10px] text-right font-black text-slate-400 uppercase tracking-wider whitespace-nowrap">Deducciones ARS</th>
-                  <th class="px-3 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider whitespace-nowrap">Neto ARS</th>
-                  <th class="px-2.5 py-3 text-[10px] text-right font-black text-yellow-400 uppercase tracking-wider whitespace-nowrap">Δ Mes ARS</th>
-                  <th class="px-2.5 py-3 text-[10px] text-center font-black text-slate-300 uppercase tracking-wider whitespace-nowrap" title="Tipo de cambio implícito en el recibo (Bruto ARS / Bruto USD)">T.C. USD</th>
-                  <th class="px-3 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider whitespace-nowrap">Bruto USD</th>
-                  <th class="px-3 py-3 text-[10px] text-right font-black text-slate-400 uppercase tracking-wider whitespace-nowrap">Deducciones USD</th>
-                  <th class="px-3 py-3 text-[10px] text-right font-black text-emerald-300 uppercase tracking-wider whitespace-nowrap">Neto USD</th>
-                  <th class="px-2.5 py-3 text-[10px] text-right font-black text-emerald-400 uppercase tracking-wider whitespace-nowrap">Δ Mes USD</th>
-                  <th class="px-2.5 py-3 text-[10px] text-center font-black text-white uppercase tracking-wider whitespace-nowrap">Acc.</th>
+                  <th class="px-2.5 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider whitespace-nowrap">Bruto ARS</th>
+                  <th class="px-2.5 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider whitespace-nowrap">Neto ARS</th>
+                  <th class="px-2 py-3 text-[10px] text-right font-black text-yellow-400 uppercase tracking-wider whitespace-nowrap">Δ Mes ARS</th>
+                  <th class="px-2 py-3 text-[10px] text-center font-black text-slate-300 uppercase tracking-wider whitespace-nowrap" title="Tipo de cambio implícito en el recibo (Bruto ARS / Bruto USD)">T.C. USD</th>
+                  <th class="px-2.5 py-3 text-[10px] text-right font-black text-white uppercase tracking-wider whitespace-nowrap">Bruto USD</th>
+                  <th class="px-2.5 py-3 text-[10px] text-right font-black text-emerald-300 uppercase tracking-wider whitespace-nowrap">Neto USD</th>
+                  <th class="px-2 py-3 text-[10px] text-right font-black text-emerald-400 uppercase tracking-wider whitespace-nowrap">Δ Mes USD</th>
+                  <th class="px-2 py-3 text-[10px] text-center font-black text-white uppercase tracking-wider whitespace-nowrap">Acc.</th>
                 </tr>
               </thead>
               <tbody id="su-tabla"></tbody>
@@ -11058,7 +11056,7 @@ function renderTablaSueldos() {
   document.getElementById('su-count').textContent = `${filtrados.length} registros`;
   const tbody = document.getElementById('su-tabla');
   if (!filtrados.length) {
-    tbody.innerHTML = `<tr><td colspan="11" class="text-center py-10 text-slate-500 text-sm">
+    tbody.innerHTML = `<tr><td colspan="9" class="text-center py-10 text-slate-500 text-sm">
       <i class="fas fa-inbox text-2xl mb-2 block"></i>Sin registros para el período seleccionado</td></tr>`;
     return;
   }
@@ -11092,36 +11090,29 @@ function renderTablaSueldos() {
           ${sacPill}
         </div>
       </td>
-      <td class="px-3 py-2.5 text-xs text-right mono font-semibold text-slate-300 whitespace-nowrap">
+      <td class="px-2.5 py-2.5 text-xs text-right mono font-semibold text-slate-300 whitespace-nowrap">
         ${fmt(r.bruto)}
       </td>
-      <td class="px-3 py-2.5 text-xs text-right mono whitespace-nowrap">
-        <div class="text-rose-400 font-medium">-${fmt(m.dedARS)}</div>
-        <div class="text-[9px] text-slate-500 font-bold">-${m.dedPctARS.toFixed(1)}%</div>
-      </td>
-      <td class="px-3 py-2.5 text-xs text-right mono font-black text-white whitespace-nowrap text-sm">
+      <td class="px-2.5 py-2.5 text-xs text-right mono font-black text-white whitespace-nowrap">
         ${fmt(r.neto)}
       </td>
-      <td class="px-2.5 py-2.5 text-xs text-right whitespace-nowrap">
+      <td class="px-2 py-2.5 text-xs text-right whitespace-nowrap">
         ${m.isSac ? '<span class="text-amber-400/70 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/20">SAC</span>' : suFormatDelta(m.deltaARS_pct, m.deltaARS_nom, false)}
       </td>
-      <td class="px-2.5 py-2.5 text-xs text-center mono font-bold text-slate-300 whitespace-nowrap">
-        ${m.tc ? `<span class="px-2 py-0.5 rounded-lg bg-slate-800/80 border border-slate-700 text-slate-200 text-[11px]">$${m.tc.toLocaleString('es-AR')}</span>` : '<span class="text-slate-600">—</span>'}
+      <td class="px-2 py-2.5 text-xs text-center mono font-bold text-slate-300 whitespace-nowrap">
+        ${m.tc ? `<span class="px-1.5 py-0.5 rounded-lg bg-slate-800/80 border border-slate-700 text-slate-200 text-[11px]">$${m.tc.toLocaleString('es-AR')}</span>` : '<span class="text-slate-600">—</span>'}
       </td>
-      <td class="px-3 py-2.5 text-xs text-right mono font-semibold text-slate-400 whitespace-nowrap">
+      <td class="px-2.5 py-2.5 text-xs text-right mono font-semibold text-slate-400 whitespace-nowrap">
         ${fmtUSD(r.brutoUSD)}
       </td>
-      <td class="px-3 py-2.5 text-xs text-right mono whitespace-nowrap">
-        <div class="text-rose-400/90 font-medium">-${fmtUSD(m.dedUSD)}</div>
-      </td>
-      <td class="px-3 py-2.5 text-xs text-right mono font-black text-emerald-300 whitespace-nowrap text-sm">
+      <td class="px-2.5 py-2.5 text-xs text-right mono font-black text-emerald-300 whitespace-nowrap">
         ${fmtUSD(r.netoUSD)}
       </td>
-      <td class="px-2.5 py-2.5 text-xs text-right whitespace-nowrap">
+      <td class="px-2 py-2.5 text-xs text-right whitespace-nowrap">
         ${m.isSac ? '<span class="text-amber-400/70 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/20">SAC</span>' : suFormatDelta(m.deltaUSD_pct, m.deltaUSD_nom, true)}
       </td>
-      <td class="px-2.5 py-2.5 text-xs text-center whitespace-nowrap" onclick="event.stopPropagation()">
-        <div class="flex gap-2 justify-center items-center">
+      <td class="px-2 py-2.5 text-xs text-center whitespace-nowrap" onclick="event.stopPropagation()">
+        <div class="flex gap-1.5 justify-center items-center">
           <button onclick="abrirModalDetalleSueldo(${r.rowIndex})" class="w-7 h-7 rounded-lg bg-slate-800/70 hover:bg-yellow-500 text-slate-400 hover:text-black transition-colors flex items-center justify-center text-xs" title="Ver Detalle Completo">
             <i class="fas fa-eye"></i>
           </button>
