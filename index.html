@@ -1572,42 +1572,7 @@
 
   <!-- SECCIÓN SALUD - ACTIVIDAD -->
   <main id="section-actividad" class="hidden p-4 md:p-8 max-w-[1400px] mx-auto w-full space-y-6">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
-
-      <!-- Tarjeta Pasos -->
-      <div class="group bg-black rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
-        <div class="absolute inset-0 bg-gradient-to-br from-teal-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
-        <div class="flex items-center justify-between mb-5 relative z-10">
-          <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-xl bg-teal-900/50 flex items-center justify-center">
-              <i class="fas fa-shoe-prints text-teal-500 text-xs"></i>
-            </div>
-            <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Pasos</span>
-          </div>
-          <div class="relative" id="health-source-box-steps">
-            <button type="button" 
-                    onclick="toggleHealthSourcePopover('steps', event)" 
-                    onmouseenter="showHealthSourcePopover('steps', event)" 
-                    onmouseleave="hideHealthSourcePopover('steps', event)" 
-                    class="w-6 h-6 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700 hover:border-teal-500/50 text-slate-400 hover:text-teal-400 flex items-center justify-center text-[10px] transition-all cursor-pointer shadow-sm" 
-                    title="Ver fuentes de datos de pasos">
-              <i class="fas fa-info-circle"></i>
-            </button>
-          </div>
-        </div>
-        <div class="relative z-10">
-          <div class="flex items-baseline">
-            <h3 id="health-steps" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
-            <span class="text-xs font-bold text-slate-400 ml-1.5">pasos</span>
-          </div>
-          <div class="mt-2.5 mb-1.5 h-1.5 w-full bg-slate-800/80 rounded-full overflow-hidden">
-            <div id="health-steps-bar" class="h-full bg-teal-400 rounded-full transition-all duration-500" style="width: 0%"></div>
-          </div>
-          <div class="inline-flex items-center gap-1">
-            <span id="health-steps-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block">Obj Diario: 10.000 pasos</span>
-          </div>
-        </div>
-      </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
 
       <!-- Tarjeta Distancia -->
       <div class="group bg-black rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
@@ -1640,6 +1605,76 @@
           </div>
           <div class="inline-flex items-center gap-1">
             <span id="health-distance-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block">Obj Diario: 8 km</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta Sueño -->
+      <div class="group bg-black rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+        <div class="absolute inset-0 bg-gradient-to-br from-indigo-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+        <div class="flex items-center justify-between mb-5 relative z-10">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-indigo-900/50 flex items-center justify-center">
+              <i class="fas fa-moon text-indigo-400 text-xs"></i>
+            </div>
+            <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Sueño</span>
+          </div>
+          <div class="relative" id="health-source-box-sleep">
+            <button type="button" 
+                    onclick="toggleHealthSourcePopover('sleep', event)" 
+                    onmouseenter="showHealthSourcePopover('sleep', event)" 
+                    onmouseleave="hideHealthSourcePopover('sleep', event)" 
+                    class="w-6 h-6 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700 hover:border-indigo-500/50 text-slate-400 hover:text-indigo-400 flex items-center justify-center text-[10px] transition-all cursor-pointer shadow-sm" 
+                    title="Ver fuentes de datos de sueño">
+              <i class="fas fa-info-circle"></i>
+            </button>
+          </div>
+        </div>
+        <div class="relative z-10">
+          <div class="flex items-baseline">
+            <h3 id="health-sleep" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+            <span class="text-xs font-bold text-slate-400 ml-1">hs</span>
+          </div>
+          <div class="mt-2.5 mb-1.5 h-1.5 w-full bg-slate-800/80 rounded-full overflow-hidden">
+            <div id="health-sleep-bar" class="h-full bg-indigo-400 rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+          <div class="inline-flex items-center gap-1">
+            <span id="health-sleep-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block">Obj Diario: 8 hs</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta Pasos -->
+      <div class="group bg-black rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+        <div class="absolute inset-0 bg-gradient-to-br from-teal-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+        <div class="flex items-center justify-between mb-5 relative z-10">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-teal-900/50 flex items-center justify-center">
+              <i class="fas fa-shoe-prints text-teal-500 text-xs"></i>
+            </div>
+            <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Pasos</span>
+          </div>
+          <div class="relative" id="health-source-box-steps">
+            <button type="button" 
+                    onclick="toggleHealthSourcePopover('steps', event)" 
+                    onmouseenter="showHealthSourcePopover('steps', event)" 
+                    onmouseleave="hideHealthSourcePopover('steps', event)" 
+                    class="w-6 h-6 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700 hover:border-teal-500/50 text-slate-400 hover:text-teal-400 flex items-center justify-center text-[10px] transition-all cursor-pointer shadow-sm" 
+                    title="Ver fuentes de datos de pasos">
+              <i class="fas fa-info-circle"></i>
+            </button>
+          </div>
+        </div>
+        <div class="relative z-10">
+          <div class="flex items-baseline">
+            <h3 id="health-steps" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+            <span class="text-xs font-bold text-slate-400 ml-1.5">pasos</span>
+          </div>
+          <div class="mt-2.5 mb-1.5 h-1.5 w-full bg-slate-800/80 rounded-full overflow-hidden">
+            <div id="health-steps-bar" class="h-full bg-teal-400 rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+          <div class="inline-flex items-center gap-1">
+            <span id="health-steps-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block">Obj Diario: 10.000 pasos</span>
           </div>
         </div>
       </div>
@@ -1714,7 +1749,7 @@
         </div>
       </div>
 
-      <!-- Tarjeta Minutos Activos -->
+      <!-- Tarjeta Actividad -->
       <div class="group bg-black rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
         <div class="absolute inset-0 bg-gradient-to-br from-rose-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
         <div class="flex items-center justify-between mb-5 relative z-10">
@@ -1749,37 +1784,37 @@
         </div>
       </div>
 
-      <!-- Tarjeta Sueño -->
+      <!-- Tarjeta Ritmo Cardíaco -->
       <div class="group bg-black rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
-        <div class="absolute inset-0 bg-gradient-to-br from-indigo-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-red-950/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
         <div class="flex items-center justify-between mb-5 relative z-10">
           <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-xl bg-indigo-900/50 flex items-center justify-center">
-              <i class="fas fa-moon text-indigo-400 text-xs"></i>
+            <div class="w-8 h-8 rounded-xl bg-red-950/60 border border-red-500/20 flex items-center justify-center">
+              <i class="fas fa-heart-pulse text-[#ff1744] text-xs"></i>
             </div>
-            <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Sueño</span>
+            <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Ritmo Cardíaco</span>
           </div>
-          <div class="relative" id="health-source-box-sleep">
+          <div class="relative" id="health-source-box-heartRate">
             <button type="button" 
-                    onclick="toggleHealthSourcePopover('sleep', event)" 
-                    onmouseenter="showHealthSourcePopover('sleep', event)" 
-                    onmouseleave="hideHealthSourcePopover('sleep', event)" 
-                    class="w-6 h-6 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700 hover:border-indigo-500/50 text-slate-400 hover:text-indigo-400 flex items-center justify-center text-[10px] transition-all cursor-pointer shadow-sm" 
-                    title="Ver fuentes de datos de sueño">
+                    onclick="toggleHealthSourcePopover('heartRate', event)" 
+                    onmouseenter="showHealthSourcePopover('heartRate', event)" 
+                    onmouseleave="hideHealthSourcePopover('heartRate', event)" 
+                    class="w-6 h-6 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700 hover:border-red-500/50 text-slate-400 hover:text-red-400 flex items-center justify-center text-[10px] transition-all cursor-pointer shadow-sm" 
+                    title="Ver fuentes de datos de ritmo cardíaco">
               <i class="fas fa-info-circle"></i>
             </button>
           </div>
         </div>
         <div class="relative z-10">
           <div class="flex items-baseline">
-            <h3 id="health-sleep" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
-            <span class="text-xs font-bold text-slate-400 ml-1">hs</span>
+            <h3 id="health-heartRate" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+            <span class="text-xs font-bold text-slate-400 ml-1.5">bpm</span>
           </div>
           <div class="mt-2.5 mb-1.5 h-1.5 w-full bg-slate-800/80 rounded-full overflow-hidden">
-            <div id="health-sleep-bar" class="h-full bg-indigo-400 rounded-full transition-all duration-500" style="width: 0%"></div>
+            <div id="health-heartRate-bar" class="h-full bg-[#ff1744] rounded-full transition-all duration-500" style="width: 0%"></div>
           </div>
           <div class="inline-flex items-center gap-1">
-            <span id="health-sleep-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block">Obj Diario: 8 hs</span>
+            <span id="health-heartRate-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block">Obj: 60-100 bpm</span>
           </div>
         </div>
       </div>
@@ -1825,33 +1860,7 @@
     </div>
 
     <!-- Contenedor de gráficos y tablas (se oculta si filtro es Hoy) -->
-    <div id="charts-actividad-container" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
-      <!-- Gráfico y Tabla Pasos -->
-      <div class="bg-black rounded-2xl border border-slate-700/60 p-5 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center gap-2 mb-4">
-             <i class="fas fa-shoe-prints text-teal-500 text-xs"></i>
-             <h4 class="text-[10px] font-black text-white uppercase tracking-widest">Evolución Pasos</h4>
-          </div>
-          <div class="h-[180px] w-full relative">
-            <canvas id="chart-steps"></canvas>
-          </div>
-          <div id="chart-steps-range" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-3 text-center empty:hidden"></div>
-        </div>
-        <div class="mt-4 pt-3 border-t border-slate-800/80">
-          <div class="max-h-[160px] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full pr-1">
-            <table class="w-full text-left border-collapse">
-              <thead>
-                <tr class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
-                  <th class="pb-1 font-bold">Fecha</th>
-                  <th class="pb-1 text-right font-bold">Total</th>
-                </tr>
-              </thead>
-              <tbody id="table-steps" class="divide-y divide-slate-800/40 text-[10px]"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+    <div id="charts-actividad-container" class="hidden grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
 
       <!-- Gráfico y Tabla Distancia -->
       <div class="bg-black rounded-2xl border border-slate-700/60 p-5 flex flex-col justify-between">
@@ -1875,6 +1884,60 @@
                 </tr>
               </thead>
               <tbody id="table-distance" class="divide-y divide-slate-800/40 text-[10px]"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráfico y Tabla Sueño -->
+      <div class="bg-black rounded-2xl border border-slate-700/60 p-5 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center gap-2 mb-4">
+             <i class="fas fa-moon text-indigo-400 text-xs"></i>
+             <h4 class="text-[10px] font-black text-white uppercase tracking-widest">Evolución Sueño</h4>
+          </div>
+          <div class="h-[180px] w-full relative">
+            <canvas id="chart-sleep"></canvas>
+          </div>
+          <div id="chart-sleep-range" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-3 text-center empty:hidden"></div>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="max-h-[160px] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full pr-1">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
+                  <th class="pb-1 font-bold">Fecha</th>
+                  <th class="pb-1 text-right font-bold">Total</th>
+                </tr>
+              </thead>
+              <tbody id="table-sleep" class="divide-y divide-slate-800/40 text-[10px]"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráfico y Tabla Pasos -->
+      <div class="bg-black rounded-2xl border border-slate-700/60 p-5 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center gap-2 mb-4">
+             <i class="fas fa-shoe-prints text-teal-500 text-xs"></i>
+             <h4 class="text-[10px] font-black text-white uppercase tracking-widest">Evolución Pasos</h4>
+          </div>
+          <div class="h-[180px] w-full relative">
+            <canvas id="chart-steps"></canvas>
+          </div>
+          <div id="chart-steps-range" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-3 text-center empty:hidden"></div>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="max-h-[160px] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full pr-1">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
+                  <th class="pb-1 font-bold">Fecha</th>
+                  <th class="pb-1 text-right font-bold">Total</th>
+                </tr>
+              </thead>
+              <tbody id="table-steps" class="divide-y divide-slate-800/40 text-[10px]"></tbody>
             </table>
           </div>
         </div>
@@ -1934,12 +1997,12 @@
         </div>
       </div>
 
-      <!-- Gráfico y Tabla Minutos Activos -->
+      <!-- Gráfico y Tabla Actividad -->
       <div class="bg-black rounded-2xl border border-slate-700/60 p-5 flex flex-col justify-between">
         <div>
           <div class="flex items-center gap-2 mb-4">
              <i class="fas fa-heartbeat text-rose-500 text-xs"></i>
-             <h4 class="text-[10px] font-black text-white uppercase tracking-widest">Minutos Activos</h4>
+             <h4 class="text-[10px] font-black text-white uppercase tracking-widest">Evolución Actividad</h4>
           </div>
           <div class="h-[180px] w-full relative">
             <canvas id="chart-activeMinutes"></canvas>
@@ -1961,17 +2024,17 @@
         </div>
       </div>
 
-      <!-- Gráfico y Tabla Sueño -->
+      <!-- Gráfico y Tabla Ritmo Cardíaco -->
       <div class="bg-black rounded-2xl border border-slate-700/60 p-5 flex flex-col justify-between">
         <div>
           <div class="flex items-center gap-2 mb-4">
-             <i class="fas fa-moon text-indigo-400 text-xs"></i>
-             <h4 class="text-[10px] font-black text-white uppercase tracking-widest">Evolución Sueño</h4>
+             <i class="fas fa-heart-pulse text-[#ff1744] text-xs"></i>
+             <h4 class="text-[10px] font-black text-white uppercase tracking-widest">Tendencia Ritmo Cardíaco</h4>
           </div>
           <div class="h-[180px] w-full relative">
-            <canvas id="chart-sleep"></canvas>
+            <canvas id="chart-heartRate"></canvas>
           </div>
-          <div id="chart-sleep-range" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-3 text-center empty:hidden"></div>
+          <div id="chart-heartRate-range" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-3 text-center empty:hidden"></div>
         </div>
         <div class="mt-4 pt-3 border-t border-slate-800/80">
           <div class="max-h-[160px] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full pr-1">
@@ -1979,10 +2042,10 @@
               <thead>
                 <tr class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
                   <th class="pb-1 font-bold">Fecha</th>
-                  <th class="pb-1 text-right font-bold">Total</th>
+                  <th class="pb-1 text-right font-bold">Promedio</th>
                 </tr>
               </thead>
-              <tbody id="table-sleep" class="divide-y divide-slate-800/40 text-[10px]"></tbody>
+              <tbody id="table-heartRate" class="divide-y divide-slate-800/40 text-[10px]"></tbody>
             </table>
           </div>
         </div>
@@ -5382,7 +5445,7 @@ function showSection(nombre) {
   if (nombre === 'inicio') {
     actualizarTarjetaFinanzas();
     if (window.fitnessData && window.fitnessData.steps && window.fitnessData.steps.length > 0) {
-      ['steps', 'distance', 'weight', 'calories', 'activeMinutes', 'sleep'].forEach(type => {
+      ['distance', 'sleep', 'steps', 'weight', 'calories', 'activeMinutes', 'heartRate'].forEach(type => {
         renderHealthCard(type, window.currentHealthFilter || 'hoy');
       });
     }
@@ -5673,7 +5736,7 @@ function exportarCSV() {
   if (seccionActiva === 'actividad') {
     if (!window.fitnessData) return showToast('No hay datos para exportar', 'error');
     let allRecords = [];
-    ['steps', 'distance', 'weight', 'calories', 'activeMinutes', 'sleep'].forEach(metric => {
+    ['distance', 'sleep', 'steps', 'weight', 'calories', 'activeMinutes', 'heartRate'].forEach(metric => {
        if(window.fitnessData[metric]) {
           window.fitnessData[metric].forEach(r => {
              allRecords.push([metric, r.date || '', r.value || 0].join(','));
@@ -13118,7 +13181,7 @@ window.eliminarTenisUI = function(rowIndex) {
 const CALENDAR_CLIENT_ID = '153589356690-gk27a6fhfn1tv19mdeqpac9pdfcvjfuc.apps.googleusercontent.com'; // <--- REEMPLAZAR AQUÍ
 const CALENDAR_API_KEY = 'AIzaSyAqO2e2L2cuqgVu1wYT5iIh8eYeDAgsnFI'; // <--- REEMPLAZAR AQUÍ
 const CALENDAR_DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
-const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/fitness.activity.read https://www.googleapis.com/auth/fitness.body.read https://www.googleapis.com/auth/fitness.location.read https://www.googleapis.com/auth/fitness.sleep.read https://www.googleapis.com/auth/tasks';
+const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/fitness.activity.read https://www.googleapis.com/auth/fitness.body.read https://www.googleapis.com/auth/fitness.heart_rate.read https://www.googleapis.com/auth/fitness.location.read https://www.googleapis.com/auth/fitness.sleep.read https://www.googleapis.com/auth/tasks';
 
 let tokenClient;
 let gapiInited = false;
@@ -14458,8 +14521,8 @@ function renderMiniCalendar() {
 }
 
 // ─── MÓDULO ACTIVIDAD (FITNESS) ──────────────────────────────────────────────
-window.fitnessData = { steps: [], distance: [], weight: [], calories: [], activeMinutes: [], sleep: [] };
-window.healthCharts = { steps: null, distance: null, weight: null, calories: null, activeMinutes: null, sleep: null };
+window.fitnessData = { distance: [], sleep: [], steps: [], weight: [], calories: [], activeMinutes: [], heartRate: [] };
+window.healthCharts = { distance: null, sleep: null, steps: null, weight: null, calories: null, activeMinutes: null, heartRate: null };
 window.currentHealthFilter = 'hoy';
 window.currentHealthMode = 'promedio';
 
@@ -14481,7 +14544,7 @@ function setActividadModo(modo) {
   }
 
   // Recalcular
-  ['steps', 'distance', 'weight', 'calories', 'activeMinutes', 'sleep'].forEach(type => {
+  ['distance', 'sleep', 'steps', 'weight', 'calories', 'activeMinutes', 'heartRate'].forEach(type => {
     renderHealthCard(type, window.currentHealthFilter);
   });
 }
@@ -14514,7 +14577,7 @@ function setActividadFiltro(period) {
     const fFin = document.getElementById('act-fecha-fin')?.value;
     if (!fIni || !fFin) {
       // Asegurar que las tarjetas de Inicio igual se alimenten con los datos de hoy
-      ['steps', 'distance', 'weight', 'calories', 'activeMinutes', 'sleep'].forEach(type => {
+      ['distance', 'sleep', 'steps', 'weight', 'calories', 'activeMinutes', 'heartRate'].forEach(type => {
         renderHealthCard(type, 'hoy');
       });
       return; // Esperamos a que le den al botón Filtrar para el rango personalizado
@@ -14524,16 +14587,16 @@ function setActividadFiltro(period) {
     customDates.classList.remove('flex', 'flex-wrap');
   }
 
-  ['steps', 'distance', 'weight', 'calories', 'activeMinutes', 'sleep'].forEach(type => {
+  ['distance', 'sleep', 'steps', 'weight', 'calories', 'activeMinutes', 'heartRate'].forEach(type => {
     renderHealthCard(type, period);
   });
 }
 
 function restaurarCacheFitness() {
   try {
-    if (localStorage.getItem('gp_fitness_cache_v') !== '3') {
+    if (localStorage.getItem('gp_fitness_cache_v') !== '4') {
       localStorage.removeItem('gp_fitness_cache');
-      localStorage.setItem('gp_fitness_cache_v', '3');
+      localStorage.setItem('gp_fitness_cache_v', '4');
       return;
     }
     if (window.fitnessData && window.fitnessData.steps && window.fitnessData.steps.length > 0) return;
@@ -14541,7 +14604,7 @@ function restaurarCacheFitness() {
     if (!raw) return;
     const parsed = JSON.parse(raw);
     if (!parsed || !Array.isArray(parsed.steps) || parsed.steps.length === 0) return;
-    ['steps', 'distance', 'weight', 'calories', 'activeMinutes', 'sleep'].forEach(metric => {
+    ['distance', 'sleep', 'steps', 'weight', 'calories', 'activeMinutes', 'heartRate'].forEach(metric => {
       if (Array.isArray(parsed[metric])) {
         window.fitnessData[metric] = parsed[metric].map(item => ({
           date: new Date(item.date),
@@ -14563,7 +14626,7 @@ function filtrarActividadCustom() {
 
   window.currentHealthFilter = 'personalizado';
 
-  ['steps', 'distance', 'weight', 'calories', 'activeMinutes', 'sleep'].forEach(type => {
+  ['distance', 'sleep', 'steps', 'weight', 'calories', 'activeMinutes', 'heartRate'].forEach(type => {
     renderHealthCard(type, 'personalizado');
   });
 }
@@ -14630,24 +14693,26 @@ let _healthPopoverPinned = false;
 function getIconoFuente(nombreFuente) {
   const s = (nombreFuente || '').toLowerCase();
   if (s.includes('samsung') || s.includes('shealth')) return 'fas fa-mobile-alt text-cyan-400';
-  if (s.includes('xiaomi') || s.includes('zepp') || s.includes('band') || s.includes('watch') || s.includes('reloj') || s.includes('galaxy')) return 'fas fa-clock text-amber-400';
+  if (s.includes('xiaomi') || s.includes('zepp') || s.includes('band') || s.includes('watch') || s.includes('reloj') || s.includes('galaxy') || s.includes('fitbit') || s.includes('polar') || s.includes('wearable')) return 'fas fa-clock text-amber-400';
   if (s.includes('strava')) return 'fas fa-biking text-orange-400';
   if (s.includes('garmin')) return 'fas fa-running text-blue-400';
   if (s.includes('withings') || s.includes('báscula') || s.includes('peso')) return 'fas fa-weight text-indigo-400';
   if (s.includes('sleep') || s.includes('sueño')) return 'fas fa-moon text-indigo-400';
   if (s.includes('manual')) return 'fas fa-edit text-emerald-400';
+  if (s.includes('heart') || s.includes('cardio') || s.includes('pulso') || s.includes('ritmo')) return 'fas fa-heart-pulse text-[#ff1744]';
   if (s.includes('connect')) return 'fas fa-heartbeat text-rose-400';
   return 'fab fa-google text-teal-400';
 }
 
 function getNombreMetricaLegible(type) {
   const map = {
-    steps: 'Pasos',
     distance: 'Distancia',
+    sleep: 'Sueño',
+    steps: 'Pasos',
     weight: 'Peso',
     calories: 'Calorías',
     activeMinutes: 'Minutos Activos',
-    sleep: 'Sueño'
+    heartRate: 'Ritmo Cardíaco'
   };
   return map[type] || 'Actividad';
 }
@@ -14832,6 +14897,7 @@ async function fetchGoogleFitness() {
 
     const promisesActivity = [];
     const promisesWeight = [];
+    const promisesHeartRate = [];
     let huboNoAutorizado = false;
 
     chunks.forEach(chunk => {
@@ -14850,6 +14916,15 @@ async function fetchGoogleFitness() {
       const bodyWeight = {
         aggregateBy: [
           { dataTypeName: 'com.google.weight' }
+        ],
+        bucketByTime: { durationMillis: 86400000 },
+        startTimeMillis: chunk.start,
+        endTimeMillis: chunk.end
+      };
+
+      const bodyHeartRate = {
+        aggregateBy: [
+          { dataTypeName: 'com.google.heart_rate.bpm' }
         ],
         bucketByTime: { durationMillis: 86400000 },
         startTimeMillis: chunk.start,
@@ -14883,10 +14958,26 @@ async function fetchGoogleFitness() {
           })
           .catch(() => ({}))
       );
+
+      promisesHeartRate.push(
+        fetch(url, { method: 'POST', headers, body: JSON.stringify(bodyHeartRate) })
+          .then(async r => {
+            if (!r.ok) {
+              const errTxt = await r.text().catch(() => '');
+              console.warn('[Google Fit HeartRate Chunk] Error', r.status, errTxt);
+              return {};
+            }
+            return r.json();
+          })
+          .catch(() => ({}))
+      );
     });
 
-    const resultsActivity = await Promise.all(promisesActivity);
-    const resultsWeight = await Promise.all(promisesWeight);
+    const [resultsActivity, resultsWeight, resultsHeartRate] = await Promise.all([
+      Promise.all(promisesActivity),
+      Promise.all(promisesWeight),
+      Promise.all(promisesHeartRate)
+    ]);
 
     if (huboNoAutorizado) {
       if (typeof invalidarYReconectarGoogle === 'function') {
@@ -15012,6 +15103,116 @@ async function fetchGoogleFitness() {
         }
       });
     });
+
+    // Procesar resultados agregados de ritmo cardíaco
+    const heartRateByDate = new Map();
+    resultsHeartRate.forEach(res => {
+      if (!res || !res.bucket) return;
+      res.bucket.forEach(b => {
+        const startMs = parseInt(b.startTimeMillis);
+        const endMs = parseInt(b.endTimeMillis);
+        const midMs = (startMs + endMs) / 2;
+        const dObj = new Date(midMs);
+        const dateKey = `${dObj.getFullYear()}-${String(dObj.getMonth() + 1).padStart(2, '0')}-${String(dObj.getDate()).padStart(2, '0')}`;
+        const dayNormalized = new Date(dObj.getFullYear(), dObj.getMonth(), dObj.getDate(), 0, 0, 0, 0);
+
+        const dayHrSources = new Set();
+        const bpmVals = [];
+
+        if (b.dataset) {
+          b.dataset.forEach(ds => {
+            if (ds.point) {
+              ds.point.forEach(p => {
+                const typeStr = p.dataTypeName || (ds.dataSourceId ? ds.dataSourceId : '');
+                if (typeStr.includes('heart_rate')) {
+                  const rawSrcId = p.originDataSourceId || ds.dataSourceId || '';
+                  const src = resolverFuenteGoogleFit(rawSrcId, knownDataSourcesMap);
+                  const srcLabel = src.device ? `${src.name} (${src.device})` : src.name;
+                  if (srcLabel) dayHrSources.add(srcLabel);
+
+                  if (p.value && p.value.length > 0) {
+                    const val = p.value[0].fpVal || p.value[0].intVal;
+                    if (val && val > 0) {
+                      bpmVals.push(val);
+                    }
+                  }
+                }
+              });
+            }
+          });
+        }
+
+        if (bpmVals.length > 0) {
+          const avg = bpmVals.reduce((a, b) => a + b, 0) / bpmVals.length;
+          heartRateByDate.set(dateKey, {
+            date: dayNormalized,
+            value: Math.round(avg),
+            sources: dayHrSources.size > 0 ? Array.from(dayHrSources) : ['Google Fit']
+          });
+        }
+      });
+    });
+
+    // Si dataset:aggregate no trajo ritmo cardíaco, buscar dataSources directos
+    if (heartRateByDate.size === 0) {
+      try {
+        console.info('[Google Fit] dataset:aggregate no trajo ritmo cardíaco. Buscando dataSources directos...');
+        const dsRes = await fetch('https://www.googleapis.com/fitness/v1/users/me/dataSources', { headers });
+        if (dsRes.ok) {
+          const dsData = await dsRes.json();
+          const hrSources = (dsData.dataSource || []).filter(ds =>
+            (ds.dataType?.name || '').includes('heart_rate') || (ds.dataStreamId || '').includes('heart_rate')
+          );
+          console.info(`[Google Fit] ${hrSources.length} fuentes de ritmo cardíaco encontradas en la cuenta`);
+
+          const startNs = BigInt(startOfToday.getTime() - (360 * 86400000)) * 1000000n;
+          const endNs = BigInt(endOfToday) * 1000000n;
+          const rawPointsByDate = new Map();
+
+          for (const hs of hrSources) {
+            try {
+              const src = resolverFuenteGoogleFit(hs.dataStreamId, knownDataSourcesMap);
+              const hsLabel = src.device ? `${src.name} (${src.device})` : src.name;
+              const ptsRes = await fetch(`https://www.googleapis.com/fitness/v1/users/me/dataSources/${encodeURIComponent(hs.dataStreamId)}/datasets/${startNs}-${endNs}`, { headers });
+              if (ptsRes.ok) {
+                const ptsData = await ptsRes.json();
+                const pts = ptsData.point || [];
+                pts.forEach(pt => {
+                  const val = pt.value?.[0]?.fpVal || pt.value?.[0]?.intVal;
+                  if (val && val > 0) {
+                    const timeNs = pt.startTimeNanos || pt.endTimeNanos;
+                    const timeMs = Number(BigInt(timeNs) / 1000000n);
+                    const d = new Date(timeMs);
+                    const dateKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+                    const dayNormalized = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
+
+                    if (!rawPointsByDate.has(dateKey)) {
+                      rawPointsByDate.set(dateKey, { date: dayNormalized, vals: [], sources: new Set() });
+                    }
+                    const entry = rawPointsByDate.get(dateKey);
+                    entry.vals.push(val);
+                    if (hsLabel) entry.sources.add(hsLabel);
+                  }
+                });
+              }
+            } catch (err) {}
+          }
+
+          rawPointsByDate.forEach((entry, dateKey) => {
+            if (entry.vals.length > 0) {
+              const avg = entry.vals.reduce((a, b) => a + b, 0) / entry.vals.length;
+              heartRateByDate.set(dateKey, {
+                date: entry.date,
+                value: Math.round(avg),
+                sources: entry.sources.size > 0 ? Array.from(entry.sources) : ['Google Fit']
+              });
+            }
+          });
+        }
+      } catch (e) {
+        console.warn('[Google Fit] Error buscando fuentes directas de ritmo cardíaco:', e);
+      }
+    }
 
     // Si dataset:aggregate no trajo puntos de peso, consultar directamente los dataSources de Google Fit
     if (weightByDate.size === 0) {
@@ -15209,7 +15410,7 @@ async function fetchGoogleFitness() {
       }
     }
 
-    window.fitnessData = { steps: [], distance: [], weight: [], calories: [], activeMinutes: [], sleep: [] };
+    window.fitnessData = { distance: [], sleep: [], steps: [], weight: [], calories: [], activeMinutes: [], heartRate: [] };
     const iter = new Date(startOfToday);
     iter.setDate(iter.getDate() - 360);
 
@@ -15255,6 +15456,13 @@ async function fetchGoogleFitness() {
         sources: slSources
       });
 
+      const hr = heartRateByDate.get(dateKey);
+      window.fitnessData.heartRate.push({
+        date: currentDay,
+        value: hr ? hr.value : null,
+        sources: (hr && hr.sources && hr.sources.length > 0) ? hr.sources : (hr && hr.value ? ['Google Fit'] : [])
+      });
+
       iter.setDate(iter.getDate() + 1);
     }
 
@@ -15267,7 +15475,7 @@ async function fetchGoogleFitness() {
 
     try {
       localStorage.setItem('gp_fitness_cache', JSON.stringify(window.fitnessData));
-      localStorage.setItem('gp_fitness_cache_v', '3');
+      localStorage.setItem('gp_fitness_cache_v', '4');
     } catch (e) {}
 
     // Actualizar inmediatamente las tarjetas de Salud en el Panel de Control (Inicio) y en Actividad
@@ -15300,7 +15508,7 @@ async function diagnosticoGoogleFit() {
   if (!token || !token.access_token) { console.warn('No hay token de Google. Conectá tu cuenta primero.'); return; }
   const headers = { 'Authorization': `Bearer ${token.access_token}` };
   const base = 'https://www.googleapis.com/fitness/v1/users/me/dataSources';
-  const tipos = ['step_count', 'distance', 'calories', 'heart_minutes', 'weight', 'sleep'];
+  const tipos = ['step_count', 'distance', 'calories', 'heart_minutes', 'weight', 'sleep', 'heart_rate'];
 
   const resp = await fetch(base, { headers });
   if (!resp.ok) { console.error('Error listando fuentes:', resp.status, await resp.text()); return; }
@@ -15378,11 +15586,11 @@ function renderHealthCard(type, period) {
       d.date.getDate() === today.getDate()
     ) || dataArray[dataArray.length - 1];
     aggregatedValue = todayData ? (todayData.value || 0) : 0;
-    if ((type === 'weight' || type === 'sleep') && (aggregatedValue === null || aggregatedValue === 0)) {
+    if ((type === 'weight' || type === 'sleep' || type === 'heartRate') && (aggregatedValue === null || aggregatedValue === 0)) {
       const lastEntry = [...dataArray].reverse().find(d => d.value !== null && d.value > 0);
       aggregatedValue = lastEntry ? lastEntry.value : 0;
     }
-    subtitle = (type === 'weight' || type === 'sleep') ? 'Último registro' : 'Hoy';
+    subtitle = (type === 'weight' || type === 'sleep' || type === 'heartRate') ? 'Último registro' : 'Hoy';
   }
   else if (period === 'semana') {
     filtered = dataArray.slice(-7);
@@ -15392,7 +15600,7 @@ function renderHealthCard(type, period) {
     });
     values = filtered.map(d => d.value || 0);
 
-    if (type === 'weight') {
+    if (type === 'weight' || type === 'heartRate') {
       const validVals = values.filter(v => v > 0);
       if (validVals.length > 0) {
         aggregatedValue = validVals.reduce((a,b)=>a+b,0)/validVals.length;
@@ -15418,7 +15626,7 @@ function renderHealthCard(type, period) {
     labels = filtered.map(d => d.date.getDate().toString());
     values = filtered.map(d => d.value || 0);
 
-    if (type === 'weight') {
+    if (type === 'weight' || type === 'heartRate') {
       const validVals = values.filter(v => v > 0);
       if (validVals.length > 0) {
         aggregatedValue = validVals.reduce((a,b)=>a+b,0)/validVals.length;
@@ -15451,14 +15659,14 @@ function renderHealthCard(type, period) {
     values = labels.map(key => {
       const arr = monthlyGroups[key];
       if (arr.length === 0) return 0;
-      if (type === 'weight') {
+      if (type === 'weight' || type === 'heartRate') {
         const valids = arr.filter(v => v > 0);
         return valids.length > 0 ? valids.reduce((a,b)=>a+b,0) / valids.length : 0;
       }
       return isAvgMode ? arr.reduce((a,b)=>a+b,0) / arr.length : arr.reduce((a,b)=>a+b,0);
     });
 
-    if (type === 'weight') {
+    if (type === 'weight' || type === 'heartRate') {
       const validVals = dataArray.filter(v => (v.value || 0) > 0);
       if (validVals.length > 0) {
         aggregatedValue = validVals.reduce((a,b)=>a+(b.value||0),0)/validVals.length;
@@ -15505,7 +15713,7 @@ function renderHealthCard(type, period) {
       values = labels.map(key => {
         const arr = monthlyGroups[key];
         if (arr.length === 0) return 0;
-        if (type === 'weight') {
+        if (type === 'weight' || type === 'heartRate') {
           const valids = arr.filter(v => v > 0);
           return valids.length > 0 ? valids.reduce((a,b)=>a+b,0) / valids.length : 0;
         }
@@ -15517,7 +15725,7 @@ function renderHealthCard(type, period) {
       values = filtered.map(d => d.value || 0);
     }
 
-    if (type === 'weight') {
+    if (type === 'weight' || type === 'heartRate') {
       const validVals = filtered.filter(v => (v.value || 0) > 0);
       if (validVals.length > 0) {
         aggregatedValue = validVals.reduce((a,b)=>a+(b.value||0),0)/validVals.length;
@@ -15546,23 +15754,23 @@ function renderHealthCard(type, period) {
 
   if (period === 'hoy') {
     cardPeriodLabel = 'Hoy (' + today.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) + ')';
-    const todayObj = (type === 'weight' || type === 'sleep')
+    const todayObj = (type === 'weight' || type === 'sleep' || type === 'heartRate')
       ? (dataArray.find(d => d.date.getFullYear() === today.getFullYear() && d.date.getMonth() === today.getMonth() && d.date.getDate() === today.getDate() && d.value > 0)
          || [...dataArray].reverse().find(d => d.value > 0))
       : (dataArray.find(d => d.date.getFullYear() === today.getFullYear() && d.date.getMonth() === today.getMonth() && d.date.getDate() === today.getDate()));
     cardSources = (todayObj && todayObj.sources && todayObj.sources.length > 0) ? todayObj.sources : (todayObj && todayObj.value > 0 ? ['Google Fit'] : []);
   } else if (period === 'semana') {
     cardPeriodLabel = 'Últimos 7 días';
-    cardSources = Array.from(new Set(filtered.flatMap(d => (d.value > 0 || (type === 'weight' && d.value !== null)) ? (d.sources || []) : [])));
+    cardSources = Array.from(new Set(filtered.flatMap(d => (d.value > 0 || ((type === 'weight' || type === 'heartRate') && d.value !== null)) ? (d.sources || []) : [])));
   } else if (period === 'mes') {
     cardPeriodLabel = 'Últimos 30 días';
-    cardSources = Array.from(new Set(filtered.flatMap(d => (d.value > 0 || (type === 'weight' && d.value !== null)) ? (d.sources || []) : [])));
+    cardSources = Array.from(new Set(filtered.flatMap(d => (d.value > 0 || ((type === 'weight' || type === 'heartRate') && d.value !== null)) ? (d.sources || []) : [])));
   } else if (period === 'año') {
     cardPeriodLabel = 'Últimos 12 meses';
-    cardSources = Array.from(new Set(dataArray.flatMap(d => (d.value > 0 || (type === 'weight' && d.value !== null)) ? (d.sources || []) : [])));
+    cardSources = Array.from(new Set(dataArray.flatMap(d => (d.value > 0 || ((type === 'weight' || type === 'heartRate') && d.value !== null)) ? (d.sources || []) : [])));
   } else if (period === 'personalizado') {
     cardPeriodLabel = 'Rango personalizado';
-    cardSources = Array.from(new Set(filtered.flatMap(d => (d.value > 0 || (type === 'weight' && d.value !== null)) ? (d.sources || []) : [])));
+    cardSources = Array.from(new Set(filtered.flatMap(d => (d.value > 0 || ((type === 'weight' || type === 'heartRate') && d.value !== null)) ? (d.sources || []) : [])));
   }
 
   if (cardSources.length === 0 && aggregatedValue > 0) {
@@ -15575,11 +15783,29 @@ function renderHealthCard(type, period) {
     sources: cardSources
   };
 
-  const numDaysGoal = (!isAvgMode && period !== 'hoy' && type !== 'weight')
+  const numDaysGoal = (!isAvgMode && period !== 'hoy' && type !== 'weight' && type !== 'heartRate')
     ? (period === 'semana' ? 7 : (period === 'mes' ? 30 : (period === 'año' ? 365 : (filtered && filtered.length > 0 ? filtered.length : 1))))
     : 1;
 
   const formatHealthGoal = (metricType, rawVal, daysMultiplier = 1) => {
+    if (metricType === 'heartRate') {
+      const v = Math.round(rawVal || 0);
+      if (v <= 0) return 'Obj: 60-100 bpm';
+      let color = 'text-green-400';
+      let status = 'Normal';
+      if (v < 60) {
+        color = 'text-blue-400';
+        status = 'Reposo';
+      } else if (v <= 100) {
+        color = 'text-green-400';
+        status = 'Normal';
+      } else {
+        color = 'text-amber-400';
+        status = 'Elevado';
+      }
+      return `Obj: 60-100 bpm <span class="${color} ml-1 font-black">(${v} bpm · ${status})</span>`;
+    }
+
     const val = (metricType === 'distance') ? (rawVal / 1000) : (rawVal || 0);
     let baseGoal = 0, suffix = '', isReverse = false, decimals = 0;
     if (metricType === 'steps') { baseGoal = 10000; suffix = ' pasos'; isReverse = false; decimals = 0; }
@@ -15646,6 +15872,11 @@ function renderHealthCard(type, period) {
       const diff = Math.abs(v - 75);
       return Math.max(15, Math.min(100, Math.round(100 - (diff * 8))));
     }
+    if (metricType === 'heartRate') {
+      if (v >= 60 && v <= 100) return 100;
+      if (v < 60) return Math.max(30, Math.round((v / 60) * 100));
+      return Math.max(25, Math.round(100 - ((v - 100) * 1.5)));
+    }
     return 0;
   };
   if (barEl) barEl.style.width = calcHealthBarPct(type, aggregatedValue, numDaysGoal) + '%';
@@ -15670,6 +15901,9 @@ function renderHealthCard(type, period) {
   } else if (type === 'sleep') {
     const txt = aggregatedValue > 0 ? formatHorasMinutosSimple(aggregatedValue) : '--';
     if (valEl) valEl.textContent = txt;
+  } else if (type === 'heartRate') {
+    const txt = aggregatedValue > 0 ? Math.round(aggregatedValue).toString() : '--';
+    if (valEl) valEl.textContent = txt;
   }
 
   // SIEMPRE calcular y mostrar el dato de "hoy" para el Panel de Control (inicio)
@@ -15680,7 +15914,7 @@ function renderHealthCard(type, period) {
   ) || dataArray[dataArray.length - 1];
   let hoyAggValue = todayEntry ? todayEntry.value : 0;
 
-  if (type === 'weight' || type === 'sleep') {
+  if (type === 'weight' || type === 'sleep' || type === 'heartRate') {
     if (hoyAggValue === null || hoyAggValue === 0) {
       const lastEntry = [...dataArray].reverse().find(d => d.value > 0);
       hoyAggValue = lastEntry ? lastEntry.value : 0;
@@ -15705,6 +15939,8 @@ function renderHealthCard(type, period) {
       valElInicio.textContent = hoyAggValue > 0 ? Math.floor(hoyAggValue).toLocaleString('es-ES') : '--';
     } else if (type === 'sleep') {
       valElInicio.textContent = hoyAggValue > 0 ? formatHorasMinutosSimple(hoyAggValue) : '--';
+    } else if (type === 'heartRate') {
+      valElInicio.textContent = hoyAggValue > 0 ? Math.round(hoyAggValue).toString() : '--';
     }
   }
 
@@ -15782,6 +16018,7 @@ function renderHealthTable(type, period, filtered, labels, values) {
     if (type === 'calories') return Math.floor(raw).toLocaleString('es-ES') + ' kcal';
     if (type === 'activeMinutes') return Math.floor(raw).toLocaleString('es-ES') + ' min';
     if (type === 'sleep') return formatHorasMinutosTexto(raw);
+    if (type === 'heartRate') return Math.round(raw) + ' bpm';
     return raw;
   };
 
@@ -15790,10 +16027,10 @@ function renderHealthTable(type, period, filtered, labels, values) {
   if (isMonthly) {
     labels.forEach((mes, idx) => {
       const v = values[idx] || 0;
-      if (type === 'weight' && (v === 0 || v === null)) return;
+      if ((type === 'weight' || type === 'heartRate') && (v === 0 || v === null)) return;
       const monthItems = (filtered && filtered.length > 0 ? filtered : (window.fitnessData[type] || [])).filter(d => {
         const mKey = d.date.toLocaleString('es-ES', { month: 'short', year: 'numeric' });
-        return mKey.toLowerCase() === mes.toLowerCase() && (d.value > 0 || (type === 'weight' && d.value !== null));
+        return mKey.toLowerCase() === mes.toLowerCase() && (d.value > 0 || ((type === 'weight' || type === 'heartRate') && d.value !== null));
       });
       const monthSources = Array.from(new Set(monthItems.flatMap(i => i.sources || [])));
       rows.push({
@@ -15805,8 +16042,8 @@ function renderHealthTable(type, period, filtered, labels, values) {
   } else if (filtered && filtered.length > 0) {
     filtered.forEach(item => {
       const val = item.value;
-      if (type === 'weight' && (val === null || val === 0 || isNaN(val))) {
-        return; // Únicamente registrar el peso el día que se pesó
+      if ((type === 'weight' || type === 'heartRate') && (val === null || val === 0 || isNaN(val))) {
+        return; // Únicamente registrar el peso / ritmo cardíaco los días con medición
       }
       const d = item.date;
       const wDay = d.toLocaleDateString('es-ES', { weekday: 'short' }).replace('.', '');
@@ -15871,8 +16108,12 @@ function drawHealthChart(type, labels, data, startPhysChangeIndex = -1, sourcesB
   if (type === 'calories') color = '#f97316'; // orange-500
   if (type === 'activeMinutes') color = '#f43f5e'; // rose-500
   if (type === 'sleep') color = '#818cf8'; // indigo-400
+  if (type === 'heartRate') {
+    color = '#ff1744'; // rojo fosforito / neon vibrante
+    chartType = 'line';
+  }
 
-  const chartData = data.map(v => v === 0 && type === 'weight' ? null : v);
+  const chartData = data.map(v => (v === 0 || v === null) && (type === 'weight' || type === 'heartRate') ? null : v);
 
   const chartPlugins = [];
   if (type === 'weight' && startPhysChangeIndex !== -1) {
@@ -15915,13 +16156,17 @@ function drawHealthChart(type, labels, data, startPhysChangeIndex = -1, sourcesB
       datasets: [{
         label: '',
         data: chartData,
-        backgroundColor: color + '80',
+        backgroundColor: (type === 'heartRate') ? 'rgba(255, 23, 68, 0.15)' : color + '80',
         borderColor: color,
-        borderWidth: 2,
+        borderWidth: (type === 'heartRate') ? 2 : 2,
         borderRadius: chartType === 'bar' ? 4 : 0,
-        tension: 0.4,
+        tension: (type === 'heartRate') ? 0 : (type === 'weight' ? 0.4 : 0),
         pointBackgroundColor: color,
-        pointRadius: chartType === 'line' ? 3 : 0,
+        pointBorderColor: '#000',
+        pointBorderWidth: (type === 'heartRate') ? 0.5 : 0,
+        pointRadius: (type === 'heartRate') ? 2.5 : (chartType === 'line' ? 3 : 0),
+        pointHoverRadius: (type === 'heartRate') ? 5 : (chartType === 'line' ? 5 : 0),
+        fill: (type === 'heartRate') ? 'origin' : false,
         spanGaps: true
       }]
     },
@@ -15948,6 +16193,7 @@ function drawHealthChart(type, labels, data, startPhysChangeIndex = -1, sourcesB
               if (type === 'calories') return Math.floor(val).toLocaleString('es-ES') + ' kcal';
               if (type === 'activeMinutes') return Math.floor(val).toLocaleString('es-ES') + ' min';
               if (type === 'sleep') return formatHorasMinutosTexto(val);
+              if (type === 'heartRate') return Math.round(val) + ' bpm';
             },
             footer: function(tooltipItems) {
               if (!tooltipItems || !tooltipItems.length) return '';
@@ -15970,7 +16216,7 @@ function drawHealthChart(type, labels, data, startPhysChangeIndex = -1, sourcesB
         },
         y: {
           display: true,
-          beginAtZero: type !== 'weight',
+          beginAtZero: type !== 'weight' && type !== 'heartRate',
           grid: { color: 'rgba(51, 65, 85, 0.4)', drawBorder: false },
           ticks: { color: '#64748b', font: { size: 9 }, maxTicksLimit: 5 }
         }
