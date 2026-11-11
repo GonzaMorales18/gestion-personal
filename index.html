@@ -3985,38 +3985,42 @@
           </div>
         </div>
 
-        <!-- Selector de Modo y Velocidad -->
-        <div class="mt-auto space-y-1.5 md:space-y-2 relative z-10 max-w-[500px] mx-auto w-full">
+        <!-- Selector de Modo y Velocidad (Lado a Lado) -->
+        <div class="mt-auto grid grid-cols-2 gap-2.5 md:gap-3 relative z-10 w-full">
           <div>
             <span class="text-[8px] md:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Modo de Operación</span>
-            <div class="grid grid-cols-5 gap-1.5 md:gap-2">
-              <button onclick="domSetModoAC('cool')" id="dom-ac-mode-cool" class="h-9.5 md:h-10 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 md:gap-1.5 transition-all">
-                <i class="fas fa-snowflake text-[9px] md:text-[10px]"></i><span>Frío</span>
+            <div class="grid grid-cols-3 gap-1 md:gap-1.5">
+              <button onclick="domSetModoAC('cool')" id="dom-ac-mode-cool" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
+                <i class="fas fa-snowflake text-[8px] md:text-[8.5px]"></i><span>Frío</span>
               </button>
-              <button onclick="domSetModoAC('heat')" id="dom-ac-mode-heat" class="h-9.5 md:h-10 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 md:gap-1.5 transition-all">
-                <i class="fas fa-sun text-[9px] md:text-[10px]"></i><span>Calor</span>
+              <button onclick="domSetModoAC('heat')" id="dom-ac-mode-heat" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
+                <i class="fas fa-sun text-[8px] md:text-[8.5px]"></i><span>Calor</span>
               </button>
-              <button onclick="domSetModoAC('auto')" id="dom-ac-mode-auto" class="h-9.5 md:h-10 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 md:gap-1.5 transition-all">
-                <i class="fas fa-magic text-[9px] md:text-[10px]"></i><span>Auto</span>
+              <button onclick="domSetModoAC('auto')" id="dom-ac-mode-auto" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
+                <i class="fas fa-magic text-[8px] md:text-[8.5px]"></i><span>Auto</span>
               </button>
-              <button onclick="domSetModoAC('fan')" id="dom-ac-mode-fan" class="h-9.5 md:h-10 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 md:gap-1.5 transition-all">
-                <i class="fas fa-fan text-[9px] md:text-[10px]"></i><span>Vent.</span>
+            </div>
+            <div class="grid grid-cols-2 gap-1 md:gap-1.5 mt-1 md:mt-1.5">
+              <button onclick="domSetModoAC('fan')" id="dom-ac-mode-fan" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
+                <i class="fas fa-fan text-[8px] md:text-[8.5px]"></i><span>Vent.</span>
               </button>
-              <button onclick="domSetModoAC('dry')" id="dom-ac-mode-dry" class="h-9.5 md:h-10 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 md:gap-1.5 transition-all">
-                <i class="fas fa-tint-slash text-[9px] md:text-[10px]"></i><span>Seco</span>
+              <button onclick="domSetModoAC('dry')" id="dom-ac-mode-dry" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
+                <i class="fas fa-tint-slash text-[8px] md:text-[8.5px]"></i><span>Seco</span>
               </button>
             </div>
           </div>
 
           <div>
             <span class="text-[8px] md:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Velocidad y Swing</span>
-            <div class="grid grid-cols-5 gap-1.5 md:gap-2">
-              <button onclick="domSetFanAC('auto')" id="dom-ac-fan-auto" class="h-9.5 md:h-10 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all">Auto</button>
-              <button onclick="domSetFanAC('low')" id="dom-ac-fan-low" class="h-9.5 md:h-10 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all">Baja</button>
-              <button onclick="domSetFanAC('med')" id="dom-ac-fan-med" class="h-9.5 md:h-10 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all">Media</button>
-              <button onclick="domSetFanAC('high')" id="dom-ac-fan-high" class="h-9.5 md:h-10 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all">Alta</button>
-              <button onclick="domToggleSwingAC()" id="dom-ac-swing-btn" class="h-9.5 md:h-10 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1">
-                <i class="fas fa-arrows-alt-v text-[9px] md:text-[10px]"></i><span>Swing</span>
+            <div class="grid grid-cols-3 gap-1 md:gap-1.5">
+              <button onclick="domSetFanAC('auto')" id="dom-ac-fan-auto" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Auto</button>
+              <button onclick="domSetFanAC('low')" id="dom-ac-fan-low" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Baja</button>
+              <button onclick="domSetFanAC('med')" id="dom-ac-fan-med" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Media</button>
+            </div>
+            <div class="grid grid-cols-2 gap-1 md:gap-1.5 mt-1 md:mt-1.5">
+              <button onclick="domSetFanAC('high')" id="dom-ac-fan-high" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Alta</button>
+              <button onclick="domToggleSwingAC()" id="dom-ac-swing-btn" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1">
+                <i class="fas fa-arrows-alt-v text-[8px] md:text-[8.5px]"></i><span>Swing</span>
               </button>
             </div>
           </div>
@@ -4093,24 +4097,26 @@
           </div>
         </div>
 
-        <!-- Modos de Limpieza y Potencia de Succión -->
-        <div class="mt-auto space-y-1.5 md:space-y-2 relative z-10 max-w-[460px] mx-auto w-full">
+        <!-- Modos de Limpieza y Potencia de Succión (Lado a Lado) -->
+        <div class="mt-auto grid grid-cols-2 gap-2.5 md:gap-3 relative z-10 w-full">
           <div>
             <span class="text-[8px] md:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Modo de Limpieza</span>
-            <div class="grid grid-cols-4 gap-1.5 md:gap-2">
-              <button onclick="domSetModoAspiradora('smart')" id="dom-vac-mode-smart" class="h-9.5 md:h-10 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Auto</button>
-              <button onclick="domSetModoAspiradora('wall_follow')" id="dom-vac-mode-wall_follow" class="h-9.5 md:h-10 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Bordes</button>
-              <button onclick="domSetModoAspiradora('spiral')" id="dom-vac-mode-spiral" class="h-9.5 md:h-10 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Punto</button>
-              <button onclick="domSetModoAspiradora('single')" id="dom-vac-mode-single" class="h-9.5 md:h-10 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Habit.</button>
+            <div class="grid grid-cols-2 gap-1 md:gap-1.5">
+              <button onclick="domSetModoAspiradora('smart')" id="dom-vac-mode-smart" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Auto</button>
+              <button onclick="domSetModoAspiradora('wall_follow')" id="dom-vac-mode-wall_follow" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Bordes</button>
+              <button onclick="domSetModoAspiradora('spiral')" id="dom-vac-mode-spiral" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Punto</button>
+              <button onclick="domSetModoAspiradora('single')" id="dom-vac-mode-single" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Habit.</button>
             </div>
           </div>
 
-          <div class="max-w-[360px] mx-auto w-full">
+          <div>
             <span class="text-[8px] md:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Potencia de Succión</span>
-            <div class="grid grid-cols-3 gap-1.5 md:gap-2">
-              <button onclick="domSetSuccionAspiradora('gentle')" id="dom-vac-suction-gentle" class="h-9.5 md:h-10 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Silencioso</button>
-              <button onclick="domSetSuccionAspiradora('normal')" id="dom-vac-suction-normal" class="h-9.5 md:h-10 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Estándar</button>
-              <button onclick="domSetSuccionAspiradora('strong')" id="dom-vac-suction-strong" class="h-9.5 md:h-10 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Turbo</button>
+            <div class="grid grid-cols-2 gap-1 md:gap-1.5">
+              <button onclick="domSetSuccionAspiradora('gentle')" id="dom-vac-suction-gentle" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Silencioso</button>
+              <button onclick="domSetSuccionAspiradora('normal')" id="dom-vac-suction-normal" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Estándar</button>
+            </div>
+            <div class="mt-1 md:mt-1.5">
+              <button onclick="domSetSuccionAspiradora('strong')" id="dom-vac-suction-strong" class="w-full h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Turbo</button>
             </div>
           </div>
         </div>
@@ -4168,13 +4174,13 @@
         </div>
 
         <!-- Temporizador rápido (Countdown Smart Life) -->
-        <div class="mt-auto relative z-10 max-w-[460px] mx-auto w-full">
-          <span class="text-[8px] md:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Temporizador Countdown</span>
-          <div class="grid grid-cols-4 gap-1.5 md:gap-2">
-            <button onclick="domSetTimerPlug(30)" class="h-9.5 md:h-10 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[9px] md:text-[9.5px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">30 min</button>
-            <button onclick="domSetTimerPlug(60)" class="h-9.5 md:h-10 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[9px] md:text-[9.5px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">1 Hora</button>
-            <button onclick="domSetTimerPlug(120)" class="h-9.5 md:h-10 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[9px] md:text-[9.5px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">2 Horas</button>
-            <button onclick="domSetTimerPlug(0)" class="h-9.5 md:h-10 rounded-xl bg-slate-900 hover:bg-red-950/50 border border-slate-800 hover:border-red-500/40 text-[9px] md:text-[9.5px] font-black uppercase tracking-wider text-slate-400 hover:text-red-300 transition-colors flex items-center justify-center">Cancelar</button>
+        <div class="mt-auto relative z-10 max-w-[340px] md:max-w-[360px] mx-auto w-full">
+          <span class="text-[8px] md:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1 text-center">Temporizador Countdown</span>
+          <div class="grid grid-cols-2 gap-1 md:gap-1.5">
+            <button onclick="domSetTimerPlug(30)" class="h-8 md:h-8.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8.5px] md:text-[9px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">30 min</button>
+            <button onclick="domSetTimerPlug(60)" class="h-8 md:h-8.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8.5px] md:text-[9px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">1 Hora</button>
+            <button onclick="domSetTimerPlug(120)" class="h-8 md:h-8.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8.5px] md:text-[9px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">2 Horas</button>
+            <button onclick="domSetTimerPlug(0)" class="h-8 md:h-8.5 rounded-xl bg-slate-900 hover:bg-red-950/50 border border-slate-800 hover:border-red-500/40 text-[8.5px] md:text-[9px] font-black uppercase tracking-wider text-slate-400 hover:text-red-300 transition-colors flex items-center justify-center">Cancelar</button>
           </div>
         </div>
       </div>
@@ -16300,7 +16306,7 @@ function renderDomoticaUI() {
     const btn = document.getElementById('dom-ac-mode-' + m);
     if (!btn) return;
     const active = ac.mode === m;
-    btn.className = `h-9.5 md:h-10 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 md:gap-1.5 transition-all ${
+    btn.className = `h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all ${
       active ? 'bg-cyan-600/25 border-cyan-400 text-cyan-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
     }`;
   });
@@ -16309,14 +16315,14 @@ function renderDomoticaUI() {
     const btn = document.getElementById('dom-ac-fan-' + f);
     if (!btn) return;
     const active = ac.fan === f;
-    btn.className = `h-9.5 md:h-10 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
+    btn.className = `h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
       active ? 'bg-cyan-600/25 border-cyan-400 text-cyan-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
     }`;
   });
 
   const swingBtn = document.getElementById('dom-ac-swing-btn');
   if (swingBtn) {
-    swingBtn.className = `h-9.5 md:h-10 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1 ${
+    swingBtn.className = `h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1 ${
       ac.swing ? 'bg-cyan-600/25 border-cyan-400 text-cyan-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
     }`;
   }
@@ -16413,7 +16419,7 @@ function renderDomoticaUI() {
     const btn = document.getElementById('dom-vac-mode-' + m);
     if (!btn) return;
     const active = vac.mode === m;
-    btn.className = `h-9.5 md:h-10 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
+    btn.className = `h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
       active ? 'bg-emerald-600/25 border-emerald-400 text-emerald-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
     }`;
   });
@@ -16422,7 +16428,8 @@ function renderDomoticaUI() {
     const btn = document.getElementById('dom-vac-suction-' + s);
     if (!btn) return;
     const active = vac.suction === s;
-    btn.className = `h-9.5 md:h-10 rounded-xl border text-[9px] md:text-[9.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
+    const baseW = s === 'strong' ? 'w-full ' : '';
+    btn.className = `${baseW}h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
       active ? 'bg-emerald-600/25 border-emerald-400 text-emerald-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
     }`;
   });
