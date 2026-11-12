@@ -1446,9 +1446,19 @@
               </div>
             </div>
             <div class="relative z-10">
-              <div class="flex items-baseline flex-wrap">
-                <h3 id="inicio-health-sleep" class="text-xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
-                <span class="text-[9px] font-bold text-slate-400 ml-1">hs</span>
+              <div class="flex items-center justify-between">
+                <div class="flex items-baseline">
+                  <h3 id="inicio-health-sleep" class="text-xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+                  <span class="text-[9px] font-bold text-slate-400 ml-1">hs</span>
+                </div>
+                <button type="button" id="inicio-health-sleep-score-box"
+                        onclick="event.stopPropagation(); abrirModalDetalleSueno('hoy')"
+                        class="hidden items-center gap-1.5 px-2 py-0.5 rounded-lg border text-[10px] font-black mono transition-all cursor-pointer bg-slate-800/80 border-slate-700/80 text-indigo-300 hover:border-indigo-500 hover:bg-slate-800"
+                        title="Ver calidad y fases del sueño">
+                  <i class="fas fa-star text-[8px] text-amber-400"></i>
+                  <span id="inicio-health-sleep-score">--</span>
+                  <span class="text-[8px] font-normal text-slate-400">calidad</span>
+                </button>
               </div>
               <div class="mt-2 mb-1.5 h-1.5 w-full bg-slate-800/80 rounded-full overflow-hidden">
                 <div id="inicio-health-sleep-bar" class="h-full bg-indigo-400 rounded-full transition-all duration-500" style="width: 0%"></div>
@@ -1572,7 +1582,7 @@
 
   <!-- SECCIÓN SALUD - ACTIVIDAD -->
   <main id="section-actividad" class="hidden p-4 md:p-8 max-w-[1400px] mx-auto w-full space-y-6">
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-[1fr_1.18fr_1fr_1fr_1fr_1fr_1fr] gap-3 xl:gap-3.5">
 
       <!-- Tarjeta Distancia -->
       <div class="group bg-black rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
@@ -1631,9 +1641,19 @@
           </div>
         </div>
         <div class="relative z-10">
-          <div class="flex items-baseline">
-            <h3 id="health-sleep" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
-            <span class="text-xs font-bold text-slate-400 ml-1">hs</span>
+          <div class="flex items-center justify-between">
+            <div class="flex items-baseline">
+              <h3 id="health-sleep" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+              <span class="text-xs font-bold text-slate-400 ml-1">hs</span>
+            </div>
+            <button type="button" id="health-sleep-score-box"
+                    onclick="abrirModalDetalleSueno()"
+                    class="hidden items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-black mono transition-all cursor-pointer bg-slate-800/90 border-slate-700 text-indigo-300 hover:border-indigo-500 hover:bg-slate-800 shadow-sm"
+                    title="Ver calidad y fases del sueño">
+              <i class="fas fa-star text-[9px] text-amber-400"></i>
+              <span id="health-sleep-score">--</span>
+              <span class="text-[9px] font-medium text-slate-400">calidad</span>
+            </button>
           </div>
           <div class="mt-2.5 mb-1.5 h-1.5 w-full bg-slate-800/80 rounded-full overflow-hidden">
             <div id="health-sleep-bar" class="h-full bg-indigo-400 rounded-full transition-all duration-500" style="width: 0%"></div>
@@ -1860,7 +1880,7 @@
     </div>
 
     <!-- Contenedor de gráficos y tablas (se oculta si filtro es Hoy) -->
-    <div id="charts-actividad-container" class="hidden grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+    <div id="charts-actividad-container" class="hidden grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-[1fr_1.18fr_1fr_1fr_1fr_1fr_1fr] gap-3 xl:gap-3.5">
 
       <!-- Gráfico y Tabla Distancia -->
       <div class="bg-black rounded-2xl border border-slate-700/60 p-5 flex flex-col justify-between">
@@ -1907,7 +1927,7 @@
               <thead>
                 <tr class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
                   <th class="pb-1 font-bold">Fecha</th>
-                  <th class="pb-1 text-right font-bold">Total</th>
+                  <th class="pb-1 text-right font-bold">Total / Calidad</th>
                 </tr>
               </thead>
               <tbody id="table-sleep" class="divide-y divide-slate-800/40 text-[10px]"></tbody>
@@ -5027,6 +5047,29 @@
       </button>
     </div>
     <div class="p-6 space-y-4 max-h-[82vh] overflow-y-auto" id="modal-detalle-sueldo-content">
+      <!-- Inyectado dinámicamente -->
+    </div>
+  </div>
+</div>
+
+<!-- Modal Detalle de Calidad del Sueño -->
+<div id="modal-detalle-sueno" onclick="if(event.target===this) cerrarModalDetalleSueno()" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[300] flex items-center justify-center p-4">
+  <div class="bg-black rounded-2xl border border-slate-700/80 shadow-2xl w-full max-w-xl overflow-hidden animate-scaleIn flex flex-col max-h-[90vh]">
+    <div class="px-6 py-4 border-b border-slate-700/60 bg-slate-900/60 flex items-center justify-between flex-shrink-0">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-xl bg-indigo-950/70 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+          <i class="fas fa-moon text-xs"></i>
+        </div>
+        <div>
+          <h3 class="font-black text-white text-sm uppercase tracking-wider">Calidad y Fases del Sueño</h3>
+          <p id="modal-detalle-sueno-sub" class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">—</p>
+        </div>
+      </div>
+      <button onclick="cerrarModalDetalleSueno()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-800 hover:bg-slate-700 transition-colors text-slate-400 hover:text-white cursor-pointer">
+        <i class="fas fa-times text-xs"></i>
+      </button>
+    </div>
+    <div class="p-5 space-y-4 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full" id="modal-detalle-sueno-content">
       <!-- Inyectado dinámicamente -->
     </div>
   </div>
@@ -14594,9 +14637,9 @@ function setActividadFiltro(period) {
 
 function restaurarCacheFitness() {
   try {
-    if (localStorage.getItem('gp_fitness_cache_v') !== '4') {
+    if (localStorage.getItem('gp_fitness_cache_v') !== '5') {
       localStorage.removeItem('gp_fitness_cache');
-      localStorage.setItem('gp_fitness_cache_v', '4');
+      localStorage.setItem('gp_fitness_cache_v', '5');
       return;
     }
     if (window.fitnessData && window.fitnessData.steps && window.fitnessData.steps.length > 0) return;
@@ -14607,6 +14650,7 @@ function restaurarCacheFitness() {
     ['distance', 'sleep', 'steps', 'weight', 'calories', 'activeMinutes', 'heartRate'].forEach(metric => {
       if (Array.isArray(parsed[metric])) {
         window.fitnessData[metric] = parsed[metric].map(item => ({
+          ...item,
           date: new Date(item.date),
           value: item.value,
           sources: Array.isArray(item.sources) ? item.sources : (item.value > 0 ? ['Google Fit'] : [])
@@ -15153,51 +15197,59 @@ async function fetchGoogleFitness() {
       });
     });
 
-    // Si dataset:aggregate no trajo ritmo cardíaco, buscar dataSources directos
-    if (heartRateByDate.size === 0) {
-      try {
-        console.info('[Google Fit] dataset:aggregate no trajo ritmo cardíaco. Buscando dataSources directos...');
+    // Consultar dataSources directos de ritmo cardíaco para obtener puntos con timestamp (para reposo nocturno en sueño y fallback)
+    const allRawHrPoints = [];
+    try {
+      let hrSources = Array.from(knownDataSourcesMap.values()).filter(ds =>
+        (ds.dataType?.name || '').includes('heart_rate') || (ds.dataStreamId || '').includes('heart_rate')
+      );
+      if (hrSources.length === 0) {
         const dsRes = await fetch('https://www.googleapis.com/fitness/v1/users/me/dataSources', { headers });
         if (dsRes.ok) {
           const dsData = await dsRes.json();
-          const hrSources = (dsData.dataSource || []).filter(ds =>
+          hrSources = (dsData.dataSource || []).filter(ds =>
             (ds.dataType?.name || '').includes('heart_rate') || (ds.dataStreamId || '').includes('heart_rate')
           );
-          console.info(`[Google Fit] ${hrSources.length} fuentes de ritmo cardíaco encontradas en la cuenta`);
+        }
+      }
 
-          const startNs = BigInt(startOfToday.getTime() - (360 * 86400000)) * 1000000n;
-          const endNs = BigInt(endOfToday) * 1000000n;
-          const rawPointsByDate = new Map();
+      if (hrSources.length > 0) {
+        const startNs = BigInt(startOfToday.getTime() - (360 * 86400000)) * 1000000n;
+        const endNs = BigInt(endOfToday) * 1000000n;
+        const rawPointsByDate = new Map();
 
-          for (const hs of hrSources) {
-            try {
-              const src = resolverFuenteGoogleFit(hs.dataStreamId, knownDataSourcesMap);
-              const hsLabel = src.device ? `${src.name} (${src.device})` : src.name;
-              const ptsRes = await fetch(`https://www.googleapis.com/fitness/v1/users/me/dataSources/${encodeURIComponent(hs.dataStreamId)}/datasets/${startNs}-${endNs}`, { headers });
-              if (ptsRes.ok) {
-                const ptsData = await ptsRes.json();
-                const pts = ptsData.point || [];
-                pts.forEach(pt => {
-                  const val = pt.value?.[0]?.fpVal || pt.value?.[0]?.intVal;
-                  if (val && val > 0) {
-                    const timeNs = pt.startTimeNanos || pt.endTimeNanos;
-                    const timeMs = Number(BigInt(timeNs) / 1000000n);
-                    const d = new Date(timeMs);
-                    const dateKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-                    const dayNormalized = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
+        for (const hs of hrSources) {
+          try {
+            const src = resolverFuenteGoogleFit(hs.dataStreamId, knownDataSourcesMap);
+            const hsLabel = src.device ? `${src.name} (${src.device})` : src.name;
+            const ptsRes = await fetch(`https://www.googleapis.com/fitness/v1/users/me/dataSources/${encodeURIComponent(hs.dataStreamId)}/datasets/${startNs}-${endNs}`, { headers });
+            if (ptsRes.ok) {
+              const ptsData = await ptsRes.json();
+              const pts = ptsData.point || [];
+              pts.forEach(pt => {
+                const val = pt.value?.[0]?.fpVal || pt.value?.[0]?.intVal;
+                if (val && val > 0) {
+                  const timeNs = pt.startTimeNanos || pt.endTimeNanos;
+                  const timeMs = Number(BigInt(timeNs) / 1000000n);
+                  allRawHrPoints.push({ timeMs, val: Math.round(val) });
 
-                    if (!rawPointsByDate.has(dateKey)) {
-                      rawPointsByDate.set(dateKey, { date: dayNormalized, vals: [], sources: new Set() });
-                    }
-                    const entry = rawPointsByDate.get(dateKey);
-                    entry.vals.push(val);
-                    if (hsLabel) entry.sources.add(hsLabel);
+                  const d = new Date(timeMs);
+                  const dateKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+                  const dayNormalized = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
+
+                  if (!rawPointsByDate.has(dateKey)) {
+                    rawPointsByDate.set(dateKey, { date: dayNormalized, vals: [], sources: new Set() });
                   }
-                });
-              }
-            } catch (err) {}
-          }
+                  const entry = rawPointsByDate.get(dateKey);
+                  entry.vals.push(val);
+                  if (hsLabel) entry.sources.add(hsLabel);
+                }
+              });
+            }
+          } catch (err) {}
+        }
 
+        if (heartRateByDate.size === 0) {
           rawPointsByDate.forEach((entry, dateKey) => {
             if (entry.vals.length > 0) {
               const avg = entry.vals.reduce((a, b) => a + b, 0) / entry.vals.length;
@@ -15209,9 +15261,9 @@ async function fetchGoogleFitness() {
             }
           });
         }
-      } catch (e) {
-        console.warn('[Google Fit] Error buscando fuentes directas de ritmo cardíaco:', e);
       }
+    } catch (e) {
+      console.warn('[Google Fit] Error buscando fuentes directas de ritmo cardíaco:', e);
     }
 
     // Si dataset:aggregate no trajo puntos de peso, consultar directamente los dataSources de Google Fit
@@ -15258,12 +15310,15 @@ async function fetchGoogleFitness() {
     }
 
     const sleepByDate = new Map();
-    // Consultar sesiones de sueño (activityType = 72)
     try {
-      let sleepPageToken = '';
       const startIso = new Date(startOfToday.getTime() - (360 * 86400000)).toISOString();
       const endIso = new Date(endOfToday).toISOString();
-      const rawSleepIntervals = [];
+      const startNs = BigInt(startOfToday.getTime() - (360 * 86400000)) * 1000000n;
+      const endNs = BigInt(endOfToday) * 1000000n;
+
+      // 1. Obtener sesiones de sueño (activityType = 72)
+      let sleepPageToken = '';
+      const rawSessions = [];
       const seenSessionIds = new Set();
 
       do {
@@ -15283,10 +15338,9 @@ async function fetchGoogleFitness() {
             const endMs = parseInt(s.endTimeMillis, 10);
             if (!isNaN(startMs) && !isNaN(endMs) && endMs > startMs) {
               const durHours = (endMs - startMs) / 3600000;
-              // Descartar sesiones anómalas mayores a 24 horas
               if (durHours > 0 && durHours <= 24) {
                 let appName = s.application?.name || formatearNombrePaquete(s.application?.packageName);
-                rawSleepIntervals.push({ start: startMs, end: endMs, source: appName || 'Google Fit' });
+                rawSessions.push({ startMs, endMs, source: appName || 'Google Fit', name: s.name || '' });
               }
             }
           });
@@ -15296,118 +15350,190 @@ async function fetchGoogleFitness() {
         }
       } while (sleepPageToken);
 
-      if (rawSleepIntervals.length > 0) {
-        // Ordenar cronológicamente
-        rawSleepIntervals.sort((a, b) => a.start - b.start || a.end - b.end);
-
-        // Fusionar intervalos solapados o contiguos (tolerancia de 5 min para apps duplicadas como Health Connect / Samsung Health)
-        const mergedIntervals = [];
-        for (const item of rawSleepIntervals) {
-          if (mergedIntervals.length === 0) {
-            mergedIntervals.push({ start: item.start, end: item.end, sources: new Set([item.source]) });
-          } else {
-            const last = mergedIntervals[mergedIntervals.length - 1];
-            if (item.start <= (last.end + 5 * 60 * 1000)) {
-              last.end = Math.max(last.end, item.end);
-              last.sources.add(item.source);
-            } else {
-              mergedIntervals.push({ start: item.start, end: item.end, sources: new Set([item.source]) });
-            }
+      // 2. Obtener dataSources de segmentos de sueño (com.google.sleep.segment)
+      let sleepSources = Array.from(knownDataSourcesMap.values()).filter(ds =>
+        (ds.dataType?.name || '').includes('sleep') || (ds.dataStreamId || '').includes('sleep')
+      );
+      if (sleepSources.length === 0) {
+        try {
+          const dsRes = await fetch('https://www.googleapis.com/fitness/v1/users/me/dataSources', { headers });
+          if (dsRes.ok) {
+            const dsData = await dsRes.json();
+            sleepSources = (dsData.dataSource || []).filter(ds =>
+              (ds.dataType?.name || '').includes('sleep') || (ds.dataStreamId || '').includes('sleep')
+            );
           }
-        }
-
-        // Asignar duración por día de despertar (endMs)
-        mergedIntervals.forEach(intv => {
-          const durHours = (intv.end - intv.start) / 3600000;
-          if (durHours > 0) {
-            const dObj = new Date(intv.end);
-            const dateKey = `${dObj.getFullYear()}-${String(dObj.getMonth() + 1).padStart(2, '0')}-${String(dObj.getDate()).padStart(2, '0')}`;
-            const prev = sleepByDate.get(dateKey) || { val: 0, sources: new Set() };
-            intv.sources.forEach(s => prev.sources.add(s));
-            prev.val = Math.min(24, prev.val + durHours);
-            sleepByDate.set(dateKey, prev);
-          }
-        });
+        } catch (e) {}
       }
-    } catch (errSleep) {
-      console.warn('[Google Fit] Error obteniendo sesiones de sueño:', errSleep);
-    }
 
-    // Si no hubo sesiones, buscar dataSources directos de sueño (ej. com.google.sleep.segment)
-    if (sleepByDate.size === 0) {
-      try {
-        console.info('[Google Fit] Buscando fuentes directas de sueño...');
-        const dsRes = await fetch('https://www.googleapis.com/fitness/v1/users/me/dataSources', { headers });
-        if (dsRes.ok) {
-          const dsData = await dsRes.json();
-          const sleepSources = (dsData.dataSource || []).filter(ds =>
-            (ds.dataType?.name || '').includes('sleep') || (ds.dataStreamId || '').includes('sleep')
-          );
-          console.info(`[Google Fit] ${sleepSources.length} fuentes de sueño encontradas en la cuenta`);
-
-          const startNs = BigInt(startOfToday.getTime() - (360 * 86400000)) * 1000000n;
-          const endNs = BigInt(endOfToday) * 1000000n;
-          const rawFallbackIntervals = [];
-
-          for (const ss of sleepSources) {
-            try {
-              const src = resolverFuenteGoogleFit(ss.dataStreamId, knownDataSourcesMap);
-              const ssLabel = src.device ? `${src.name} (${src.device})` : src.name;
-              const ptsRes = await fetch(`https://www.googleapis.com/fitness/v1/users/me/dataSources/${encodeURIComponent(ss.dataStreamId)}/datasets/${startNs}-${endNs}`, { headers });
-              if (ptsRes.ok) {
-                const ptsData = await ptsRes.json();
-                const pts = ptsData.point || [];
-                pts.forEach(pt => {
-                  const sNs = pt.startTimeNanos ? BigInt(pt.startTimeNanos) : null;
-                  const eNs = pt.endTimeNanos ? BigInt(pt.endTimeNanos) : null;
-                  if (sNs && eNs && eNs > sNs) {
-                    const stage = pt.value?.[0]?.intVal;
-                    if (stage === 1 || stage === 3) return; // Despierto / fuera de cama
-                    const startMs = Number(sNs / 1000000n);
-                    const endMs = Number(eNs / 1000000n);
-                    const durHours = (endMs - startMs) / 3600000;
-                    if (durHours > 0 && durHours <= 24) {
-                      rawFallbackIntervals.push({ start: startMs, end: endMs, source: ssLabel });
-                    }
-                  }
-                });
-              }
-            } catch (err) {}
-          }
-
-          if (rawFallbackIntervals.length > 0) {
-            rawFallbackIntervals.sort((a, b) => a.start - b.start || a.end - b.end);
-            const mergedFallback = [];
-            for (const item of rawFallbackIntervals) {
-              if (mergedFallback.length === 0) {
-                mergedFallback.push({ start: item.start, end: item.end, sources: new Set([item.source]) });
-              } else {
-                const last = mergedFallback[mergedFallback.length - 1];
-                if (item.start <= (last.end + 5 * 60 * 1000)) {
-                  last.end = Math.max(last.end, item.end);
-                  last.sources.add(item.source);
-                } else {
-                  mergedFallback.push({ start: item.start, end: item.end, sources: new Set([item.source]) });
-                }
-              }
-            }
-
-            mergedFallback.forEach(intv => {
-              const durHours = (intv.end - intv.start) / 3600000;
-              if (durHours > 0) {
-                const dObj = new Date(intv.end);
-                const dateKey = `${dObj.getFullYear()}-${String(dObj.getMonth() + 1).padStart(2, '0')}-${String(dObj.getDate()).padStart(2, '0')}`;
-                const prev = sleepByDate.get(dateKey) || { val: 0, sources: new Set() };
-                intv.sources.forEach(s => prev.sources.add(s));
-                prev.val = Math.min(24, prev.val + durHours);
-                sleepByDate.set(dateKey, prev);
+      const rawSegments = [];
+      for (const ss of sleepSources) {
+        try {
+          const src = resolverFuenteGoogleFit(ss.dataStreamId, knownDataSourcesMap);
+          const ssLabel = src.device ? `${src.name} (${src.device})` : src.name;
+          const ptsRes = await fetch(`https://www.googleapis.com/fitness/v1/users/me/dataSources/${encodeURIComponent(ss.dataStreamId)}/datasets/${startNs}-${endNs}`, { headers });
+          if (ptsRes.ok) {
+            const ptsData = await ptsRes.json();
+            const pts = ptsData.point || [];
+            pts.forEach(pt => {
+              const sNs = pt.startTimeNanos ? BigInt(pt.startTimeNanos) : null;
+              const eNs = pt.endTimeNanos ? BigInt(pt.endTimeNanos) : null;
+              if (sNs && eNs && eNs > sNs) {
+                const startMs = Number(sNs / 1000000n);
+                const endMs = Number(eNs / 1000000n);
+                const stage = pt.value?.[0]?.intVal || 2;
+                rawSegments.push({ startMs, endMs, stage, source: ssLabel });
               }
             });
           }
-        }
-      } catch (e) {
-        console.warn('[Google Fit] Error buscando fuentes directas de sueño:', e);
+        } catch (err) {}
       }
+
+      // 3. Fusionar sesiones o generar sesiones a partir de segmentos si no hubo sesiones
+      let mergedIntervals = [];
+      if (rawSessions.length > 0) {
+        rawSessions.sort((a, b) => a.startMs - b.startMs || a.endMs - b.endMs);
+        for (const s of rawSessions) {
+          if (mergedIntervals.length === 0) {
+            mergedIntervals.push({ startMs: s.startMs, endMs: s.endMs, sources: new Set([s.source]) });
+          } else {
+            const last = mergedIntervals[mergedIntervals.length - 1];
+            if (s.startMs <= (last.endMs + 10 * 60 * 1000)) {
+              last.endMs = Math.max(last.endMs, s.endMs);
+              last.sources.add(s.source);
+            } else {
+              mergedIntervals.push({ startMs: s.startMs, endMs: s.endMs, sources: new Set([s.source]) });
+            }
+          }
+        }
+      } else if (rawSegments.length > 0) {
+        // Fallback: agrupar segmentos en sesiones de sueño
+        rawSegments.sort((a, b) => a.startMs - b.startMs);
+        for (const seg of rawSegments) {
+          if (seg.stage === 1 || seg.stage === 3) continue; // Despierto / fuera de cama no inicia sesión
+          if (mergedIntervals.length === 0) {
+            mergedIntervals.push({ startMs: seg.startMs, endMs: seg.endMs, sources: new Set([seg.source]) });
+          } else {
+            const last = mergedIntervals[mergedIntervals.length - 1];
+            if (seg.startMs <= (last.endMs + 30 * 60 * 1000)) {
+              last.endMs = Math.max(last.endMs, seg.endMs);
+              last.sources.add(seg.source);
+            } else {
+              mergedIntervals.push({ startMs: seg.startMs, endMs: seg.endMs, sources: new Set([seg.source]) });
+            }
+          }
+        }
+      }
+
+      // 4. Por cada sesión de sueño calculada, buscar sus fases detalladas y ritmo cardíaco
+      mergedIntervals.forEach(intv => {
+        const durHoursSession = (intv.endMs - intv.startMs) / 3600000;
+        if (durHoursSession <= 0 || durHoursSession > 24) return;
+
+        // Fecha de despertar determina el día del sueño
+        const dObj = new Date(intv.endMs);
+        const dateKey = `${dObj.getFullYear()}-${String(dObj.getMonth() + 1).padStart(2, '0')}-${String(dObj.getDate()).padStart(2, '0')}`;
+
+        // Segmentos correspondientes a este intervalo (+/- 15 min de tolerancia)
+        const matchedSegments = rawSegments.filter(seg =>
+          seg.startMs >= (intv.startMs - 15 * 60 * 1000) && seg.endMs <= (intv.endMs + 15 * 60 * 1000)
+        );
+
+        let deepMs = 0, remMs = 0, lightMs = 0, awakeMs = 0, generalSleepMs = 0;
+        matchedSegments.forEach(seg => {
+          const segDur = Math.max(0, seg.endMs - seg.startMs);
+          if (seg.source) intv.sources.add(seg.source);
+          if (seg.stage === 5) deepMs += segDur;
+          else if (seg.stage === 6) remMs += segDur;
+          else if (seg.stage === 4) lightMs += segDur;
+          else if (seg.stage === 1 || seg.stage === 3) awakeMs += segDur;
+          else if (seg.stage === 2) generalSleepMs += segDur;
+        });
+
+        const hasStages = (deepMs > 0 || remMs > 0 || lightMs > 0);
+        let actualAsleepHours = 0;
+        if (hasStages || generalSleepMs > 0) {
+          actualAsleepHours = (deepMs + remMs + lightMs + generalSleepMs) / 3600000;
+        } else {
+          actualAsleepHours = durHoursSession;
+        }
+
+        // Ritmo cardíaco durante el sueño (entre inicio y fin de la sesión)
+        const nightHrPoints = allRawHrPoints.filter(p => p.timeMs >= intv.startMs && p.timeMs <= intv.endMs);
+        let hrAvg = null, hrMin = null, hrMax = null;
+        if (nightHrPoints.length > 0) {
+          const vals = nightHrPoints.map(p => p.val);
+          hrAvg = Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
+          hrMin = Math.min(...vals);
+          hrMax = Math.max(...vals);
+        }
+
+        const deepHours = Number((deepMs / 3600000).toFixed(2));
+        const remHours = Number((remMs / 3600000).toFixed(2));
+        const lightHours = Number(((lightMs + generalSleepMs) / 3600000).toFixed(2));
+        const awakeHours = Number((awakeMs / 3600000).toFixed(2));
+        const totalInBedHours = Number(durHoursSession.toFixed(2));
+        const asleepHours = Number(actualAsleepHours.toFixed(2));
+
+        const deepPct = asleepHours > 0 ? Math.round((deepHours / asleepHours) * 100) : 0;
+        const remPct = asleepHours > 0 ? Math.round((remHours / asleepHours) * 100) : 0;
+        const lightPct = asleepHours > 0 ? Math.max(0, 100 - deepPct - remPct) : 0;
+        const awakePct = totalInBedHours > 0 ? Math.round((awakeHours / totalInBedHours) * 100) : 0;
+        const efficiency = totalInBedHours > 0 ? Math.min(100, Math.round((asleepHours / totalInBedHours) * 100)) : 100;
+
+        const scoreObj = calcularSleepScore({
+          durHours: asleepHours,
+          deepHours,
+          remHours,
+          lightHours,
+          awakeHours,
+          hasStages
+        });
+
+        const bedtimeD = new Date(intv.startMs);
+        const wakeTimeD = new Date(intv.endMs);
+        const bedtimeStr = `${String(bedtimeD.getHours()).padStart(2, '0')}:${String(bedtimeD.getMinutes()).padStart(2, '0')}`;
+        const wakeTimeStr = `${String(wakeTimeD.getHours()).padStart(2, '0')}:${String(wakeTimeD.getMinutes()).padStart(2, '0')}`;
+
+        const prevDay = sleepByDate.get(dateKey);
+        if (!prevDay || asleepHours > prevDay.val) {
+          const combinedSources = new Set(intv.sources);
+          if (prevDay && prevDay.sources) prevDay.sources.forEach(s => combinedSources.add(s));
+          const combinedVal = Math.min(24, (prevDay ? prevDay.val : 0) + asleepHours);
+
+          sleepByDate.set(dateKey, {
+            val: combinedVal,
+            sources: combinedSources,
+            bedtimeMs: intv.startMs,
+            wakeTimeMs: intv.endMs,
+            bedtimeStr: bedtimeStr,
+            wakeTimeStr: wakeTimeStr,
+            totalInBedHours: Math.min(24, (prevDay ? prevDay.totalInBedHours : 0) + totalInBedHours),
+            asleepHours: combinedVal,
+            hasStages: hasStages || !!prevDay?.hasStages,
+            stages: {
+              deepHours: Number(((prevDay?.stages?.deepHours || 0) + deepHours).toFixed(2)),
+              remHours: Number(((prevDay?.stages?.remHours || 0) + remHours).toFixed(2)),
+              lightHours: Number(((prevDay?.stages?.lightHours || 0) + lightHours).toFixed(2)),
+              awakeHours: Number(((prevDay?.stages?.awakeHours || 0) + awakeHours).toFixed(2)),
+              deepPct: deepPct,
+              remPct: remPct,
+              lightPct: lightPct,
+              awakePct: awakePct
+            },
+            efficiency: efficiency,
+            hrAvg: hrAvg || prevDay?.hrAvg || null,
+            hrMin: hrMin || prevDay?.hrMin || null,
+            hrMax: hrMax || prevDay?.hrMax || null,
+            hrCount: nightHrPoints.length,
+            score: scoreObj.score,
+            scoreLabel: scoreObj.label,
+            scoreBadgeClass: scoreObj.badgeClass
+          });
+        }
+      });
+    } catch (errSleep) {
+      console.warn('[Google Fit] Error procesando sesiones y fases de sueño:', errSleep);
     }
 
     window.fitnessData = { distance: [], sleep: [], steps: [], weight: [], calories: [], activeMinutes: [], heartRate: [] };
@@ -15448,12 +15574,41 @@ async function fetchGoogleFitness() {
       });
 
       const sl = sleepByDate.get(dateKey);
-      const slVal = sl ? (typeof sl.val === 'number' ? sl.val : (typeof sl === 'number' ? sl : 0)) : 0;
+      const slVal = sl ? (typeof sl.val === 'number' ? sl.val : (typeof sl === 'number' ? sl : (sl.asleepHours || 0))) : 0;
       const slSources = (sl && sl.sources && sl.sources.size > 0) ? Array.from(sl.sources) : (slVal > 0 ? ['Google Fit'] : []);
+      const slHasStages = !!(sl && sl.hasStages);
+      const slStages = sl && sl.stages ? sl.stages : null;
+      const slEfficiency = sl && typeof sl.efficiency === 'number' ? sl.efficiency : (slVal > 0 ? 100 : null);
+      const slScoreObj = slVal > 0 ? calcularSleepScore({
+        durHours: slVal,
+        deepHours: slStages ? slStages.deepHours : 0,
+        remHours: slStages ? slStages.remHours : 0,
+        lightHours: slStages ? slStages.lightHours : 0,
+        awakeHours: slStages ? slStages.awakeHours : 0,
+        hasStages: slHasStages
+      }) : null;
+
       window.fitnessData.sleep.push({
         date: currentDay,
+        dateIso: dateKey,
         value: slVal > 0 ? Number(slVal.toFixed(2)) : 0,
-        sources: slSources
+        sources: slSources,
+        bedtimeStr: sl?.bedtimeStr || null,
+        wakeTimeStr: sl?.wakeTimeStr || null,
+        bedtimeMs: sl?.bedtimeMs || null,
+        wakeTimeMs: sl?.wakeTimeMs || null,
+        totalInBedHours: sl?.totalInBedHours || slVal,
+        asleepHours: slVal > 0 ? Number(slVal.toFixed(2)) : 0,
+        hasStages: slHasStages,
+        stages: slStages,
+        efficiency: slEfficiency,
+        hrAvg: sl?.hrAvg || null,
+        hrMin: sl?.hrMin || null,
+        hrMax: sl?.hrMax || null,
+        hrCount: sl?.hrCount || 0,
+        score: sl?.score || (slScoreObj ? slScoreObj.score : null),
+        scoreLabel: sl?.scoreLabel || (slScoreObj ? slScoreObj.label : null),
+        scoreBadgeClass: sl?.scoreBadgeClass || (slScoreObj ? slScoreObj.badgeClass : null)
       });
 
       const hr = heartRateByDate.get(dateKey);
@@ -15475,7 +15630,7 @@ async function fetchGoogleFitness() {
 
     try {
       localStorage.setItem('gp_fitness_cache', JSON.stringify(window.fitnessData));
-      localStorage.setItem('gp_fitness_cache_v', '4');
+      localStorage.setItem('gp_fitness_cache_v', '5');
     } catch (e) {}
 
     // Actualizar inmediatamente las tarjetas de Salud en el Panel de Control (Inicio) y en Actividad
@@ -15548,6 +15703,662 @@ async function diagnosticoGoogleFit() {
   return filas;
 }
 window.diagnosticoGoogleFit = diagnosticoGoogleFit;
+
+// ─── FUNCIONES DE CALIDAD Y FASES DEL SUEÑO ──────────────────────────────────
+
+function calcularSleepScore({ durHours = 0, deepHours = 0, remHours = 0, lightHours = 0, awakeHours = 0, hasStages = false } = {}) {
+  if (!durHours || durHours <= 0) {
+    return {
+      score: 0,
+      label: 'Sin datos',
+      badgeClass: 'bg-slate-800 text-slate-400 border-slate-700',
+      color: 'text-slate-400',
+      border: 'border-slate-800',
+      bg: 'bg-slate-900',
+      efficiency: 0
+    };
+  }
+
+  let score = 0;
+  const totalInBed = durHours + awakeHours;
+  const efficiency = totalInBed > 0 ? Math.min(100, Math.round((durHours / totalInBed) * 100)) : 100;
+
+  if (hasStages && (deepHours > 0 || remHours > 0)) {
+    // 1. Duración (0-40 pts). Ideal: 7 a 9 horas
+    let durPts = 0;
+    if (durHours >= 7 && durHours <= 8.5) {
+      durPts = 40;
+    } else if (durHours > 8.5 && durHours <= 9.5) {
+      durPts = 36;
+    } else if (durHours >= 6 && durHours < 7) {
+      durPts = 28 + Math.round((durHours - 6) * 12);
+    } else if (durHours >= 5 && durHours < 6) {
+      durPts = 16 + Math.round((durHours - 5) * 12);
+    } else if (durHours > 9.5) {
+      durPts = Math.max(15, Math.round(36 - (durHours - 9.5) * 10));
+    } else {
+      durPts = Math.max(5, Math.round(durHours * 3.5));
+    }
+
+    // 2. Sueño Profundo (0-25 pts). Ideal: 15% - 25%
+    const deepPct = durHours > 0 ? (deepHours / durHours) * 100 : 0;
+    let deepPts = 0;
+    if (deepPct >= 18 && deepPct <= 28) {
+      deepPts = 25;
+    } else if (deepPct >= 14 && deepPct < 18) {
+      deepPts = 21;
+    } else if (deepPct >= 10 && deepPct < 14) {
+      deepPts = 16;
+    } else if (deepPct >= 6 && deepPct < 10) {
+      deepPts = 10;
+    } else if (deepPct > 28) {
+      deepPts = 22;
+    } else {
+      deepPts = Math.max(4, Math.round(deepPct * 1.5));
+    }
+
+    // 3. Sueño REM (0-20 pts). Ideal: 20% - 25%
+    const remPct = durHours > 0 ? (remHours / durHours) * 100 : 0;
+    let remPts = 0;
+    if (remPct >= 20 && remPct <= 28) {
+      remPts = 20;
+    } else if (remPct >= 15 && remPct < 20) {
+      remPts = 16;
+    } else if (remPct >= 10 && remPct < 15) {
+      remPts = 11;
+    } else if (remPct > 28) {
+      remPts = 17;
+    } else {
+      remPts = Math.max(3, Math.round(remPct * 1.1));
+    }
+
+    // 4. Eficiencia y Continuidad (0-15 pts). Ideal: > 85%
+    let effPts = 0;
+    if (efficiency >= 92) {
+      effPts = 15;
+    } else if (efficiency >= 85) {
+      effPts = 12;
+    } else if (efficiency >= 78) {
+      effPts = 8;
+    } else {
+      effPts = Math.max(2, Math.round((efficiency / 100) * 10));
+    }
+
+    score = Math.min(100, Math.max(10, durPts + deepPts + remPts + effPts));
+  } else {
+    // Sin desglose de fases: cálculo ponderado basado en duración
+    if (durHours >= 7.5 && durHours <= 8.5) {
+      score = 88;
+    } else if (durHours >= 7 && durHours < 7.5) {
+      score = 82;
+    } else if (durHours > 8.5 && durHours <= 9.2) {
+      score = 83;
+    } else if (durHours >= 6.5 && durHours < 7) {
+      score = 76;
+    } else if (durHours >= 6 && durHours < 6.5) {
+      score = 70;
+    } else if (durHours >= 5 && durHours < 6) {
+      score = 58;
+    } else if (durHours > 9.2) {
+      score = Math.max(40, Math.round(80 - (durHours - 9.2) * 12));
+    } else {
+      score = Math.max(15, Math.round(durHours * 10));
+    }
+  }
+
+  let label = 'Aceptable';
+  let badgeClass = 'bg-amber-500/15 text-amber-300 border-amber-500/30';
+  let color = 'text-amber-400';
+  let border = 'border-amber-500/30';
+  let bg = 'bg-amber-500/10';
+
+  if (score >= 90) {
+    label = 'Excelente';
+    badgeClass = 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30 hover:border-emerald-400';
+    color = 'text-emerald-400';
+    border = 'border-emerald-500/30';
+    bg = 'bg-emerald-500/10';
+  } else if (score >= 75) {
+    label = 'Bueno';
+    badgeClass = 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30 hover:border-indigo-400';
+    color = 'text-indigo-400';
+    border = 'border-indigo-500/30';
+    bg = 'bg-indigo-500/10';
+  } else if (score >= 60) {
+    label = 'Aceptable';
+    badgeClass = 'bg-amber-500/15 text-amber-300 border-amber-500/30 hover:border-amber-400';
+    color = 'text-amber-400';
+    border = 'border-amber-500/30';
+    bg = 'bg-amber-500/10';
+  } else {
+    label = 'Insuficiente';
+    badgeClass = 'bg-rose-500/15 text-rose-300 border-rose-500/30 hover:border-rose-400';
+    color = 'text-rose-400';
+    border = 'border-rose-500/30';
+    bg = 'bg-rose-500/10';
+  }
+
+  return { score, label, badgeClass, color, border, bg, efficiency };
+}
+
+function getSleepScoreBadgeClass(score) {
+  if (score >= 90) return 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30 hover:border-emerald-400 hover:bg-emerald-500/25';
+  if (score >= 75) return 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30 hover:border-indigo-400 hover:bg-indigo-500/25';
+  if (score >= 60) return 'bg-amber-500/15 text-amber-300 border-amber-500/30 hover:border-amber-400 hover:bg-amber-500/25';
+  return 'bg-rose-500/15 text-rose-300 border-rose-500/30 hover:border-rose-400 hover:bg-rose-500/25';
+}
+
+function formatFechaCompleta(dateObj) {
+  if (!dateObj) return '—';
+  const d = (dateObj instanceof Date) ? dateObj : new Date(dateObj);
+  const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+  const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+  return `${dias[d.getDay()]} ${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()}`;
+}
+
+function abrirModalDetalleSueno(target) {
+  const modal = document.getElementById('modal-detalle-sueno');
+  if (!modal) return;
+
+  const dataArray = (window.fitnessData && window.fitnessData.sleep) ? window.fitnessData.sleep : [];
+  if (dataArray.length === 0) {
+    if (typeof showToast === 'function') showToast('No hay datos de sueño disponibles todavía', 'info');
+    return;
+  }
+
+  const today = new Date();
+  const isSameDay = (d1, d2) => {
+    if (!d1 || !d2) return false;
+    const a = (d1 instanceof Date) ? d1 : new Date(d1);
+    const b = (d2 instanceof Date) ? d2 : new Date(d2);
+    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  };
+
+  if (!target || target === 'hoy') {
+    const permiteFallback = today.getHours() < 6;
+    let entry = dataArray.find(d => isSameDay(d.date, today) && d.value > 0);
+    if (!entry && permiteFallback) {
+      entry = [...dataArray].reverse().find(d => d.value > 0);
+    }
+    if (!entry) {
+      if (typeof showToast === 'function') showToast('No hay registro de sueño cargado para hoy todavía', 'info');
+      return;
+    }
+    renderDetalleSuenoDia(entry);
+  } else if (typeof target === 'string' && target.match(/^\d{4}-\d{2}-\d{2}$/)) {
+    // Fecha ISO YYYY-MM-DD
+    const entry = dataArray.find(d => {
+      const dKey = d.dateIso || `${d.date.getFullYear()}-${String(d.date.getMonth() + 1).padStart(2, '0')}-${String(d.date.getDate()).padStart(2, '0')}`;
+      return dKey === target;
+    });
+    if (!entry) {
+      if (typeof showToast === 'function') showToast('No se encontró el registro para esa fecha', 'warning');
+      return;
+    }
+    renderDetalleSuenoDia(entry);
+  } else if (target === 'semana' || target === 'mes' || target === 'año' || target === 'personalizado') {
+    let periodItems = [];
+    let periodLabel = 'Período';
+    if (target === 'semana') {
+      periodItems = dataArray.slice(-7);
+      periodLabel = 'Últimos 7 días';
+    } else if (target === 'mes') {
+      periodItems = dataArray.slice(-30);
+      periodLabel = 'Últimos 30 días';
+    } else if (target === 'año') {
+      periodItems = dataArray.slice(-365);
+      periodLabel = 'Último año';
+    } else if (target === 'personalizado') {
+      const fIni = document.getElementById('act-fecha-inicio')?.value;
+      const fFin = document.getElementById('act-fecha-fin')?.value;
+      if (fIni && fFin) {
+        const sDate = new Date(fIni + 'T00:00:00');
+        const eDate = new Date(fFin + 'T23:59:59');
+        periodItems = dataArray.filter(d => d.date >= sDate && d.date <= eDate);
+      } else {
+        periodItems = dataArray.slice(-7);
+      }
+      periodLabel = 'Rango personalizado';
+    }
+    renderDetalleSuenoPeriodo(periodItems, periodLabel);
+  } else {
+    // Búsqueda por mes (ej. "nov. 2026")
+    const monthItems = dataArray.filter(d => {
+      const mKey = d.date.toLocaleString('es-ES', { month: 'short', year: 'numeric' });
+      return mKey.toLowerCase() === target.toLowerCase();
+    });
+    if (monthItems.length > 0) {
+      renderDetalleSuenoPeriodo(monthItems, target);
+    } else {
+      const parsedD = new Date(target);
+      if (!isNaN(parsedD.getTime())) {
+        const entry = dataArray.find(d => isSameDay(d.date, parsedD));
+        if (entry) {
+          renderDetalleSuenoDia(entry);
+        } else {
+          renderDetalleSuenoPeriodo(dataArray.slice(-7), 'Últimos 7 días');
+        }
+      } else {
+        renderDetalleSuenoPeriodo(dataArray.slice(-7), 'Últimos 7 días');
+      }
+    }
+  }
+
+  modal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function cerrarModalDetalleSueno() {
+  const modal = document.getElementById('modal-detalle-sueno');
+  if (modal) modal.classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function renderDetalleSuenoDia(entry) {
+  const modalSub = document.getElementById('modal-detalle-sueno-sub');
+  const container = document.getElementById('modal-detalle-sueno-content');
+  if (!container) return;
+
+  const d = entry.date instanceof Date ? entry.date : new Date(entry.date);
+  if (modalSub) {
+    const srcTxt = (entry.sources && entry.sources.length > 0) ? entry.sources.join(', ') : 'Google Fit';
+    modalSub.textContent = `${formatFechaCompleta(d)} · ${srcTxt}`;
+  }
+
+  const durHours = entry.asleepHours || entry.value || 0;
+  const inBedHours = entry.totalInBedHours || durHours;
+  const hasStages = !!entry.hasStages;
+  const stages = entry.stages || {
+    deepHours: 0, remHours: 0, lightHours: durHours, awakeHours: Math.max(0, inBedHours - durHours),
+    deepPct: 0, remPct: 0, lightPct: 100, awakePct: 0
+  };
+
+  const scoreData = calcularSleepScore({
+    durHours,
+    deepHours: stages.deepHours,
+    remHours: stages.remHours,
+    lightHours: stages.lightHours,
+    awakeHours: stages.awakeHours,
+    hasStages
+  });
+
+  const score = entry.score || scoreData.score;
+  const scoreLabel = entry.scoreLabel || scoreData.label;
+
+  // Feedback interpretativo
+  let feedback = '';
+  if (score >= 90) {
+    feedback = '¡Descanso excelente! Tu duración, porcentaje de fases reparadoras y regularidad estuvieron en niveles óptimos para una recuperación física y mental completa.';
+  } else if (score >= 75) {
+    feedback = 'Buen descanso. Cumpliste con las horas recomendadas y lograste una buena proporción de sueño reparador.';
+  } else if (score >= 60) {
+    feedback = 'Sueño aceptable, aunque podés mejorar la duración o la continuidad reduciendo interrupciones durante la noche.';
+  } else {
+    feedback = 'Descanso insuficiente. Dormiste menos de lo recomendado o hubo demasiadas interrupciones, lo que puede afectar tu energía y concentración hoy.';
+  }
+
+  // Generar HTML del desglose de fases
+  let fasesHtml = '';
+  if (hasStages && (stages.deepHours > 0 || stages.remHours > 0)) {
+    const deepStatus = stages.deepPct >= 18 ? 'Óptimo' : (stages.deepPct >= 12 ? 'Normal' : 'Bajo');
+    const deepStatusClass = stages.deepPct >= 15 ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' : 'text-amber-400 bg-amber-500/10 border-amber-500/20';
+
+    const remStatus = stages.remPct >= 20 ? 'Óptimo' : (stages.remPct >= 14 ? 'Normal' : 'Bajo');
+    const remStatusClass = stages.remPct >= 18 ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' : 'text-amber-400 bg-amber-500/10 border-amber-500/20';
+
+    fasesHtml = `
+      <div class="space-y-3 p-4 rounded-2xl bg-slate-900/60 border border-slate-800">
+        <div class="flex items-center justify-between">
+          <h4 class="text-xs font-black uppercase tracking-wider text-slate-300">Desglose de Fases del Sueño</h4>
+          <span class="text-[10px] text-slate-400 font-bold">100% de la noche</span>
+        </div>
+
+        <!-- Barra visual de fases -->
+        <div class="h-3 w-full bg-slate-800/80 rounded-full overflow-hidden flex shadow-inner">
+          <div style="width: ${stages.deepPct}%" class="bg-indigo-500 h-full transition-all" title="Profundo: ${stages.deepPct}%"></div>
+          <div style="width: ${stages.remPct}%" class="bg-purple-500 h-full transition-all" title="REM: ${stages.remPct}%"></div>
+          <div style="width: ${stages.lightPct}%" class="bg-sky-400 h-full transition-all" title="Ligero: ${stages.lightPct}%"></div>
+          <div style="width: ${stages.awakePct}%" class="bg-amber-400 h-full transition-all" title="Despierto: ${stages.awakePct}%"></div>
+        </div>
+
+        <!-- Grid de 4 fases -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
+          <!-- Profundo -->
+          <div class="p-2.5 rounded-xl bg-black/40 border border-indigo-500/20 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-1.5 text-[10px] font-bold text-indigo-300">
+                <span class="w-2 h-2 rounded-full bg-indigo-500"></span> Profundo
+              </span>
+              <span class="px-1.5 py-0.2 rounded text-[8px] font-black border ${deepStatusClass}">${deepStatus}</span>
+            </div>
+            <div class="text-sm font-black mono text-white">${formatHorasMinutosSimple(stages.deepHours)} <span class="text-[9px] font-normal text-slate-400">(${stages.deepPct}%)</span></div>
+            <div class="text-[8px] text-slate-400">Meta: 15% - 25%</div>
+          </div>
+
+          <!-- REM -->
+          <div class="p-2.5 rounded-xl bg-black/40 border border-purple-500/20 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-1.5 text-[10px] font-bold text-purple-300">
+                <span class="w-2 h-2 rounded-full bg-purple-500"></span> REM
+              </span>
+              <span class="px-1.5 py-0.2 rounded text-[8px] font-black border ${remStatusClass}">${remStatus}</span>
+            </div>
+            <div class="text-sm font-black mono text-white">${formatHorasMinutosSimple(stages.remHours)} <span class="text-[9px] font-normal text-slate-400">(${stages.remPct}%)</span></div>
+            <div class="text-[8px] text-slate-400">Meta: 20% - 25%</div>
+          </div>
+
+          <!-- Ligero -->
+          <div class="p-2.5 rounded-xl bg-black/40 border border-sky-500/20 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-1.5 text-[10px] font-bold text-sky-300">
+                <span class="w-2 h-2 rounded-full bg-sky-400"></span> Ligero
+              </span>
+              <span class="text-[8px] font-black text-slate-400">Base</span>
+            </div>
+            <div class="text-sm font-black mono text-white">${formatHorasMinutosSimple(stages.lightHours)} <span class="text-[9px] font-normal text-slate-400">(${stages.lightPct}%)</span></div>
+            <div class="text-[8px] text-slate-400">Meta: 45% - 55%</div>
+          </div>
+
+          <!-- Despierto -->
+          <div class="p-2.5 rounded-xl bg-black/40 border border-amber-500/20 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-1.5 text-[10px] font-bold text-amber-300">
+                <span class="w-2 h-2 rounded-full bg-amber-400"></span> Despierto
+              </span>
+              <span class="text-[8px] font-black text-slate-400">&lt; 10%</span>
+            </div>
+            <div class="text-sm font-black mono text-white">${formatHorasMinutosSimple(stages.awakeHours)} <span class="text-[9px] font-normal text-slate-400">(${stages.awakePct}%)</span></div>
+            <div class="text-[8px] text-slate-400">Interrupciones</div>
+          </div>
+        </div>
+      </div>
+    `;
+  } else {
+    fasesHtml = `
+      <div class="p-3.5 rounded-2xl bg-slate-900/40 border border-slate-800 text-[11px] text-slate-400 space-y-1">
+        <div class="flex items-center gap-2 text-indigo-300 font-bold">
+          <i class="fas fa-info-circle text-xs"></i>
+          <span>Fases detalladas no registradas para esta noche</span>
+        </div>
+        <p class="text-slate-400 text-[10px]">
+          Esta sesión registró la duración total pero no el desglose de fases (profundo/REM/ligero). 
+          Al medir con tu pulsera Xiaomi con el monitoreo avanzado de sueño activo en Mi Fitness / Zepp Life, el desglose por fases aparecerá automáticamente aquí.
+        </p>
+      </div>
+    `;
+  }
+
+  // Frecuencia cardíaca nocturna
+  const hrHtml = entry.hrAvg ? `
+    <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-7 h-7 rounded-lg bg-rose-950/60 border border-rose-500/30 flex items-center justify-center text-rose-400">
+          <i class="fas fa-heartbeat text-xs"></i>
+        </div>
+        <div>
+          <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">FC en Reposo durante el Sueño</div>
+          <div class="text-xs font-black mono text-white">
+            ${entry.hrAvg} <span class="text-[9px] font-normal text-slate-400">bpm prom</span>
+            ${entry.hrMin ? `<span class="text-slate-500 mx-1">·</span> Mín <span class="text-rose-400">${entry.hrMin}</span> bpm` : ''}
+          </div>
+        </div>
+      </div>
+      <span class="px-2 py-0.5 rounded-full text-[9px] font-black border ${entry.hrAvg < 65 ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30' : 'text-blue-400 bg-blue-500/10 border-blue-500/30'}">
+        ${entry.hrAvg < 60 ? 'Excelente reposo' : (entry.hrAvg <= 70 ? 'Reposo normal' : 'Activo')}
+      </span>
+    </div>
+  ` : '';
+
+  // Horarios de sueño
+  const scheduleHtml = (entry.bedtimeStr && entry.wakeTimeStr) ? `
+    <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-7 h-7 rounded-lg bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+          <i class="fas fa-clock text-xs"></i>
+        </div>
+        <div>
+          <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Horario de Sueño</div>
+          <div class="text-xs font-black mono text-white">
+            ${entry.bedtimeStr} <span class="text-slate-500">→</span> ${entry.wakeTimeStr}
+          </div>
+        </div>
+      </div>
+      <div class="text-right">
+        <div class="text-[10px] text-slate-400 font-bold">En cama</div>
+        <div class="text-xs font-black mono text-slate-300">${formatHorasMinutosSimple(inBedHours)} hs</div>
+      </div>
+    </div>
+  ` : '';
+
+  container.innerHTML = `
+    <!-- Tarjeta de Puntuación Principal -->
+    <div class="p-4 rounded-2xl bg-gradient-to-br from-indigo-950/40 via-slate-900/60 to-black border ${scoreData.border} flex items-center justify-between gap-4">
+      <div class="space-y-1">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-wider ${scoreData.badgeClass}">
+            ${scoreLabel}
+          </span>
+          <span class="text-[10px] text-slate-400 font-bold">${hasStages ? 'Monitoreo de Pulsera' : 'Registro de Duración'}</span>
+        </div>
+        <p class="text-xs text-slate-300 font-medium leading-relaxed max-w-sm pt-1">${feedback}</p>
+      </div>
+      <div class="text-right flex-shrink-0">
+        <div class="text-4xl font-black mono tracking-tighter ${scoreData.color}">${score}</div>
+        <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">/ 100 calidad</div>
+      </div>
+    </div>
+
+    <!-- Grid de Métricas Principales -->
+    <div class="grid grid-cols-2 gap-3">
+      <!-- Tiempo dormido -->
+      <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1">
+        <div class="flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+          <span>Tiempo Dormido</span>
+          <i class="fas fa-bed text-indigo-400"></i>
+        </div>
+        <div class="text-xl font-black mono text-white">${formatHorasMinutosSimple(durHours)} <span class="text-xs font-normal text-slate-400">hs</span></div>
+        <div class="text-[9px] font-bold text-slate-400">
+          Obj: 8:00 hs · <span class="${durHours >= 8 ? 'text-emerald-400' : (durHours >= 7 ? 'text-indigo-400' : 'text-amber-400')}">${durHours >= 8 ? '+' : ''}${((durHours - 8)).toFixed(1)} hs</span>
+        </div>
+      </div>
+
+      <!-- Eficiencia -->
+      <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1">
+        <div class="flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+          <span>Eficiencia del Sueño</span>
+          <i class="fas fa-chart-pie text-emerald-400"></i>
+        </div>
+        <div class="text-xl font-black mono text-white">${entry.efficiency || scoreData.efficiency || 100}<span class="text-xs font-normal text-slate-400">%</span></div>
+        <div class="text-[9px] font-bold text-slate-400">
+          ${(entry.efficiency || scoreData.efficiency || 100) >= 90 ? 'Excelente continuidad' : 'Interrupciones moderadas'}
+        </div>
+      </div>
+    </div>
+
+    ${scheduleHtml}
+    ${hrHtml}
+    ${fasesHtml}
+  `;
+}
+
+function renderDetalleSuenoPeriodo(items, title) {
+  const modalSub = document.getElementById('modal-detalle-sueno-sub');
+  const container = document.getElementById('modal-detalle-sueno-content');
+  if (!container) return;
+
+  const validNights = (items || []).filter(d => (d.value || 0) > 0);
+  if (modalSub) {
+    modalSub.textContent = `${title} · ${validNights.length} noches registradas`;
+  }
+
+  if (validNights.length === 0) {
+    container.innerHTML = `
+      <div class="py-12 text-center text-slate-500 space-y-2">
+        <i class="fas fa-bed text-3xl opacity-40"></i>
+        <p class="text-xs font-bold uppercase tracking-wider">Sin datos de sueño en este período</p>
+      </div>
+    `;
+    return;
+  }
+
+  // Métricas acumuladas del período
+  const totalHours = validNights.reduce((acc, d) => acc + d.value, 0);
+  const avgHours = totalHours / validNights.length;
+
+  const scores = validNights.map(d => d.score || calcularSleepScore({ durHours: d.value }).score).filter(s => s > 0);
+  const avgScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+  const badgeClass = getSleepScoreBadgeClass(avgScore);
+
+  // Eficiencia promedio
+  const effs = validNights.map(d => d.efficiency).filter(e => typeof e === 'number' && e > 0);
+  const avgEff = effs.length > 0 ? Math.round(effs.reduce((a, b) => a + b, 0) / effs.length) : 100;
+
+  // FC promedio en sueño
+  const hrs = validNights.map(d => d.hrAvg).filter(h => typeof h === 'number' && h > 0);
+  const avgHr = hrs.length > 0 ? Math.round(hrs.reduce((a, b) => a + b, 0) / hrs.length) : null;
+
+  // Fases promedio si hay registros con fases
+  const nightsWithStages = validNights.filter(d => d.hasStages && d.stages);
+  let avgFasesHtml = '';
+  if (nightsWithStages.length > 0) {
+    const avgDeepPct = Math.round(nightsWithStages.reduce((acc, d) => acc + (d.stages.deepPct || 0), 0) / nightsWithStages.length);
+    const avgRemPct = Math.round(nightsWithStages.reduce((acc, d) => acc + (d.stages.remPct || 0), 0) / nightsWithStages.length);
+    const avgLightPct = Math.round(nightsWithStages.reduce((acc, d) => acc + (d.stages.lightPct || 0), 0) / nightsWithStages.length);
+    const avgAwakePct = Math.round(nightsWithStages.reduce((acc, d) => acc + (d.stages.awakePct || 0), 0) / nightsWithStages.length);
+
+    avgFasesHtml = `
+      <div class="p-3.5 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-2.5">
+        <div class="flex items-center justify-between text-xs font-black uppercase tracking-wider text-slate-300">
+          <span>Distribución Promedio de Fases</span>
+          <span class="text-[10px] text-slate-400 font-bold">${nightsWithStages.length} noches con fases</span>
+        </div>
+        <div class="h-2.5 w-full bg-slate-800/80 rounded-full overflow-hidden flex shadow-inner">
+          <div style="width: ${avgDeepPct}%" class="bg-indigo-500 h-full" title="Profundo: ${avgDeepPct}%"></div>
+          <div style="width: ${avgRemPct}%" class="bg-purple-500 h-full" title="REM: ${avgRemPct}%"></div>
+          <div style="width: ${avgLightPct}%" class="bg-sky-400 h-full" title="Ligero: ${avgLightPct}%"></div>
+          <div style="width: ${avgAwakePct}%" class="bg-amber-400 h-full" title="Despierto: ${avgAwakePct}%"></div>
+        </div>
+        <div class="grid grid-cols-4 gap-2 text-center pt-1 text-[10px]">
+          <div class="p-1.5 rounded-lg bg-black/40 border border-indigo-500/20">
+            <span class="text-indigo-300 font-bold block">Profundo</span>
+            <span class="font-black mono text-white">${avgDeepPct}%</span>
+          </div>
+          <div class="p-1.5 rounded-lg bg-black/40 border border-purple-500/20">
+            <span class="text-purple-300 font-bold block">REM</span>
+            <span class="font-black mono text-white">${avgRemPct}%</span>
+          </div>
+          <div class="p-1.5 rounded-lg bg-black/40 border border-sky-500/20">
+            <span class="text-sky-300 font-bold block">Ligero</span>
+            <span class="font-black mono text-white">${avgLightPct}%</span>
+          </div>
+          <div class="p-1.5 rounded-lg bg-black/40 border border-amber-500/20">
+            <span class="text-amber-300 font-bold block">Despierto</span>
+            <span class="font-black mono text-white">${avgAwakePct}%</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Lista de noches (más reciente primero)
+  const sortedNights = [...validNights].reverse();
+  const tableRowsHtml = sortedNights.map(n => {
+    const d = n.date instanceof Date ? n.date : new Date(n.date);
+    const dateLabel = d.toLocaleDateString('es-ES', { weekday: 'short', day: '2-digit', month: '2-digit' });
+    const scoreVal = n.score || calcularSleepScore({ durHours: n.value }).score;
+    const badge = n.scoreBadgeClass || getSleepScoreBadgeClass(scoreVal);
+    const dateIso = n.dateIso || `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+    return `
+      <tr class="hover:bg-slate-800/50 transition-colors cursor-pointer group" onclick="abrirModalDetalleSueno('${dateIso}')">
+        <td class="py-2 px-3 text-slate-300 font-bold capitalize">${dateLabel}</td>
+        <td class="py-2 px-3 text-right mono font-black text-white">${formatHorasMinutosSimple(n.value)} hs</td>
+        <td class="py-2 px-3 text-right">
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[10px] font-black mono ${badge}">
+            <i class="fas fa-star text-[8px] text-amber-400"></i>${scoreVal} pts
+          </span>
+        </td>
+        <td class="py-2 px-2 text-right text-slate-500 group-hover:text-indigo-400 transition-colors">
+          <i class="fas fa-chevron-right text-[10px]"></i>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    <!-- Resumen del Período -->
+    <div class="p-4 rounded-2xl bg-gradient-to-br from-indigo-950/40 via-slate-900/60 to-black border border-indigo-500/30 flex items-center justify-between gap-4">
+      <div class="space-y-1">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-wider ${badgeClass}">
+            Calidad ${avgScore >= 85 ? 'Excelente' : (avgScore >= 75 ? 'Buena' : (avgScore >= 60 ? 'Aceptable' : 'Baja'))}
+          </span>
+          <span class="text-[10px] text-slate-400 font-bold">${validNights.length} noches evaluadas</span>
+        </div>
+        <p class="text-xs text-slate-300 font-medium leading-relaxed max-w-sm pt-1">
+          Promedio diario de <span class="font-bold text-white mono">${formatHorasMinutosSimple(avgHours)} hs</span> de sueño en el período.
+        </p>
+      </div>
+      <div class="text-right flex-shrink-0">
+        <div class="text-4xl font-black mono tracking-tighter text-indigo-300">${avgScore}</div>
+        <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">/ 100 prom</div>
+      </div>
+    </div>
+
+    <!-- Grid de Métricas Promedio -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+      <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-0.5">
+        <div class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Promedio Diario</div>
+        <div class="text-lg font-black mono text-white">${formatHorasMinutosSimple(avgHours)} <span class="text-[10px] font-normal text-slate-400">hs</span></div>
+      </div>
+      <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-0.5">
+        <div class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Eficiencia Media</div>
+        <div class="text-lg font-black mono text-white">${avgEff}<span class="text-[10px] font-normal text-slate-400">%</span></div>
+      </div>
+      <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-0.5 col-span-2 sm:col-span-1">
+        <div class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">FC Reposo Media</div>
+        <div class="text-lg font-black mono text-white">${avgHr ? `${avgHr} <span class="text-[10px] font-normal text-slate-400">bpm</span>` : '—'}</div>
+      </div>
+    </div>
+
+    ${avgFasesHtml}
+
+    <!-- Tabla interactiva de noches -->
+    <div class="space-y-2 pt-1">
+      <div class="flex items-center justify-between">
+        <h4 class="text-xs font-black uppercase tracking-wider text-slate-300">Noches del Período</h4>
+        <span class="text-[9px] text-slate-500 font-bold">Hacé clic en una noche para ver su desglose</span>
+      </div>
+      <div class="rounded-xl border border-slate-800 overflow-hidden bg-slate-900/40">
+        <table class="w-full text-[11px]">
+          <thead>
+            <tr class="text-[9px] font-bold text-slate-400 uppercase tracking-wider bg-slate-900/80 border-b border-slate-800">
+              <th class="py-1.5 px-3 text-left">Fecha</th>
+              <th class="py-1.5 px-3 text-right">Duración</th>
+              <th class="py-1.5 px-3 text-right">Puntuación</th>
+              <th class="py-1.5 px-2"></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/40">
+            ${tableRowsHtml}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+// Cerrar modal al presionar ESC
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    cerrarModalDetalleSueno();
+  }
+});
+
+window.abrirModalDetalleSueno = abrirModalDetalleSueno;
+window.cerrarModalDetalleSueno = cerrarModalDetalleSueno;
+window.calcularSleepScore = calcularSleepScore;
+window.getSleepScoreBadgeClass = getSleepScoreBadgeClass;
 
 function formatHorasMinutosSimple(valDecimal) {
   if (valDecimal === null || valDecimal === undefined || isNaN(valDecimal) || Number(valDecimal) <= 0) return '--';
@@ -15955,6 +16766,88 @@ function renderHealthCard(type, period) {
     }
   }
 
+  // Actualizar recuadros de puntuación de calidad de sueño en las tarjetas
+  if (type === 'sleep') {
+    // 1. Tarjeta Inicio (Panel de Control)
+    const inicioScoreBox = document.getElementById('inicio-health-sleep-score-box');
+    const inicioScoreVal = document.getElementById('inicio-health-sleep-score');
+    if (inicioScoreBox && inicioScoreVal) {
+      if (hoyAggValue > 0) {
+        const permiteFallback = today.getHours() < 6;
+        const targetEntry = dataArray.find(d => isToday(d.date) && d.value > 0) || (permiteFallback ? [...dataArray].reverse().find(d => d.value > 0) : null);
+        const sc = targetEntry?.score || (targetEntry?.value > 0 ? Math.round(calcularSleepScore({ durHours: targetEntry.value }).score) : null);
+        if (sc && sc > 0) {
+          inicioScoreVal.textContent = sc;
+          inicioScoreBox.classList.remove('hidden');
+          inicioScoreBox.classList.add('inline-flex');
+          inicioScoreBox.onclick = (e) => {
+            e.stopPropagation();
+            abrirModalDetalleSueno(targetEntry.dateIso || 'hoy');
+          };
+          inicioScoreBox.title = `Puntuación de calidad: ${sc}/100. Clic para ver desglose y fases.`;
+        } else {
+          inicioScoreBox.classList.add('hidden');
+          inicioScoreBox.classList.remove('inline-flex');
+        }
+      } else {
+        inicioScoreBox.classList.add('hidden');
+        inicioScoreBox.classList.remove('inline-flex');
+      }
+    }
+
+    // 2. Tarjeta Actividad
+    const actScoreBox = document.getElementById('health-sleep-score-box');
+    const actScoreVal = document.getElementById('health-sleep-score');
+    if (actScoreBox && actScoreVal) {
+      if (period === 'hoy') {
+        if (aggregatedValue > 0) {
+          const permiteFallback = today.getHours() < 6;
+          const targetEntry = dataArray.find(d => isToday(d.date) && d.value > 0) || (permiteFallback ? [...dataArray].reverse().find(d => d.value > 0) : null);
+          const sc = targetEntry?.score || (targetEntry?.value > 0 ? Math.round(calcularSleepScore({ durHours: targetEntry.value }).score) : null);
+          if (sc && sc > 0) {
+            actScoreVal.textContent = sc;
+            actScoreBox.classList.remove('hidden');
+            actScoreBox.classList.add('inline-flex');
+            actScoreBox.onclick = (e) => {
+              e.stopPropagation();
+              abrirModalDetalleSueno(targetEntry.dateIso || 'hoy');
+            };
+            actScoreBox.title = `Puntuación de calidad: ${sc}/100. Clic para ver desglose y fases.`;
+          } else {
+            actScoreBox.classList.add('hidden');
+            actScoreBox.classList.remove('inline-flex');
+          }
+        } else {
+          actScoreBox.classList.add('hidden');
+          actScoreBox.classList.remove('inline-flex');
+        }
+      } else {
+        // En períodos (semana, mes, año, personalizado)
+        const entriesWithSleep = (filtered && filtered.length > 0 ? filtered : dataArray).filter(d => (d.value || 0) > 0);
+        if (entriesWithSleep.length > 0) {
+          const totalScores = entriesWithSleep.map(d => d.score || calcularSleepScore({ durHours: d.value }).score).filter(s => s > 0);
+          if (totalScores.length > 0) {
+            const avgScore = Math.round(totalScores.reduce((a, b) => a + b, 0) / totalScores.length);
+            actScoreVal.textContent = avgScore;
+            actScoreBox.classList.remove('hidden');
+            actScoreBox.classList.add('inline-flex');
+            actScoreBox.onclick = (e) => {
+              e.stopPropagation();
+              abrirModalDetalleSueno(period);
+            };
+            actScoreBox.title = `Calidad promedio del período: ${avgScore}/100 (${entriesWithSleep.length} noches). Clic para ver desglose.`;
+          } else {
+            actScoreBox.classList.add('hidden');
+            actScoreBox.classList.remove('inline-flex');
+          }
+        } else {
+          actScoreBox.classList.add('hidden');
+          actScoreBox.classList.remove('inline-flex');
+        }
+      }
+    }
+  }
+
   if (type === 'calories') {
     const nutValEl = document.getElementById('nut-health-calories');
     if (nutValEl) {
@@ -16044,10 +16937,26 @@ function renderHealthTable(type, period, filtered, labels, values) {
         return mKey.toLowerCase() === mes.toLowerCase() && (d.value > 0 || ((type === 'weight' || type === 'heartRate') && d.value !== null));
       });
       const monthSources = Array.from(new Set(monthItems.flatMap(i => i.sources || [])));
+      
+      let sleepScore = null;
+      let sleepScoreClass = '';
+      if (type === 'sleep' && monthItems.length > 0) {
+        const validScores = monthItems.map(i => i.score || (i.value > 0 ? calcularSleepScore({ durHours: i.value }).score : 0)).filter(s => s > 0);
+        if (validScores.length > 0) {
+          sleepScore = Math.round(validScores.reduce((a, b) => a + b, 0) / validScores.length);
+          sleepScoreClass = getSleepScoreBadgeClass(sleepScore);
+        }
+      }
+
       rows.push({
         label: mes,
         val: formatVal(v, false),
-        sources: monthSources
+        sources: monthSources,
+        type: type,
+        periodMode: 'month',
+        monthItems: monthItems,
+        sleepScore: sleepScore,
+        sleepScoreClass: sleepScoreClass
       });
     });
   } else if (filtered && filtered.length > 0) {
@@ -16060,10 +16969,23 @@ function renderHealthTable(type, period, filtered, labels, values) {
       const wDay = d.toLocaleDateString('es-ES', { weekday: 'short' }).replace('.', '');
       const dNum = d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
       const label = `${wDay.charAt(0).toUpperCase() + wDay.slice(1)} ${dNum}`;
+      
+      let sleepScore = null;
+      let sleepScoreClass = '';
+      const dateIso = item.dateIso || `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      if (type === 'sleep' && val > 0) {
+        sleepScore = item.score || calcularSleepScore({ durHours: val }).score;
+        sleepScoreClass = item.scoreBadgeClass || getSleepScoreBadgeClass(sleepScore);
+      }
+
       rows.push({
         label: label,
         val: formatVal(val, true),
-        sources: item.sources || []
+        sources: item.sources || [],
+        type: type,
+        dateIso: dateIso,
+        sleepScore: sleepScore,
+        sleepScoreClass: sleepScoreClass
       });
     });
   }
@@ -16078,12 +17000,24 @@ function renderHealthTable(type, period, filtered, labels, values) {
 
   tbody.innerHTML = rows.map(r => {
     const srcTxt = (r.sources && r.sources.length > 0) ? r.sources.join(', ') : 'Google Fit';
+    const sleepBadgeHtml = (r.type === 'sleep' && r.sleepScore)
+      ? `<button type="button" 
+                 class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[9px] font-black mono cursor-pointer transition-all hover:scale-105 ${r.sleepScoreClass || 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30'}"
+                 title="Calidad: ${r.sleepScore}/100. Clic para ver desglose y fases"
+                 onclick="event.stopPropagation(); abrirModalDetalleSueno('${r.periodMode === 'month' ? r.label : r.dateIso}')">
+           <i class="fas fa-star text-[7px] text-amber-400"></i>
+           <span>${r.sleepScore}</span>
+           <span class="text-[7.5px] font-normal opacity-75">pts</span>
+         </button>`
+      : '';
+
     return `
       <tr class="hover:bg-slate-800/40 transition-colors group/row">
         <td class="py-1 text-slate-300 font-bold whitespace-nowrap">${r.label}</td>
         <td class="py-1 text-right mono font-black text-white whitespace-nowrap">
           <div class="inline-flex items-center justify-end gap-1.5">
             <span>${r.val}</span>
+            ${sleepBadgeHtml}
             <button type="button" 
                     class="opacity-60 group-hover/row:opacity-100 hover:text-teal-400 text-slate-500 transition-all p-0.5 rounded cursor-pointer" 
                     title="Fuente: ${srcTxt}"
