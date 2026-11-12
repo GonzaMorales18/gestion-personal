@@ -378,6 +378,37 @@
     transform: scale(1.01);
     filter: brightness(1.1);
   }
+  /* Eventos pasados en FullCalendar (marcados con tilde y estilo atenuado) */
+  #fullcalendar-container .fc-event-past {
+    opacity: 0.55 !important;
+    filter: grayscale(20%) !important;
+  }
+  #fullcalendar-container .fc-event-past:hover {
+    opacity: 0.9 !important;
+    filter: none !important;
+  }
+  #fullcalendar-container .fc-event-past .fc-event-title {
+    text-decoration: line-through !important;
+    text-decoration-color: rgba(255, 255, 255, 0.45) !important;
+  }
+  #fullcalendar-container .fc-event-past .fc-event-title::before {
+    content: '✓ ' !important;
+    color: #34d399 !important; /* emerald-400 */
+    font-weight: 900 !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    margin-right: 3px !important;
+  }
+  #fullcalendar-container .fc-event-past.fc-daygrid-dot-event .fc-daygrid-event-dot {
+    border-color: #64748b !important;
+    opacity: 0.6 !important;
+  }
+  html.light-mode #fullcalendar-container .fc-event-past .fc-event-title {
+    text-decoration-color: rgba(15, 23, 42, 0.45) !important;
+  }
+  html.light-mode #fullcalendar-container .fc-event-past .fc-event-title::before {
+    color: #059669 !important; /* emerald-600 */
+  }
   #fullcalendar-container .fc-daygrid-day-bottom {
     display: none !important;
   }
@@ -4780,6 +4811,9 @@
           </span>
           <span id="gcal-det-allday-badge" class="hidden px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">
             Todo el día
+          </span>
+          <span id="gcal-det-past-badge" class="hidden px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 items-center gap-1">
+            <i class="fas fa-check-circle text-[9px]"></i> Finalizado
           </span>
         </div>
         <h3 id="gcal-det-titulo" class="font-black text-white text-base leading-tight break-words">Título</h3>
@@ -13314,9 +13348,38 @@ async function iniciarCalendario(hacerScroll = false) {
     fixedWeekCount: false,
     dayMaxEvents: false, // Mostrar todos los eventos con scroll interno dentro de cada tarjeta
     dayMaxEventRows: false,
+    eventClassNames: function(arg) {
+      const now = new Date();
+      const ev = arg.event;
+      let isPast = false;
+      if (ev.allDay) {
+        const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+        const endDt = ev.end ? new Date(ev.end) : new Date(ev.start);
+        isPast = endDt <= todayStart;
+      } else {
+        const endDt = ev.end ? new Date(ev.end) : new Date(ev.start);
+        isPast = endDt < now;
+      }
+      return isPast ? ['fc-event-past'] : [];
+    },
     eventDidMount: function(info) {
       if (info.el && info.el.parentElement && info.el.parentElement.getAttribute('style')) {
         info.el.parentElement.removeAttribute('style');
+      }
+      const now = new Date();
+      const ev = info.event;
+      let isPast = false;
+      if (ev.allDay) {
+        const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+        const endDt = ev.end ? new Date(ev.end) : new Date(ev.start);
+        isPast = endDt <= todayStart;
+      } else {
+        const endDt = ev.end ? new Date(ev.end) : new Date(ev.start);
+        isPast = endDt < now;
+      }
+      if (isPast) {
+        info.el.classList.add('fc-event-past');
+        info.el.setAttribute('title', (ev.title || '') + ' (Evento finalizado)');
       }
     },
     datesSet: function() {
@@ -14154,7 +14217,7 @@ function abrirModalDetalleEventoGoogle(evOrFcEvent) {
   if (!modal) return;
 
   let rawEv = null;
-  const rawId = evOrFcEvent?.extendedProps?.rawEventId || evOrFcEvent?.id;
+  const rawId = (typeof evOrFcEvent === 'string') ? evOrFcEvent : (evOrFcEvent?.extendedProps?.rawEventId || evOrFcEvent?.id);
   if (rawId && Array.isArray(globalGoogleEvents)) {
     rawEv = globalGoogleEvents.find(e => e.id === rawId || `${e.id}_0` === rawId);
   }
@@ -14168,6 +14231,7 @@ function abrirModalDetalleEventoGoogle(evOrFcEvent) {
   const barColor = document.getElementById('gcal-det-color-bar');
   const calBadge = document.getElementById('gcal-det-cal-badge');
   const alldayBadge = document.getElementById('gcal-det-allday-badge');
+  const pastBadge = document.getElementById('gcal-det-past-badge');
   const tituloEl = document.getElementById('gcal-det-titulo');
   const fechaHoraEl = document.getElementById('gcal-det-fechahora');
   const ubicWrap = document.getElementById('gcal-det-ubicacion-wrap');
@@ -14188,13 +14252,35 @@ function abrirModalDetalleEventoGoogle(evOrFcEvent) {
     calBadge.style.color = color;
   }
 
-  if (tituloEl) tituloEl.textContent = rawEv.summary || '(Sin título)';
-
   const isAllDay = !rawEv.start.dateTime;
   if (alldayBadge) {
     if (isAllDay) alldayBadge.classList.remove('hidden');
     else alldayBadge.classList.add('hidden');
   }
+
+  const now = new Date();
+  let isPast = false;
+  if (isAllDay) {
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+    const endStr = rawEv.end?.date || rawEv.start.date;
+    const endD = new Date(endStr + 'T00:00:00');
+    isPast = endD <= todayStart;
+  } else {
+    const endD = rawEv.end?.dateTime ? new Date(rawEv.end.dateTime) : new Date(rawEv.start.dateTime);
+    isPast = endD < now;
+  }
+
+  if (pastBadge) {
+    if (isPast) {
+      pastBadge.classList.remove('hidden');
+      pastBadge.classList.add('inline-flex');
+    } else {
+      pastBadge.classList.add('hidden');
+      pastBadge.classList.remove('inline-flex');
+    }
+  }
+
+  if (tituloEl) tituloEl.textContent = rawEv.summary || '(Sin título)';
 
   if (fechaHoraEl) {
     if (isAllDay) {
@@ -14535,15 +14621,36 @@ function renderMiniCalendar() {
 
     const titleSafe = ev.summary ? ev.summary.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;') : 'Sin título';
 
-    const eventCard = `
-      <div class="bg-slate-800/80 rounded-lg p-2.5 border-l-2" style="border-color: ${color}">
-        <p class="text-[9px] font-bold text-slate-400 mono mb-0.5">${timeStr}</p>
-        <p class="text-[11px] font-bold text-white truncate" title="${titleSafe}">${titleSafe}</p>
-      </div>
-    `;
-
     all4Days.forEach((dayStr, index) => {
       if (dayStr >= startStr && dayStr <= endStr) {
+        let isPast = false;
+        if (index === 0) { // Columna "Hoy"
+          if (isAllDay) {
+            isPast = false;
+          } else {
+            const eventEnd = ev.end?.dateTime ? new Date(ev.end.dateTime) : new Date(startDate.getTime() + 3600000);
+            isPast = eventEnd < now;
+          }
+        } else if (dayStr < all4Days[0]) {
+          isPast = true;
+        }
+
+        const eventCard = `
+          <div onclick="abrirModalDetalleEventoGoogle('${ev.id}')" 
+               class="rounded-lg p-2.5 border-l-2 transition-all cursor-pointer group/evcard ${isPast ? 'bg-slate-800/40 opacity-60 hover:opacity-90 border-slate-600' : 'bg-slate-800/80 hover:bg-slate-800'}" 
+               style="border-color: ${isPast ? '#64748b' : color}"
+               title="${titleSafe}${isPast ? ' (Evento finalizado)' : ''}">
+            <div class="flex items-center justify-between mb-0.5">
+              <p class="text-[9px] font-bold ${isPast ? 'text-slate-500' : 'text-slate-400'} mono">${timeStr}</p>
+              ${isPast ? '<span class="inline-flex items-center gap-1 text-[8.5px] font-black text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/25" title="Evento finalizado"><i class="fas fa-check text-[7.5px]"></i> Pasó</span>' : ''}
+            </div>
+            <p class="text-[11px] font-bold ${isPast ? 'text-slate-400' : 'text-white'} truncate flex items-center gap-1.5">
+              ${isPast ? '<i class="fas fa-check-circle text-emerald-400 text-[10px] shrink-0" title="Evento finalizado"></i>' : ''}
+              <span class="${isPast ? 'line-through opacity-85' : ''}">${titleSafe}</span>
+            </p>
+          </div>
+        `;
+
         daysData[index].push(eventCard);
       }
     });
