@@ -62,29 +62,34 @@
     display: none !important;
   }
 
-  /* Grilla unificada y responsive para Actividad (7 columnas alineadas 1 a 1 sin desborde) */
+  /* Grilla unificada y responsive para Actividad (6 columnas alineadas 1 a 1 sin desborde) */
+  .actividad-grid-6,
   .actividad-grid-7 {
     display: grid;
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
   @media (min-width: 640px) {
+    .actividad-grid-6,
     .actividad-grid-7 {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
   @media (min-width: 768px) {
+    .actividad-grid-6,
     .actividad-grid-7 {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
   @media (min-width: 1024px) {
+    .actividad-grid-6,
     .actividad-grid-7 {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
   @media (min-width: 1280px) {
+    .actividad-grid-6,
     .actividad-grid-7 {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
     }
   }
 
@@ -1638,7 +1643,7 @@
 
   <!-- SECCIÓN SALUD - ACTIVIDAD -->
   <main id="section-actividad" class="hidden p-4 md:p-8 max-w-[1400px] mx-auto w-full space-y-6">
-    <div class="actividad-grid-7 gap-3 xl:gap-3.5 w-full max-w-full min-w-0">
+    <div class="actividad-grid-6 gap-3.5 xl:gap-4 w-full max-w-full min-w-0">
 
       <!-- Tarjeta Distancia -->
       <div class="group bg-black rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
@@ -1859,40 +1864,6 @@
         </div>
       </div>
 
-      <!-- Tarjeta Ritmo Cardíaco -->
-      <div class="group bg-black rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
-        <div class="absolute inset-0 bg-gradient-to-br from-red-950/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
-        <div class="flex items-center justify-between mb-5 relative z-10">
-          <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-xl bg-red-950/60 border border-red-500/20 flex items-center justify-center">
-              <i class="fas fa-heart-pulse text-[#ff1744] text-xs"></i>
-            </div>
-            <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Ritmo Cardíaco</span>
-          </div>
-          <div class="relative" id="health-source-box-heartRate">
-            <button type="button" 
-                    onclick="toggleHealthSourcePopover('heartRate', event)" 
-                    onmouseenter="showHealthSourcePopover('heartRate', event)" 
-                    onmouseleave="hideHealthSourcePopover('heartRate', event)" 
-                    class="w-6 h-6 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700 hover:border-red-500/50 text-slate-400 hover:text-red-400 flex items-center justify-center text-[10px] transition-all cursor-pointer shadow-sm" 
-                    title="Ver fuentes de datos de ritmo cardíaco">
-              <i class="fas fa-info-circle"></i>
-            </button>
-          </div>
-        </div>
-        <div class="relative z-10">
-          <div class="flex items-baseline">
-            <h3 id="health-heartRate" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
-            <span class="text-xs font-bold text-slate-400 ml-1.5">bpm</span>
-          </div>
-          <div class="mt-2.5 mb-1.5 h-1.5 w-full bg-slate-800/80 rounded-full overflow-hidden">
-            <div id="health-heartRate-bar" class="h-full bg-[#ff1744] rounded-full transition-all duration-500" style="width: 0%"></div>
-          </div>
-          <div class="inline-flex items-center gap-1">
-            <span id="health-heartRate-subtitle" class="text-[9px] font-bold tracking-wide text-slate-400 block">Obj: 60-100 bpm</span>
-          </div>
-        </div>
-      </div>
 
     </div>
 
@@ -1935,7 +1906,7 @@
     </div>
 
     <!-- Contenedor de gráficos y tablas (se oculta si filtro es Hoy) -->
-    <div id="charts-actividad-container" class="hidden actividad-grid-7 gap-3 xl:gap-3.5 w-full max-w-full min-w-0">
+    <div id="charts-actividad-container" class="hidden actividad-grid-6 gap-3.5 xl:gap-4 w-full max-w-full min-w-0">
 
       <!-- Gráfico y Tabla Distancia -->
       <div class="bg-black rounded-2xl border border-slate-700/60 p-3.5 xl:p-3 flex flex-col justify-between min-w-0 overflow-hidden">
@@ -2099,32 +2070,6 @@
         </div>
       </div>
 
-      <!-- Gráfico y Tabla Ritmo Cardíaco -->
-      <div class="bg-black rounded-2xl border border-slate-700/60 p-3.5 xl:p-3 flex flex-col justify-between min-w-0 overflow-hidden">
-        <div>
-          <div class="flex items-center gap-2 mb-3 min-w-0">
-             <i class="fas fa-heart-pulse text-[#ff1744] text-xs shrink-0"></i>
-             <h4 class="text-[10px] font-black text-white uppercase tracking-wider truncate">Tendencia Ritmo Cardíaco</h4>
-          </div>
-          <div class="h-[150px] md:h-[160px] w-full relative min-w-0 overflow-hidden">
-            <canvas id="chart-heartRate"></canvas>
-          </div>
-          <div id="chart-heartRate-range" class="text-[8.5px] font-bold text-slate-500 uppercase tracking-wider mt-2 text-center empty:hidden truncate"></div>
-        </div>
-        <div class="mt-3 pt-2.5 border-t border-slate-800/80 min-w-0">
-          <div class="max-h-[160px] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full pr-0.5">
-            <table class="w-full text-left border-collapse table-fixed">
-              <thead>
-                <tr class="text-[8.5px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
-                  <th class="pb-1 font-bold w-[40%] truncate">Fecha</th>
-                  <th class="pb-1 text-right font-bold w-[60%] truncate">Promedio</th>
-                </tr>
-              </thead>
-              <tbody id="table-heartRate" class="divide-y divide-slate-800/40 text-[9.5px]"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
     </div>
 
   </main>
@@ -5546,7 +5491,7 @@ function showSection(nombre) {
   if (nombre === 'inicio') {
     actualizarTarjetaFinanzas();
     if (window.fitnessData && window.fitnessData.steps && window.fitnessData.steps.length > 0) {
-      ['distance', 'sleep', 'steps', 'weight', 'calories', 'activeMinutes', 'heartRate'].forEach(type => {
+      ['distance', 'sleep', 'steps', 'weight', 'calories', 'activeMinutes'].forEach(type => {
         renderHealthCard(type, window.currentHealthFilter || 'hoy');
       });
     }
@@ -5837,7 +5782,7 @@ function exportarCSV() {
   if (seccionActiva === 'actividad') {
     if (!window.fitnessData) return showToast('No hay datos para exportar', 'error');
     let allRecords = [];
-    ['distance', 'sleep', 'steps', 'weight', 'calories', 'activeMinutes', 'heartRate'].forEach(metric => {
+    ['distance', 'sleep', 'steps', 'weight', 'calories', 'activeMinutes'].forEach(metric => {
        if(window.fitnessData[metric]) {
           window.fitnessData[metric].forEach(r => {
              allRecords.push([metric, r.date || '', r.value || 0].join(','));
@@ -14718,7 +14663,7 @@ function setActividadModo(modo) {
   }
 
   // Recalcular
-  ['distance', 'sleep', 'steps', 'weight', 'calories', 'activeMinutes', 'heartRate'].forEach(type => {
+  ['distance', 'sleep', 'steps', 'weight', 'calories', 'activeMinutes'].forEach(type => {
     renderHealthCard(type, window.currentHealthFilter);
   });
 }
@@ -14751,7 +14696,7 @@ function setActividadFiltro(period) {
     const fFin = document.getElementById('act-fecha-fin')?.value;
     if (!fIni || !fFin) {
       // Asegurar que las tarjetas de Inicio igual se alimenten con los datos de hoy
-      ['distance', 'sleep', 'steps', 'weight', 'calories', 'activeMinutes', 'heartRate'].forEach(type => {
+      ['distance', 'sleep', 'steps', 'weight', 'calories', 'activeMinutes'].forEach(type => {
         renderHealthCard(type, 'hoy');
       });
       return; // Esperamos a que le den al botón Filtrar para el rango personalizado
@@ -14761,7 +14706,7 @@ function setActividadFiltro(period) {
     customDates.classList.remove('flex', 'flex-wrap');
   }
 
-  ['distance', 'sleep', 'steps', 'weight', 'calories', 'activeMinutes', 'heartRate'].forEach(type => {
+  ['distance', 'sleep', 'steps', 'weight', 'calories', 'activeMinutes'].forEach(type => {
     renderHealthCard(type, period);
   });
 }
@@ -14778,7 +14723,7 @@ function restaurarCacheFitness() {
     if (!raw) return;
     const parsed = JSON.parse(raw);
     if (!parsed || !Array.isArray(parsed.steps) || parsed.steps.length === 0) return;
-    ['distance', 'sleep', 'steps', 'weight', 'calories', 'activeMinutes', 'heartRate'].forEach(metric => {
+    ['distance', 'sleep', 'steps', 'weight', 'calories', 'activeMinutes'].forEach(metric => {
       if (Array.isArray(parsed[metric])) {
         window.fitnessData[metric] = parsed[metric].map(item => ({
           ...item,
@@ -14801,7 +14746,7 @@ function filtrarActividadCustom() {
 
   window.currentHealthFilter = 'personalizado';
 
-  ['distance', 'sleep', 'steps', 'weight', 'calories', 'activeMinutes', 'heartRate'].forEach(type => {
+  ['distance', 'sleep', 'steps', 'weight', 'calories', 'activeMinutes'].forEach(type => {
     renderHealthCard(type, 'personalizado');
   });
 }
@@ -16732,6 +16677,9 @@ function formatHorasMinutosTexto(valDecimal) {
 
 function renderHealthCard(type, period) {
   if (!window.fitnessData[type] || window.fitnessData[type].length === 0) return;
+  const valEl = document.getElementById('health-' + type);
+  const valElInicio = document.getElementById('inicio-health-' + type);
+  if (!valEl && !valElInicio) return;
 
   const dataArray = window.fitnessData[type];
   let filtered = [];
@@ -17385,7 +17333,9 @@ function renderHealthTable(type, period, filtered, labels, values) {
 }
 
 function drawHealthChart(type, labels, data, startPhysChangeIndex = -1, sourcesByPoint = []) {
-  const ctx = document.getElementById('chart-' + type).getContext('2d');
+  const canvas = document.getElementById('chart-' + type);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
 
   if (window.healthCharts[type] instanceof Chart) {
     window.healthCharts[type].destroy();
