@@ -15666,6 +15666,33 @@ async function fetchGoogleFitness() {
           }
         }
       });
+
+      try {
+        window._rawSleepDebug = {
+          rawSessions: (rawSessions || []).map(s => ({
+            inicio: new Date(s.startMs).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+            fin: new Date(s.endMs).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+            duracionHs: ((s.endMs - s.startMs) / 3600000).toFixed(2),
+            fuente: s.source,
+            nombre: s.name,
+            startMs: s.startMs,
+            endMs: s.endMs
+          })),
+          rawSegments: (rawSegments || []).map(s => {
+            const stageNames = { 1: 'Despierto', 2: 'Sueño general', 3: 'Fuera de cama', 4: 'Ligero', 5: 'Profundo', 6: 'REM' };
+            return {
+              fase: stageNames[s.stage] || ('Fase ' + s.stage),
+              etapaId: s.stage,
+              inicio: new Date(s.startMs).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+              fin: new Date(s.endMs).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+              minutos: Math.round((s.endMs - s.startMs) / 60000),
+              fuente: s.source,
+              startMs: s.startMs,
+              endMs: s.endMs
+            };
+          })
+        };
+      } catch (eDebug) {}
     } catch (errSleep) {
       console.warn('[Google Fit] Error procesando sesiones y fases de sueño:', errSleep);
     }
@@ -15989,6 +16016,92 @@ function formatFechaCompleta(dateObj) {
   const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
   return `${dias[d.getDay()]} ${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()}`;
 }
+
+window.debugSueno = function(dateStr = 'hoy') {
+  const dataArray = (window.fitnessData && window.fitnessData.sleep) ? window.fitnessData.sleep : [];
+  if (dataArray.length === 0) {
+    console.warn('⚠️ No hay datos de sueño cargados todavía en memoria.');
+    return null;
+  }
+
+  const today = new Date();
+  const isSameDay = (d1, d2) => {
+    if (!d1 || !d2) return false;
+    const a = (d1 instanceof Date) ? d1 : new Date(d1);
+    const b = (d2 instanceof Date) ? d2 : new Date(d2);
+    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  };
+
+  let entry = null;
+  if (!dateStr || dateStr === 'hoy') {
+    entry = dataArray.find(d => isSameDay(d.date, today) && d.value > 0);
+    if (!entry) {
+      entry = [...dataArray].reverse().find(d => d.value > 0);
+    }
+  } else {
+    entry = dataArray.find(d => d.dateIso === dateStr || isSameDay(d.date, new Date(dateStr)));
+  }
+
+  if (!entry) {
+    console.warn('⚠️ No se encontró registro de sueño para la fecha indicada:', dateStr);
+    return null;
+  }
+
+  console.group(`🌙 [DEBUG SUEÑO] Datos registrados para: ${entry.dateIso || entry.date.toLocaleDateString('es-ES')}`);
+  console.log('📦 Objeto procesado en memoria (window.fitnessData.sleep):', entry);
+
+  console.group('⏱️ 1. Horarios y Duración');
+  console.log(`• Horario en cama: ${entry.bedtimeStr || '--'} → ${entry.wakeTimeStr || '--'}`);
+  console.log(`• Tiempo en cama total: ${entry.totalInBedHours || entry.value} hs (${Math.round((entry.totalInBedHours || entry.value) * 60)} min)`);
+  console.log(`• Tiempo dormido real: ${entry.asleepHours || entry.value} hs (${Math.round((entry.asleepHours || entry.value) * 60)} min)`);
+  console.log(`• Eficiencia calculada: ${entry.efficiency || 100}%  [Fórmula: (Tiempo dormido / Tiempo en cama) * 100]`);
+  if (entry.efficiency === 100) {
+    console.info('💡 ¿Por qué 100% de eficiencia? Porque Google Fit no reportó minutos en fase "Despierto" (Stage 1). Si Mi Fitness muestra 98%, es porque Mi Fitness mide ~5-10 min de micro-despertares internamente pero no los sincroniza como puntos de datos en Google Fit.');
+  }
+  console.groupEnd();
+
+  if (entry.stages) {
+    console.group('📊 2. Desglose de Fases (recibidas vía Google Fit / Mi Fitness)');
+    const tableFases = [
+      { 'Fase': 'Profundo (Stage 5)', 'Horas': `${entry.stages.deepHours} hs`, 'Minutos': `${Math.round(entry.stages.deepHours * 60)} min`, '% de la noche': `${entry.stages.deepPct}%`, 'Rango ideal': '15% - 25%' },
+      { 'Fase': 'REM (Stage 6)', 'Horas': `${entry.stages.remHours} hs`, 'Minutos': `${Math.round(entry.stages.remHours * 60)} min`, '% de la noche': `${entry.stages.remPct}%`, 'Rango ideal': '20% - 25%' },
+      { 'Fase': 'Ligero (Stage 4)', 'Horas': `${entry.stages.lightHours} hs`, 'Minutos': `${Math.round(entry.stages.lightHours * 60)} min`, '% de la noche': `${entry.stages.lightPct}%`, 'Rango ideal': '45% - 55%' },
+      { 'Fase': 'Despierto (Stage 1)', 'Horas': `${entry.stages.awakeHours || 0} hs`, 'Minutos': `${Math.round((entry.stages.awakeHours || 0) * 60)} min`, '% de la noche': `${entry.stages.awakePct || 0}%`, 'Rango ideal': '< 10%' }
+    ];
+    console.table(tableFases);
+    console.groupEnd();
+  }
+
+  console.group(`⭐ 3. Cálculo del Sleep Score: ${entry.score || 0} / 100 (${entry.scoreLabel || 'Aceptable'})`);
+  console.info('💡 Google Fit NO provee puntuación de calidad nativa. Este puntaje 0-100 es calculado clínicamente por la app combinando 4 factores:');
+  const durH = entry.asleepHours || entry.value;
+  const dPct = entry.stages?.deepPct || 0;
+  const rPct = entry.stages?.remPct || 0;
+  const eff = entry.efficiency || 100;
+  console.log(`• 1. Duración (${durH.toFixed(2)} hs): ideal entre 7 y 8.5 hs (aporta hasta 40 pts).`);
+  console.log(`• 2. Sueño Profundo (${dPct}%): ideal 15% - 25% (aporta hasta 25 pts).`);
+  console.log(`• 3. Sueño REM (${rPct}%): ideal 20% - 25% (aporta hasta 20 pts).`);
+  console.log(`• 4. Eficiencia (${eff}%): continuidad y pocas interrupciones (aporta hasta 15 pts).`);
+  console.log(`=> Puntuación total resultante: ${entry.score} / 100`);
+  console.groupEnd();
+
+  if (window._rawSleepDebug) {
+    console.group('🔬 4. Datos Crudos de la API de Google Fit');
+    if (window._rawSleepDebug.rawSessions && window._rawSleepDebug.rawSessions.length > 0) {
+      console.log('• Sesiones de sueño sincronizadas:');
+      console.table(window._rawSleepDebug.rawSessions);
+    }
+    if (window._rawSleepDebug.rawSegments && window._rawSleepDebug.rawSegments.length > 0) {
+      console.log('• Bloques/Segmentos de fases (com.google.sleep.segment):');
+      console.table(window._rawSleepDebug.rawSegments);
+    }
+    console.groupEnd();
+  }
+
+  console.groupEnd();
+  return entry;
+};
+window.debugSuenoHoy = () => window.debugSueno('hoy');
 
 function abrirModalDetalleSueno(target) {
   const modal = document.getElementById('modal-detalle-sueno');
