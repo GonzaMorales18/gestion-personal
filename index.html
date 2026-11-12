@@ -14637,9 +14637,9 @@ function setActividadFiltro(period) {
 
 function restaurarCacheFitness() {
   try {
-    if (localStorage.getItem('gp_fitness_cache_v') !== '5') {
+    if (localStorage.getItem('gp_fitness_cache_v') !== '6') {
       localStorage.removeItem('gp_fitness_cache');
-      localStorage.setItem('gp_fitness_cache_v', '5');
+      localStorage.setItem('gp_fitness_cache_v', '6');
       return;
     }
     if (window.fitnessData && window.fitnessData.steps && window.fitnessData.steps.length > 0) return;
@@ -15398,7 +15398,8 @@ async function fetchGoogleFitness() {
             mergedIntervals.push({ startMs: s.startMs, endMs: s.endMs, sources: new Set([s.source]) });
           } else {
             const last = mergedIntervals[mergedIntervals.length - 1];
-            if (s.startMs <= (last.endMs + 10 * 60 * 1000)) {
+            // Tolerancia de 30 min para unificar sesiones duplicadas entre Google Fit, Mi Fitness, Zepp, etc.
+            if (s.startMs <= (last.endMs + 30 * 60 * 1000)) {
               last.endMs = Math.max(last.endMs, s.endMs);
               last.sources.add(s.source);
             } else {
@@ -15434,29 +15435,93 @@ async function fetchGoogleFitness() {
         const dObj = new Date(intv.endMs);
         const dateKey = `${dObj.getFullYear()}-${String(dObj.getMonth() + 1).padStart(2, '0')}-${String(dObj.getDate()).padStart(2, '0')}`;
 
-        // Segmentos correspondientes a este intervalo (+/- 15 min de tolerancia)
-        const matchedSegments = rawSegments.filter(seg =>
-          seg.startMs >= (intv.startMs - 15 * 60 * 1000) && seg.endMs <= (intv.endMs + 15 * 60 * 1000)
-        );
+        // Segmentos correspondientes a este intervalo recortados estrictamente a la sesión
+        const candidateSegments = [];
+        rawSegments.forEach(seg => {
+          if (seg.startMs < intv.endMs && seg.endMs > intv.startMs) {
+            const sStart = Math.max(intv.startMs, seg.startMs);
+            const sEnd = Math.min(intv.endMs, seg.endMs);
+            if (sEnd > sStart) {
+              candidateSegments.push({
+                startMs: sStart,
+                endMs: sEnd,
+                durMs: sEnd - sStart,
+                stage: seg.stage,
+                source: seg.source
+              });
+              if (seg.source) intv.sources.add(seg.source);
+            }
+          }
+        });
+
+        // Detectar si alguna fuente provee fases detalladas (4: Ligero, 5: Profundo, 6: REM)
+        const sourcesWithStages = new Set();
+        candidateSegments.forEach(seg => {
+          if (seg.stage === 4 || seg.stage === 5 || seg.stage === 6) {
+            sourcesWithStages.add(seg.source);
+          }
+        });
+
+        // Si hay fuentes con fases (ej. Xiaomi / Mi Fitness / Zepp), priorizar exclusivamente esa fuente para el desglose
+        // y descartar los segmentos de stage 2 (Sleep general) de otras fuentes que duplican el tiempo de sueño.
+        let targetSegments = candidateSegments;
+        if (sourcesWithStages.size > 0) {
+          let bestSrc = null;
+          let maxDetailedMs = -1;
+          sourcesWithStages.forEach(src => {
+            const totalMs = candidateSegments
+              .filter(s => s.source === src && (s.stage === 4 || s.stage === 5 || s.stage === 6))
+              .reduce((acc, s) => acc + s.durMs, 0);
+            if (totalMs > maxDetailedMs) {
+              maxDetailedMs = totalMs;
+              bestSrc = src;
+            }
+          });
+          targetSegments = candidateSegments.filter(s => s.source === bestSrc);
+        }
+
+        // Ordenar cronológicamente y asignar fases sobre la línea de tiempo sin solapamientos
+        targetSegments.sort((a, b) => a.startMs - b.startMs || a.endMs - b.endMs);
 
         let deepMs = 0, remMs = 0, lightMs = 0, awakeMs = 0, generalSleepMs = 0;
-        matchedSegments.forEach(seg => {
-          const segDur = Math.max(0, seg.endMs - seg.startMs);
-          if (seg.source) intv.sources.add(seg.source);
-          if (seg.stage === 5) deepMs += segDur;
-          else if (seg.stage === 6) remMs += segDur;
-          else if (seg.stage === 4) lightMs += segDur;
-          else if (seg.stage === 1 || seg.stage === 3) awakeMs += segDur;
-          else if (seg.stage === 2) generalSleepMs += segDur;
+        let timelineCursor = intv.startMs;
+
+        targetSegments.forEach(seg => {
+          const start = Math.max(timelineCursor, seg.startMs);
+          const end = Math.min(intv.endMs, seg.endMs);
+          if (end > start) {
+            const dur = end - start;
+            if (seg.stage === 5) deepMs += dur;
+            else if (seg.stage === 6) remMs += dur;
+            else if (seg.stage === 4) lightMs += dur;
+            else if (seg.stage === 1 || seg.stage === 3) awakeMs += dur;
+            else if (seg.stage === 2) generalSleepMs += dur;
+            timelineCursor = end;
+          }
         });
 
         const hasStages = (deepMs > 0 || remMs > 0 || lightMs > 0);
-        let actualAsleepHours = 0;
-        if (hasStages || generalSleepMs > 0) {
-          actualAsleepHours = (deepMs + remMs + lightMs + generalSleepMs) / 3600000;
+        const totalSessionMs = intv.endMs - intv.startMs;
+
+        let actualAsleepMs = 0;
+        if (hasStages) {
+          actualAsleepMs = deepMs + remMs + lightMs;
+          // Si los segmentos clasificados dejaron tiempo sin clasificar en la sesión y había generalSleepMs:
+          const unassignedMs = Math.max(0, totalSessionMs - awakeMs - actualAsleepMs);
+          if (unassignedMs > 0 && generalSleepMs > 0) {
+            const fillMs = Math.min(unassignedMs, generalSleepMs);
+            lightMs += fillMs;
+            actualAsleepMs += fillMs;
+          }
         } else {
-          actualAsleepHours = durHoursSession;
+          // Sin fases detalladas: sueño general
+          actualAsleepMs = generalSleepMs > 0 ? Math.min(totalSessionMs, generalSleepMs) : Math.max(0, totalSessionMs - awakeMs);
+          lightMs = actualAsleepMs;
         }
+
+        // El tiempo dormido real NUNCA puede superar el tiempo en cama de la sesión
+        actualAsleepMs = Math.min(totalSessionMs, actualAsleepMs);
+        const actualAsleepHours = actualAsleepMs / 3600000;
 
         // Ritmo cardíaco durante el sueño (entre inicio y fin de la sesión)
         const nightHrPoints = allRawHrPoints.filter(p => p.timeMs >= intv.startMs && p.timeMs <= intv.endMs);
@@ -15470,7 +15535,7 @@ async function fetchGoogleFitness() {
 
         const deepHours = Number((deepMs / 3600000).toFixed(2));
         const remHours = Number((remMs / 3600000).toFixed(2));
-        const lightHours = Number(((lightMs + generalSleepMs) / 3600000).toFixed(2));
+        const lightHours = Number((lightMs / 3600000).toFixed(2));
         const awakeHours = Number((awakeMs / 3600000).toFixed(2));
         const totalInBedHours = Number(durHoursSession.toFixed(2));
         const asleepHours = Number(actualAsleepHours.toFixed(2));
@@ -15496,40 +15561,85 @@ async function fetchGoogleFitness() {
         const wakeTimeStr = `${String(wakeTimeD.getHours()).padStart(2, '0')}:${String(wakeTimeD.getMinutes()).padStart(2, '0')}`;
 
         const prevDay = sleepByDate.get(dateKey);
-        if (!prevDay || asleepHours > prevDay.val) {
-          const combinedSources = new Set(intv.sources);
-          if (prevDay && prevDay.sources) prevDay.sources.forEach(s => combinedSources.add(s));
-          const combinedVal = Math.min(24, (prevDay ? prevDay.val : 0) + asleepHours);
-
+        if (!prevDay) {
           sleepByDate.set(dateKey, {
-            val: combinedVal,
-            sources: combinedSources,
+            val: asleepHours,
+            sources: new Set(intv.sources),
             bedtimeMs: intv.startMs,
             wakeTimeMs: intv.endMs,
             bedtimeStr: bedtimeStr,
             wakeTimeStr: wakeTimeStr,
-            totalInBedHours: Math.min(24, (prevDay ? prevDay.totalInBedHours : 0) + totalInBedHours),
-            asleepHours: combinedVal,
-            hasStages: hasStages || !!prevDay?.hasStages,
+            totalInBedHours: totalInBedHours,
+            asleepHours: asleepHours,
+            hasStages: hasStages,
             stages: {
-              deepHours: Number(((prevDay?.stages?.deepHours || 0) + deepHours).toFixed(2)),
-              remHours: Number(((prevDay?.stages?.remHours || 0) + remHours).toFixed(2)),
-              lightHours: Number(((prevDay?.stages?.lightHours || 0) + lightHours).toFixed(2)),
-              awakeHours: Number(((prevDay?.stages?.awakeHours || 0) + awakeHours).toFixed(2)),
+              deepHours: deepHours,
+              remHours: remHours,
+              lightHours: lightHours,
+              awakeHours: awakeHours,
               deepPct: deepPct,
               remPct: remPct,
               lightPct: lightPct,
               awakePct: awakePct
             },
             efficiency: efficiency,
-            hrAvg: hrAvg || prevDay?.hrAvg || null,
-            hrMin: hrMin || prevDay?.hrMin || null,
-            hrMax: hrMax || prevDay?.hrMax || null,
+            hrAvg: hrAvg,
+            hrMin: hrMin,
+            hrMax: hrMax,
             hrCount: nightHrPoints.length,
             score: scoreObj.score,
             scoreLabel: scoreObj.label,
             scoreBadgeClass: scoreObj.badgeClass
           });
+        } else {
+          // Ya existe un registro para esta fecha de despertar.
+          // Verificar si es la misma noche/sesión duplicada (horarios solapados o cercanos a menos de 2 horas)
+          const isOverlapOrSameNight = (
+            (intv.startMs >= prevDay.bedtimeMs - 2 * 3600000 && intv.startMs <= prevDay.wakeTimeMs + 2 * 3600000) ||
+            (intv.endMs >= prevDay.bedtimeMs - 2 * 3600000 && intv.endMs <= prevDay.wakeTimeMs + 2 * 3600000)
+          );
+
+          if (isOverlapOrSameNight) {
+            intv.sources.forEach(s => prevDay.sources.add(s));
+            if (!prevDay.hasStages && hasStages) {
+              prevDay.val = asleepHours;
+              prevDay.bedtimeMs = intv.startMs;
+              prevDay.wakeTimeMs = intv.endMs;
+              prevDay.bedtimeStr = bedtimeStr;
+              prevDay.wakeTimeStr = wakeTimeStr;
+              prevDay.totalInBedHours = totalInBedHours;
+              prevDay.asleepHours = asleepHours;
+              prevDay.hasStages = true;
+              prevDay.stages = { deepHours, remHours, lightHours, awakeHours, deepPct, remPct, lightPct, awakePct };
+              prevDay.efficiency = efficiency;
+              prevDay.hrAvg = hrAvg || prevDay.hrAvg;
+              prevDay.hrMin = hrMin || prevDay.hrMin;
+              prevDay.hrMax = hrMax || prevDay.hrMax;
+              prevDay.score = scoreObj.score;
+              prevDay.scoreLabel = scoreObj.label;
+              prevDay.scoreBadgeClass = scoreObj.badgeClass;
+            } else if (asleepHours > prevDay.val) {
+              prevDay.val = asleepHours;
+              prevDay.totalInBedHours = Math.max(prevDay.totalInBedHours, totalInBedHours);
+              prevDay.asleepHours = asleepHours;
+            }
+          } else {
+            // Siesta o sesión adicional separada en el mismo día
+            intv.sources.forEach(s => prevDay.sources.add(s));
+            const newTotalVal = Math.min(24, Number((prevDay.val + asleepHours).toFixed(2)));
+            prevDay.val = newTotalVal;
+            prevDay.totalInBedHours = Math.min(24, Number((prevDay.totalInBedHours + totalInBedHours).toFixed(2)));
+            prevDay.asleepHours = newTotalVal;
+            if (hasStages) {
+              prevDay.stages.deepHours = Number((prevDay.stages.deepHours + deepHours).toFixed(2));
+              prevDay.stages.remHours = Number((prevDay.stages.remHours + remHours).toFixed(2));
+              prevDay.stages.lightHours = Number((prevDay.stages.lightHours + lightHours).toFixed(2));
+              prevDay.stages.awakeHours = Number((prevDay.stages.awakeHours + awakeHours).toFixed(2));
+              prevDay.stages.deepPct = Math.round((prevDay.stages.deepHours / newTotalVal) * 100);
+              prevDay.stages.remPct = Math.round((prevDay.stages.remHours / newTotalVal) * 100);
+              prevDay.stages.lightPct = Math.max(0, 100 - prevDay.stages.deepPct - prevDay.stages.remPct);
+            }
+          }
         }
       });
     } catch (errSleep) {
@@ -15630,7 +15740,7 @@ async function fetchGoogleFitness() {
 
     try {
       localStorage.setItem('gp_fitness_cache', JSON.stringify(window.fitnessData));
-      localStorage.setItem('gp_fitness_cache_v', '5');
+      localStorage.setItem('gp_fitness_cache_v', '6');
     } catch (e) {}
 
     // Actualizar inmediatamente las tarjetas de Salud en el Panel de Control (Inicio) y en Actividad
@@ -16067,7 +16177,7 @@ function renderDetalleSuenoDia(entry) {
               </span>
               <span class="text-[8px] font-black text-slate-400">&lt; 10%</span>
             </div>
-            <div class="text-sm font-black mono text-white">${formatHorasMinutosSimple(stages.awakeHours)} <span class="text-[9px] font-normal text-slate-400">(${stages.awakePct}%)</span></div>
+            <div class="text-sm font-black mono text-white">${stages.awakeHours > 0 ? formatHorasMinutosSimple(stages.awakeHours) : '0 min'} <span class="text-[9px] font-normal text-slate-400">(${stages.awakePct}%)</span></div>
             <div class="text-[8px] text-slate-400">Interrupciones</div>
           </div>
         </div>
