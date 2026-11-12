@@ -15578,19 +15578,31 @@ function renderHealthCard(type, period) {
   const isAvgMode = window.currentHealthMode === 'promedio';
 
   const today = new Date();
+  const isSameDay = (d1, d2) => {
+    if (!d1 || !d2) return false;
+    const a = (d1 instanceof Date) ? d1 : new Date(d1);
+    const b = (d2 instanceof Date) ? d2 : new Date(d2);
+    return a.getFullYear() === b.getFullYear() &&
+           a.getMonth() === b.getMonth() &&
+           a.getDate() === b.getDate();
+  };
+  const isToday = (d) => isSameDay(d, today);
 
   if (period === 'hoy') {
-    const todayData = dataArray.find(d =>
-      d.date.getFullYear() === today.getFullYear() &&
-      d.date.getMonth() === today.getMonth() &&
-      d.date.getDate() === today.getDate()
-    ) || dataArray[dataArray.length - 1];
+    const todayData = dataArray.find(d => isToday(d.date));
     aggregatedValue = todayData ? (todayData.value || 0) : 0;
-    if ((type === 'weight' || type === 'sleep' || type === 'heartRate') && (aggregatedValue === null || aggregatedValue === 0)) {
+
+    // Fallback al último registro disponible:
+    // - Peso y ritmo cardíaco: siempre disponible como 'Último registro'.
+    // - Sueño: solo antes de las 6:00 AM (por si el usuario aún no durmió esa noche). A partir de las 6:00 AM no se muestra el de ayer y queda en '--' hasta que cargue el del día.
+    const permiteFallbackSueno = today.getHours() < 6;
+    const admiteFallback = (type === 'weight' || type === 'heartRate' || (type === 'sleep' && permiteFallbackSueno));
+
+    if (admiteFallback && (aggregatedValue === null || aggregatedValue === 0)) {
       const lastEntry = [...dataArray].reverse().find(d => d.value !== null && d.value > 0);
       aggregatedValue = lastEntry ? lastEntry.value : 0;
     }
-    subtitle = (type === 'weight' || type === 'sleep' || type === 'heartRate') ? 'Último registro' : 'Hoy';
+    subtitle = (admiteFallback && aggregatedValue > 0 && (!todayData || !todayData.value)) ? 'Último registro' : 'Hoy';
   }
   else if (period === 'semana') {
     filtered = dataArray.slice(-7);
@@ -15754,10 +15766,12 @@ function renderHealthCard(type, period) {
 
   if (period === 'hoy') {
     cardPeriodLabel = 'Hoy (' + today.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) + ')';
-    const todayObj = (type === 'weight' || type === 'sleep' || type === 'heartRate')
-      ? (dataArray.find(d => d.date.getFullYear() === today.getFullYear() && d.date.getMonth() === today.getMonth() && d.date.getDate() === today.getDate() && d.value > 0)
+    const permiteFallbackSueno = today.getHours() < 6;
+    const admiteFallback = (type === 'weight' || type === 'heartRate' || (type === 'sleep' && permiteFallbackSueno));
+    const todayObj = admiteFallback
+      ? (dataArray.find(d => isToday(d.date) && d.value > 0)
          || [...dataArray].reverse().find(d => d.value > 0))
-      : (dataArray.find(d => d.date.getFullYear() === today.getFullYear() && d.date.getMonth() === today.getMonth() && d.date.getDate() === today.getDate()));
+      : dataArray.find(d => isToday(d.date));
     cardSources = (todayObj && todayObj.sources && todayObj.sources.length > 0) ? todayObj.sources : (todayObj && todayObj.value > 0 ? ['Google Fit'] : []);
   } else if (period === 'semana') {
     cardPeriodLabel = 'Últimos 7 días';
@@ -15907,18 +15921,15 @@ function renderHealthCard(type, period) {
   }
 
   // SIEMPRE calcular y mostrar el dato de "hoy" para el Panel de Control (inicio)
-  const todayEntry = dataArray.find(d =>
-    d.date.getFullYear() === today.getFullYear() &&
-    d.date.getMonth() === today.getMonth() &&
-    d.date.getDate() === today.getDate()
-  ) || dataArray[dataArray.length - 1];
-  let hoyAggValue = todayEntry ? todayEntry.value : 0;
+  const todayEntry = dataArray.find(d => isToday(d.date));
+  let hoyAggValue = todayEntry ? (todayEntry.value || 0) : 0;
 
-  if (type === 'weight' || type === 'sleep' || type === 'heartRate') {
-    if (hoyAggValue === null || hoyAggValue === 0) {
-      const lastEntry = [...dataArray].reverse().find(d => d.value > 0);
-      hoyAggValue = lastEntry ? lastEntry.value : 0;
-    }
+  const permiteFallbackSuenoInicio = today.getHours() < 6;
+  const admiteFallbackInicio = (type === 'weight' || type === 'heartRate' || (type === 'sleep' && permiteFallbackSuenoInicio));
+
+  if (admiteFallbackInicio && (hoyAggValue === null || hoyAggValue === 0)) {
+    const lastEntry = [...dataArray].reverse().find(d => d.value !== null && d.value > 0);
+    hoyAggValue = lastEntry ? lastEntry.value : 0;
   }
 
   const valElInicio = document.getElementById('inicio-health-' + type);
