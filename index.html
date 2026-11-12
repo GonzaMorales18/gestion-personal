@@ -62,6 +62,32 @@
     display: none !important;
   }
 
+  /* Grilla unificada y responsive para Actividad (7 columnas alineadas 1 a 1 sin desborde) */
+  .actividad-grid-7 {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+  @media (min-width: 640px) {
+    .actividad-grid-7 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 768px) {
+    .actividad-grid-7 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1024px) {
+    .actividad-grid-7 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1280px) {
+    .actividad-grid-7 {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+    }
+  }
+
   /* Skeleton loading */
   @keyframes shimmer {
     0%   { background-position: -400px 0; }
@@ -1582,7 +1608,7 @@
 
   <!-- SECCIÓN SALUD - ACTIVIDAD -->
   <main id="section-actividad" class="hidden p-4 md:p-8 max-w-[1400px] mx-auto w-full space-y-6">
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-[1fr_1.18fr_1fr_1fr_1fr_1fr_1fr] gap-3 xl:gap-3.5">
+    <div class="actividad-grid-7 gap-3 xl:gap-3.5 w-full max-w-full min-w-0">
 
       <!-- Tarjeta Distancia -->
       <div class="group bg-black rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
@@ -1880,192 +1906,192 @@
     </div>
 
     <!-- Contenedor de gráficos y tablas (se oculta si filtro es Hoy) -->
-    <div id="charts-actividad-container" class="hidden grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-[1fr_1.18fr_1fr_1fr_1fr_1fr_1fr] gap-3 xl:gap-3.5">
+    <div id="charts-actividad-container" class="hidden actividad-grid-7 gap-3 xl:gap-3.5 w-full max-w-full min-w-0">
 
       <!-- Gráfico y Tabla Distancia -->
-      <div class="bg-black rounded-2xl border border-slate-700/60 p-5 flex flex-col justify-between">
+      <div class="bg-black rounded-2xl border border-slate-700/60 p-3.5 xl:p-3 flex flex-col justify-between min-w-0 overflow-hidden">
         <div>
-          <div class="flex items-center gap-2 mb-4">
-             <i class="fas fa-route text-emerald-500 text-xs"></i>
-             <h4 class="text-[10px] font-black text-white uppercase tracking-widest">Evolución Distancia</h4>
+          <div class="flex items-center gap-2 mb-3 min-w-0">
+             <i class="fas fa-route text-emerald-500 text-xs shrink-0"></i>
+             <h4 class="text-[10px] font-black text-white uppercase tracking-wider truncate">Evolución Distancia</h4>
           </div>
-          <div class="h-[180px] w-full relative">
+          <div class="h-[150px] md:h-[160px] w-full relative min-w-0 overflow-hidden">
             <canvas id="chart-distance"></canvas>
           </div>
-          <div id="chart-distance-range" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-3 text-center empty:hidden"></div>
+          <div id="chart-distance-range" class="text-[8.5px] font-bold text-slate-500 uppercase tracking-wider mt-2 text-center empty:hidden truncate"></div>
         </div>
-        <div class="mt-4 pt-3 border-t border-slate-800/80">
-          <div class="max-h-[160px] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full pr-1">
-            <table class="w-full text-left border-collapse">
+        <div class="mt-3 pt-2.5 border-t border-slate-800/80 min-w-0">
+          <div class="max-h-[160px] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full pr-0.5">
+            <table class="w-full text-left border-collapse table-fixed">
               <thead>
-                <tr class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
-                  <th class="pb-1 font-bold">Fecha</th>
-                  <th class="pb-1 text-right font-bold">Total</th>
+                <tr class="text-[8.5px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
+                  <th class="pb-1 font-bold w-[40%] truncate">Fecha</th>
+                  <th class="pb-1 text-right font-bold w-[60%] truncate">Total</th>
                 </tr>
               </thead>
-              <tbody id="table-distance" class="divide-y divide-slate-800/40 text-[10px]"></tbody>
+              <tbody id="table-distance" class="divide-y divide-slate-800/40 text-[9.5px]"></tbody>
             </table>
           </div>
         </div>
       </div>
 
       <!-- Gráfico y Tabla Sueño -->
-      <div class="bg-black rounded-2xl border border-slate-700/60 p-5 flex flex-col justify-between">
+      <div class="bg-black rounded-2xl border border-slate-700/60 p-3.5 xl:p-3 flex flex-col justify-between min-w-0 overflow-hidden">
         <div>
-          <div class="flex items-center gap-2 mb-4">
-             <i class="fas fa-moon text-indigo-400 text-xs"></i>
-             <h4 class="text-[10px] font-black text-white uppercase tracking-widest">Evolución Sueño</h4>
+          <div class="flex items-center gap-2 mb-3 min-w-0">
+             <i class="fas fa-moon text-indigo-400 text-xs shrink-0"></i>
+             <h4 class="text-[10px] font-black text-white uppercase tracking-wider truncate">Evolución Sueño</h4>
           </div>
-          <div class="h-[180px] w-full relative">
+          <div class="h-[150px] md:h-[160px] w-full relative min-w-0 overflow-hidden">
             <canvas id="chart-sleep"></canvas>
           </div>
-          <div id="chart-sleep-range" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-3 text-center empty:hidden"></div>
+          <div id="chart-sleep-range" class="text-[8.5px] font-bold text-slate-500 uppercase tracking-wider mt-2 text-center empty:hidden truncate"></div>
         </div>
-        <div class="mt-4 pt-3 border-t border-slate-800/80">
-          <div class="max-h-[160px] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full pr-1">
-            <table class="w-full text-left border-collapse">
+        <div class="mt-3 pt-2.5 border-t border-slate-800/80 min-w-0">
+          <div class="max-h-[160px] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full pr-0.5">
+            <table class="w-full text-left border-collapse table-fixed">
               <thead>
-                <tr class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
-                  <th class="pb-1 font-bold">Fecha</th>
-                  <th class="pb-1 text-right font-bold">Total / Calidad</th>
+                <tr class="text-[8.5px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
+                  <th class="pb-1 font-bold w-[36%] truncate">Fecha</th>
+                  <th class="pb-1 text-right font-bold w-[64%] truncate">Total / Calidad</th>
                 </tr>
               </thead>
-              <tbody id="table-sleep" class="divide-y divide-slate-800/40 text-[10px]"></tbody>
+              <tbody id="table-sleep" class="divide-y divide-slate-800/40 text-[9.5px]"></tbody>
             </table>
           </div>
         </div>
       </div>
 
       <!-- Gráfico y Tabla Pasos -->
-      <div class="bg-black rounded-2xl border border-slate-700/60 p-5 flex flex-col justify-between">
+      <div class="bg-black rounded-2xl border border-slate-700/60 p-3.5 xl:p-3 flex flex-col justify-between min-w-0 overflow-hidden">
         <div>
-          <div class="flex items-center gap-2 mb-4">
-             <i class="fas fa-shoe-prints text-teal-500 text-xs"></i>
-             <h4 class="text-[10px] font-black text-white uppercase tracking-widest">Evolución Pasos</h4>
+          <div class="flex items-center gap-2 mb-3 min-w-0">
+             <i class="fas fa-shoe-prints text-teal-500 text-xs shrink-0"></i>
+             <h4 class="text-[10px] font-black text-white uppercase tracking-wider truncate">Evolución Pasos</h4>
           </div>
-          <div class="h-[180px] w-full relative">
+          <div class="h-[150px] md:h-[160px] w-full relative min-w-0 overflow-hidden">
             <canvas id="chart-steps"></canvas>
           </div>
-          <div id="chart-steps-range" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-3 text-center empty:hidden"></div>
+          <div id="chart-steps-range" class="text-[8.5px] font-bold text-slate-500 uppercase tracking-wider mt-2 text-center empty:hidden truncate"></div>
         </div>
-        <div class="mt-4 pt-3 border-t border-slate-800/80">
-          <div class="max-h-[160px] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full pr-1">
-            <table class="w-full text-left border-collapse">
+        <div class="mt-3 pt-2.5 border-t border-slate-800/80 min-w-0">
+          <div class="max-h-[160px] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full pr-0.5">
+            <table class="w-full text-left border-collapse table-fixed">
               <thead>
-                <tr class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
-                  <th class="pb-1 font-bold">Fecha</th>
-                  <th class="pb-1 text-right font-bold">Total</th>
+                <tr class="text-[8.5px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
+                  <th class="pb-1 font-bold w-[40%] truncate">Fecha</th>
+                  <th class="pb-1 text-right font-bold w-[60%] truncate">Total</th>
                 </tr>
               </thead>
-              <tbody id="table-steps" class="divide-y divide-slate-800/40 text-[10px]"></tbody>
+              <tbody id="table-steps" class="divide-y divide-slate-800/40 text-[9.5px]"></tbody>
             </table>
           </div>
         </div>
       </div>
 
       <!-- Gráfico y Tabla Peso -->
-      <div class="bg-black rounded-2xl border border-slate-700/60 p-5 flex flex-col justify-between">
+      <div class="bg-black rounded-2xl border border-slate-700/60 p-3.5 xl:p-3 flex flex-col justify-between min-w-0 overflow-hidden">
         <div>
-          <div class="flex items-center gap-2 mb-4">
-             <i class="fas fa-weight text-blue-500 text-xs"></i>
-             <h4 class="text-[10px] font-black text-white uppercase tracking-widest">Tendencia de Peso</h4>
+          <div class="flex items-center gap-2 mb-3 min-w-0">
+             <i class="fas fa-weight text-blue-500 text-xs shrink-0"></i>
+             <h4 class="text-[10px] font-black text-white uppercase tracking-wider truncate">Tendencia de Peso</h4>
           </div>
-          <div class="h-[180px] w-full relative">
+          <div class="h-[150px] md:h-[160px] w-full relative min-w-0 overflow-hidden">
             <canvas id="chart-weight"></canvas>
           </div>
-          <div id="chart-weight-range" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-3 text-center empty:hidden"></div>
+          <div id="chart-weight-range" class="text-[8.5px] font-bold text-slate-500 uppercase tracking-wider mt-2 text-center empty:hidden truncate"></div>
         </div>
-        <div class="mt-4 pt-3 border-t border-slate-800/80">
-          <div class="max-h-[160px] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full pr-1">
-            <table class="w-full text-left border-collapse">
+        <div class="mt-3 pt-2.5 border-t border-slate-800/80 min-w-0">
+          <div class="max-h-[160px] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full pr-0.5">
+            <table class="w-full text-left border-collapse table-fixed">
               <thead>
-                <tr class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
-                  <th class="pb-1 font-bold">Fecha</th>
-                  <th class="pb-1 text-right font-bold">Peso</th>
+                <tr class="text-[8.5px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
+                  <th class="pb-1 font-bold w-[40%] truncate">Fecha</th>
+                  <th class="pb-1 text-right font-bold w-[60%] truncate">Peso</th>
                 </tr>
               </thead>
-              <tbody id="table-weight" class="divide-y divide-slate-800/40 text-[10px]"></tbody>
+              <tbody id="table-weight" class="divide-y divide-slate-800/40 text-[9.5px]"></tbody>
             </table>
           </div>
         </div>
       </div>
 
       <!-- Gráfico y Tabla Calorías -->
-      <div class="bg-black rounded-2xl border border-slate-700/60 p-5 flex flex-col justify-between">
+      <div class="bg-black rounded-2xl border border-slate-700/60 p-3.5 xl:p-3 flex flex-col justify-between min-w-0 overflow-hidden">
         <div>
-          <div class="flex items-center gap-2 mb-4">
-             <i class="fas fa-fire text-orange-500 text-xs"></i>
-             <h4 class="text-[10px] font-black text-white uppercase tracking-widest">Evolución Calorías</h4>
+          <div class="flex items-center gap-2 mb-3 min-w-0">
+             <i class="fas fa-fire text-orange-500 text-xs shrink-0"></i>
+             <h4 class="text-[10px] font-black text-white uppercase tracking-wider truncate">Evolución Calorías</h4>
           </div>
-          <div class="h-[180px] w-full relative">
+          <div class="h-[150px] md:h-[160px] w-full relative min-w-0 overflow-hidden">
             <canvas id="chart-calories"></canvas>
           </div>
-          <div id="chart-calories-range" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-3 text-center empty:hidden"></div>
+          <div id="chart-calories-range" class="text-[8.5px] font-bold text-slate-500 uppercase tracking-wider mt-2 text-center empty:hidden truncate"></div>
         </div>
-        <div class="mt-4 pt-3 border-t border-slate-800/80">
-          <div class="max-h-[160px] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full pr-1">
-            <table class="w-full text-left border-collapse">
+        <div class="mt-3 pt-2.5 border-t border-slate-800/80 min-w-0">
+          <div class="max-h-[160px] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full pr-0.5">
+            <table class="w-full text-left border-collapse table-fixed">
               <thead>
-                <tr class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
-                  <th class="pb-1 font-bold">Fecha</th>
-                  <th class="pb-1 text-right font-bold">Total</th>
+                <tr class="text-[8.5px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
+                  <th class="pb-1 font-bold w-[40%] truncate">Fecha</th>
+                  <th class="pb-1 text-right font-bold w-[60%] truncate">Total</th>
                 </tr>
               </thead>
-              <tbody id="table-calories" class="divide-y divide-slate-800/40 text-[10px]"></tbody>
+              <tbody id="table-calories" class="divide-y divide-slate-800/40 text-[9.5px]"></tbody>
             </table>
           </div>
         </div>
       </div>
 
       <!-- Gráfico y Tabla Actividad -->
-      <div class="bg-black rounded-2xl border border-slate-700/60 p-5 flex flex-col justify-between">
+      <div class="bg-black rounded-2xl border border-slate-700/60 p-3.5 xl:p-3 flex flex-col justify-between min-w-0 overflow-hidden">
         <div>
-          <div class="flex items-center gap-2 mb-4">
-             <i class="fas fa-heartbeat text-rose-500 text-xs"></i>
-             <h4 class="text-[10px] font-black text-white uppercase tracking-widest">Evolución Actividad</h4>
+          <div class="flex items-center gap-2 mb-3 min-w-0">
+             <i class="fas fa-heartbeat text-rose-500 text-xs shrink-0"></i>
+             <h4 class="text-[10px] font-black text-white uppercase tracking-wider truncate">Evolución Actividad</h4>
           </div>
-          <div class="h-[180px] w-full relative">
+          <div class="h-[150px] md:h-[160px] w-full relative min-w-0 overflow-hidden">
             <canvas id="chart-activeMinutes"></canvas>
           </div>
-          <div id="chart-activeMinutes-range" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-3 text-center empty:hidden"></div>
+          <div id="chart-activeMinutes-range" class="text-[8.5px] font-bold text-slate-500 uppercase tracking-wider mt-2 text-center empty:hidden truncate"></div>
         </div>
-        <div class="mt-4 pt-3 border-t border-slate-800/80">
-          <div class="max-h-[160px] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full pr-1">
-            <table class="w-full text-left border-collapse">
+        <div class="mt-3 pt-2.5 border-t border-slate-800/80 min-w-0">
+          <div class="max-h-[160px] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full pr-0.5">
+            <table class="w-full text-left border-collapse table-fixed">
               <thead>
-                <tr class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
-                  <th class="pb-1 font-bold">Fecha</th>
-                  <th class="pb-1 text-right font-bold">Total</th>
+                <tr class="text-[8.5px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
+                  <th class="pb-1 font-bold w-[40%] truncate">Fecha</th>
+                  <th class="pb-1 text-right font-bold w-[60%] truncate">Total</th>
                 </tr>
               </thead>
-              <tbody id="table-activeMinutes" class="divide-y divide-slate-800/40 text-[10px]"></tbody>
+              <tbody id="table-activeMinutes" class="divide-y divide-slate-800/40 text-[9.5px]"></tbody>
             </table>
           </div>
         </div>
       </div>
 
       <!-- Gráfico y Tabla Ritmo Cardíaco -->
-      <div class="bg-black rounded-2xl border border-slate-700/60 p-5 flex flex-col justify-between">
+      <div class="bg-black rounded-2xl border border-slate-700/60 p-3.5 xl:p-3 flex flex-col justify-between min-w-0 overflow-hidden">
         <div>
-          <div class="flex items-center gap-2 mb-4">
-             <i class="fas fa-heart-pulse text-[#ff1744] text-xs"></i>
-             <h4 class="text-[10px] font-black text-white uppercase tracking-widest">Tendencia Ritmo Cardíaco</h4>
+          <div class="flex items-center gap-2 mb-3 min-w-0">
+             <i class="fas fa-heart-pulse text-[#ff1744] text-xs shrink-0"></i>
+             <h4 class="text-[10px] font-black text-white uppercase tracking-wider truncate">Tendencia Ritmo Cardíaco</h4>
           </div>
-          <div class="h-[180px] w-full relative">
+          <div class="h-[150px] md:h-[160px] w-full relative min-w-0 overflow-hidden">
             <canvas id="chart-heartRate"></canvas>
           </div>
-          <div id="chart-heartRate-range" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-3 text-center empty:hidden"></div>
+          <div id="chart-heartRate-range" class="text-[8.5px] font-bold text-slate-500 uppercase tracking-wider mt-2 text-center empty:hidden truncate"></div>
         </div>
-        <div class="mt-4 pt-3 border-t border-slate-800/80">
-          <div class="max-h-[160px] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full pr-1">
-            <table class="w-full text-left border-collapse">
+        <div class="mt-3 pt-2.5 border-t border-slate-800/80 min-w-0">
+          <div class="max-h-[160px] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full pr-0.5">
+            <table class="w-full text-left border-collapse table-fixed">
               <thead>
-                <tr class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
-                  <th class="pb-1 font-bold">Fecha</th>
-                  <th class="pb-1 text-right font-bold">Promedio</th>
+                <tr class="text-[8.5px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
+                  <th class="pb-1 font-bold w-[40%] truncate">Fecha</th>
+                  <th class="pb-1 text-right font-bold w-[60%] truncate">Promedio</th>
                 </tr>
               </thead>
-              <tbody id="table-heartRate" class="divide-y divide-slate-800/40 text-[10px]"></tbody>
+              <tbody id="table-heartRate" class="divide-y divide-slate-800/40 text-[9.5px]"></tbody>
             </table>
           </div>
         </div>
@@ -17112,27 +17138,26 @@ function renderHealthTable(type, period, filtered, labels, values) {
     const srcTxt = (r.sources && r.sources.length > 0) ? r.sources.join(', ') : 'Google Fit';
     const sleepBadgeHtml = (r.type === 'sleep' && r.sleepScore)
       ? `<button type="button" 
-                 class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[9px] font-black mono cursor-pointer transition-all hover:scale-105 ${r.sleepScoreClass || 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30'}"
+                 class="inline-flex items-center gap-0.5 px-1 py-0.5 rounded text-[8px] font-black mono cursor-pointer transition-all hover:scale-105 shrink-0 ${r.sleepScoreClass || 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30'}"
                  title="Calidad: ${r.sleepScore}/100. Clic para ver desglose y fases"
                  onclick="event.stopPropagation(); abrirModalDetalleSueno('${r.periodMode === 'month' ? r.label : r.dateIso}')">
-           <i class="fas fa-star text-[7px] text-amber-400"></i>
+           <i class="fas fa-star text-[6px] text-amber-400 mr-0.5"></i>
            <span>${r.sleepScore}</span>
-           <span class="text-[7.5px] font-normal opacity-75">pts</span>
          </button>`
       : '';
 
     return `
       <tr class="hover:bg-slate-800/40 transition-colors group/row">
-        <td class="py-1 text-slate-300 font-bold whitespace-nowrap">${r.label}</td>
-        <td class="py-1 text-right mono font-black text-white whitespace-nowrap">
-          <div class="inline-flex items-center justify-end gap-1.5">
-            <span>${r.val}</span>
+        <td class="py-1 text-slate-300 font-bold text-[9px] truncate" title="${r.label}">${r.label}</td>
+        <td class="py-1 text-right mono font-black text-white text-[9.5px]">
+          <div class="inline-flex items-center justify-end gap-1 max-w-full">
+            <span class="truncate">${r.val}</span>
             ${sleepBadgeHtml}
             <button type="button" 
-                    class="opacity-60 group-hover/row:opacity-100 hover:text-teal-400 text-slate-500 transition-all p-0.5 rounded cursor-pointer" 
+                    class="opacity-60 group-hover/row:opacity-100 hover:text-teal-400 text-slate-500 transition-all p-0.5 rounded cursor-pointer shrink-0" 
                     title="Fuente: ${srcTxt}"
                     onclick="mostrarDetalleFuenteFila('${type}', '${r.label}', '${escapeHtmlHealth(srcTxt)}', event)">
-              <i class="fas fa-info-circle text-[10px]"></i>
+              <i class="fas fa-info-circle text-[9px]"></i>
             </button>
           </div>
         </td>
