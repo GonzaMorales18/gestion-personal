@@ -14695,9 +14695,9 @@ function setActividadFiltro(period) {
 
 function restaurarCacheFitness() {
   try {
-    if (localStorage.getItem('gp_fitness_cache_v') !== '6') {
+    if (localStorage.getItem('gp_fitness_cache_v') !== '7') {
       localStorage.removeItem('gp_fitness_cache');
-      localStorage.setItem('gp_fitness_cache_v', '6');
+      localStorage.setItem('gp_fitness_cache_v', '7');
       return;
     }
     if (window.fitnessData && window.fitnessData.steps && window.fitnessData.steps.length > 0) return;
@@ -15008,6 +15008,7 @@ async function fetchGoogleFitness() {
           { dataTypeName: 'com.google.step_count.delta' },
           { dataTypeName: 'com.google.distance.delta' },
           { dataTypeName: 'com.google.calories.expended' },
+          { dataTypeName: 'com.google.active_minutes' },
           { dataTypeName: 'com.google.heart_minutes' }
         ],
         bucketByTime: { durationMillis: 86400000 },
@@ -15104,11 +15105,14 @@ async function fetchGoogleFitness() {
         let daySteps = 0;
         let dayDist = 0;
         let dayCalories = 0;
-        let dayActiveMins = 0;
+        let dayActiveMinsReal = 0;
+        let dayHeartPoints = 0;
+        let hasActiveMins = false;
         const dayStepSources = new Set();
         const dayDistSources = new Set();
         const dayCalSources = new Set();
         const dayActiveSources = new Set();
+        const dayHeartSources = new Set();
 
         if (b.dataset) {
           b.dataset.forEach(ds => {
@@ -15131,13 +15135,25 @@ async function fetchGoogleFitness() {
                   p.value.forEach(v => dayCalories += (v.fpVal || v.intVal || 0));
                   if (srcLabel) dayCalSources.add(srcLabel);
                 }
-                if (typeStr.includes('heart_minutes')) {
-                  p.value.forEach(v => dayActiveMins += (v.fpVal || v.intVal || 0));
+                if (typeStr.includes('active_minutes')) {
+                  hasActiveMins = true;
+                  p.value.forEach(v => dayActiveMinsReal += (v.intVal || v.fpVal || 0));
                   if (srcLabel) dayActiveSources.add(srcLabel);
+                }
+                if (typeStr.includes('heart_minutes')) {
+                  p.value.forEach(v => dayHeartPoints += (v.fpVal || v.intVal || 0));
+                  if (srcLabel) dayHeartSources.add(srcLabel);
                 }
               });
             }
           });
+        }
+
+        // Prioridad: minutos reales de actividad (com.google.active_minutes, ej: 119 min).
+        // Si no existen en la cuenta, usamos puntos cardio (com.google.heart_minutes) como alternativa.
+        const dayActiveMins = hasActiveMins ? dayActiveMinsReal : dayHeartPoints;
+        if (!hasActiveMins) {
+          dayHeartSources.forEach(s => dayActiveSources.add(s));
         }
 
         if (activityByDate.has(dateKey)) {
@@ -15890,7 +15906,7 @@ async function fetchGoogleFitness() {
 
     try {
       localStorage.setItem('gp_fitness_cache', JSON.stringify(window.fitnessData));
-      localStorage.setItem('gp_fitness_cache_v', '6');
+      localStorage.setItem('gp_fitness_cache_v', '7');
     } catch (e) {}
 
     // Actualizar inmediatamente las tarjetas de Salud en el Panel de Control (Inicio) y en Actividad
@@ -15923,7 +15939,7 @@ async function diagnosticoGoogleFit() {
   if (!token || !token.access_token) { console.warn('No hay token de Google. Conectá tu cuenta primero.'); return; }
   const headers = { 'Authorization': `Bearer ${token.access_token}` };
   const base = 'https://www.googleapis.com/fitness/v1/users/me/dataSources';
-  const tipos = ['step_count', 'distance', 'calories', 'heart_minutes', 'weight', 'sleep', 'heart_rate'];
+  const tipos = ['step_count', 'distance', 'calories', 'active_minutes', 'heart_minutes', 'weight', 'sleep', 'heart_rate'];
 
   const resp = await fetch(base, { headers });
   if (!resp.ok) { console.error('Error listando fuentes:', resp.status, await resp.text()); return; }
