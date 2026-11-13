@@ -3995,7 +3995,7 @@
           </div>
           <div class="overflow-hidden">
             <p class="text-xs md:text-[13px] font-black text-white uppercase tracking-wider truncate">Salir de Casa</p>
-            <p class="text-[9.5px] md:text-[10.5px] text-slate-400 truncate mt-0.5">Inicia aspiradora</p>
+            <p class="text-[9.5px] md:text-[10.5px] text-slate-400 truncate mt-0.5">Inicia aspiradora • Enchufe OFF</p>
           </div>
         </button>
 
@@ -18489,15 +18489,38 @@ async function ejecutarEscenaDomotica(escena) {
       });
     }, 900);
   } else if (escena === 'salir_casa') {
-    // Solo inicia la aspiradora robot; NO envía pulsos IR al Aire ni a la TV para no encenderlos si ya estaban apagados
+    // 1. Iniciar la aspiradora robot a máxima potencia (Turbo • Modo Automático)
     domState.vacuum.status = 'cleaning';
     domState.vacuum.mode = 'smart';
     domState.vacuum.suction = 'strong';
     if (!domState.vacuum.area || domState.vacuum.area === 42) domState.vacuum.area = 34;
     if (!domState.vacuum.time || domState.vacuum.time === 38) domState.vacuum.time = 32;
+
+    // 2. Verificar enchufe inteligente: si está encendido, apagarlo
+    const estabaEncendido = !!domState.plug.power;
+    if (estabaEncendido) {
+      domState.plug.power = false;
+      domState.plug.timerMinutes = 0;
+      domState.plug.timerEndTime = null;
+      domState.plug.lastChange = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+    }
+
     guardarEstadoDomotica();
     renderDomoticaUI();
-    showToast('Salir de Casa: Aspiradora iniciada a máxima potencia', 'ok');
+
+    if (estabaEncendido) {
+      registrarLogDomotica('Enchufe Inteligente', 'Escena "Salir de Casa": Estaba encendido → Apagado por seguridad');
+      showToast('Salir de Casa: Aspiradora iniciada y enchufe apagado', 'ok');
+      await enviarComandoSmartLife('Enchufe Inteligente', 'Escena "Salir de Casa": Apagar enchufe (OFF)', { switch_1: false });
+    } else {
+      registrarLogDomotica('Enchufe Inteligente', 'Escena "Salir de Casa": Verificado (ya estaba apagado)');
+      showToast('Salir de Casa: Aspiradora iniciada (enchufe verificado apagado)', 'ok');
+      const usaApi = domConfig.mode !== 'local' && (domConfig.clientId || domConfig.bridgeUrl);
+      if (usaApi && domConfig.plugId) {
+        enviarComandoSmartLife('Enchufe Inteligente', 'Escena "Salir de Casa": Confirmar estado apagado (OFF)', { switch_1: false });
+      }
+    }
+
     await enviarComandoSmartLife('Aspiradora Robot', 'Escena "Salir de Casa": Iniciar limpieza automática (Turbo)', {
       command: 'start',
       mode: 'smart',
@@ -20482,7 +20505,7 @@ function filtrarCommandPalette() {
   // 2. Escenas rápidas de Domótica y Acciones
   const acciones = [
     { title: 'Escena Domótica: Tengo Calor (Aires a 22°C)', sub: 'Enciende ambos aires en frío', icon: 'fa-snowflake text-cyan-400', badge: 'Domótica', fn: () => ejecutarEscenaDomotica('tengo_calor') },
-    { title: 'Escena Domótica: Salir de Casa (Aspirar)',     sub: 'Apaga clima/TV e inicia aspiradora', icon: 'fa-robot text-emerald-400', badge: 'Domótica', fn: () => ejecutarEscenaDomotica('salir_casa') },
+    { title: 'Escena Domótica: Salir de Casa (Aspirar + Enchufe OFF)', sub: 'Inicia aspiradora y apaga enchufe si está encendido', icon: 'fa-robot text-emerald-400', badge: 'Domótica', fn: () => ejecutarEscenaDomotica('salir_casa') },
     { title: 'Escena Domótica: Modo Cine',                   sub: 'Enciende TV Living y climatización', icon: 'fa-film text-violet-400', badge: 'Domótica', fn: () => ejecutarEscenaDomotica('modo_cine') },
     { title: 'Asistente IA: Dictar para Listas',             sub: 'Hablar por micrófono para agregar o tildar tareas', icon: 'fa-microphone text-purple-400', badge: 'Listas', fn: () => toggleVozIAListas() },
     { title: 'Asistente IA: Dictar Movimiento en Balance',   sub: 'Hablar por micrófono para registrar gasto o ingreso', icon: 'fa-microphone text-purple-400', badge: 'Balance', fn: () => { showSection('finanzas'); toggleVozIABalance(); } },
