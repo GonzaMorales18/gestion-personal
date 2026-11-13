@@ -4162,23 +4162,19 @@
           </div>
         </div>
 
-        <!-- Apartado 2: Acciones Principales (mt-3 exacto) -->
+        <!-- Apartado 2: Acciones Principales (mt-3 exacto, 3 controles en fila) -->
         <div class="mt-3 relative z-10 w-full shrink-0">
           <span class="text-[8px] sm:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1.5">Controles de Limpieza</span>
-          <div class="grid grid-cols-2 gap-1 sm:gap-1.5">
-            <button onclick="domAccionAspiradora('start')" id="dom-vac-btn-start" class="h-7.5 sm:h-8 py-0.5 px-1.5 rounded-lg bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95">
-              <i class="fas fa-power-off text-[8px]"></i>
-              <span id="dom-vac-btn-start-txt">Iniciar</span>
-            </button>
-            <button onclick="domAccionAspiradora('pause')" id="dom-vac-btn-pause" class="h-7.5 sm:h-8 py-0.5 px-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95">
+          <div class="grid grid-cols-3 gap-1 sm:gap-1.5">
+            <button onclick="domAccionAspiradora('pause')" id="dom-vac-btn-pause" class="h-7.5 sm:h-8 py-0.5 px-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1 transition-all active:scale-95">
               <i class="fas fa-pause text-[8px] text-amber-400"></i>
               <span>Pausar</span>
             </button>
-            <button onclick="domAccionAspiradora('dock')" id="dom-vac-btn-dock" class="h-7.5 sm:h-8 py-0.5 px-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95">
+            <button onclick="domAccionAspiradora('dock')" id="dom-vac-btn-dock" class="h-7.5 sm:h-8 py-0.5 px-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1 transition-all active:scale-95">
               <i class="fas fa-charging-station text-[8px] text-cyan-400"></i>
               <span>Base</span>
             </button>
-            <button onclick="domAccionAspiradora('locate')" class="h-7.5 sm:h-8 py-0.5 px-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95">
+            <button onclick="domAccionAspiradora('locate')" class="h-7.5 sm:h-8 py-0.5 px-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1 transition-all active:scale-95">
               <i class="fas fa-volume-up text-[8px] text-violet-400"></i>
               <span>Buscar</span>
             </button>
@@ -18011,7 +18007,6 @@ function renderDomoticaUI() {
   const vacArea = document.getElementById('dom-vac-area');
   const vacTime = document.getElementById('dom-vac-time');
   const vacPowerBtn = document.getElementById('dom-vac-power-btn');
-  const vacStartBtn = document.getElementById('dom-vac-btn-start');
 
   const vacStatusMap = {
     docked: {
@@ -18079,12 +18074,10 @@ function renderDomoticaUI() {
     if (vacCard) vacCard.className = 'bg-black rounded-2xl border border-emerald-500/50 p-3 md:p-3.5 relative overflow-hidden flex flex-col transition-colors shadow-md shadow-emerald-950/30';
     if (vacGlow) vacGlow.classList.replace('opacity-0', 'opacity-100');
     if (vacPowerBtn) vacPowerBtn.className = redPowerOnClass;
-    if (vacStartBtn) vacStartBtn.className = 'h-7.5 sm:h-8 py-0.5 px-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white border border-red-400/50 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-md shadow-red-600/30';
   } else {
     if (vacCard) vacCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col transition-colors';
     if (vacGlow) vacGlow.classList.replace('opacity-100', 'opacity-0');
     if (vacPowerBtn) vacPowerBtn.className = redPowerOffClass;
-    if (vacStartBtn) vacStartBtn.className = 'h-7.5 sm:h-8 py-0.5 px-1.5 rounded-lg bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95';
   }
 
   ['smart', 'wall_follow', 'spiral', 'single'].forEach(m => {
