@@ -16677,9 +16677,9 @@ function formatHorasMinutosTexto(valDecimal) {
 
 function renderHealthCard(type, period) {
   if (!window.fitnessData[type] || window.fitnessData[type].length === 0) return;
-  const valEl = document.getElementById('health-' + type);
-  const valElInicio = document.getElementById('inicio-health-' + type);
-  if (!valEl && !valElInicio) return;
+  const cardEl = document.getElementById('health-' + type);
+  const cardInicioEl = document.getElementById('inicio-health-' + type);
+  if (!cardEl && !cardInicioEl) return;
 
   const dataArray = window.fitnessData[type];
   let filtered = [];
