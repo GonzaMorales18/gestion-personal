@@ -3971,7 +3971,7 @@
   </main>
 
   <!-- SECCIÓN DOMÓTICA (SMART LIFE / TUYA) -->
-  <main id="section-domotica" class="hidden p-3 md:p-4 max-w-[1440px] mx-auto w-full md:h-[calc(100vh-4rem)] md:max-h-[calc(100vh-4rem)] md:flex md:flex-col md:justify-between space-y-2.5 md:space-y-3 overflow-y-auto">
+  <main id="section-domotica" class="hidden p-3 md:p-4 max-w-[1440px] mx-auto w-full md:min-h-[calc(100vh-4rem)] md:flex md:flex-col md:justify-between space-y-2.5 md:space-y-3 overflow-y-auto">
 
     <!-- Escenas Rápidas (Tap-to-Run) -->
     <div class="shrink-0">
@@ -4011,293 +4011,286 @@
       </div>
     </div>
 
-    <!-- Grid Principal de Artefactos (4 tarjetas con idéntico ancho y alto) -->
-    <div class="md:flex-1 md:min-h-0 grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-2.5 md:gap-3.5">
+    <!-- Grid Principal de Artefactos (4 tarjetas verticales en una misma fila) -->
+    <div class="md:flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 md:gap-3.5">
 
       <!-- 1. AIRE ACONDICIONADO (MANDO INFRARROJO IR) -->
-      <div id="dom-card-ac" class="bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col transition-colors h-full">
-        <!-- Cabecera A/C -->
+      <div id="dom-card-ac" class="bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col justify-between transition-colors h-full">
+        <!-- Cabecera A/C: Título y estado arriba -->
         <div class="h-10 md:h-11 flex items-center justify-between mb-2 md:mb-2.5 relative z-10 shrink-0">
-          <div class="flex items-center gap-2.5 min-w-0 overflow-hidden">
-            <div id="dom-ac-icon-box" class="w-8 h-8 md:w-8.5 md:h-8.5 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-all shrink-0">
-              <i id="dom-ac-icon" class="fas fa-snowflake text-cyan-400 text-xs md:text-sm"></i>
+          <div class="flex items-center gap-2 min-w-0 overflow-hidden">
+            <div id="dom-ac-icon-box" class="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-all shrink-0">
+              <i id="dom-ac-icon" class="fas fa-snowflake text-cyan-400 text-xs"></i>
             </div>
             <div class="min-w-0 overflow-hidden">
               <div class="flex items-center gap-1.5">
-                <span class="text-xs md:text-[13px] font-black text-white uppercase tracking-wider truncate">Aire Acondicionado</span>
-                <span class="text-[8.5px] md:text-[9px] font-bold uppercase px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 shrink-0">Hub IR</span>
+                <span class="text-xs md:text-[12.5px] font-black text-white uppercase tracking-wider truncate">Aire Acondicionado</span>
+                <span class="text-[7.5px] md:text-[8px] font-bold uppercase px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 shrink-0">Hub IR</span>
               </div>
-              <p id="dom-ac-subtitle" class="text-[9.5px] md:text-[10px] text-slate-400 leading-tight truncate">Mando Infrarrojo · Listo para enviar señal</p>
+              <p id="dom-ac-subtitle" class="text-[8.5px] md:text-[9px] text-slate-400 leading-tight truncate">Mando Infrarrojo · Listo para enviar señal</p>
             </div>
           </div>
 
           <button onclick="domToggleAC()" id="dom-ac-power-btn" title="Encender / Apagar Aire"
-                  class="w-8 h-8 md:w-8.5 md:h-8.5 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 flex items-center justify-center transition-all active:scale-95 shrink-0">
-            <i class="fas fa-power-off text-xs md:text-sm"></i>
+                  class="w-8 h-8 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 flex items-center justify-center transition-all active:scale-95 shrink-0">
+            <i class="fas fa-power-off text-xs"></i>
           </button>
         </div>
 
         <!-- Display Central de Temperatura y Accesos Rápidos -->
-        <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-2 md:p-2.5 relative z-10 flex items-center justify-between gap-2.5 shrink-0">
-          <!-- Control de temperatura con +/- -->
-          <div class="flex items-center gap-2">
-            <button onclick="domCambiarTempAC(-1)" class="w-8 h-8 md:w-8.5 md:h-8.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white border border-slate-700 flex items-center justify-center font-black transition-all">
-              <i class="fas fa-minus text-[9px]"></i>
-            </button>
-            <div class="flex items-baseline">
-              <span id="dom-ac-temp" class="text-2xl md:text-3xl font-black mono text-white tracking-tighter">24</span>
-              <span class="text-xs md:text-sm font-black mono text-cyan-400 ml-0.5">°C</span>
+        <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-2 md:p-2.5 relative z-10 shrink-0 space-y-1.5">
+          <!-- Control de temperatura con +/- y Pills de estado -->
+          <div class="flex items-center justify-between gap-1.5">
+            <div class="flex items-center gap-1.5">
+              <button onclick="domCambiarTempAC(-1)" title="Bajar Temperatura"
+                      class="w-7 h-7 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white border border-slate-700 flex items-center justify-center font-black transition-all">
+                <i class="fas fa-minus text-[8.5px]"></i>
+              </button>
+              <div class="flex items-baseline px-0.5">
+                <span id="dom-ac-temp" class="text-2xl sm:text-3xl font-black mono text-white tracking-tighter">24</span>
+                <span class="text-xs sm:text-sm font-black mono text-cyan-400 ml-0.5">°C</span>
+              </div>
+              <button onclick="domCambiarTempAC(1)" title="Subir Temperatura"
+                      class="w-7 h-7 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white border border-slate-700 flex items-center justify-center font-black transition-all">
+                <i class="fas fa-plus text-[8.5px]"></i>
+              </button>
             </div>
-            <button onclick="domCambiarTempAC(1)" class="w-8 h-8 md:w-8.5 md:h-8.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white border border-slate-700 flex items-center justify-center font-black transition-all">
-              <i class="fas fa-plus text-[9px]"></i>
-            </button>
+
+            <!-- Pills de Modo y Fan -->
+            <div class="flex flex-col items-end gap-1 overflow-hidden">
+              <span id="dom-ac-mode-pill" class="text-[7.5px] sm:text-[8px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 truncate">❄️ Frío</span>
+              <span id="dom-ac-fan-pill" class="text-[7.5px] sm:text-[8px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700 truncate">🌀 Fan: Auto</span>
+            </div>
           </div>
 
-          <!-- Pills + Shortcuts a la derecha -->
-          <div class="flex flex-col items-end gap-1">
-            <div class="flex items-center gap-1.5">
-              <span id="dom-ac-mode-pill" class="text-[8.5px] md:text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">❄️ Frío</span>
-              <span id="dom-ac-fan-pill" class="text-[8.5px] md:text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">🌀 Fan: Auto</span>
-            </div>
-            <div class="flex items-center gap-1">
-              <button onclick="domSetTempAC(18)" class="h-5.5 md:h-6 px-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8.5px] md:text-[9px] font-bold mono text-slate-300 transition-colors">18°</button>
-              <button onclick="domSetTempAC(22)" class="h-5.5 md:h-6 px-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8.5px] md:text-[9px] font-bold mono text-slate-300 transition-colors">22°</button>
-              <button onclick="domSetTempAC(24)" class="h-5.5 md:h-6 px-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8.5px] md:text-[9px] font-bold mono text-slate-300 transition-colors">24°</button>
-              <button onclick="domSetTempAC(26)" class="h-5.5 md:h-6 px-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8.5px] md:text-[9px] font-bold mono text-slate-300 transition-colors">26°</button>
-            </div>
+          <!-- Shortcuts directos de temperatura -->
+          <div class="grid grid-cols-4 gap-1 pt-0.5">
+            <button onclick="domSetTempAC(18)" class="h-6 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8px] sm:text-[8.5px] font-bold mono text-slate-300 transition-colors flex items-center justify-center">18°</button>
+            <button onclick="domSetTempAC(22)" class="h-6 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8px] sm:text-[8.5px] font-bold mono text-slate-300 transition-colors flex items-center justify-center">22°</button>
+            <button onclick="domSetTempAC(24)" class="h-6 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8px] sm:text-[8.5px] font-bold mono text-slate-300 transition-colors flex items-center justify-center">24°</button>
+            <button onclick="domSetTempAC(26)" class="h-6 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8px] sm:text-[8.5px] font-bold mono text-slate-300 transition-colors flex items-center justify-center">26°</button>
           </div>
         </div>
 
-        <!-- Selector de Modo y Velocidad (Lado a Lado) -->
-        <div class="mt-auto grid grid-cols-2 gap-2.5 md:gap-3 relative z-10 w-full">
-          <div>
-            <span class="text-[8px] md:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Modo de Operación</span>
-            <div class="grid grid-cols-3 gap-1 md:gap-1.5">
-              <button onclick="domSetModoAC('cool')" id="dom-ac-mode-cool" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
-                <i class="fas fa-snowflake text-[8px] md:text-[8.5px]"></i><span>Frío</span>
-              </button>
-              <button onclick="domSetModoAC('heat')" id="dom-ac-mode-heat" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
-                <i class="fas fa-sun text-[8px] md:text-[8.5px]"></i><span>Calor</span>
-              </button>
-              <button onclick="domSetModoAC('auto')" id="dom-ac-mode-auto" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
-                <i class="fas fa-magic text-[8px] md:text-[8.5px]"></i><span>Auto</span>
-              </button>
-            </div>
-            <div class="grid grid-cols-2 gap-1 md:gap-1.5 mt-1 md:mt-1.5">
-              <button onclick="domSetModoAC('fan')" id="dom-ac-mode-fan" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
-                <i class="fas fa-fan text-[8px] md:text-[8.5px]"></i><span>Vent.</span>
-              </button>
-              <button onclick="domSetModoAC('dry')" id="dom-ac-mode-dry" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
-                <i class="fas fa-tint-slash text-[8px] md:text-[8.5px]"></i><span>Seco</span>
-              </button>
-            </div>
+        <!-- Modo de Operación (Hacia abajo) -->
+        <div class="mt-2 relative z-10 w-full shrink-0">
+          <span class="text-[8px] sm:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Modo de Operación</span>
+          <div class="grid grid-cols-3 gap-1 sm:gap-1.5">
+            <button onclick="domSetModoAC('cool')" id="dom-ac-mode-cool" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
+              <i class="fas fa-snowflake text-[8px]"></i><span>Frío</span>
+            </button>
+            <button onclick="domSetModoAC('heat')" id="dom-ac-mode-heat" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
+              <i class="fas fa-sun text-[8px]"></i><span>Calor</span>
+            </button>
+            <button onclick="domSetModoAC('auto')" id="dom-ac-mode-auto" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
+              <i class="fas fa-magic text-[8px]"></i><span>Auto</span>
+            </button>
           </div>
+          <div class="grid grid-cols-2 gap-1 sm:gap-1.5 mt-1">
+            <button onclick="domSetModoAC('fan')" id="dom-ac-mode-fan" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
+              <i class="fas fa-fan text-[8px]"></i><span>Ventilador</span>
+            </button>
+            <button onclick="domSetModoAC('dry')" id="dom-ac-mode-dry" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
+              <i class="fas fa-tint-slash text-[8px]"></i><span>Seco</span>
+            </button>
+          </div>
+        </div>
 
-          <div>
-            <span class="text-[8px] md:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Velocidad y Swing</span>
-            <div class="grid grid-cols-3 gap-1 md:gap-1.5">
-              <button onclick="domSetFanAC('auto')" id="dom-ac-fan-auto" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Auto</button>
-              <button onclick="domSetFanAC('low')" id="dom-ac-fan-low" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Baja</button>
-              <button onclick="domSetFanAC('med')" id="dom-ac-fan-med" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Media</button>
-            </div>
-            <div class="grid grid-cols-2 gap-1 md:gap-1.5 mt-1 md:mt-1.5">
-              <button onclick="domSetFanAC('high')" id="dom-ac-fan-high" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Alta</button>
-              <button onclick="domToggleSwingAC()" id="dom-ac-swing-btn" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1">
-                <i class="fas fa-arrows-alt-v text-[8px] md:text-[8.5px]"></i><span>Swing</span>
-              </button>
-            </div>
+        <!-- Velocidad y Swing (Más para abajo) -->
+        <div class="mt-2 relative z-10 w-full shrink-0">
+          <span class="text-[8px] sm:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Velocidad y Swing</span>
+          <div class="grid grid-cols-3 gap-1 sm:gap-1.5">
+            <button onclick="domSetFanAC('auto')" id="dom-ac-fan-auto" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Auto</button>
+            <button onclick="domSetFanAC('low')" id="dom-ac-fan-low" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Baja</button>
+            <button onclick="domSetFanAC('med')" id="dom-ac-fan-med" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Media</button>
+          </div>
+          <div class="grid grid-cols-2 gap-1 sm:gap-1.5 mt-1">
+            <button onclick="domSetFanAC('high')" id="dom-ac-fan-high" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Alta</button>
+            <button onclick="domToggleSwingAC()" id="dom-ac-swing-btn" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1">
+              <i class="fas fa-arrows-alt-v text-[8px]"></i><span>Swing</span>
+            </button>
           </div>
         </div>
       </div>
 
       <!-- 2. ASPIRADORA ROBOT (SMART LIFE / TUYA) -->
-      <div id="dom-card-vacuum" class="bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col transition-colors h-full">
+      <div id="dom-card-vacuum" class="bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col justify-between transition-colors h-full">
         <div id="dom-vac-glow" class="absolute inset-0 bg-gradient-to-br from-emerald-900/15 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none"></div>
 
-        <!-- Cabecera Aspiradora -->
+        <!-- Cabecera Aspiradora: Título, estado y batería -->
         <div class="h-10 md:h-11 flex items-center justify-between mb-2 md:mb-2.5 relative z-10 shrink-0">
-          <div class="flex items-center gap-2.5 min-w-0 overflow-hidden">
-            <div id="dom-vac-icon-box" class="w-8 h-8 md:w-8.5 md:h-8.5 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-all shrink-0">
-              <i id="dom-vac-icon" class="fas fa-robot text-emerald-400 text-xs md:text-sm"></i>
+          <div class="flex items-center gap-2 min-w-0 overflow-hidden">
+            <div id="dom-vac-icon-box" class="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-all shrink-0">
+              <i id="dom-vac-icon" class="fas fa-robot text-emerald-400 text-xs"></i>
             </div>
             <div class="min-w-0 overflow-hidden">
               <div class="flex items-center gap-1.5">
-                <span class="text-xs md:text-[13px] font-black text-white uppercase tracking-wider truncate">Aspiradora Robot</span>
-                <span id="dom-vac-badge" class="text-[8.5px] md:text-[9px] font-black uppercase px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shrink-0">En Base</span>
+                <span class="text-xs md:text-[12.5px] font-black text-white uppercase tracking-wider truncate">Aspiradora Robot</span>
+                <span id="dom-vac-badge" class="text-[7.5px] md:text-[8px] font-black uppercase px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shrink-0">En Base</span>
               </div>
-              <p id="dom-vac-subtitle" class="text-[9.5px] md:text-[10px] text-slate-400 leading-tight truncate">Carga completa — Lista para limpiar</p>
+              <p id="dom-vac-subtitle" class="text-[8.5px] md:text-[9px] text-slate-400 leading-tight truncate">Carga completa — Lista para limpiar</p>
             </div>
           </div>
 
-          <div class="flex items-center gap-2 shrink-0">
+          <div class="flex items-center gap-1.5 shrink-0">
             <!-- Batería Real Tuya -->
-            <div class="flex items-center gap-1.5 bg-slate-900 px-2 py-0.5 rounded-xl border border-slate-800 h-7.5 md:h-8 shrink-0" title="Nivel de batería reportado por Tuya Cloud">
-              <i id="dom-vac-bat-icon" class="fas fa-battery-full text-emerald-400 text-xs"></i>
-              <span id="dom-vac-battery" class="text-[10.5px] md:text-[11px] font-black mono text-white">100%</span>
+            <div class="flex items-center gap-1 bg-slate-900 px-1.5 py-0.5 rounded-xl border border-slate-800 h-7 shrink-0" title="Nivel de batería reportado por Tuya Cloud">
+              <i id="dom-vac-bat-icon" class="fas fa-battery-full text-emerald-400 text-[10px]"></i>
+              <span id="dom-vac-battery" class="text-[9.5px] sm:text-[10px] font-black mono text-white">100%</span>
             </div>
 
             <button onclick="domToggleAspiradoraPower()" id="dom-vac-power-btn" title="Iniciar / Pausar Aspiradora"
-                    class="w-8 h-8 md:w-8.5 md:h-8.5 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 flex items-center justify-center transition-all active:scale-95 shrink-0">
-              <i class="fas fa-power-off text-xs md:text-sm"></i>
+                    class="w-8 h-8 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 flex items-center justify-center transition-all active:scale-95 shrink-0">
+              <i class="fas fa-power-off text-xs"></i>
             </button>
           </div>
         </div>
 
-        <!-- Métricas + Botones Principales en Grid Compacto -->
-        <div class="space-y-1 md:space-y-1.5 relative z-10 shrink-0">
-          <div class="grid grid-cols-3 gap-1 md:gap-1.5">
-            <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-1 md:p-1.5 text-center">
-              <span class="text-[8px] md:text-[8.5px] font-bold text-slate-400 uppercase tracking-widest block leading-none">Estado</span>
-              <span id="dom-vac-state-text" class="text-[11px] md:text-xs font-black text-emerald-400 uppercase block leading-tight mt-0.5">Cargada</span>
-            </div>
-            <div onclick="domEditarMetricaAspiradora('area')" class="bg-slate-900/70 hover:bg-slate-900 rounded-xl border border-slate-800 hover:border-slate-700 p-1 md:p-1.5 text-center cursor-pointer transition-all" title="Click para ajustar área limpia">
-              <span class="text-[8px] md:text-[8.5px] font-bold text-slate-400 uppercase tracking-widest block leading-none">Área</span>
-              <span id="dom-vac-area" class="text-[11px] md:text-xs font-black mono text-white block leading-tight mt-0.5">34 m²</span>
-            </div>
-            <div onclick="domEditarMetricaAspiradora('time')" class="bg-slate-900/70 hover:bg-slate-900 rounded-xl border border-slate-800 hover:border-slate-700 p-1 md:p-1.5 text-center cursor-pointer transition-all" title="Click para ajustar tiempo de limpieza">
-              <span class="text-[8px] md:text-[8.5px] font-bold text-slate-400 uppercase tracking-widest block leading-none">Tiempo</span>
-              <span id="dom-vac-time" class="text-[11px] md:text-xs font-black mono text-white block leading-tight mt-0.5">32 min</span>
-            </div>
+        <!-- Métricas: Estado de Carga, Área y Tiempo -->
+        <div class="grid grid-cols-3 gap-1 sm:gap-1.5 relative z-10 shrink-0">
+          <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-1 md:p-1.5 text-center">
+            <span class="text-[7.5px] sm:text-[8px] font-bold text-slate-400 uppercase tracking-widest block leading-none">Estado</span>
+            <span id="dom-vac-state-text" class="text-[10.5px] sm:text-[11px] font-black text-emerald-400 uppercase block leading-tight mt-0.5">Cargada</span>
           </div>
+          <div onclick="domEditarMetricaAspiradora('area')" class="bg-slate-900/70 hover:bg-slate-900 rounded-xl border border-slate-800 hover:border-slate-700 p-1 md:p-1.5 text-center cursor-pointer transition-all" title="Click para ajustar área limpia">
+            <span class="text-[7.5px] sm:text-[8px] font-bold text-slate-400 uppercase tracking-widest block leading-none">Área</span>
+            <span id="dom-vac-area" class="text-[10.5px] sm:text-[11px] font-black mono text-white block leading-tight mt-0.5">34 m²</span>
+          </div>
+          <div onclick="domEditarMetricaAspiradora('time')" class="bg-slate-900/70 hover:bg-slate-900 rounded-xl border border-slate-800 hover:border-slate-700 p-1 md:p-1.5 text-center cursor-pointer transition-all" title="Click para ajustar tiempo de limpieza">
+            <span class="text-[7.5px] sm:text-[8px] font-bold text-slate-400 uppercase tracking-widest block leading-none">Tiempo</span>
+            <span id="dom-vac-time" class="text-[10.5px] sm:text-[11px] font-black mono text-white block leading-tight mt-0.5">32 min</span>
+          </div>
+        </div>
 
-          <div class="grid grid-cols-4 gap-1 md:gap-1.5">
-            <button onclick="domAccionAspiradora('start')" id="dom-vac-btn-start" class="h-7 md:h-7.5 py-0.5 px-1 rounded-lg bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 font-black text-[9px] md:text-[9.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95">
-              <i class="fas fa-power-off text-[8.5px]"></i>
+        <!-- Acciones Principales: Iniciar, Pausar, Base, Buscar -->
+        <div class="mt-2 relative z-10 w-full shrink-0">
+          <span class="text-[8px] sm:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Controles de Limpieza</span>
+          <div class="grid grid-cols-2 gap-1 sm:gap-1.5">
+            <button onclick="domAccionAspiradora('start')" id="dom-vac-btn-start" class="h-7.5 sm:h-8 py-0.5 px-1.5 rounded-lg bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95">
+              <i class="fas fa-power-off text-[8px]"></i>
               <span id="dom-vac-btn-start-txt">Iniciar</span>
             </button>
-            <button onclick="domAccionAspiradora('pause')" id="dom-vac-btn-pause" class="h-7 md:h-7.5 py-0.5 px-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[9px] md:text-[9.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95">
-              <i class="fas fa-pause text-[8.5px] text-amber-400"></i>
+            <button onclick="domAccionAspiradora('pause')" id="dom-vac-btn-pause" class="h-7.5 sm:h-8 py-0.5 px-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95">
+              <i class="fas fa-pause text-[8px] text-amber-400"></i>
               <span>Pausar</span>
             </button>
-            <button onclick="domAccionAspiradora('dock')" id="dom-vac-btn-dock" class="h-7 md:h-7.5 py-0.5 px-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[9px] md:text-[9.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95">
-              <i class="fas fa-charging-station text-[8.5px] text-cyan-400"></i>
+            <button onclick="domAccionAspiradora('dock')" id="dom-vac-btn-dock" class="h-7.5 sm:h-8 py-0.5 px-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95">
+              <i class="fas fa-charging-station text-[8px] text-cyan-400"></i>
               <span>Base</span>
             </button>
-            <button onclick="domAccionAspiradora('locate')" class="h-7 md:h-7.5 py-0.5 px-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[9px] md:text-[9.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95">
-              <i class="fas fa-volume-up text-[8.5px] text-violet-400"></i>
+            <button onclick="domAccionAspiradora('locate')" class="h-7.5 sm:h-8 py-0.5 px-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95">
+              <i class="fas fa-volume-up text-[8px] text-violet-400"></i>
               <span>Buscar</span>
             </button>
           </div>
         </div>
 
-        <!-- Modos de Limpieza y Potencia de Succión (Lado a Lado) -->
-        <div class="mt-auto grid grid-cols-2 gap-2.5 md:gap-3 relative z-10 w-full">
-          <div>
-            <span class="text-[8px] md:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Modo de Limpieza</span>
-            <div class="grid grid-cols-2 gap-1 md:gap-1.5">
-              <button onclick="domSetModoAspiradora('smart')" id="dom-vac-mode-smart" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Auto</button>
-              <button onclick="domSetModoAspiradora('wall_follow')" id="dom-vac-mode-wall_follow" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Bordes</button>
-              <button onclick="domSetModoAspiradora('spiral')" id="dom-vac-mode-spiral" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Punto</button>
-              <button onclick="domSetModoAspiradora('single')" id="dom-vac-mode-single" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Habit.</button>
-            </div>
+        <!-- Potencia de Succión (Únicamente estas tres opciones hacia abajo) -->
+        <div class="mt-2 relative z-10 w-full shrink-0">
+          <span class="text-[8px] sm:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Potencia de Succión</span>
+          <div class="grid grid-cols-2 gap-1 sm:gap-1.5">
+            <button onclick="domSetSuccionAspiradora('gentle')" id="dom-vac-suction-gentle" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Silencioso</button>
+            <button onclick="domSetSuccionAspiradora('normal')" id="dom-vac-suction-normal" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Estándar</button>
           </div>
-
-          <div>
-            <span class="text-[8px] md:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Potencia de Succión</span>
-            <div class="grid grid-cols-2 gap-1 md:gap-1.5">
-              <button onclick="domSetSuccionAspiradora('gentle')" id="dom-vac-suction-gentle" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Silencioso</button>
-              <button onclick="domSetSuccionAspiradora('normal')" id="dom-vac-suction-normal" class="h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Estándar</button>
-            </div>
-            <div class="mt-1 md:mt-1.5">
-              <button onclick="domSetSuccionAspiradora('strong')" id="dom-vac-suction-strong" class="w-full h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Turbo</button>
-            </div>
+          <div class="mt-1">
+            <button onclick="domSetSuccionAspiradora('strong')" id="dom-vac-suction-strong" class="w-full h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Turbo</button>
           </div>
         </div>
       </div>
 
       <!-- 3. ENCHUFE INTELIGENTE (SMART LIFE) -->
-      <div id="dom-card-plug" class="bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col transition-colors h-full">
+      <div id="dom-card-plug" class="bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col justify-between transition-colors h-full">
         <div id="dom-plug-glow" class="absolute inset-0 bg-gradient-to-br from-amber-900/15 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none"></div>
 
         <!-- Cabecera Enchufe -->
         <div class="h-10 md:h-11 flex items-center justify-between mb-2 md:mb-2.5 relative z-10 shrink-0">
-          <div class="flex items-center gap-2.5 min-w-0 overflow-hidden">
-            <div id="dom-plug-icon-box" class="w-8 h-8 md:w-8.5 md:h-8.5 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-colors shrink-0">
-              <i id="dom-plug-icon" class="fas fa-plug text-slate-400 text-xs md:text-sm"></i>
+          <div class="flex items-center gap-2 min-w-0 overflow-hidden">
+            <div id="dom-plug-icon-box" class="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-colors shrink-0">
+              <i id="dom-plug-icon" class="fas fa-plug text-slate-400 text-xs"></i>
             </div>
             <div class="min-w-0 overflow-hidden">
               <div class="flex items-center gap-1.5">
-                <span id="dom-plug-title" class="text-xs md:text-[13px] font-black text-white uppercase tracking-wider truncate">Enchufe Inteligente</span>
-                <span id="dom-plug-badge" class="text-[8.5px] md:text-[9px] font-black uppercase px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 shrink-0">Apagado</span>
+                <span id="dom-plug-title" class="text-xs md:text-[12.5px] font-black text-white uppercase tracking-wider truncate">Enchufe Inteligente</span>
+                <span id="dom-plug-badge" class="text-[7.5px] md:text-[8px] font-black uppercase px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 shrink-0">Apagado</span>
               </div>
-              <p id="dom-plug-subtitle" class="text-[9.5px] md:text-[10px] text-slate-400 leading-tight truncate">Sin suministro activo</p>
+              <p id="dom-plug-subtitle" class="text-[8.5px] md:text-[9px] text-slate-400 leading-tight truncate">Sin suministro activo</p>
             </div>
           </div>
 
           <button onclick="domTogglePlug()" id="dom-plug-power-btn" title="Encender / Apagar Enchufe"
-                  class="w-8 h-8 md:w-8.5 md:h-8.5 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 flex items-center justify-center transition-all active:scale-95 shrink-0">
-            <i class="fas fa-power-off text-xs md:text-sm"></i>
+                  class="w-8 h-8 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 flex items-center justify-center transition-all active:scale-95 shrink-0">
+            <i class="fas fa-power-off text-xs"></i>
           </button>
         </div>
 
-        <!-- Botón Central Interactivo del Enchufe -->
-        <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-2 md:p-2.5 relative z-10 flex items-center justify-between gap-3 shrink-0">
-          <div class="flex items-center gap-3">
-            <button onclick="domTogglePlug()" id="dom-plug-big-btn"
-                    class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border-2 border-red-500/40 flex items-center justify-center transition-all active:scale-95 shadow-md shrink-0">
-              <i id="dom-plug-big-icon" class="fas fa-power-off text-base md:text-lg transition-colors"></i>
-            </button>
-            <div>
-              <span class="text-[8px] md:text-[8.5px] font-black uppercase tracking-[0.2em] text-slate-400 block leading-tight">Estado del Relé</span>
-              <span id="dom-plug-state-big" class="text-base md:text-lg font-black mono text-white tracking-tight block">OFF</span>
-              <span id="dom-plug-timer-info" class="text-[9px] md:text-[9.5px] font-bold text-slate-400 block leading-tight mt-0.5">Temporizador: Inactivo</span>
+        <!-- Bloque Central: Estado del Relé y Red -->
+        <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-2 md:p-2.5 relative z-10 shrink-0 space-y-2">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <button onclick="domTogglePlug()" id="dom-plug-big-btn" title="Conmutar Relé"
+                      class="w-9 h-9 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border-2 border-red-500/40 flex items-center justify-center transition-all active:scale-95 shadow-md shrink-0">
+                <i id="dom-plug-big-icon" class="fas fa-power-off text-sm transition-colors"></i>
+              </button>
+              <div>
+                <span class="text-[7.5px] sm:text-[8px] font-black uppercase tracking-[0.2em] text-slate-400 block leading-tight">Estado del Relé</span>
+                <span id="dom-plug-state-big" class="text-sm sm:text-base font-black mono text-white tracking-tight block">OFF</span>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="text-[7.5px] sm:text-[8px] font-bold text-slate-400 uppercase tracking-widest block leading-tight">Tensión / Red</span>
+              <span class="text-[11px] sm:text-xs font-black mono text-slate-200">220V ~ WiFi</span>
             </div>
           </div>
 
-          <div class="text-right">
-            <div>
-              <span class="text-[8px] md:text-[8.5px] font-bold text-slate-400 uppercase tracking-widest block leading-tight">Tensión / Red</span>
-              <span class="text-xs md:text-sm font-black mono text-slate-200">220V ~ WiFi</span>
-            </div>
-            <div class="mt-1">
-              <span class="text-[8px] md:text-[8.5px] font-bold text-slate-400 uppercase tracking-widest block leading-tight">Último cambio</span>
-              <span id="dom-plug-last-change" class="text-[10px] md:text-[11px] font-bold mono text-cyan-400 leading-tight">—</span>
-            </div>
+          <!-- Información de Temporizador y Último Cambio -->
+          <div class="pt-1.5 border-t border-slate-800/80 flex items-center justify-between text-[8px] sm:text-[8.5px]">
+            <span id="dom-plug-timer-info" class="font-bold text-slate-400 truncate">Temporizador: Inactivo</span>
+            <span class="text-slate-500 font-mono text-[8px] shrink-0">Cambio: <span id="dom-plug-last-change" class="text-cyan-400 font-bold">—</span></span>
           </div>
         </div>
 
         <!-- Temporizador rápido (Countdown Smart Life) -->
-        <div class="mt-auto relative z-10 max-w-[340px] md:max-w-[360px] mx-auto w-full">
-          <span class="text-[8px] md:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1 text-center">Temporizador Countdown</span>
-          <div class="grid grid-cols-2 gap-1 md:gap-1.5">
-            <button onclick="domSetTimerPlug(30)" class="h-8 md:h-8.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8.5px] md:text-[9px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">30 min</button>
-            <button onclick="domSetTimerPlug(60)" class="h-8 md:h-8.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8.5px] md:text-[9px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">1 Hora</button>
-            <button onclick="domSetTimerPlug(120)" class="h-8 md:h-8.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8.5px] md:text-[9px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">2 Horas</button>
-            <button onclick="domSetTimerPlug(0)" class="h-8 md:h-8.5 rounded-xl bg-slate-900 hover:bg-red-950/50 border border-slate-800 hover:border-red-500/40 text-[8.5px] md:text-[9px] font-black uppercase tracking-wider text-slate-400 hover:text-red-300 transition-colors flex items-center justify-center">Cancelar</button>
+        <div class="mt-2 relative z-10 w-full shrink-0">
+          <span class="text-[8px] sm:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Temporizador Countdown</span>
+          <div class="grid grid-cols-2 gap-1 sm:gap-1.5">
+            <button onclick="domSetTimerPlug(30)" class="h-7.5 sm:h-8 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">30 min</button>
+            <button onclick="domSetTimerPlug(60)" class="h-7.5 sm:h-8 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">1 Hora</button>
+            <button onclick="domSetTimerPlug(120)" class="h-7.5 sm:h-8 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">2 Horas</button>
+            <button onclick="domSetTimerPlug(0)" class="h-7.5 sm:h-8 rounded-xl bg-slate-900 hover:bg-red-950/50 border border-slate-800 hover:border-red-500/40 text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider text-slate-400 hover:text-red-300 transition-colors flex items-center justify-center">Cancelar</button>
           </div>
         </div>
       </div>
 
       <!-- 4. TELEVISOR ANDROID TV (CONTROLADOR IR - SMART LIFE) -->
-      <div id="dom-card-tv" class="bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col transition-colors h-full">
+      <div id="dom-card-tv" class="bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col justify-between transition-colors h-full">
         <div id="dom-tv-glow" class="absolute inset-0 bg-gradient-to-br from-violet-900/15 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none"></div>
 
         <!-- Cabecera TV (Mando Infrarrojo IR) -->
         <div class="h-10 md:h-11 flex items-center justify-between mb-2 md:mb-2.5 relative z-10 shrink-0">
-          <div class="flex items-center gap-2.5 min-w-0 overflow-hidden">
-            <div id="dom-tv-icon-box" class="w-8 h-8 md:w-8.5 md:h-8.5 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-all shrink-0">
-              <i id="dom-tv-icon" class="fas fa-tv text-violet-400 text-xs md:text-sm"></i>
+          <div class="flex items-center gap-2 min-w-0 overflow-hidden">
+            <div id="dom-tv-icon-box" class="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-all shrink-0">
+              <i id="dom-tv-icon" class="fas fa-tv text-violet-400 text-xs"></i>
             </div>
             <div class="min-w-0 overflow-hidden">
               <div class="flex items-center gap-1.5">
-                <span class="text-xs md:text-[13px] font-black text-white uppercase tracking-wider truncate">Android TV</span>
-                <span class="text-[8.5px] md:text-[9px] font-bold uppercase px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 shrink-0">Hub IR</span>
+                <span class="text-xs md:text-[12.5px] font-black text-white uppercase tracking-wider truncate">Android TV</span>
+                <span class="text-[7.5px] md:text-[8px] font-bold uppercase px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 shrink-0">Hub IR</span>
               </div>
-              <p id="dom-tv-subtitle" class="text-[9.5px] md:text-[10px] text-slate-400 leading-tight truncate">Mando Infrarrojo · Listo para enviar señal</p>
+              <p id="dom-tv-subtitle" class="text-[8.5px] md:text-[9px] text-slate-400 leading-tight truncate">Mando Infrarrojo · Listo para enviar señal</p>
             </div>
           </div>
 
           <button onclick="domToggleTV()" id="dom-tv-power-btn" title="Encender / Apagar TV"
-                  class="w-8 h-8 md:w-8.5 md:h-8.5 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 flex items-center justify-center transition-all active:scale-95 shrink-0">
-            <i class="fas fa-power-off text-xs md:text-sm"></i>
+                  class="w-8 h-8 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 flex items-center justify-center transition-all active:scale-95 shrink-0">
+            <i class="fas fa-power-off text-xs"></i>
           </button>
         </div>
 
-        <!-- Barra: Botón Home (Arriba) + Volumen Compacto a la Derecha -->
-        <div class="flex items-center justify-between gap-2 bg-slate-900/70 rounded-xl border border-slate-800 p-2 md:p-2.5 relative z-10 shrink-0">
-          <button onclick="domCmdTV('home')" class="h-7 md:h-7.5 px-3 rounded-lg bg-violet-600/20 hover:bg-violet-600 active:scale-95 text-violet-300 hover:text-white border border-violet-500/40 text-[9px] md:text-[9.5px] font-black uppercase tracking-wider flex items-center gap-1.5 transition-all">
+        <!-- Barra: Botón Home + Volumen Compacto -->
+        <div class="flex items-center justify-between gap-1.5 bg-slate-900/70 rounded-xl border border-slate-800 p-2 md:p-2.5 relative z-10 shrink-0">
+          <button onclick="domCmdTV('home')" class="h-7 sm:h-7.5 px-2.5 rounded-lg bg-violet-600/20 hover:bg-violet-600 active:scale-95 text-violet-300 hover:text-white border border-violet-500/40 text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center gap-1.5 transition-all">
             <i class="fas fa-home text-xs"></i>
-            <span>Inicio (Home)</span>
+            <span>Home</span>
           </button>
 
           <!-- Control de Volumen compacto a la derecha -->
@@ -4310,9 +4303,9 @@
                     class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 flex items-center justify-center transition-all active:scale-95">
               <i class="fas fa-minus text-[7.5px]"></i>
             </button>
-            <div class="px-1 text-center min-w-[28px]">
+            <div class="px-1 text-center min-w-[24px]">
               <span class="text-[6px] font-black uppercase tracking-widest text-slate-500 block leading-none">VOL</span>
-              <span id="dom-tv-vol-val" class="text-[10.5px] md:text-xs font-black mono text-violet-400 leading-none">18</span>
+              <span id="dom-tv-vol-val" class="text-[10px] sm:text-[10.5px] font-black mono text-violet-400 leading-none">18</span>
             </div>
             <button onclick="domCmdTV('vol_up')" title="Subir Volumen"
                     class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 flex items-center justify-center transition-all active:scale-95">
@@ -4321,44 +4314,44 @@
           </div>
         </div>
 
-        <!-- Panel de Aplicaciones Android TV (2 filas de 4 apps) -->
-        <div class="mt-auto relative z-10 max-w-[460px] mx-auto w-full">
+        <!-- Panel de Aplicaciones Android TV (2 columnas de apps hacia abajo) -->
+        <div class="mt-2 relative z-10 w-full shrink-0">
           <div class="flex items-center justify-between mb-1">
-            <span class="text-[8px] md:text-[8.5px] font-black text-slate-400 uppercase tracking-widest">Aplicaciones Android TV</span>
-            <span id="dom-tv-active-app-badge" class="text-[8px] md:text-[8.5px] font-bold text-slate-400 uppercase tracking-wider">Macros IR</span>
+            <span class="text-[8px] sm:text-[8.5px] font-black text-slate-400 uppercase tracking-widest">Aplicaciones TV</span>
+            <span id="dom-tv-active-app-badge" class="text-[7.5px] sm:text-[8px] font-bold text-slate-400 uppercase tracking-wider">Macros IR</span>
           </div>
-          <div class="grid grid-cols-4 gap-1.5 md:gap-2">
-            <button onclick="domAbrirAppTV('flow')" id="dom-tv-app-flow" class="group h-9.5 md:h-10 px-1.5 rounded-xl bg-slate-900/90 hover:bg-emerald-950/40 border border-slate-800 hover:border-emerald-500/50 flex items-center justify-center gap-1.5 transition-all active:scale-95">
-              <i class="fas fa-play-circle text-emerald-400 text-xs md:text-sm shrink-0"></i>
-              <span class="text-[8.5px] md:text-[9px] font-black text-white uppercase tracking-wider block truncate">Flow</span>
+          <div class="grid grid-cols-2 gap-1 sm:gap-1.5">
+            <button onclick="domAbrirAppTV('flow')" id="dom-tv-app-flow" class="group h-7.5 sm:h-8 px-2 rounded-xl bg-slate-900/90 hover:bg-emerald-950/40 border border-slate-800 hover:border-emerald-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
+              <i class="fas fa-play-circle text-emerald-400 text-xs shrink-0"></i>
+              <span class="text-[8px] sm:text-[8.5px] font-black text-white uppercase tracking-wider truncate">Flow</span>
             </button>
-            <button onclick="domAbrirAppTV('youtube')" id="dom-tv-app-youtube" class="group h-9.5 md:h-10 px-1.5 rounded-xl bg-slate-900/90 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-500/50 flex items-center justify-center gap-1.5 transition-all active:scale-95">
-              <i class="fab fa-youtube text-rose-500 text-xs md:text-sm shrink-0"></i>
-              <span class="text-[8.5px] md:text-[9px] font-black text-white uppercase tracking-wider block truncate">YouTube</span>
+            <button onclick="domAbrirAppTV('youtube')" id="dom-tv-app-youtube" class="group h-7.5 sm:h-8 px-2 rounded-xl bg-slate-900/90 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
+              <i class="fab fa-youtube text-rose-500 text-xs shrink-0"></i>
+              <span class="text-[8px] sm:text-[8.5px] font-black text-white uppercase tracking-wider truncate">YouTube</span>
             </button>
-            <button onclick="domAbrirAppTV('stremio')" id="dom-tv-app-stremio" class="group h-9.5 md:h-10 px-1.5 rounded-xl bg-slate-900/90 hover:bg-violet-950/40 border border-slate-800 hover:border-violet-500/50 flex items-center justify-center gap-1.5 transition-all active:scale-95">
-              <i class="fas fa-play text-violet-400 text-xs md:text-sm shrink-0"></i>
-              <span class="text-[8.5px] md:text-[9px] font-black text-white uppercase tracking-wider block truncate">Stremio</span>
+            <button onclick="domAbrirAppTV('stremio')" id="dom-tv-app-stremio" class="group h-7.5 sm:h-8 px-2 rounded-xl bg-slate-900/90 hover:bg-violet-950/40 border border-slate-800 hover:border-violet-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
+              <i class="fas fa-play text-violet-400 text-xs shrink-0"></i>
+              <span class="text-[8px] sm:text-[8.5px] font-black text-white uppercase tracking-wider truncate">Stremio</span>
             </button>
-            <button onclick="domAbrirAppTV('disney')" id="dom-tv-app-disney" class="group h-9.5 md:h-10 px-1.5 rounded-xl bg-slate-900/90 hover:bg-blue-950/40 border border-slate-800 hover:border-blue-500/50 flex items-center justify-center gap-1.5 transition-all active:scale-95">
-              <i class="fas fa-star text-blue-400 text-xs md:text-sm shrink-0"></i>
-              <span class="text-[8.5px] md:text-[9px] font-black text-white uppercase tracking-wider block truncate">Disney+</span>
+            <button onclick="domAbrirAppTV('disney')" id="dom-tv-app-disney" class="group h-7.5 sm:h-8 px-2 rounded-xl bg-slate-900/90 hover:bg-blue-950/40 border border-slate-800 hover:border-blue-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
+              <i class="fas fa-star text-blue-400 text-xs shrink-0"></i>
+              <span class="text-[8px] sm:text-[8.5px] font-black text-white uppercase tracking-wider truncate">Disney+</span>
             </button>
-            <button onclick="domAbrirAppTV('paramount')" id="dom-tv-app-paramount" class="group h-9.5 md:h-10 px-1.5 rounded-xl bg-slate-900/90 hover:bg-sky-950/40 border border-slate-800 hover:border-sky-500/50 flex items-center justify-center gap-1.5 transition-all active:scale-95">
-              <i class="fas fa-mountain text-sky-400 text-xs md:text-sm shrink-0"></i>
-              <span class="text-[8.5px] md:text-[9px] font-black text-white uppercase tracking-wider block truncate">Paramount</span>
+            <button onclick="domAbrirAppTV('paramount')" id="dom-tv-app-paramount" class="group h-7.5 sm:h-8 px-2 rounded-xl bg-slate-900/90 hover:bg-sky-950/40 border border-slate-800 hover:border-sky-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
+              <i class="fas fa-mountain text-sky-400 text-xs shrink-0"></i>
+              <span class="text-[8px] sm:text-[8.5px] font-black text-white uppercase tracking-wider truncate">Paramount</span>
             </button>
-            <button onclick="domAbrirAppTV('netflix')" id="dom-tv-app-netflix" class="group h-9.5 md:h-10 px-1.5 rounded-xl bg-slate-900/90 hover:bg-red-950/40 border border-slate-800 hover:border-red-500/50 flex items-center justify-center gap-1.5 transition-all active:scale-95">
-              <span class="font-black text-red-500 text-xs md:text-sm mono shrink-0">N</span>
-              <span class="text-[8.5px] md:text-[9px] font-black text-white uppercase tracking-wider block truncate">Netflix</span>
+            <button onclick="domAbrirAppTV('netflix')" id="dom-tv-app-netflix" class="group h-7.5 sm:h-8 px-2 rounded-xl bg-slate-900/90 hover:bg-red-950/40 border border-slate-800 hover:border-red-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
+              <span class="font-black text-red-500 text-xs mono shrink-0">N</span>
+              <span class="text-[8px] sm:text-[8.5px] font-black text-white uppercase tracking-wider truncate">Netflix</span>
             </button>
-            <button onclick="domAbrirAppTV('ytmusic')" id="dom-tv-app-ytmusic" class="group h-9.5 md:h-10 px-1.5 rounded-xl bg-slate-900/90 hover:bg-pink-950/40 border border-slate-800 hover:border-pink-500/50 flex items-center justify-center gap-1.5 transition-all active:scale-95">
-              <i class="fas fa-compact-disc text-pink-400 text-xs md:text-sm shrink-0"></i>
-              <span class="text-[8.5px] md:text-[9px] font-black text-white uppercase tracking-wider block truncate">YT Music</span>
+            <button onclick="domAbrirAppTV('ytmusic')" id="dom-tv-app-ytmusic" class="group h-7.5 sm:h-8 px-2 rounded-xl bg-slate-900/90 hover:bg-pink-950/40 border border-slate-800 hover:border-pink-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
+              <i class="fas fa-compact-disc text-pink-400 text-xs shrink-0"></i>
+              <span class="text-[8px] sm:text-[8.5px] font-black text-white uppercase tracking-wider truncate">YT Music</span>
             </button>
-            <button onclick="domAbrirAppTV('kick')" id="dom-tv-app-kick" class="group h-9.5 md:h-10 px-1.5 rounded-xl bg-slate-900/90 hover:bg-lime-950/40 border border-slate-800 hover:border-lime-500/50 flex items-center justify-center gap-1.5 transition-all active:scale-95">
-              <span class="font-black text-lime-400 text-xs md:text-sm mono shrink-0">K</span>
-              <span class="text-[8.5px] md:text-[9px] font-black text-white uppercase tracking-wider block truncate">Kick</span>
+            <button onclick="domAbrirAppTV('kick')" id="dom-tv-app-kick" class="group h-7.5 sm:h-8 px-2 rounded-xl bg-slate-900/90 hover:bg-lime-950/40 border border-slate-800 hover:border-lime-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
+              <span class="font-black text-lime-400 text-xs mono shrink-0">K</span>
+              <span class="text-[8px] sm:text-[8.5px] font-black text-white uppercase tracking-wider truncate">Kick</span>
             </button>
           </div>
         </div>
@@ -17986,13 +17979,13 @@ function renderDomoticaUI() {
   if (acTemp) acTemp.textContent = ac.temp;
   if (acModePill) acModePill.textContent = (modeLabels[ac.mode] || modeLabels.cool).txt;
   if (acFanPill) acFanPill.textContent = `🌀 Fan: ${fanLabels[ac.fan] || 'Auto'}${ac.swing ? ' • Swing' : ''}`;
-  if (acCard) acCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col transition-colors h-full';
+  if (acCard) acCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col justify-between transition-colors h-full';
 
   ['cool', 'heat', 'auto', 'fan', 'dry'].forEach(m => {
     const btn = document.getElementById('dom-ac-mode-' + m);
     if (!btn) return;
     const active = ac.mode === m;
-    btn.className = `h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all ${
+    btn.className = `h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all ${
       active ? 'bg-cyan-600/25 border-cyan-400 text-cyan-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
     }`;
   });
@@ -18001,14 +17994,14 @@ function renderDomoticaUI() {
     const btn = document.getElementById('dom-ac-fan-' + f);
     if (!btn) return;
     const active = ac.fan === f;
-    btn.className = `h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
+    btn.className = `h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
       active ? 'bg-cyan-600/25 border-cyan-400 text-cyan-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
     }`;
   });
 
   const swingBtn = document.getElementById('dom-ac-swing-btn');
   if (swingBtn) {
-    swingBtn.className = `h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1 ${
+    swingBtn.className = `h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1 ${
       ac.swing ? 'bg-cyan-600/25 border-cyan-400 text-cyan-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
     }`;
   }
@@ -18070,7 +18063,7 @@ function renderDomoticaUI() {
   if (vacSub) vacSub.textContent = vInfo.sub;
   if (vacStateTxt) {
     vacStateTxt.textContent = vInfo.state;
-    vacStateTxt.className = `text-xs font-black uppercase mt-1 block ${vInfo.color}`;
+    vacStateTxt.className = `text-[10.5px] sm:text-[11px] font-black uppercase block leading-tight mt-0.5 ${vInfo.color}`;
   }
   if (vacBat) vacBat.textContent = `${vac.battery}%`;
   if (vacBatIcon) {
@@ -18085,27 +18078,27 @@ function renderDomoticaUI() {
   const vacIconBox = document.getElementById('dom-vac-icon-box');
   if (vacIconBox) {
     vacIconBox.className = vInfo.active
-      ? 'w-8 h-8 md:w-8.5 md:h-8.5 rounded-xl bg-emerald-900/40 border border-emerald-500/30 flex items-center justify-center transition-colors shrink-0'
-      : 'w-8 h-8 md:w-8.5 md:h-8.5 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-all shrink-0';
+      ? 'w-8 h-8 rounded-xl bg-emerald-900/40 border border-emerald-500/30 flex items-center justify-center transition-colors shrink-0'
+      : 'w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-all shrink-0';
   }
 
   if (vInfo.active) {
-    if (vacCard) vacCard.className = 'bg-black rounded-2xl border border-emerald-500/50 p-3 md:p-3.5 relative overflow-hidden flex flex-col transition-colors shadow-md shadow-emerald-950/30 h-full';
+    if (vacCard) vacCard.className = 'bg-black rounded-2xl border border-emerald-500/50 p-3 md:p-3.5 relative overflow-hidden flex flex-col justify-between transition-colors shadow-md shadow-emerald-950/30 h-full';
     if (vacGlow) vacGlow.classList.replace('opacity-0', 'opacity-100');
     if (vacPowerBtn) vacPowerBtn.className = redPowerOnClass;
-    if (vacStartBtn) vacStartBtn.className = 'h-7 md:h-7.5 py-0.5 px-1 rounded-lg bg-red-600 hover:bg-red-500 text-white border border-red-400/50 font-black text-[9px] md:text-[9.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-md shadow-red-600/30';
+    if (vacStartBtn) vacStartBtn.className = 'h-7.5 sm:h-8 py-0.5 px-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white border border-red-400/50 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-md shadow-red-600/30';
   } else {
-    if (vacCard) vacCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col transition-colors h-full';
+    if (vacCard) vacCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col justify-between transition-colors h-full';
     if (vacGlow) vacGlow.classList.replace('opacity-100', 'opacity-0');
     if (vacPowerBtn) vacPowerBtn.className = redPowerOffClass;
-    if (vacStartBtn) vacStartBtn.className = 'h-7 md:h-7.5 py-0.5 px-1 rounded-lg bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 font-black text-[9px] md:text-[9.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95';
+    if (vacStartBtn) vacStartBtn.className = 'h-7.5 sm:h-8 py-0.5 px-1.5 rounded-lg bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95';
   }
 
   ['smart', 'wall_follow', 'spiral', 'single'].forEach(m => {
     const btn = document.getElementById('dom-vac-mode-' + m);
     if (!btn) return;
     const active = vac.mode === m;
-    btn.className = `h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
+    btn.className = `h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
       active ? 'bg-emerald-600/25 border-emerald-400 text-emerald-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
     }`;
   });
@@ -18115,7 +18108,7 @@ function renderDomoticaUI() {
     if (!btn) return;
     const active = vac.suction === s;
     const baseW = s === 'strong' ? 'w-full ' : '';
-    btn.className = `${baseW}h-8 md:h-8.5 rounded-xl border text-[8.5px] md:text-[9px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
+    btn.className = `${baseW}h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
       active ? 'bg-emerald-600/25 border-emerald-400 text-emerald-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
     }`;
   });
@@ -18143,45 +18136,45 @@ function renderDomoticaUI() {
   }
 
   if (plug.power) {
-    if (plugCard) plugCard.className = 'bg-black rounded-2xl border border-amber-500/50 p-3 md:p-3.5 relative overflow-hidden flex flex-col transition-colors shadow-md shadow-amber-950/30 h-full';
+    if (plugCard) plugCard.className = 'bg-black rounded-2xl border border-amber-500/50 p-3 md:p-3.5 relative overflow-hidden flex flex-col justify-between transition-colors shadow-md shadow-amber-950/30 h-full';
     if (plugGlow) plugGlow.classList.replace('opacity-0', 'opacity-100');
-    if (plugIconBox) plugIconBox.className = 'w-8 h-8 md:w-8.5 md:h-8.5 rounded-xl bg-amber-900/50 border border-amber-500/40 flex items-center justify-center transition-colors shrink-0';
-    if (plugIcon) plugIcon.className = 'fas fa-plug text-amber-400 text-xs md:text-sm';
+    if (plugIconBox) plugIconBox.className = 'w-8 h-8 rounded-xl bg-amber-900/50 border border-amber-500/40 flex items-center justify-center transition-colors shrink-0';
+    if (plugIcon) plugIcon.className = 'fas fa-plug text-amber-400 text-xs';
     if (plugBadge) {
-      plugBadge.className = 'text-[8.5px] md:text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40';
+      plugBadge.className = 'text-[7.5px] sm:text-[8px] font-black uppercase px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40';
       plugBadge.textContent = 'Encendido';
     }
     if (plugSub) plugSub.innerHTML = '<span class="text-amber-400 font-bold">Suministro activo</span> — Corriente habilitada';
     if (plugPowerBtn) plugPowerBtn.className = redPowerOnClass;
-    if (plugBigBtn) plugBigBtn.className = 'w-10 h-10 md:w-11 md:h-11 rounded-xl bg-red-600 hover:bg-red-500 text-white border-2 border-red-400 flex items-center justify-center transition-all active:scale-95 shadow-md shadow-red-600/30 shrink-0';
-    if (plugBigIcon) plugBigIcon.className = 'fas fa-power-off text-base md:text-lg text-white transition-colors';
+    if (plugBigBtn) plugBigBtn.className = 'w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-red-600 hover:bg-red-500 text-white border-2 border-red-400 flex items-center justify-center transition-all active:scale-95 shadow-md shadow-red-600/30 shrink-0';
+    if (plugBigIcon) plugBigIcon.className = 'fas fa-power-off text-sm sm:text-base text-white transition-colors';
     if (plugStateBig) {
       plugStateBig.textContent = 'ENCENDIDO';
-      plugStateBig.className = 'text-base md:text-lg font-black mono text-amber-400 tracking-tight block';
+      plugStateBig.className = 'text-sm sm:text-base font-black mono text-amber-400 tracking-tight block';
     }
   } else {
-    if (plugCard) plugCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col transition-colors h-full';
+    if (plugCard) plugCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col justify-between transition-colors h-full';
     if (plugGlow) plugGlow.classList.replace('opacity-100', 'opacity-0');
-    if (plugIconBox) plugIconBox.className = 'w-8 h-8 md:w-8.5 md:h-8.5 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-colors shrink-0';
-    if (plugIcon) plugIcon.className = 'fas fa-plug text-slate-400 text-xs md:text-sm';
+    if (plugIconBox) plugIconBox.className = 'w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-colors shrink-0';
+    if (plugIcon) plugIcon.className = 'fas fa-plug text-slate-400 text-xs';
     if (plugBadge) {
-      plugBadge.className = 'text-[8.5px] md:text-[9px] font-black uppercase px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700';
+      plugBadge.className = 'text-[7.5px] sm:text-[8px] font-black uppercase px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700';
       plugBadge.textContent = 'Apagado';
     }
     if (plugSub) plugSub.textContent = 'Sin suministro activo';
     if (plugPowerBtn) plugPowerBtn.className = redPowerOffClass;
-    if (plugBigBtn) plugBigBtn.className = 'w-10 h-10 md:w-11 md:h-11 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border-2 border-red-500/40 flex items-center justify-center transition-all active:scale-95 shadow-md shrink-0';
-    if (plugBigIcon) plugBigIcon.className = 'fas fa-power-off text-base md:text-lg transition-colors';
+    if (plugBigBtn) plugBigBtn.className = 'w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border-2 border-red-500/40 flex items-center justify-center transition-all active:scale-95 shadow-md shrink-0';
+    if (plugBigIcon) plugBigIcon.className = 'fas fa-power-off text-sm sm:text-base transition-colors';
     if (plugStateBig) {
       plugStateBig.textContent = 'APAGADO';
-      plugStateBig.className = 'text-base md:text-lg font-black mono text-slate-400 tracking-tight block';
+      plugStateBig.className = 'text-sm sm:text-base font-black mono text-slate-400 tracking-tight block';
     }
   }
 
   // 4. Render Televisor Android TV (Mando Infrarrojo IR - Sin estado ciego)
   const tvCard = document.getElementById('dom-card-tv');
   if (tvCard) {
-    tvCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col transition-colors h-full';
+    tvCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col justify-between transition-colors h-full';
   }
 }
 
