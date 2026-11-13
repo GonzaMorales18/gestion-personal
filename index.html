@@ -3971,7 +3971,7 @@
   </main>
 
   <!-- SECCIÓN DOMÓTICA (SMART LIFE / TUYA) -->
-  <main id="section-domotica" class="hidden p-3 md:p-4 max-w-[1440px] mx-auto w-full md:min-h-[calc(100vh-4rem)] md:flex md:flex-col md:justify-between space-y-2.5 md:space-y-3 overflow-y-auto">
+  <main id="section-domotica" class="hidden p-3 md:p-4 max-w-[1440px] mx-auto w-full space-y-3.5 overflow-y-auto">
 
     <!-- Escenas Rápidas (Tap-to-Run) -->
     <div class="shrink-0">
@@ -4011,13 +4011,13 @@
       </div>
     </div>
 
-    <!-- Grid Principal de Artefactos (4 tarjetas verticales en una misma fila) -->
-    <div class="md:flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 md:gap-3.5">
+    <!-- Grid Principal de Artefactos (4 columnas verticales independientes alineadas arriba) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-start gap-2.5 md:gap-3.5">
 
       <!-- 1. AIRE ACONDICIONADO (MANDO INFRARROJO IR) -->
-      <div id="dom-card-ac" class="bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col justify-between transition-colors h-full">
+      <div id="dom-card-ac" class="bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col transition-colors">
         <!-- Cabecera A/C: Título y estado arriba -->
-        <div class="h-10 md:h-11 flex items-center justify-between mb-2 md:mb-2.5 relative z-10 shrink-0">
+        <div class="h-10 flex items-center justify-between relative z-10 shrink-0">
           <div class="flex items-center gap-2 min-w-0 overflow-hidden">
             <div id="dom-ac-icon-box" class="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-all shrink-0">
               <i id="dom-ac-icon" class="fas fa-snowflake text-cyan-400 text-xs"></i>
@@ -4037,8 +4037,8 @@
           </button>
         </div>
 
-        <!-- Display Central de Temperatura y Accesos Rápidos -->
-        <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-2 md:p-2.5 relative z-10 shrink-0 space-y-1.5">
+        <!-- Apartado 1: Display Central de Temperatura y Accesos Rápidos (mt-3 exacto) -->
+        <div class="mt-3 bg-slate-900/70 rounded-xl border border-slate-800 p-2 md:p-2.5 relative z-10 shrink-0 space-y-1.5">
           <!-- Control de temperatura con +/- y Pills de estado -->
           <div class="flex items-center justify-between gap-1.5">
             <div class="flex items-center gap-1.5">
@@ -4072,9 +4072,9 @@
           </div>
         </div>
 
-        <!-- Modo de Operación (Hacia abajo) -->
-        <div class="mt-2 relative z-10 w-full shrink-0">
-          <span class="text-[8px] sm:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Modo de Operación</span>
+        <!-- Apartado 2: Modo de Operación (mt-3 exacto) -->
+        <div class="mt-3 relative z-10 w-full shrink-0">
+          <span class="text-[8px] sm:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1.5">Modo de Operación</span>
           <div class="grid grid-cols-3 gap-1 sm:gap-1.5">
             <button onclick="domSetModoAC('cool')" id="dom-ac-mode-cool" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
               <i class="fas fa-snowflake text-[8px]"></i><span>Frío</span>
@@ -4086,7 +4086,7 @@
               <i class="fas fa-magic text-[8px]"></i><span>Auto</span>
             </button>
           </div>
-          <div class="grid grid-cols-2 gap-1 sm:gap-1.5 mt-1">
+          <div class="grid grid-cols-2 gap-1 sm:gap-1.5 mt-1 sm:mt-1.5">
             <button onclick="domSetModoAC('fan')" id="dom-ac-mode-fan" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
               <i class="fas fa-fan text-[8px]"></i><span>Ventilador</span>
             </button>
@@ -4096,15 +4096,15 @@
           </div>
         </div>
 
-        <!-- Velocidad y Swing (Más para abajo) -->
-        <div class="mt-2 relative z-10 w-full shrink-0">
-          <span class="text-[8px] sm:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Velocidad y Swing</span>
+        <!-- Apartado 3: Velocidad y Swing (mt-3 exacto) -->
+        <div class="mt-3 relative z-10 w-full shrink-0">
+          <span class="text-[8px] sm:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1.5">Velocidad y Swing</span>
           <div class="grid grid-cols-3 gap-1 sm:gap-1.5">
             <button onclick="domSetFanAC('auto')" id="dom-ac-fan-auto" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Auto</button>
             <button onclick="domSetFanAC('low')" id="dom-ac-fan-low" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Baja</button>
             <button onclick="domSetFanAC('med')" id="dom-ac-fan-med" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Media</button>
           </div>
-          <div class="grid grid-cols-2 gap-1 sm:gap-1.5 mt-1">
+          <div class="grid grid-cols-2 gap-1 sm:gap-1.5 mt-1 sm:mt-1.5">
             <button onclick="domSetFanAC('high')" id="dom-ac-fan-high" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Alta</button>
             <button onclick="domToggleSwingAC()" id="dom-ac-swing-btn" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1">
               <i class="fas fa-arrows-alt-v text-[8px]"></i><span>Swing</span>
@@ -4114,11 +4114,11 @@
       </div>
 
       <!-- 2. ASPIRADORA ROBOT (SMART LIFE / TUYA) -->
-      <div id="dom-card-vacuum" class="bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col justify-between transition-colors h-full">
+      <div id="dom-card-vacuum" class="bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col transition-colors">
         <div id="dom-vac-glow" class="absolute inset-0 bg-gradient-to-br from-emerald-900/15 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none"></div>
 
         <!-- Cabecera Aspiradora: Título, estado y batería -->
-        <div class="h-10 md:h-11 flex items-center justify-between mb-2 md:mb-2.5 relative z-10 shrink-0">
+        <div class="h-10 flex items-center justify-between relative z-10 shrink-0">
           <div class="flex items-center gap-2 min-w-0 overflow-hidden">
             <div id="dom-vac-icon-box" class="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-all shrink-0">
               <i id="dom-vac-icon" class="fas fa-robot text-emerald-400 text-xs"></i>
@@ -4146,8 +4146,8 @@
           </div>
         </div>
 
-        <!-- Métricas: Estado de Carga, Área y Tiempo -->
-        <div class="grid grid-cols-3 gap-1 sm:gap-1.5 relative z-10 shrink-0">
+        <!-- Apartado 1: Métricas de Carga, Área y Tiempo (mt-3 exacto) -->
+        <div class="mt-3 grid grid-cols-3 gap-1 sm:gap-1.5 relative z-10 shrink-0">
           <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-1 md:p-1.5 text-center">
             <span class="text-[7.5px] sm:text-[8px] font-bold text-slate-400 uppercase tracking-widest block leading-none">Estado</span>
             <span id="dom-vac-state-text" class="text-[10.5px] sm:text-[11px] font-black text-emerald-400 uppercase block leading-tight mt-0.5">Cargada</span>
@@ -4162,9 +4162,9 @@
           </div>
         </div>
 
-        <!-- Acciones Principales: Iniciar, Pausar, Base, Buscar -->
-        <div class="mt-2 relative z-10 w-full shrink-0">
-          <span class="text-[8px] sm:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Controles de Limpieza</span>
+        <!-- Apartado 2: Acciones Principales (mt-3 exacto) -->
+        <div class="mt-3 relative z-10 w-full shrink-0">
+          <span class="text-[8px] sm:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1.5">Controles de Limpieza</span>
           <div class="grid grid-cols-2 gap-1 sm:gap-1.5">
             <button onclick="domAccionAspiradora('start')" id="dom-vac-btn-start" class="h-7.5 sm:h-8 py-0.5 px-1.5 rounded-lg bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95">
               <i class="fas fa-power-off text-[8px]"></i>
@@ -4185,25 +4185,23 @@
           </div>
         </div>
 
-        <!-- Potencia de Succión (Únicamente estas tres opciones hacia abajo) -->
-        <div class="mt-2 relative z-10 w-full shrink-0">
-          <span class="text-[8px] sm:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Potencia de Succión</span>
-          <div class="grid grid-cols-2 gap-1 sm:gap-1.5">
+        <!-- Apartado 3: Potencia de Succión (mt-3 exacto, 3 opciones compactas en fila) -->
+        <div class="mt-3 relative z-10 w-full shrink-0">
+          <span class="text-[8px] sm:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1.5">Potencia de Succión</span>
+          <div class="grid grid-cols-3 gap-1 sm:gap-1.5">
             <button onclick="domSetSuccionAspiradora('gentle')" id="dom-vac-suction-gentle" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Silencioso</button>
             <button onclick="domSetSuccionAspiradora('normal')" id="dom-vac-suction-normal" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Estándar</button>
-          </div>
-          <div class="mt-1">
-            <button onclick="domSetSuccionAspiradora('strong')" id="dom-vac-suction-strong" class="w-full h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Turbo</button>
+            <button onclick="domSetSuccionAspiradora('strong')" id="dom-vac-suction-strong" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Turbo</button>
           </div>
         </div>
       </div>
 
       <!-- 3. ENCHUFE INTELIGENTE (SMART LIFE) -->
-      <div id="dom-card-plug" class="bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col justify-between transition-colors h-full">
+      <div id="dom-card-plug" class="bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col transition-colors">
         <div id="dom-plug-glow" class="absolute inset-0 bg-gradient-to-br from-amber-900/15 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none"></div>
 
-        <!-- Cabecera Enchufe -->
-        <div class="h-10 md:h-11 flex items-center justify-between mb-2 md:mb-2.5 relative z-10 shrink-0">
+        <!-- Cabecera Enchufe: Mismo botón arriba a la derecha que todos -->
+        <div class="h-10 flex items-center justify-between relative z-10 shrink-0">
           <div class="flex items-center gap-2 min-w-0 overflow-hidden">
             <div id="dom-plug-icon-box" class="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-colors shrink-0">
               <i id="dom-plug-icon" class="fas fa-plug text-slate-400 text-xs"></i>
@@ -4217,28 +4215,23 @@
             </div>
           </div>
 
+          <!-- Botón de Encendido Único (Arriba a la derecha) -->
           <button onclick="domTogglePlug()" id="dom-plug-power-btn" title="Encender / Apagar Enchufe"
                   class="w-8 h-8 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 flex items-center justify-center transition-all active:scale-95 shrink-0">
             <i class="fas fa-power-off text-xs"></i>
           </button>
         </div>
 
-        <!-- Bloque Central: Estado del Relé y Red -->
-        <div class="bg-slate-900/70 rounded-xl border border-slate-800 p-2 md:p-2.5 relative z-10 shrink-0 space-y-2">
-          <div class="flex items-center justify-between gap-2">
-            <div class="flex items-center gap-2.5">
-              <button onclick="domTogglePlug()" id="dom-plug-big-btn" title="Conmutar Relé"
-                      class="w-9 h-9 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border-2 border-red-500/40 flex items-center justify-center transition-all active:scale-95 shadow-md shrink-0">
-                <i id="dom-plug-big-icon" class="fas fa-power-off text-sm transition-colors"></i>
-              </button>
-              <div>
-                <span class="text-[7.5px] sm:text-[8px] font-black uppercase tracking-[0.2em] text-slate-400 block leading-tight">Estado del Relé</span>
-                <span id="dom-plug-state-big" class="text-sm sm:text-base font-black mono text-white tracking-tight block">OFF</span>
-              </div>
+        <!-- Apartado 1: Estado del Relé y Red (mt-3 exacto, sin el botón duplicado) -->
+        <div class="mt-3 bg-slate-900/70 rounded-xl border border-slate-800 p-2 md:p-2.5 relative z-10 shrink-0 space-y-1.5">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-[7.5px] sm:text-[8px] font-black uppercase tracking-[0.2em] text-slate-400 block leading-tight">Estado del Relé</span>
+              <span id="dom-plug-state-big" class="text-xs sm:text-sm font-black mono text-slate-400 tracking-tight block mt-0.5">APAGADO</span>
             </div>
             <div class="text-right">
               <span class="text-[7.5px] sm:text-[8px] font-bold text-slate-400 uppercase tracking-widest block leading-tight">Tensión / Red</span>
-              <span class="text-[11px] sm:text-xs font-black mono text-slate-200">220V ~ WiFi</span>
+              <span class="text-[10.5px] sm:text-xs font-black mono text-slate-200 block mt-0.5">220V ~ WiFi</span>
             </div>
           </div>
 
@@ -4249,9 +4242,9 @@
           </div>
         </div>
 
-        <!-- Temporizador rápido (Countdown Smart Life) -->
-        <div class="mt-2 relative z-10 w-full shrink-0">
-          <span class="text-[8px] sm:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1">Temporizador Countdown</span>
+        <!-- Apartado 2: Temporizador Countdown (mt-3 exacto) -->
+        <div class="mt-3 relative z-10 w-full shrink-0">
+          <span class="text-[8px] sm:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1.5">Temporizador Countdown</span>
           <div class="grid grid-cols-2 gap-1 sm:gap-1.5">
             <button onclick="domSetTimerPlug(30)" class="h-7.5 sm:h-8 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">30 min</button>
             <button onclick="domSetTimerPlug(60)" class="h-7.5 sm:h-8 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">1 Hora</button>
@@ -4262,11 +4255,11 @@
       </div>
 
       <!-- 4. TELEVISOR ANDROID TV (CONTROLADOR IR - SMART LIFE) -->
-      <div id="dom-card-tv" class="bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col justify-between transition-colors h-full">
+      <div id="dom-card-tv" class="bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col transition-colors">
         <div id="dom-tv-glow" class="absolute inset-0 bg-gradient-to-br from-violet-900/15 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none"></div>
 
         <!-- Cabecera TV (Mando Infrarrojo IR) -->
-        <div class="h-10 md:h-11 flex items-center justify-between mb-2 md:mb-2.5 relative z-10 shrink-0">
+        <div class="h-10 flex items-center justify-between relative z-10 shrink-0">
           <div class="flex items-center gap-2 min-w-0 overflow-hidden">
             <div id="dom-tv-icon-box" class="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-all shrink-0">
               <i id="dom-tv-icon" class="fas fa-tv text-violet-400 text-xs"></i>
@@ -4286,8 +4279,8 @@
           </button>
         </div>
 
-        <!-- Barra: Botón Home + Volumen Compacto -->
-        <div class="flex items-center justify-between gap-1.5 bg-slate-900/70 rounded-xl border border-slate-800 p-2 md:p-2.5 relative z-10 shrink-0">
+        <!-- Apartado 1: Botón Home + Volumen Compacto (mt-3 exacto) -->
+        <div class="mt-3 flex items-center justify-between gap-1.5 bg-slate-900/70 rounded-xl border border-slate-800 p-2 md:p-2.5 relative z-10 shrink-0">
           <button onclick="domCmdTV('home')" class="h-7 sm:h-7.5 px-2.5 rounded-lg bg-violet-600/20 hover:bg-violet-600 active:scale-95 text-violet-300 hover:text-white border border-violet-500/40 text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center gap-1.5 transition-all">
             <i class="fas fa-home text-xs"></i>
             <span>Home</span>
@@ -4314,9 +4307,9 @@
           </div>
         </div>
 
-        <!-- Panel de Aplicaciones Android TV (2 columnas de apps hacia abajo) -->
-        <div class="mt-2 relative z-10 w-full shrink-0">
-          <div class="flex items-center justify-between mb-1">
+        <!-- Apartado 2: Panel de Aplicaciones Android TV (mt-3 exacto) -->
+        <div class="mt-3 relative z-10 w-full shrink-0">
+          <div class="flex items-center justify-between mb-1.5">
             <span class="text-[8px] sm:text-[8.5px] font-black text-slate-400 uppercase tracking-widest">Aplicaciones TV</span>
             <span id="dom-tv-active-app-badge" class="text-[7.5px] sm:text-[8px] font-bold text-slate-400 uppercase tracking-wider">Macros IR</span>
           </div>
@@ -17979,7 +17972,7 @@ function renderDomoticaUI() {
   if (acTemp) acTemp.textContent = ac.temp;
   if (acModePill) acModePill.textContent = (modeLabels[ac.mode] || modeLabels.cool).txt;
   if (acFanPill) acFanPill.textContent = `🌀 Fan: ${fanLabels[ac.fan] || 'Auto'}${ac.swing ? ' • Swing' : ''}`;
-  if (acCard) acCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col justify-between transition-colors h-full';
+  if (acCard) acCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col transition-colors';
 
   ['cool', 'heat', 'auto', 'fan', 'dry'].forEach(m => {
     const btn = document.getElementById('dom-ac-mode-' + m);
@@ -18083,12 +18076,12 @@ function renderDomoticaUI() {
   }
 
   if (vInfo.active) {
-    if (vacCard) vacCard.className = 'bg-black rounded-2xl border border-emerald-500/50 p-3 md:p-3.5 relative overflow-hidden flex flex-col justify-between transition-colors shadow-md shadow-emerald-950/30 h-full';
+    if (vacCard) vacCard.className = 'bg-black rounded-2xl border border-emerald-500/50 p-3 md:p-3.5 relative overflow-hidden flex flex-col transition-colors shadow-md shadow-emerald-950/30';
     if (vacGlow) vacGlow.classList.replace('opacity-0', 'opacity-100');
     if (vacPowerBtn) vacPowerBtn.className = redPowerOnClass;
     if (vacStartBtn) vacStartBtn.className = 'h-7.5 sm:h-8 py-0.5 px-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white border border-red-400/50 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-md shadow-red-600/30';
   } else {
-    if (vacCard) vacCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col justify-between transition-colors h-full';
+    if (vacCard) vacCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col transition-colors';
     if (vacGlow) vacGlow.classList.replace('opacity-100', 'opacity-0');
     if (vacPowerBtn) vacPowerBtn.className = redPowerOffClass;
     if (vacStartBtn) vacStartBtn.className = 'h-7.5 sm:h-8 py-0.5 px-1.5 rounded-lg bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95';
@@ -18107,8 +18100,7 @@ function renderDomoticaUI() {
     const btn = document.getElementById('dom-vac-suction-' + s);
     if (!btn) return;
     const active = vac.suction === s;
-    const baseW = s === 'strong' ? 'w-full ' : '';
-    btn.className = `${baseW}h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
+    btn.className = `h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
       active ? 'bg-emerald-600/25 border-emerald-400 text-emerald-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
     }`;
   });
@@ -18136,7 +18128,7 @@ function renderDomoticaUI() {
   }
 
   if (plug.power) {
-    if (plugCard) plugCard.className = 'bg-black rounded-2xl border border-amber-500/50 p-3 md:p-3.5 relative overflow-hidden flex flex-col justify-between transition-colors shadow-md shadow-amber-950/30 h-full';
+    if (plugCard) plugCard.className = 'bg-black rounded-2xl border border-amber-500/50 p-3 md:p-3.5 relative overflow-hidden flex flex-col transition-colors shadow-md shadow-amber-950/30';
     if (plugGlow) plugGlow.classList.replace('opacity-0', 'opacity-100');
     if (plugIconBox) plugIconBox.className = 'w-8 h-8 rounded-xl bg-amber-900/50 border border-amber-500/40 flex items-center justify-center transition-colors shrink-0';
     if (plugIcon) plugIcon.className = 'fas fa-plug text-amber-400 text-xs';
@@ -18150,10 +18142,10 @@ function renderDomoticaUI() {
     if (plugBigIcon) plugBigIcon.className = 'fas fa-power-off text-sm sm:text-base text-white transition-colors';
     if (plugStateBig) {
       plugStateBig.textContent = 'ENCENDIDO';
-      plugStateBig.className = 'text-sm sm:text-base font-black mono text-amber-400 tracking-tight block';
+      plugStateBig.className = 'text-xs sm:text-sm font-black mono text-amber-400 tracking-tight block mt-0.5';
     }
   } else {
-    if (plugCard) plugCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col justify-between transition-colors h-full';
+    if (plugCard) plugCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col transition-colors';
     if (plugGlow) plugGlow.classList.replace('opacity-100', 'opacity-0');
     if (plugIconBox) plugIconBox.className = 'w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center transition-colors shrink-0';
     if (plugIcon) plugIcon.className = 'fas fa-plug text-slate-400 text-xs';
@@ -18167,14 +18159,14 @@ function renderDomoticaUI() {
     if (plugBigIcon) plugBigIcon.className = 'fas fa-power-off text-sm sm:text-base transition-colors';
     if (plugStateBig) {
       plugStateBig.textContent = 'APAGADO';
-      plugStateBig.className = 'text-sm sm:text-base font-black mono text-slate-400 tracking-tight block';
+      plugStateBig.className = 'text-xs sm:text-sm font-black mono text-slate-400 tracking-tight block mt-0.5';
     }
   }
 
   // 4. Render Televisor Android TV (Mando Infrarrojo IR - Sin estado ciego)
   const tvCard = document.getElementById('dom-card-tv');
   if (tvCard) {
-    tvCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col justify-between transition-colors h-full';
+    tvCard.className = 'bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col transition-colors';
   }
 }
 
