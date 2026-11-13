@@ -15645,6 +15645,12 @@ async function fetchGoogleFitness() {
             wakeTimeMs: intv.endMs,
             bedtimeStr: bedtimeStr,
             wakeTimeStr: wakeTimeStr,
+            mainBedtimeStr: bedtimeStr,
+            mainWakeTimeStr: wakeTimeStr,
+            mainBedtimeMs: intv.startMs,
+            mainWakeTimeMs: intv.endMs,
+            mainInBedHours: totalInBedHours,
+            mainAsleepHours: asleepHours,
             totalInBedHours: totalInBedHours,
             asleepHours: asleepHours,
             hasStages: hasStages,
@@ -15665,7 +15671,8 @@ async function fetchGoogleFitness() {
             hrCount: nightHrPoints.length,
             score: scoreObj.score,
             scoreLabel: scoreObj.label,
-            scoreBadgeClass: scoreObj.badgeClass
+            scoreBadgeClass: scoreObj.badgeClass,
+            naps: []
           });
         } else {
           // Ya existe un registro para esta fecha de despertar.
@@ -15683,6 +15690,12 @@ async function fetchGoogleFitness() {
               prevDay.wakeTimeMs = intv.endMs;
               prevDay.bedtimeStr = bedtimeStr;
               prevDay.wakeTimeStr = wakeTimeStr;
+              prevDay.mainBedtimeMs = intv.startMs;
+              prevDay.mainWakeTimeMs = intv.endMs;
+              prevDay.mainBedtimeStr = bedtimeStr;
+              prevDay.mainWakeTimeStr = wakeTimeStr;
+              prevDay.mainInBedHours = totalInBedHours;
+              prevDay.mainAsleepHours = asleepHours;
               prevDay.totalInBedHours = totalInBedHours;
               prevDay.asleepHours = asleepHours;
               prevDay.hasStages = true;
@@ -15698,15 +15711,60 @@ async function fetchGoogleFitness() {
               prevDay.val = asleepHours;
               prevDay.totalInBedHours = Math.max(prevDay.totalInBedHours, totalInBedHours);
               prevDay.asleepHours = asleepHours;
+              prevDay.mainInBedHours = Math.max(prevDay.mainInBedHours || 0, totalInBedHours);
+              prevDay.mainAsleepHours = Math.max(prevDay.mainAsleepHours || 0, asleepHours);
             }
           } else {
             // Siesta o sesión adicional separada en el mismo día
             intv.sources.forEach(s => prevDay.sources.add(s));
+            prevDay.naps = prevDay.naps || [];
+
+            const incomingIsLonger = asleepHours > (prevDay.mainAsleepHours || prevDay.asleepHours || 0);
+            if (incomingIsLonger) {
+              // La sesión previa pasa a ser considerada siesta y la entrante la principal
+              prevDay.naps.push({
+                startMs: prevDay.mainBedtimeMs || prevDay.bedtimeMs,
+                endMs: prevDay.mainWakeTimeMs || prevDay.wakeTimeMs,
+                bedtimeStr: prevDay.mainBedtimeStr || prevDay.bedtimeStr,
+                wakeTimeStr: prevDay.mainWakeTimeStr || prevDay.wakeTimeStr,
+                inBedHours: prevDay.mainInBedHours || prevDay.totalInBedHours,
+                asleepHours: prevDay.mainAsleepHours || prevDay.asleepHours,
+                asleepMinutes: Math.round((prevDay.mainAsleepHours || prevDay.asleepHours) * 60)
+              });
+
+              prevDay.mainBedtimeMs = intv.startMs;
+              prevDay.mainWakeTimeMs = intv.endMs;
+              prevDay.mainBedtimeStr = bedtimeStr;
+              prevDay.mainWakeTimeStr = wakeTimeStr;
+              prevDay.mainInBedHours = totalInBedHours;
+              prevDay.mainAsleepHours = asleepHours;
+              prevDay.bedtimeMs = intv.startMs;
+              prevDay.wakeTimeMs = intv.endMs;
+              prevDay.bedtimeStr = bedtimeStr;
+              prevDay.wakeTimeStr = wakeTimeStr;
+              if (hasStages) {
+                prevDay.hasStages = true;
+                prevDay.stages = { deepHours, remHours, lightHours, awakeHours, deepPct, remPct, lightPct, awakePct };
+              }
+            } else {
+              // La sesión entrante es una siesta o período adicional
+              prevDay.naps.push({
+                startMs: intv.startMs,
+                endMs: intv.endMs,
+                bedtimeStr: bedtimeStr,
+                wakeTimeStr: wakeTimeStr,
+                inBedHours: totalInBedHours,
+                asleepHours: asleepHours,
+                asleepMinutes: Math.round(asleepHours * 60)
+              });
+            }
+
             const newTotalVal = Math.min(24, Number((prevDay.val + asleepHours).toFixed(2)));
             prevDay.val = newTotalVal;
             prevDay.totalInBedHours = Math.min(24, Number((prevDay.totalInBedHours + totalInBedHours).toFixed(2)));
             prevDay.asleepHours = newTotalVal;
-            if (hasStages) {
+
+            if (hasStages && !incomingIsLonger && prevDay.stages) {
               prevDay.stages.deepHours = Number((prevDay.stages.deepHours + deepHours).toFixed(2));
               prevDay.stages.remHours = Number((prevDay.stages.remHours + remHours).toFixed(2));
               prevDay.stages.lightHours = Number((prevDay.stages.lightHours + lightHours).toFixed(2));
@@ -15810,6 +15868,13 @@ async function fetchGoogleFitness() {
         wakeTimeStr: sl?.wakeTimeStr || null,
         bedtimeMs: sl?.bedtimeMs || null,
         wakeTimeMs: sl?.wakeTimeMs || null,
+        mainBedtimeStr: sl?.mainBedtimeStr || sl?.bedtimeStr || null,
+        mainWakeTimeStr: sl?.mainWakeTimeStr || sl?.wakeTimeStr || null,
+        mainBedtimeMs: sl?.mainBedtimeMs || sl?.bedtimeMs || null,
+        mainWakeTimeMs: sl?.mainWakeTimeMs || sl?.wakeTimeMs || null,
+        mainInBedHours: sl?.mainInBedHours || null,
+        mainAsleepHours: sl?.mainAsleepHours || null,
+        naps: sl?.naps || [],
         totalInBedHours: sl?.totalInBedHours || slVal,
         asleepHours: slVal > 0 ? Number(slVal.toFixed(2)) : 0,
         hasStages: slHasStages,
@@ -16103,9 +16168,14 @@ window.debugSueno = function(dateStr = 'hoy') {
   console.log('📦 Objeto procesado en memoria (window.fitnessData.sleep):', entry);
 
   console.group('⏱️ 1. Horarios y Duración');
-  console.log(`• Horario en cama: ${entry.bedtimeStr || '--'} → ${entry.wakeTimeStr || '--'}`);
+  console.log(`• Horario en cama (Noche): ${entry.mainBedtimeStr || entry.bedtimeStr || '--'} → ${entry.mainWakeTimeStr || entry.wakeTimeStr || '--'}`);
   console.log(`• Tiempo en cama total: ${entry.totalInBedHours || entry.value} hs (${Math.round((entry.totalInBedHours || entry.value) * 60)} min)`);
   console.log(`• Tiempo dormido real: ${entry.asleepHours || entry.value} hs (${Math.round((entry.asleepHours || entry.value) * 60)} min)`);
+  if (entry.naps && entry.naps.length > 0) {
+    entry.naps.forEach((nap, idx) => {
+      console.log(`• ☀️ Siesta #${idx + 1}: ${nap.bedtimeStr || '--'} → ${nap.wakeTimeStr || '--'} (${nap.asleepMinutes || Math.round(nap.asleepHours * 60)} min)`);
+    });
+  }
   console.log(`• Eficiencia calculada: ${entry.efficiency || 100}%  [Fórmula: (Tiempo dormido / Tiempo en cama) * 100]`);
   if (entry.efficiency === 100) {
     console.info('💡 ¿Por qué 100% de eficiencia? Porque Google Fit no reportó minutos en fase "Despierto" (Stage 1). Si Mi Fitness muestra 98%, es porque Mi Fitness mide ~5-10 min de micro-despertares internamente pero no los sincroniza como puntos de datos en Google Fit.');
@@ -16296,6 +16366,67 @@ function renderDetalleSuenoDia(entry) {
     feedback = 'Descanso insuficiente. Dormiste menos de lo recomendado o hubo demasiadas interrupciones, lo que puede afectar tu energía y concentración hoy.';
   }
 
+  // --- CÁLCULO Y DESGLOSE DE HORARIOS DE NOCHE Y SIESTAS ---
+  const mainBedtimeStr = entry.mainBedtimeStr || entry.bedtimeStr;
+  const mainWakeTimeStr = entry.mainWakeTimeStr || entry.wakeTimeStr;
+
+  let nightScheduleMin = 0;
+  if (mainBedtimeStr && mainWakeTimeStr) {
+    const [h1, m1] = mainBedtimeStr.split(':').map(Number);
+    const [h2, m2] = mainWakeTimeStr.split(':').map(Number);
+    if (!isNaN(h1) && !isNaN(m1) && !isNaN(h2) && !isNaN(m2)) {
+      nightScheduleMin = (h2 * 60 + m2) - (h1 * 60 + m1);
+      if (nightScheduleMin < 0) nightScheduleMin += 24 * 60;
+    }
+  }
+
+  // Buscar siestas registradas o en el debug de sesiones de Google Fit
+  let napsList = [];
+  if (Array.isArray(entry.naps) && entry.naps.length > 0) {
+    napsList = entry.naps.slice();
+  } else if (window._rawSleepDebug && Array.isArray(window._rawSleepDebug.rawSessions)) {
+    const entryDate = entry.date instanceof Date ? entry.date : new Date(entry.date);
+    const isSameDate = (ms) => {
+      const dS = new Date(ms);
+      return dS.getFullYear() === entryDate.getFullYear() &&
+             dS.getMonth() === entryDate.getMonth() &&
+             dS.getDate() === entryDate.getDate();
+    };
+    const candidateSessions = window._rawSleepDebug.rawSessions.filter(s => {
+      if (!isSameDate(s.endMs)) return false;
+      if (s.inicio === mainBedtimeStr && s.fin === mainWakeTimeStr) return false;
+      if (entry.bedtimeMs && Math.abs(s.startMs - entry.bedtimeMs) < 60000) return false;
+      return true;
+    });
+    if (candidateSessions.length > 0) {
+      napsList = candidateSessions.map(s => ({
+        startMs: s.startMs,
+        endMs: s.endMs,
+        bedtimeStr: s.inicio,
+        wakeTimeStr: s.fin,
+        asleepMinutes: Math.round(Number(s.duracionHs) * 60)
+      }));
+    }
+  }
+
+  // Calcular diferencia en minutos entre el tiempo total en cama y el horario nocturno
+  const totalInBedMin = Math.round(inBedHours * 60);
+  const extraMinutesDiff = (nightScheduleMin > 0) ? Math.max(0, totalInBedMin - nightScheduleMin) : 0;
+  const hasNapOrExtra = (napsList.length > 0) || (extraMinutesDiff >= 5);
+
+  const totalNapMinutes = napsList.length > 0
+    ? napsList.reduce((acc, n) => acc + (n.asleepMinutes || Math.round((n.asleepHours || 0) * 60)), 0)
+    : extraMinutesDiff;
+
+  // Horas nocturnas calculadas
+  const nightInBedHours = hasNapOrExtra
+    ? (entry.mainInBedHours || (nightScheduleMin > 0 ? Number((nightScheduleMin / 60).toFixed(2)) : inBedHours))
+    : inBedHours;
+
+  const nightAsleepHours = hasNapOrExtra
+    ? (entry.mainAsleepHours || Math.max(0, Number(((Math.round(durHours * 60) - totalNapMinutes) / 60).toFixed(2))))
+    : durHours;
+
   // Generar HTML del desglose de fases
   let fasesHtml = '';
   if (hasStages && (stages.deepHours > 0 || stages.remHours > 0)) {
@@ -16309,7 +16440,7 @@ function renderDetalleSuenoDia(entry) {
       <div class="space-y-3 p-4 rounded-2xl bg-slate-900/60 border border-slate-800">
         <div class="flex items-center justify-between">
           <h4 class="text-xs font-black uppercase tracking-wider text-slate-300">Desglose de Fases del Sueño</h4>
-          <span class="text-[10px] text-slate-400 font-bold">100% de la noche</span>
+          <span class="text-[10px] text-slate-400 font-bold">${hasNapOrExtra ? `Sueño nocturno (${formatHorasMinutosSimple(nightAsleepHours)} hs)` : '100% de la noche'}</span>
         </div>
 
         <!-- Barra visual de fases -->
@@ -16408,26 +16539,80 @@ function renderDetalleSuenoDia(entry) {
     </div>
   ` : '';
 
-  // Horarios de sueño
-  const scheduleHtml = (entry.bedtimeStr && entry.wakeTimeStr) ? `
-    <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center justify-between">
-      <div class="flex items-center gap-2.5">
-        <div class="w-7 h-7 rounded-lg bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
-          <i class="fas fa-clock text-xs"></i>
-        </div>
-        <div>
-          <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Horario de Sueño</div>
-          <div class="text-xs font-black mono text-white">
-            ${entry.bedtimeStr} <span class="text-slate-500">→</span> ${entry.wakeTimeStr}
+  // Horarios de sueño y desglose de siestas
+  let scheduleHtml = '';
+  if (mainBedtimeStr && mainWakeTimeStr) {
+    let napsHtml = '';
+    if (hasNapOrExtra) {
+      if (napsList.length > 0) {
+        napsHtml = napsList.map(n => {
+          const napMin = n.asleepMinutes || Math.round((n.asleepHours || 0) * 60) || 0;
+          return `
+            <div class="flex items-center justify-between bg-black/40 px-3 py-2 rounded-xl border border-amber-500/20">
+              <div class="flex items-center gap-2.5">
+                <div class="w-6 h-6 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center text-xs">
+                  <i class="fas fa-sun"></i>
+                </div>
+                <div>
+                  <div class="text-[10px] font-bold text-amber-300 uppercase tracking-wider">Siesta</div>
+                  <div class="text-xs font-black mono text-white">${n.bedtimeStr} <span class="text-slate-500">→</span> ${n.wakeTimeStr}</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Dormido</div>
+                <div class="text-xs font-black mono text-amber-400">+${napMin} min</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } else {
+        napsHtml = `
+          <div class="flex items-center justify-between bg-black/40 px-3 py-2 rounded-xl border border-amber-500/20">
+            <div class="flex items-center gap-2.5">
+              <div class="w-6 h-6 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center text-xs">
+                <i class="fas fa-sun"></i>
+              </div>
+              <div>
+                <div class="text-[10px] font-bold text-amber-300 uppercase tracking-wider">Siesta / Otros tiempos dormidos</div>
+                <div class="text-[10px] text-slate-400">Tiempo dormido adicional fuera del horario nocturno</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Extra</div>
+              <div class="text-xs font-black mono text-amber-400">+${totalNapMinutes} min</div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    scheduleHtml = `
+      <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2.5">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+              <i class="fas fa-${hasNapOrExtra ? 'moon' : 'clock'} text-xs"></i>
+            </div>
+            <div>
+              <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">${hasNapOrExtra ? 'Sueño Nocturno' : 'Horario de Sueño'}</div>
+              <div class="text-xs font-black mono text-white">
+                ${mainBedtimeStr} <span class="text-slate-500">→</span> ${mainWakeTimeStr}
+              </div>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-[10px] text-slate-400 font-bold">En cama</div>
+            <div class="text-xs font-black mono text-slate-300">${formatHorasMinutosSimple(hasNapOrExtra ? nightInBedHours : inBedHours)} hs</div>
           </div>
         </div>
+        ${hasNapOrExtra ? `
+          <div class="pt-2 border-t border-slate-800/80 space-y-1.5">
+            ${napsHtml}
+          </div>
+        ` : ''}
       </div>
-      <div class="text-right">
-        <div class="text-[10px] text-slate-400 font-bold">En cama</div>
-        <div class="text-xs font-black mono text-slate-300">${formatHorasMinutosSimple(inBedHours)} hs</div>
-      </div>
-    </div>
-  ` : '';
+    `;
+  }
 
   container.innerHTML = `
     <!-- Tarjeta de Puntuación Principal -->
@@ -16457,6 +16642,13 @@ function renderDetalleSuenoDia(entry) {
         </div>
         <div class="text-xl font-black mono text-white">${formatHorasMinutosSimple(durHours)} <span class="text-xs font-normal text-slate-400">hs</span></div>
         <div class="text-[9px] font-bold text-slate-400">
+          ${hasNapOrExtra ? `
+            <div class="text-slate-300 font-semibold mb-0.5">
+              <span>${formatHorasMinutosSimple(nightAsleepHours)} hs noche</span>
+              <span class="text-slate-500"> + </span>
+              <span class="text-amber-300">${totalNapMinutes} min siesta</span>
+            </div>
+          ` : ''}
           Obj: 8:00 hs · <span class="${durHours >= 8 ? 'text-emerald-400' : (durHours >= 7 ? 'text-indigo-400' : 'text-amber-400')}">${durHours >= 8 ? '+' : ''}${((durHours - 8)).toFixed(1)} hs</span>
         </div>
       </div>
