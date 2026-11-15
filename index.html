@@ -26,6 +26,13 @@
     min-width: 0;
   }
 
+  /* Proporciones de tarjetas en Finanzas (Inicio): Balance 40% (+20%), Inversiones 30% (-10%), Sueldos 30% (-10%) */
+  @media (min-width: 1024px) {
+    #grid-inicio-finanzas {
+      grid-template-columns: 4fr 3fr 3fr !important;
+    }
+  }
+
   /* En móviles (< 768px), los botones secundarios del header se repliegan en el menú de 3 puntos para evitar desborde */
   @media (max-width: 767px) {
     .header-secondary-action {
@@ -1422,7 +1429,7 @@
       <div class="xl:col-span-3 flex flex-col">
         <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em] mb-3 ml-1">Finanzas</h3>
         <!-- Grid de tarjetas de resumen -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 flex-1">
+        <div id="grid-inicio-finanzas" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[4fr_3fr_3fr] gap-4 flex-1">
 
       <!-- Tarjeta Finanzas -->
       <div onclick="showSection('finanzas')"
