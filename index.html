@@ -9384,6 +9384,21 @@ function getColorActivoAhorro(activo, index = 0) {
   return PALETA_OTROS_ACTIVOS_AHORRO[index % PALETA_OTROS_ACTIVOS_AHORRO.length];
 }
 
+// Redirección oficial para plataformas específicas de inversión
+function getPlataformaRedireccionUrl(platName) {
+  if (!platName) return null;
+  const p = String(platName).trim().toLowerCase();
+  // Bull Market
+  if (p === 'bull market' || p === 'bullmarket' || p === 'bull market brokers') {
+    return 'https://inversiones.bullmarket.com.ar/Clients/Dashboard';
+  }
+  // Galicia
+  if (p === 'galicia' || p === 'banco galicia') {
+    return 'https://onlinebanking.bancogalicia.com.ar/login';
+  }
+  return null;
+}
+
 function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
   const tbody = document.getElementById('tbody-composicion-ahorros');
   const tbodyPlat = document.getElementById('tbody-plataformas-ahorros');
@@ -9513,9 +9528,19 @@ function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
     const platsArr = Array.from(a.plataformas);
     let platBadgeHtml = '';
     if (platsArr.length === 1) {
-      platBadgeHtml = `<div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 truncate"><i class="fas fa-landmark text-emerald-400/80 text-[9px] flex-shrink-0"></i><span class="truncate">${platsArr[0]}</span></div>`;
+      const pName = platsArr[0];
+      const urlP = getPlataformaRedireccionUrl(pName);
+      platBadgeHtml = urlP
+        ? `<div class="text-[10px] flex items-center gap-1 mt-0.5 truncate"><i class="fas fa-landmark text-emerald-400 text-[9px] flex-shrink-0"></i><a href="${urlP}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="text-emerald-400 hover:text-emerald-300 hover:underline truncate inline-flex items-center gap-1" title="Abrir ${pName}"><span class="truncate">${pName}</span><i class="fas fa-external-link-alt text-[7.5px] opacity-75"></i></a></div>`
+        : `<div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 truncate"><i class="fas fa-landmark text-emerald-400/80 text-[9px] flex-shrink-0"></i><span class="truncate">${pName}</span></div>`;
     } else if (platsArr.length > 1) {
-      platBadgeHtml = `<div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 truncate" title="${platsArr.join(', ')}"><i class="fas fa-layer-group text-violet-400/80 text-[9px] flex-shrink-0"></i><span class="truncate">${platsArr.join(', ')}</span></div>`;
+      const pLinks = platsArr.map(pName => {
+        const urlP = getPlataformaRedireccionUrl(pName);
+        return urlP
+          ? `<a href="${urlP}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="text-emerald-400 hover:text-emerald-300 hover:underline inline-flex items-center gap-0.5" title="Abrir ${pName}">${pName}<i class="fas fa-external-link-alt text-[7px] opacity-75"></i></a>`
+          : `<span>${pName}</span>`;
+      });
+      platBadgeHtml = `<div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 truncate"><i class="fas fa-layer-group text-violet-400/80 text-[9px] flex-shrink-0"></i><span class="truncate">${pLinks.map((l, idx) => idx > 0 ? ', ' + l : l).join('')}</span></div>`;
     } else {
       platBadgeHtml = `<div class="text-[10px] text-slate-500 flex items-center gap-1 mt-0.5"><i class="fas fa-wallet text-slate-500 text-[9px] flex-shrink-0"></i><span>General</span></div>`;
     }
@@ -9598,14 +9623,24 @@ function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
           ? `<div class="text-[10px] font-bold text-emerald-400/80 mono mt-0.5">${fmtUSD(p.valorUSD)}</div>`
           : '<div class="text-[10px] text-transparent mono mt-0.5 select-none">&nbsp;</div>';
         const subtext = `<div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 truncate"><i class="fas fa-layer-group text-violet-400/80 text-[9px] flex-shrink-0"></i><span>${p.count} activo${p.count !== 1 ? 's' : ''}</span></div>`;
+        const urlPlat = getPlataformaRedireccionUrl(p.nombre);
+        const platLinkHtml = urlPlat
+          ? `<a href="${urlPlat}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"
+                class="text-xs font-bold text-emerald-400 hover:text-emerald-300 hover:underline inline-flex items-center gap-1.5 transition-colors group/plat" title="Abrir ${p.nombre}">
+               <i class="fas fa-landmark text-[10px] text-emerald-400"></i>
+               <span class="truncate">${p.nombre}</span>
+               <i class="fas fa-external-link-alt text-[8.5px] opacity-75 group-hover/plat:opacity-100 transition-opacity"></i>
+             </a>`
+          : `<span class="text-xs font-bold text-slate-200 truncate block" title="${p.nombre}">
+               <i class="fas fa-landmark text-[10px] text-emerald-400 mr-1"></i>${p.nombre}
+             </span>`;
+
         return `<tr class="border-b border-slate-800 hover:bg-slate-800/60 transition-colors">
           <td class="px-4 py-3 align-top">
             <div class="flex items-start gap-2.5">
               <span class="w-2.5 h-2.5 rounded-full flex-shrink-0 mt-1" style="background:${color};box-shadow:0 0 8px ${color}99"></span>
               <div class="flex-1 min-w-0">
-                <span class="text-xs font-bold text-slate-200 truncate block" title="${p.nombre}">
-                  <i class="fas fa-landmark text-[10px] text-emerald-400 mr-1"></i>${p.nombre}
-                </span>
+                ${platLinkHtml}
                 ${subtext}
                 <div class="mt-2 h-1.5 w-full bg-slate-800/90 rounded-full overflow-hidden">
                   <div class="h-full rounded-full transition-all duration-500" style="width:${barWidth}%;background:${color}"></div>
@@ -9727,8 +9762,16 @@ function renderTablaAhorros() {
     }
 
     const platTexto = (a.plataforma || a.descripcion || '').trim();
+    const urlPlat = getPlataformaRedireccionUrl(platTexto);
     const platHtml = platTexto
-      ? `<span class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 truncate"><i class="fas fa-landmark text-emerald-400/80 text-[9px] flex-shrink-0"></i><span class="truncate">${platTexto}</span></span>`
+      ? (urlPlat
+          ? `<a href="${urlPlat}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"
+                class="text-[10px] text-emerald-400 hover:text-emerald-300 hover:underline flex items-center gap-1 mt-0.5 truncate transition-colors group/plat" title="Abrir ${platTexto}">
+               <i class="fas fa-landmark text-[9px] flex-shrink-0"></i>
+               <span class="truncate">${platTexto}</span>
+               <i class="fas fa-external-link-alt text-[7.5px] opacity-75 group-hover/plat:opacity-100 transition-opacity"></i>
+             </a>`
+          : `<span class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 truncate"><i class="fas fa-landmark text-emerald-400/80 text-[9px] flex-shrink-0"></i><span class="truncate">${platTexto}</span></span>`)
       : '';
 
     const pesoPct = (totalARS > 0 && valorARS != null) ? ((valorARS / totalARS) * 100) : 0;
@@ -10864,7 +10907,12 @@ function renderTablaOperaciones() {
       : '<span class="text-slate-500">—</span>';
     const platStr    = (op.plataforma || op.descripcion || '').trim();
     const nombreAct  = op.ticker ? op.ticker.toUpperCase() : (platStr || op.tipo);
-    const platBadge  = platStr ? `<span class="text-[10px] text-slate-400 font-normal flex items-center gap-1 mt-0.5"><i class="fas fa-landmark text-emerald-400/80 text-[9px]"></i>${platStr}</span>` : '';
+    const urlPlatOp  = getPlataformaRedireccionUrl(platStr);
+    const platBadge  = platStr
+      ? (urlPlatOp
+          ? `<a href="${urlPlatOp}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="text-[10px] text-emerald-400 hover:text-emerald-300 hover:underline font-normal flex items-center gap-1 mt-0.5 transition-colors" title="Abrir ${platStr}"><i class="fas fa-landmark text-[9px]"></i><span>${platStr}</span><i class="fas fa-external-link-alt text-[7.5px] opacity-75"></i></a>`
+          : `<span class="text-[10px] text-slate-400 font-normal flex items-center gap-1 mt-0.5"><i class="fas fa-landmark text-emerald-400/80 text-[9px]"></i>${platStr}</span>`)
+      : '';
     const icon       = tipoIcon[op.tipo] || '💎';
     const badgeMon   = op.moneda === 'USD' ? '<span class="ml-1 px-1 py-0.2 bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 rounded text-[8px] font-black mono">USD</span>' : '';
     const tickerBadge = op.ticker ? `<span class="ml-1.5 px-1.5 py-0.5 bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 rounded text-[9px] font-black mono">${op.ticker.toUpperCase()}</span>${badgeMon}` : (badgeMon);
