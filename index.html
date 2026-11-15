@@ -1464,10 +1464,17 @@
         <!-- Divisor -->
         <div class="my-3.5 border-t border-slate-700/60"></div>
 
-        <!-- Ingresos totales — dato secundario -->
-        <div class="flex items-center justify-between">
-          <p class="text-[9px] font-bold text-white uppercase tracking-widest">Ingresos del mes</p>
-          <p id="inicio-ingresos" class="text-xs font-black mono text-green-400 tracking-tight"><span class="skeleton w-20 h-4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
+        <!-- Ingresos y Gastos totales — dato secundario -->
+        <div class="flex items-center justify-between gap-1.5">
+          <div class="flex items-center gap-1.5 min-w-0">
+            <span class="text-[9px] font-bold text-white uppercase tracking-wider shrink-0">Ingresos</span>
+            <span id="inicio-ingresos" class="text-xs font-black mono text-green-400 tracking-tight truncate"><span class="skeleton w-16 h-3.5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span>
+          </div>
+          <span class="text-slate-600 font-mono text-xs shrink-0 select-none">|</span>
+          <div class="flex items-center gap-1.5 min-w-0 justify-end">
+            <span class="text-[9px] font-bold text-white uppercase tracking-wider shrink-0">Gastos</span>
+            <span id="inicio-gastos" class="text-xs font-black mono text-red-400 tracking-tight truncate"><span class="skeleton w-16 h-3.5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span>
+          </div>
         </div>
         <!-- Mini barra ritmo de gasto -->
         <div class="mt-2.5 pt-2 border-t border-slate-800/70">
@@ -12354,8 +12361,11 @@ function actualizarTarjetaFinanzas() {
     labelEl.className   = 'text-[9px] font-bold uppercase tracking-widest text-white';
   }
 
-  // Ingresos
-  document.getElementById('inicio-ingresos').textContent = fmt(ingTotal);
+  // Ingresos y Gastos
+  const ingEl = document.getElementById('inicio-ingresos');
+  if (ingEl) ingEl.textContent = fmt(ingTotal);
+  const gasEl = document.getElementById('inicio-gastos');
+  if (gasEl) gasEl.textContent = fmt(gasTotal);
   if (typeof actualizarProgresoGasto === 'function') actualizarProgresoGasto();
 }
 
