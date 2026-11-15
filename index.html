@@ -15,6 +15,176 @@
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
 <style>
   * { box-sizing: border-box; }
+  /* Bloqueo estricto de desplazamiento horizontal en móvil y tablet */
+  html, body {
+    overflow-x: hidden !important;
+    width: 100%;
+    max-width: 100vw;
+    position: relative;
+    -webkit-overflow-scrolling: touch;
+  }
+  #main-content-wrapper {
+    overflow-x: hidden !important;
+    width: 100%;
+    max-width: 100vw;
+    min-width: 0;
+  }
+
+  /* En móviles (< 768px), los botones secundarios del header se repliegan en el menú de 3 puntos para evitar desborde */
+  @media (max-width: 767px) {
+    .header-secondary-action {
+      display: none !important;
+    }
+  }
+
+  /* Universal Responsive Modals:
+     Alineación centrada perfecta, contención horizontal absoluta (sin necesidad de zoom ni scroll lateral)
+     y scroll vertical interno suave en móvil y tablet */
+  #globalEditModal,
+  #modal-ia,
+  #modal-anual,
+  #modal-ia-listas,
+  #modal-keep-edit,
+  #modal-domotica-config,
+  #modal-gcal-evento,
+  #modal-gcal-detalle,
+  #modal-cotizaciones,
+  #modal-fallidos,
+  #modal-editar,
+  #modal-command-palette,
+  #modal-confirm-delete,
+  #modal-detalle-movimiento,
+  #modal-detalle-sueldo,
+  #modal-detalle-sueno,
+  #modal-confirm-delete-op,
+  #modal-editar-op,
+  #modal-confirm-delete-ahorro,
+  #modal-editar-ahorro,
+  #modal-clima {
+    padding: 0.75rem !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+  @media (min-width: 640px) {
+    #globalEditModal,
+    #modal-ia,
+    #modal-anual,
+    #modal-ia-listas,
+    #modal-keep-edit,
+    #modal-domotica-config,
+    #modal-gcal-evento,
+    #modal-gcal-detalle,
+    #modal-cotizaciones,
+    #modal-fallidos,
+    #modal-editar,
+    #modal-command-palette,
+    #modal-confirm-delete,
+    #modal-detalle-movimiento,
+    #modal-detalle-sueldo,
+    #modal-detalle-sueno,
+    #modal-confirm-delete-op,
+    #modal-editar-op,
+    #modal-confirm-delete-ahorro,
+    #modal-editar-ahorro,
+    #modal-clima {
+      padding: 1rem !important;
+    }
+  }
+
+  /* Tarjeta contenedora de todos los modales: centrada y sin desborde */
+  #globalEditModal > div,
+  #modal-ia > div.relative,
+  #modal-anual > div.relative,
+  #modal-ia-listas > div.relative,
+  #modal-keep-edit > div,
+  #modal-domotica-config > div,
+  #modal-gcal-evento > div,
+  #modal-gcal-detalle > div,
+  #modal-cotizaciones > div,
+  #modal-fallidos > div,
+  #modal-editar > div,
+  #modal-command-palette > div,
+  #modal-confirm-delete > div,
+  #modal-detalle-movimiento > div,
+  #modal-detalle-sueldo > div,
+  #modal-detalle-sueno > div,
+  #modal-confirm-delete-op > div,
+  #modal-editar-op > div,
+  #modal-confirm-delete-ahorro > div,
+  #modal-editar-ahorro > div,
+  #modal-clima > div {
+    max-width: 100% !important;
+    width: 100% !important;
+    max-height: calc(100vh - 1.5rem) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    margin: auto !important;
+  }
+  @media (min-width: 640px) {
+    #globalEditModal > div,
+    #modal-ia > div.relative,
+    #modal-anual > div.relative,
+    #modal-ia-listas > div.relative,
+    #modal-keep-edit > div,
+    #modal-domotica-config > div,
+    #modal-gcal-evento > div,
+    #modal-gcal-detalle > div,
+    #modal-cotizaciones > div,
+    #modal-fallidos > div,
+    #modal-editar > div,
+    #modal-command-palette > div,
+    #modal-confirm-delete > div,
+    #modal-detalle-movimiento > div,
+    #modal-detalle-sueldo > div,
+    #modal-detalle-sueno > div,
+    #modal-confirm-delete-op > div,
+    #modal-editar-op > div,
+    #modal-confirm-delete-ahorro > div,
+    #modal-editar-ahorro > div,
+    #modal-clima > div {
+      max-height: 90vh !important;
+    }
+  }
+
+  /* Max-widths individuales para pantallas amplias */
+  #modal-confirm-delete > div,
+  #modal-confirm-delete-op > div,
+  #modal-confirm-delete-ahorro > div {
+    max-width: 24rem !important;
+  }
+  #modal-editar > div,
+  #modal-editar-op > div,
+  #modal-editar-ahorro > div,
+  #modal-fallidos > div,
+  #modal-detalle-movimiento > div,
+  #modal-gcal-detalle > div {
+    max-width: 28rem !important;
+  }
+  #modal-ia > div.relative,
+  #modal-ia-listas > div.relative,
+  #modal-gcal-evento > div,
+  #modal-detalle-sueldo > div {
+    max-width: 32rem !important;
+  }
+  #modal-command-palette > div,
+  #modal-keep-edit > div,
+  #modal-detalle-sueno > div {
+    max-width: 36rem !important;
+  }
+  #globalEditModal > div,
+  #modal-domotica-config > div,
+  #modal-cotizaciones > div {
+    max-width: 42rem !important;
+  }
+  #modal-anual > div.relative {
+    max-width: 48rem !important;
+  }
+  #modal-clima > div {
+    max-width: 64rem !important;
+  }
+
   body { font-family: 'Space Grotesk', sans-serif; }
   .mono { font-family: 'JetBrains Mono', monospace; }
 
@@ -1032,18 +1202,18 @@
 <body class="bg-black text-white min-h-screen">
 
 <!-- Modal Global de Edición -->
-<div id="globalEditModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
-  <div class="bg-black border border-slate-700/80 rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden relative mt-auto mb-auto">
-    <div class="px-6 py-4 border-b border-slate-700/80 flex justify-between items-center bg-slate-900/60">
-      <div class="flex items-center gap-2.5">
-        <div class="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center">
+<div id="globalEditModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto">
+  <div class="bg-black border border-slate-700/80 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden relative my-auto">
+    <div class="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-700/80 flex justify-between items-center bg-slate-900/60 shrink-0">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0">
           <i class="fas fa-pen text-slate-300 text-xs"></i>
         </div>
-        <h2 id="globalEditModalTitle" class="text-sm font-black text-white uppercase tracking-wider">Editar Registro</h2>
+        <h2 id="globalEditModalTitle" class="text-xs sm:text-sm font-black text-white uppercase tracking-wider truncate">Editar Registro</h2>
       </div>
-      <button onclick="closeEditModal()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors"><i class="fas fa-times text-sm"></i></button>
+      <button onclick="closeEditModal()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors shrink-0"><i class="fas fa-times text-sm"></i></button>
     </div>
-    <div id="globalEditModalBody" class="p-0">
+    <div id="globalEditModalBody" class="p-0 overflow-y-auto flex-1">
       <!-- El formulario se inyecta aquí temporalmente -->
     </div>
   </div>
@@ -1139,60 +1309,95 @@
 <div id="main-content-wrapper" class="md:ml-64 flex flex-col min-h-screen bg-black">
 
   <!-- Header -->
-  <header class="bg-black/90 sticky top-0 z-30 border-b border-slate-800 backdrop-blur-md h-16 flex items-center justify-between px-4 md:px-6">
-    <div class="flex items-center gap-3">
-      <button onclick="toggleMenu()" class="md:hidden w-9 h-9 rounded-xl bg-slate-900/90 border border-slate-700/80 flex items-center justify-center text-slate-300 hover:text-white transition-colors" title="Abrir menú">
+  <header class="bg-black/90 sticky top-0 z-30 border-b border-slate-800 backdrop-blur-md h-16 flex items-center justify-between px-3 sm:px-4 md:px-6">
+    <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+      <button onclick="toggleMenu()" class="md:hidden w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-900/90 border border-slate-700/80 flex items-center justify-center text-slate-300 hover:text-white transition-colors shrink-0" title="Abrir menú">
         <i class="fas fa-bars text-sm"></i>
       </button>
-      <button onclick="toggleSidebarCollapse()" class="hidden md:flex w-9 h-9 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 items-center justify-center text-slate-400 hover:text-white transition-colors" title="Retraer / Expandir panel izquierdo">
+      <button onclick="toggleSidebarCollapse()" class="hidden md:flex w-9 h-9 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 items-center justify-center text-slate-400 hover:text-white transition-colors shrink-0" title="Retraer / Expandir panel izquierdo">
         <i class="fas fa-bars text-xs"></i>
       </button>
-      <div class="flex items-center gap-2.5">
-        <i id="header-icon" class="fas fa-wallet text-blue-500 text-sm"></i>
-        <span id="header-title" class="font-black text-white uppercase tracking-[0.15em] text-xs">Balance</span>
+      <div class="flex items-center gap-2 min-w-0">
+        <i id="header-icon" class="fas fa-wallet text-blue-500 text-sm shrink-0"></i>
+        <span id="header-title" class="font-black text-white uppercase tracking-[0.15em] text-xs truncate max-w-[100px] xs:max-w-[140px] sm:max-w-none">Balance</span>
       </div>
     </div>
-    <div class="flex items-center gap-3">
-      <!-- Widget Clima en Header (aparece al scrollear hacia abajo en Inicio) -->
-      <div id="header-clima" onclick="abrirModalClima()" class="hidden items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/80 border border-slate-700/70 cursor-pointer hover:border-blue-500/40 transition-all mr-1" title="Ver pronóstico de Resistencia">
+    <div class="flex items-center gap-1.5 sm:gap-2 lg:gap-3 shrink-0">
+      <!-- Widget Clima en Header (aparece al scrollear hacia abajo en Inicio en desktop/tablet) -->
+      <div id="header-clima" onclick="abrirModalClima()" class="hidden items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900/80 border border-slate-700/70 cursor-pointer hover:border-blue-500/40 transition-all mr-0.5 header-secondary-action" title="Ver pronóstico de Resistencia">
         <i id="header-clima-icono" class="fas fa-sun text-yellow-400 text-xs"></i>
-        <span class="hidden sm:inline text-[10px] font-bold uppercase tracking-widest text-slate-300">Resistencia</span>
+        <span class="hidden xl:inline text-[10px] font-bold uppercase tracking-widest text-slate-300">Resistencia</span>
         <span id="header-clima-temp" class="text-xs font-black mono text-white">--°C</span>
       </div>
-      <!-- Botón Fuente -->
+      <!-- Botón Fuente (Desktop / Tablet) -->
       <a id="btn-fuente" href="https://docs.google.com/spreadsheets/d/12B_--vUStI5IXJ7KmN2f8xNsx8RdoYaCV_dYx_sgPbo/edit?gid=0#gid=0" target="_blank" title="Abrir fuente de datos"
-              class="hidden w-9 h-9 items-center justify-center rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-400 hover:text-purple-400 transition-all">
+         class="hidden w-8 h-8 sm:w-9 sm:h-9 items-center justify-center rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-400 hover:text-purple-400 transition-all header-secondary-action">
         <i class="fas fa-external-link-alt text-xs"></i>
       </a>
-      <!-- Botón exportar CSV -->
+      <!-- Botón exportar CSV (Desktop / Tablet) -->
       <button id="btn-export-csv" onclick="exportarCSV()" title="Exportar CSV"
-              class="hidden w-9 h-9 items-center justify-center rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-400 hover:text-emerald-400 transition-all">
+              class="hidden w-8 h-8 sm:w-9 sm:h-9 items-center justify-center rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-400 hover:text-emerald-400 transition-all header-secondary-action">
         <i class="fas fa-file-csv text-xs"></i>
       </button>
-      <!-- Botones Conexión Unificada (Google + Smart Life) -->
+      <!-- Botones Conexión Unificada (Google + Smart Life) (Desktop / Tablet) -->
       <button id="btn-conectar-google" onclick="conectarServicios()" title="Conectar Google y Smart Life"
-              class="flex w-9 h-9 items-center justify-center rounded-xl bg-blue-600/20 border border-blue-500/40 text-blue-400 hover:bg-blue-600 hover:text-white transition-all">
+              class="flex w-8 h-8 sm:w-9 sm:h-9 items-center justify-center rounded-xl bg-blue-600/20 border border-blue-500/40 text-blue-400 hover:bg-blue-600 hover:text-white transition-all header-secondary-action">
         <i class="fas fa-plug text-xs"></i>
       </button>
       <button id="btn-desconectar-google" onclick="desconectarServicios()" title="Desconectar servicios"
-              class="hidden w-9 h-9 items-center justify-center rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-400 hover:text-rose-400 transition-all">
+              class="hidden w-8 h-8 sm:w-9 sm:h-9 items-center justify-center rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-400 hover:text-rose-400 transition-all header-secondary-action">
         <i class="fas fa-sign-out-alt text-xs"></i>
       </button>
-      <!-- Actualizar -->
+      <!-- Actualizar (Siempre visible) -->
       <button onclick="recargarDatos()" title="Actualizar datos y sincronizar dispositivos"
-              class="flex w-9 h-9 items-center justify-center rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-400 hover:text-blue-400 transition-all">
+              class="flex w-8 h-8 sm:w-9 sm:h-9 items-center justify-center rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-400 hover:text-blue-400 transition-all shrink-0">
         <i id="icon-refresh" class="fas fa-sync-alt text-xs"></i>
       </button>
-      <!-- Buscador Rápido Global (Ctrl + K) -->
+      <!-- Buscador Rápido Global (Ctrl + K) (Siempre visible) -->
       <button onclick="abrirCommandPalette()" title="Buscador y Comando Rápido (Ctrl + K)"
-              class="flex w-9 h-9 items-center justify-center rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-indigo-400 hover:text-white transition-all">
+              class="flex w-8 h-8 sm:w-9 sm:h-9 items-center justify-center rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-indigo-400 hover:text-white transition-all shrink-0">
         <i class="fas fa-search text-xs"></i>
       </button>
-      <!-- Selector Modo Oscuro (Obsidian Glass) / Modo Claro (Nordic Daylight) -->
+      <!-- Selector Modo Oscuro / Modo Claro (Siempre visible) -->
       <button id="btn-theme-toggle" onclick="toggleThemeMode()" title="Cambiar entre Modo Oscuro y Modo Claro"
-              class="flex w-9 h-9 items-center justify-center rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white transition-all">
+              class="flex w-8 h-8 sm:w-9 sm:h-9 items-center justify-center rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white transition-all shrink-0">
         <i id="theme-toggle-icon" class="fas fa-sun text-amber-400 text-xs"></i>
       </button>
+      <!-- Menú Más Opciones en Móviles (< 768px) -->
+      <div class="relative md:hidden shrink-0">
+        <button id="btn-header-more-actions" onclick="toggleHeaderActionsMenu(event)" title="Más opciones"
+                class="flex w-8 h-8 items-center justify-center rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white transition-all active:scale-95">
+          <i class="fas fa-ellipsis-vertical text-xs"></i>
+        </button>
+        <!-- Dropdown Flotante Móvil -->
+        <div id="header-actions-dropdown" class="hidden absolute right-0 top-10 w-56 bg-slate-900/95 backdrop-blur-xl border border-slate-700/90 rounded-2xl shadow-2xl p-2 z-[9999] flex-col gap-1 text-xs">
+          <a id="dropdown-item-fuente" href="https://docs.google.com/spreadsheets/d/12B_--vUStI5IXJ7KmN2f8xNsx8RdoYaCV_dYx_sgPbo/edit?gid=0#gid=0" target="_blank" onclick="closeHeaderActionsMenu()"
+             class="hidden items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors">
+            <i class="fas fa-external-link-alt text-purple-400 text-xs w-4 text-center"></i>
+            <span class="font-bold">Abrir fuente de datos</span>
+          </a>
+          <button id="dropdown-item-export-csv" onclick="exportarCSV(); closeHeaderActionsMenu();"
+                  class="hidden w-full text-left items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors">
+            <i class="fas fa-file-csv text-emerald-400 text-xs w-4 text-center"></i>
+            <span class="font-bold">Exportar tabla CSV</span>
+          </button>
+          <button id="dropdown-item-conectar" onclick="conectarServicios(); closeHeaderActionsMenu();"
+                  class="flex w-full text-left items-center gap-2.5 px-3 py-2 rounded-xl text-blue-300 hover:text-white hover:bg-blue-600/30 transition-colors">
+            <i class="fas fa-plug text-blue-400 text-xs w-4 text-center"></i>
+            <span class="font-bold">Conectar servicios</span>
+          </button>
+          <button id="dropdown-item-desconectar" onclick="desconectarServicios(); closeHeaderActionsMenu();"
+                  class="hidden w-full text-left items-center gap-2.5 px-3 py-2 rounded-xl text-rose-300 hover:text-white hover:bg-rose-600/30 transition-colors">
+            <i class="fas fa-sign-out-alt text-rose-400 text-xs w-4 text-center"></i>
+            <span class="font-bold">Desconectar servicios</span>
+          </button>
+          <button id="dropdown-item-clima" onclick="abrirModalClima(); closeHeaderActionsMenu();"
+                  class="flex w-full text-left items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors">
+            <i class="fas fa-cloud-sun text-amber-400 text-xs w-4 text-center"></i>
+            <span class="font-bold">Clima: <span id="dropdown-clima-temp">Resistencia</span></span>
+          </button>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -2964,7 +3169,7 @@
               <i id="icon-refresh-ah" class="fas fa-sync-alt text-[10px]"></i> Actualizar precios
             </button>
           </div>
-          <div class="overflow-x-hidden">
+          <div class="overflow-x-auto">
             <table class="w-full text-sm">
               <thead>
                 <tr class="border-b border-slate-700/60 bg-slate-800/80">
@@ -3009,7 +3214,7 @@
             </div>
             <span id="ah-ops-count" class="text-[10px] font-bold text-slate-400 mono bg-slate-900 px-3 py-1 rounded-full border border-slate-700/80">— operaciones</span>
           </div>
-          <div class="overflow-x-hidden">
+          <div class="overflow-x-auto">
             <table class="w-full text-sm">
               <thead>
                 <tr class="border-b border-slate-700/60 bg-slate-800/80">
@@ -3504,7 +3709,7 @@
                      class="w-full h-9 pl-8 pr-4 bg-black border border-slate-700 rounded-xl text-[12px] outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/50 text-white">
             </div>
           </div>
-          <div class="overflow-x-hidden">
+          <div class="overflow-x-auto">
             <table class="w-full text-sm">
               <thead>
                 <tr class="border-b border-slate-700/60 bg-slate-800/80">
@@ -3755,7 +3960,7 @@
                      class="w-full h-9 pl-8 pr-4 bg-black border border-slate-700 rounded-xl text-[12px] outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 text-white">
             </div>
           </div>
-          <div class="overflow-x-hidden">
+          <div class="overflow-x-auto">
             <table class="w-full text-sm">
               <thead>
                 <tr class="border-b border-slate-700/60 bg-slate-800/80">
@@ -4817,19 +5022,19 @@
 <div id="modal-cotizaciones" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[300] flex items-center justify-center p-4">
   <div class="bg-black border border-slate-700/80 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[88vh] flex flex-col overflow-hidden">
     <!-- Header -->
-    <div class="px-6 py-4 border-b border-slate-700/80 bg-slate-900/60 flex items-center justify-between flex-shrink-0">
-      <div class="flex items-center gap-2.5">
-        <div class="w-8 h-8 rounded-xl bg-violet-900/50 border border-violet-500/30 flex items-center justify-center">
+    <div class="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-700/80 bg-slate-900/60 flex items-center justify-between flex-shrink-0 gap-2">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-8 h-8 rounded-xl bg-violet-900/50 border border-violet-500/30 flex items-center justify-center shrink-0">
           <i class="fas fa-chart-line text-violet-400 text-xs"></i>
         </div>
-        <div>
-          <h3 class="font-black text-white text-sm uppercase tracking-wider">Cotizaciones de Mercado</h3>
-          <p class="text-[10px] text-slate-400 mt-0.5" id="modal-cotizaciones-subtitle">BYMA en vivo (Acciones &amp; CEDEARs), Dólares &amp; Cripto</p>
+        <div class="min-w-0">
+          <h3 class="font-black text-white text-xs sm:text-sm uppercase tracking-wider truncate">Cotizaciones de Mercado</h3>
+          <p class="text-[10px] text-slate-400 mt-0.5 truncate max-w-[170px] sm:max-w-none" id="modal-cotizaciones-subtitle">BYMA en vivo (Acciones &amp; CEDEARs), Dólares &amp; Cripto</p>
         </div>
       </div>
-      <div class="flex items-center gap-2">
-        <button onclick="actualizarCotizacionesAhorros(true)" class="h-8 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-violet-300 flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider transition-colors">
-          <i class="fas fa-sync-alt text-[10px]"></i> Actualizar
+      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <button onclick="actualizarCotizacionesAhorros(true)" class="h-8 px-2.5 sm:px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-violet-300 flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider transition-colors shrink-0">
+          <i class="fas fa-sync-alt text-[10px]"></i> <span class="hidden sm:inline">Actualizar</span>
         </button>
         <button onclick="cerrarModalCotizaciones()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors">
           <i class="fas fa-times text-sm"></i>
@@ -4902,9 +5107,9 @@
 
 
 <!-- Modal editar movimiento -->
-<div id="modal-editar" class="hidden fixed inset-0 bg-black/70 z-[300] flex items-center justify-center p-4">
-  <div class="bg-black rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-    <div class="px-6 py-5 border-b border-slate-700/60 flex items-center justify-between">
+<div id="modal-editar" class="hidden fixed inset-0 bg-black/70 z-[300] flex items-center justify-center p-3 sm:p-4">
+  <div class="bg-black rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden border border-slate-700/80 my-auto">
+    <div class="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-700/60 flex items-center justify-between shrink-0">
       <div>
         <h3 class="font-black text-white text-sm uppercase tracking-wider">Editar Movimiento</h3>
         <p class="text-[10px] text-slate-400 mt-0.5">Modificá los campos y guardá los cambios</p>
@@ -4998,9 +5203,9 @@
 </div>
 
 <!-- Modal Detalle de Movimiento (Finanzas / Balance) -->
-<div id="modal-detalle-movimiento" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[300] flex items-center justify-center p-4">
-  <div class="bg-black rounded-2xl border border-slate-700/80 shadow-2xl w-full max-w-md overflow-hidden animate-scaleIn">
-    <div class="px-6 py-5 border-b border-slate-700/60 bg-slate-900/60 flex items-center justify-between">
+<div id="modal-detalle-movimiento" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[300] flex items-center justify-center p-3 sm:p-4">
+  <div class="bg-black rounded-2xl border border-slate-700/80 shadow-2xl w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden animate-scaleIn my-auto">
+    <div class="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-700/60 bg-slate-900/60 flex items-center justify-between shrink-0">
       <div class="flex items-center gap-2.5">
         <div class="w-8 h-8 rounded-xl bg-blue-900/50 border border-blue-500/30 flex items-center justify-center text-blue-400">
           <i class="fas fa-file-invoice text-xs"></i>
@@ -5018,9 +5223,9 @@
 </div>
 
 <!-- Modal Detalle de Liquidación de Sueldo -->
-<div id="modal-detalle-sueldo" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[300] flex items-center justify-center p-4">
-  <div class="bg-black rounded-2xl border border-slate-700/80 shadow-2xl w-full max-w-lg overflow-hidden animate-scaleIn">
-    <div class="px-6 py-5 border-b border-slate-700/60 bg-slate-900/60 flex items-center justify-between">
+<div id="modal-detalle-sueldo" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[300] flex items-center justify-center p-3 sm:p-4">
+  <div class="bg-black rounded-2xl border border-slate-700/80 shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden animate-scaleIn my-auto">
+    <div class="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-700/60 bg-slate-900/60 flex items-center justify-between shrink-0">
       <div class="flex items-center gap-2.5">
         <div class="w-8 h-8 rounded-xl bg-yellow-900/50 border border-yellow-500/30 flex items-center justify-center text-yellow-400">
           <i class="fas fa-money-check-dollar text-xs"></i>
@@ -5080,9 +5285,9 @@
 </div>
 
 <!-- Modal editar operación -->
-<div id="modal-editar-op" class="hidden fixed inset-0 bg-black/70 z-[300] flex items-center justify-center p-4">
-  <div class="bg-black rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-    <div class="px-6 py-5 border-b border-slate-700/60 flex items-center justify-between">
+<div id="modal-editar-op" class="hidden fixed inset-0 bg-black/70 z-[300] flex items-center justify-center p-3 sm:p-4">
+  <div class="bg-black rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden border border-slate-700/80 my-auto">
+    <div class="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-700/60 flex items-center justify-between shrink-0">
       <div>
         <h3 class="font-black text-white text-sm uppercase tracking-wider">Editar Operación</h3>
         <p class="text-[10px] text-slate-400 mt-0.5">Modificá los campos y guardá los cambios</p>
@@ -5159,9 +5364,9 @@
 </div>
 
 <!-- Modal editar inversión -->
-<div id="modal-editar-ahorro" class="hidden fixed inset-0 bg-black/70 z-[300] flex items-center justify-center p-4">
-  <div class="bg-black rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-    <div class="px-6 py-5 border-b border-slate-700/60 flex items-center justify-between">
+<div id="modal-editar-ahorro" class="hidden fixed inset-0 bg-black/70 z-[300] flex items-center justify-center p-3 sm:p-4">
+  <div class="bg-black rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden border border-slate-700/80 my-auto">
+    <div class="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-700/60 flex items-center justify-between shrink-0">
       <div>
         <h3 class="font-black text-white text-sm uppercase tracking-wider">Editar Inversión</h3>
         <p class="text-[10px] text-slate-400 mt-0.5">Modificá los campos y guardá los cambios</p>
@@ -5415,6 +5620,97 @@ const MODULE_ACCENT = {
   domotica:  { nav: 'border-cyan-500 text-cyan-400 bg-cyan-600/10',      icon: 'text-cyan-400'   },
 };
 
+
+// ─── Control del Menú Móvil de Más Acciones en Header ───────────────────────
+function actualizarHeaderMenuMobile() {
+  const dropdownFuente = document.getElementById('dropdown-item-fuente');
+  const dropdownExport = document.getElementById('dropdown-item-export-csv');
+  const dropdownConectar = document.getElementById('dropdown-item-conectar');
+  const dropdownDesconectar = document.getElementById('dropdown-item-desconectar');
+  const dropdownClimaTemp = document.getElementById('dropdown-clima-temp');
+
+  const btnFuente = document.getElementById('btn-fuente');
+  const btnExport = document.getElementById('btn-export-csv');
+  const btnC = document.getElementById('btn-conectar-google');
+  const btnD = document.getElementById('btn-desconectar-google');
+  const headerClimaTemp = document.getElementById('header-clima-temp');
+
+  if (dropdownFuente && btnFuente) {
+    if (btnFuente.classList.contains('hidden')) {
+      dropdownFuente.classList.add('hidden');
+      dropdownFuente.classList.remove('flex');
+    } else {
+      dropdownFuente.classList.remove('hidden');
+      dropdownFuente.classList.add('flex');
+    }
+  }
+
+  if (dropdownExport && btnExport) {
+    if (btnExport.classList.contains('hidden')) {
+      dropdownExport.classList.add('hidden');
+      dropdownExport.classList.remove('flex');
+    } else {
+      dropdownExport.classList.remove('hidden');
+      dropdownExport.classList.add('flex');
+    }
+  }
+
+  if (dropdownConectar && btnC) {
+    if (btnC.classList.contains('hidden')) {
+      dropdownConectar.classList.add('hidden');
+      dropdownConectar.classList.remove('flex');
+    } else {
+      dropdownConectar.classList.remove('hidden');
+      dropdownConectar.classList.add('flex');
+    }
+  }
+
+  if (dropdownDesconectar && btnD) {
+    if (btnD.classList.contains('hidden')) {
+      dropdownDesconectar.classList.add('hidden');
+      dropdownDesconectar.classList.remove('flex');
+    } else {
+      dropdownDesconectar.classList.remove('hidden');
+      dropdownDesconectar.classList.add('flex');
+    }
+  }
+
+  if (dropdownClimaTemp && headerClimaTemp && headerClimaTemp.textContent && headerClimaTemp.textContent !== '--°C') {
+    dropdownClimaTemp.textContent = headerClimaTemp.textContent;
+  }
+}
+
+function toggleHeaderActionsMenu(e) {
+  if (e) {
+    e.stopPropagation();
+    e.preventDefault();
+  }
+  actualizarHeaderMenuMobile();
+  const dropdown = document.getElementById('header-actions-dropdown');
+  if (dropdown) {
+    dropdown.classList.toggle('hidden');
+    dropdown.classList.toggle('flex');
+  }
+}
+
+function closeHeaderActionsMenu() {
+  const dropdown = document.getElementById('header-actions-dropdown');
+  if (dropdown) {
+    dropdown.classList.add('hidden');
+    dropdown.classList.remove('flex');
+  }
+}
+
+document.addEventListener('click', function(e) {
+  const dropdown = document.getElementById('header-actions-dropdown');
+  const btn = document.getElementById('btn-header-more-actions');
+  if (dropdown && !dropdown.classList.contains('hidden')) {
+    if (!dropdown.contains(e.target) && (!btn || !btn.contains(e.target))) {
+      closeHeaderActionsMenu();
+    }
+  }
+});
+
 function showSection(nombre) {
   ['inicio', 'actividad', 'finanzas', 'ahorros', 'sueldos', 'tenis', 'partidos', 'calendario', 'listas', 'domotica'].forEach(s => {
     const sec = document.getElementById('section-' + s);
@@ -5485,6 +5781,7 @@ function showSection(nombre) {
       setActividadFiltro(window.currentHealthFilter || 'hoy');
     }
   }
+  actualizarHeaderMenuMobile();
 }
 
 function toggleMenu() {
@@ -13399,6 +13696,7 @@ function actualizarUIGoogleConectado(conectadoGoogle) {
       else btnC.title = 'Conectar Smart Life';
     }
   }
+  actualizarHeaderMenuMobile();
 }
 
 function conectarServicios() {
@@ -20668,7 +20966,7 @@ document.addEventListener('keydown', (e) => {
 </script>
   <!-- Modal Clima -->
   <div id="modal-clima" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-[300] items-center justify-center p-4">
-    <div class="bg-black border border-slate-700/80 rounded-2xl w-full max-w-6xl w-[96vw] overflow-hidden flex flex-col shadow-2xl relative">
+    <div class="bg-black border border-slate-700/80 rounded-2xl w-full max-w-5xl overflow-hidden flex flex-col shadow-2xl relative my-auto">
       <div class="p-4 px-6 border-b border-slate-700/60 flex items-center justify-between bg-slate-800/50">
         <div class="flex items-center gap-3">
           <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></div>
