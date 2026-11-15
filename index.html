@@ -4179,8 +4179,8 @@
   <main id="section-domotica" class="hidden p-3 md:px-4 md:py-4 max-w-[1536px] mx-auto w-full space-y-3.5 overflow-y-auto">
 
     <!-- Escenas Rápidas (Tap-to-Run) -->
-    <div class="shrink-0">
-      <div class="flex items-center justify-between mb-1.5 ml-1">
+    <div class="shrink-0 mb-3 sm:mb-4 md:mb-5">
+      <div class="flex items-center justify-between mb-1.5 sm:mb-2 ml-1">
         <h3 class="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Escenas Rápidas (Tap-to-Run)</h3>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 md:gap-3">
@@ -4216,8 +4216,14 @@
       </div>
     </div>
 
-    <!-- Grid Principal de Artefactos (4 columnas verticales independientes alineadas arriba) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-start gap-2.5 md:gap-3.5">
+    <!-- Subtítulo y Grid de Dispositivos -->
+    <div class="shrink-0 pt-1 sm:pt-2">
+      <div class="flex items-center justify-between mb-2 sm:mb-2.5 ml-1">
+        <h3 class="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Dispositivos</h3>
+      </div>
+
+      <!-- Grid Principal de Artefactos (4 columnas verticales independientes alineadas arriba) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-start gap-2.5 md:gap-3.5">
 
       <!-- 1. AIRE ACONDICIONADO (MANDO INFRARROJO IR) -->
       <div id="dom-card-ac" class="bg-black rounded-2xl border border-slate-700/60 p-3 md:p-3.5 relative overflow-hidden flex flex-col transition-colors">
@@ -4248,7 +4254,7 @@
           <div class="flex items-center justify-between gap-1.5">
             <div class="flex items-center gap-1.5">
               <button onclick="domCambiarTempAC(-1)" title="Bajar Temperatura"
-                      class="w-7 h-7 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white border border-slate-700 flex items-center justify-center font-black transition-all">
+                      class="w-8 h-8 sm:w-7 sm:h-7 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white border border-slate-700 flex items-center justify-center font-black transition-all">
                 <i class="fas fa-minus text-[8.5px]"></i>
               </button>
               <div class="flex items-baseline px-0.5">
@@ -4256,7 +4262,7 @@
                 <span class="text-xs sm:text-sm font-black mono text-cyan-400 ml-0.5">°C</span>
               </div>
               <button onclick="domCambiarTempAC(1)" title="Subir Temperatura"
-                      class="w-7 h-7 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white border border-slate-700 flex items-center justify-center font-black transition-all">
+                      class="w-8 h-8 sm:w-7 sm:h-7 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white border border-slate-700 flex items-center justify-center font-black transition-all">
                 <i class="fas fa-plus text-[8.5px]"></i>
               </button>
             </div>
@@ -4270,10 +4276,10 @@
 
           <!-- Shortcuts directos de temperatura -->
           <div class="grid grid-cols-4 gap-1 pt-0.5">
-            <button onclick="domSetTempAC(18)" class="h-6 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8px] sm:text-[8.5px] font-bold mono text-slate-300 transition-colors flex items-center justify-center">18°</button>
-            <button onclick="domSetTempAC(22)" class="h-6 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8px] sm:text-[8.5px] font-bold mono text-slate-300 transition-colors flex items-center justify-center">22°</button>
-            <button onclick="domSetTempAC(24)" class="h-6 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8px] sm:text-[8.5px] font-bold mono text-slate-300 transition-colors flex items-center justify-center">24°</button>
-            <button onclick="domSetTempAC(26)" class="h-6 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8px] sm:text-[8.5px] font-bold mono text-slate-300 transition-colors flex items-center justify-center">26°</button>
+            <button onclick="domSetTempAC(18)" class="h-8 sm:h-7 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8px] sm:text-[8.5px] font-bold mono text-slate-300 transition-colors flex items-center justify-center">18°</button>
+            <button onclick="domSetTempAC(22)" class="h-8 sm:h-7 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8px] sm:text-[8.5px] font-bold mono text-slate-300 transition-colors flex items-center justify-center">22°</button>
+            <button onclick="domSetTempAC(24)" class="h-8 sm:h-7 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8px] sm:text-[8.5px] font-bold mono text-slate-300 transition-colors flex items-center justify-center">24°</button>
+            <button onclick="domSetTempAC(26)" class="h-8 sm:h-7 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8px] sm:text-[8.5px] font-bold mono text-slate-300 transition-colors flex items-center justify-center">26°</button>
           </div>
         </div>
 
@@ -4281,21 +4287,21 @@
         <div class="mt-3 relative z-10 w-full shrink-0">
           <span class="text-[8px] sm:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1.5">Modo de Operación</span>
           <div class="grid grid-cols-3 gap-1 sm:gap-1.5">
-            <button onclick="domSetModoAC('cool')" id="dom-ac-mode-cool" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
+            <button onclick="domSetModoAC('cool')" id="dom-ac-mode-cool" class="h-9 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
               <i class="fas fa-snowflake text-[8px]"></i><span>Frío</span>
             </button>
-            <button onclick="domSetModoAC('heat')" id="dom-ac-mode-heat" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
+            <button onclick="domSetModoAC('heat')" id="dom-ac-mode-heat" class="h-9 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
               <i class="fas fa-sun text-[8px]"></i><span>Calor</span>
             </button>
-            <button onclick="domSetModoAC('auto')" id="dom-ac-mode-auto" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
+            <button onclick="domSetModoAC('auto')" id="dom-ac-mode-auto" class="h-9 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
               <i class="fas fa-magic text-[8px]"></i><span>Auto</span>
             </button>
           </div>
           <div class="grid grid-cols-2 gap-1 sm:gap-1.5 mt-1 sm:mt-1.5">
-            <button onclick="domSetModoAC('fan')" id="dom-ac-mode-fan" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
+            <button onclick="domSetModoAC('fan')" id="dom-ac-mode-fan" class="h-9 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
               <i class="fas fa-fan text-[8px]"></i><span>Ventilador</span>
             </button>
-            <button onclick="domSetModoAC('dry')" id="dom-ac-mode-dry" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
+            <button onclick="domSetModoAC('dry')" id="dom-ac-mode-dry" class="h-9 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
               <i class="fas fa-tint-slash text-[8px]"></i><span>Seco</span>
             </button>
           </div>
@@ -4305,13 +4311,13 @@
         <div class="mt-3 relative z-10 w-full shrink-0">
           <span class="text-[8px] sm:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1.5">Velocidad y Swing</span>
           <div class="grid grid-cols-3 gap-1 sm:gap-1.5">
-            <button onclick="domSetFanAC('auto')" id="dom-ac-fan-auto" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Auto</button>
-            <button onclick="domSetFanAC('low')" id="dom-ac-fan-low" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Baja</button>
-            <button onclick="domSetFanAC('med')" id="dom-ac-fan-med" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Media</button>
+            <button onclick="domSetFanAC('auto')" id="dom-ac-fan-auto" class="h-9 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Auto</button>
+            <button onclick="domSetFanAC('low')" id="dom-ac-fan-low" class="h-9 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Baja</button>
+            <button onclick="domSetFanAC('med')" id="dom-ac-fan-med" class="h-9 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Media</button>
           </div>
           <div class="grid grid-cols-2 gap-1 sm:gap-1.5 mt-1 sm:mt-1.5">
-            <button onclick="domSetFanAC('high')" id="dom-ac-fan-high" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Alta</button>
-            <button onclick="domToggleSwingAC()" id="dom-ac-swing-btn" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1">
+            <button onclick="domSetFanAC('high')" id="dom-ac-fan-high" class="h-9 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Alta</button>
+            <button onclick="domToggleSwingAC()" id="dom-ac-swing-btn" class="h-9 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1">
               <i class="fas fa-arrows-alt-v text-[8px]"></i><span>Swing</span>
             </button>
           </div>
@@ -4371,15 +4377,15 @@
         <div class="mt-3 relative z-10 w-full shrink-0">
           <span class="text-[8px] sm:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1.5">Controles de Limpieza</span>
           <div class="grid grid-cols-3 gap-1 sm:gap-1.5">
-            <button onclick="domAccionAspiradora('pause')" id="dom-vac-btn-pause" class="h-7.5 sm:h-8 py-0.5 px-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1 transition-all active:scale-95">
+            <button onclick="domAccionAspiradora('pause')" id="dom-vac-btn-pause" class="h-9 sm:h-8 px-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1 transition-all active:scale-95">
               <i class="fas fa-pause text-[8px] text-amber-400"></i>
               <span>Pausar</span>
             </button>
-            <button onclick="domAccionAspiradora('dock')" id="dom-vac-btn-dock" class="h-7.5 sm:h-8 py-0.5 px-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1 transition-all active:scale-95">
+            <button onclick="domAccionAspiradora('dock')" id="dom-vac-btn-dock" class="h-9 sm:h-8 px-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1 transition-all active:scale-95">
               <i class="fas fa-charging-station text-[8px] text-cyan-400"></i>
               <span>Base</span>
             </button>
-            <button onclick="domAccionAspiradora('locate')" class="h-7.5 sm:h-8 py-0.5 px-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1 transition-all active:scale-95">
+            <button onclick="domAccionAspiradora('locate')" class="h-9 sm:h-8 px-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-black text-[8px] sm:text-[8.5px] uppercase tracking-wider flex items-center justify-center gap-1 transition-all active:scale-95">
               <i class="fas fa-volume-up text-[8px] text-violet-400"></i>
               <span>Buscar</span>
             </button>
@@ -4390,9 +4396,9 @@
         <div class="mt-3 relative z-10 w-full shrink-0">
           <span class="text-[8px] sm:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1.5">Potencia de Succión</span>
           <div class="grid grid-cols-3 gap-1 sm:gap-1.5">
-            <button onclick="domSetSuccionAspiradora('gentle')" id="dom-vac-suction-gentle" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Silencioso</button>
-            <button onclick="domSetSuccionAspiradora('normal')" id="dom-vac-suction-normal" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Estándar</button>
-            <button onclick="domSetSuccionAspiradora('strong')" id="dom-vac-suction-strong" class="h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Turbo</button>
+            <button onclick="domSetSuccionAspiradora('gentle')" id="dom-vac-suction-gentle" class="h-9 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Silencioso</button>
+            <button onclick="domSetSuccionAspiradora('normal')" id="dom-vac-suction-normal" class="h-9 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Estándar</button>
+            <button onclick="domSetSuccionAspiradora('strong')" id="dom-vac-suction-strong" class="h-9 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center">Turbo</button>
           </div>
         </div>
       </div>
@@ -4447,10 +4453,10 @@
         <div class="mt-3 relative z-10 w-full shrink-0">
           <span class="text-[8px] sm:text-[8.5px] font-black text-slate-400 uppercase tracking-widest block mb-1.5">Temporizador Countdown</span>
           <div class="grid grid-cols-2 gap-1 sm:gap-1.5">
-            <button onclick="domSetTimerPlug(30)" class="h-7.5 sm:h-8 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">30 min</button>
-            <button onclick="domSetTimerPlug(60)" class="h-7.5 sm:h-8 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">1 Hora</button>
-            <button onclick="domSetTimerPlug(120)" class="h-7.5 sm:h-8 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">2 Horas</button>
-            <button onclick="domSetTimerPlug(0)" class="h-7.5 sm:h-8 rounded-xl bg-slate-900 hover:bg-red-950/50 border border-slate-800 hover:border-red-500/40 text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider text-slate-400 hover:text-red-300 transition-colors flex items-center justify-center">Cancelar</button>
+            <button onclick="domSetTimerPlug(30)" class="h-9 sm:h-8 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">30 min</button>
+            <button onclick="domSetTimerPlug(60)" class="h-9 sm:h-8 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">1 Hora</button>
+            <button onclick="domSetTimerPlug(120)" class="h-9 sm:h-8 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider text-slate-300 transition-colors flex items-center justify-center">2 Horas</button>
+            <button onclick="domSetTimerPlug(0)" class="h-9 sm:h-8 rounded-xl bg-slate-900 hover:bg-red-950/50 border border-slate-800 hover:border-red-500/40 text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider text-slate-400 hover:text-red-300 transition-colors flex items-center justify-center">Cancelar</button>
           </div>
         </div>
       </div>
@@ -4482,7 +4488,7 @@
 
         <!-- Apartado 1: Botón Home + Volumen Compacto (mt-3 exacto) -->
         <div class="mt-3 flex items-center justify-between gap-1.5 bg-slate-900/70 rounded-xl border border-slate-800 p-2 md:p-2.5 relative z-10 shrink-0">
-          <button onclick="domCmdTV('home')" class="h-7 sm:h-7.5 px-2.5 rounded-lg bg-violet-600/20 hover:bg-violet-600 active:scale-95 text-violet-300 hover:text-white border border-violet-500/40 text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center gap-1.5 transition-all">
+          <button onclick="domCmdTV('home')" class="h-9 sm:h-8 px-2.5 rounded-xl bg-violet-600/20 hover:bg-violet-600 active:scale-95 text-violet-300 hover:text-white border border-violet-500/40 text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center gap-1.5 transition-all">
             <i class="fas fa-home text-xs"></i>
             <span>Home</span>
           </button>
@@ -4490,20 +4496,20 @@
           <!-- Control de Volumen compacto a la derecha -->
           <div class="flex items-center gap-1 bg-black/60 px-1.5 py-1 rounded-lg border border-slate-800">
             <button onclick="domCmdTV('mute')" id="dom-tv-mute-btn" title="Silenciar TV"
-                    class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 flex items-center justify-center transition-all active:scale-95">
-              <i id="dom-tv-mute-icon" class="fas fa-volume-mute text-[8px]"></i>
+                    class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 flex items-center justify-center transition-all active:scale-95">
+              <i id="dom-tv-mute-icon" class="fas fa-volume-mute text-[8.5px]"></i>
             </button>
             <button onclick="domCmdTV('vol_down')" title="Bajar Volumen"
-                    class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 flex items-center justify-center transition-all active:scale-95">
-              <i class="fas fa-minus text-[7.5px]"></i>
+                    class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 flex items-center justify-center transition-all active:scale-95">
+              <i class="fas fa-minus text-[8px]"></i>
             </button>
             <div class="px-1 text-center min-w-[24px]">
               <span class="text-[6px] font-black uppercase tracking-widest text-slate-500 block leading-none">VOL</span>
               <span id="dom-tv-vol-val" class="text-[10px] sm:text-[10.5px] font-black mono text-violet-400 leading-none">18</span>
             </div>
             <button onclick="domCmdTV('vol_up')" title="Subir Volumen"
-                    class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 flex items-center justify-center transition-all active:scale-95">
-              <i class="fas fa-plus text-[7.5px]"></i>
+                    class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 flex items-center justify-center transition-all active:scale-95">
+              <i class="fas fa-plus text-[8px]"></i>
             </button>
           </div>
         </div>
@@ -4515,35 +4521,35 @@
             <span id="dom-tv-active-app-badge" class="text-[7.5px] sm:text-[8px] font-bold text-slate-400 uppercase tracking-wider">Macros IR</span>
           </div>
           <div class="grid grid-cols-2 gap-1 sm:gap-1.5">
-            <button onclick="domAbrirAppTV('flow')" id="dom-tv-app-flow" class="group h-7.5 sm:h-8 px-2 rounded-xl bg-slate-900/90 hover:bg-emerald-950/40 border border-slate-800 hover:border-emerald-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
+            <button onclick="domAbrirAppTV('flow')" id="dom-tv-app-flow" class="group h-9 sm:h-8 px-2.5 rounded-xl bg-slate-900/90 hover:bg-emerald-950/40 border border-slate-800 hover:border-emerald-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
               <i class="fas fa-play-circle text-emerald-400 text-xs shrink-0"></i>
               <span class="text-[8px] sm:text-[8.5px] font-black text-white uppercase tracking-wider truncate">Flow</span>
             </button>
-            <button onclick="domAbrirAppTV('youtube')" id="dom-tv-app-youtube" class="group h-7.5 sm:h-8 px-2 rounded-xl bg-slate-900/90 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
+            <button onclick="domAbrirAppTV('youtube')" id="dom-tv-app-youtube" class="group h-9 sm:h-8 px-2.5 rounded-xl bg-slate-900/90 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
               <i class="fab fa-youtube text-rose-500 text-xs shrink-0"></i>
               <span class="text-[8px] sm:text-[8.5px] font-black text-white uppercase tracking-wider truncate">YouTube</span>
             </button>
-            <button onclick="domAbrirAppTV('stremio')" id="dom-tv-app-stremio" class="group h-7.5 sm:h-8 px-2 rounded-xl bg-slate-900/90 hover:bg-violet-950/40 border border-slate-800 hover:border-violet-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
+            <button onclick="domAbrirAppTV('stremio')" id="dom-tv-app-stremio" class="group h-9 sm:h-8 px-2.5 rounded-xl bg-slate-900/90 hover:bg-violet-950/40 border border-slate-800 hover:border-violet-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
               <i class="fas fa-play text-violet-400 text-xs shrink-0"></i>
               <span class="text-[8px] sm:text-[8.5px] font-black text-white uppercase tracking-wider truncate">Stremio</span>
             </button>
-            <button onclick="domAbrirAppTV('disney')" id="dom-tv-app-disney" class="group h-7.5 sm:h-8 px-2 rounded-xl bg-slate-900/90 hover:bg-blue-950/40 border border-slate-800 hover:border-blue-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
+            <button onclick="domAbrirAppTV('disney')" id="dom-tv-app-disney" class="group h-9 sm:h-8 px-2.5 rounded-xl bg-slate-900/90 hover:bg-blue-950/40 border border-slate-800 hover:border-blue-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
               <i class="fas fa-star text-blue-400 text-xs shrink-0"></i>
               <span class="text-[8px] sm:text-[8.5px] font-black text-white uppercase tracking-wider truncate">Disney+</span>
             </button>
-            <button onclick="domAbrirAppTV('paramount')" id="dom-tv-app-paramount" class="group h-7.5 sm:h-8 px-2 rounded-xl bg-slate-900/90 hover:bg-sky-950/40 border border-slate-800 hover:border-sky-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
+            <button onclick="domAbrirAppTV('paramount')" id="dom-tv-app-paramount" class="group h-9 sm:h-8 px-2.5 rounded-xl bg-slate-900/90 hover:bg-sky-950/40 border border-slate-800 hover:border-sky-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
               <i class="fas fa-mountain text-sky-400 text-xs shrink-0"></i>
               <span class="text-[8px] sm:text-[8.5px] font-black text-white uppercase tracking-wider truncate">Paramount</span>
             </button>
-            <button onclick="domAbrirAppTV('netflix')" id="dom-tv-app-netflix" class="group h-7.5 sm:h-8 px-2 rounded-xl bg-slate-900/90 hover:bg-red-950/40 border border-slate-800 hover:border-red-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
+            <button onclick="domAbrirAppTV('netflix')" id="dom-tv-app-netflix" class="group h-9 sm:h-8 px-2.5 rounded-xl bg-slate-900/90 hover:bg-red-950/40 border border-slate-800 hover:border-red-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
               <span class="font-black text-red-500 text-xs mono shrink-0">N</span>
               <span class="text-[8px] sm:text-[8.5px] font-black text-white uppercase tracking-wider truncate">Netflix</span>
             </button>
-            <button onclick="domAbrirAppTV('ytmusic')" id="dom-tv-app-ytmusic" class="group h-7.5 sm:h-8 px-2 rounded-xl bg-slate-900/90 hover:bg-pink-950/40 border border-slate-800 hover:border-pink-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
+            <button onclick="domAbrirAppTV('ytmusic')" id="dom-tv-app-ytmusic" class="group h-9 sm:h-8 px-2.5 rounded-xl bg-slate-900/90 hover:bg-pink-950/40 border border-slate-800 hover:border-pink-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
               <i class="fas fa-compact-disc text-pink-400 text-xs shrink-0"></i>
               <span class="text-[8px] sm:text-[8.5px] font-black text-white uppercase tracking-wider truncate">YT Music</span>
             </button>
-            <button onclick="domAbrirAppTV('kick')" id="dom-tv-app-kick" class="group h-7.5 sm:h-8 px-2 rounded-xl bg-slate-900/90 hover:bg-lime-950/40 border border-slate-800 hover:border-lime-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
+            <button onclick="domAbrirAppTV('kick')" id="dom-tv-app-kick" class="group h-9 sm:h-8 px-2.5 rounded-xl bg-slate-900/90 hover:bg-lime-950/40 border border-slate-800 hover:border-lime-500/50 flex items-center justify-start gap-1.5 transition-all active:scale-95">
               <span class="font-black text-lime-400 text-xs mono shrink-0">K</span>
               <span class="text-[8px] sm:text-[8.5px] font-black text-white uppercase tracking-wider truncate">Kick</span>
             </button>
@@ -4551,6 +4557,7 @@
         </div>
       </div>
 
+    </div>
     </div>
 
     <!-- Registro de Comandos enviados -->
@@ -18288,7 +18295,7 @@ function renderDomoticaUI() {
     const btn = document.getElementById('dom-ac-mode-' + m);
     if (!btn) return;
     const active = ac.mode === m;
-    btn.className = `h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all ${
+    btn.className = `h-9 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all ${
       active ? 'bg-cyan-600/25 border-cyan-400 text-cyan-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
     }`;
   });
@@ -18297,14 +18304,14 @@ function renderDomoticaUI() {
     const btn = document.getElementById('dom-ac-fan-' + f);
     if (!btn) return;
     const active = ac.fan === f;
-    btn.className = `h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
+    btn.className = `h-9 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
       active ? 'bg-cyan-600/25 border-cyan-400 text-cyan-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
     }`;
   });
 
   const swingBtn = document.getElementById('dom-ac-swing-btn');
   if (swingBtn) {
-    swingBtn.className = `h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1 ${
+    swingBtn.className = `h-9 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1 ${
       ac.swing ? 'bg-cyan-600/25 border-cyan-400 text-cyan-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
     }`;
   }
@@ -18398,7 +18405,7 @@ function renderDomoticaUI() {
     const btn = document.getElementById('dom-vac-mode-' + m);
     if (!btn) return;
     const active = vac.mode === m;
-    btn.className = `h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
+    btn.className = `h-9 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
       active ? 'bg-emerald-600/25 border-emerald-400 text-emerald-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
     }`;
   });
@@ -18407,7 +18414,7 @@ function renderDomoticaUI() {
     const btn = document.getElementById('dom-vac-suction-' + s);
     if (!btn) return;
     const active = vac.suction === s;
-    btn.className = `h-7.5 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
+    btn.className = `h-9 sm:h-8 rounded-xl border text-[8px] sm:text-[8.5px] font-black uppercase tracking-wider transition-all flex items-center justify-center ${
       active ? 'bg-emerald-600/25 border-emerald-400 text-emerald-300' : 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-400'
     }`;
   });
