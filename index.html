@@ -46,6 +46,7 @@
   #globalEditModal,
   #modal-ia,
   #modal-anual,
+  #modal-historico-categoria,
   #modal-ia-listas,
   #modal-keep-edit,
   #modal-domotica-config,
@@ -72,6 +73,7 @@
     #globalEditModal,
     #modal-ia,
     #modal-anual,
+    #modal-historico-categoria,
     #modal-ia-listas,
     #modal-keep-edit,
     #modal-domotica-config,
@@ -98,6 +100,7 @@
   #globalEditModal > div,
   #modal-ia > div.relative,
   #modal-anual > div.relative,
+  #modal-historico-categoria > div.relative,
   #modal-ia-listas > div.relative,
   #modal-keep-edit > div,
   #modal-domotica-config > div,
@@ -129,6 +132,7 @@
     #globalEditModal > div,
     #modal-ia > div.relative,
     #modal-anual > div.relative,
+    #modal-historico-categoria > div.relative,
     #modal-ia-listas > div.relative,
     #modal-keep-edit > div,
     #modal-domotica-config > div,
@@ -173,7 +177,8 @@
   }
   #modal-command-palette > div,
   #modal-keep-edit > div,
-  #modal-detalle-sueno > div {
+  #modal-detalle-sueno > div,
+  #modal-historico-categoria > div.relative {
     max-width: 36rem !important;
   }
   #globalEditModal > div,
@@ -2438,8 +2443,8 @@
             </div>
           </div>
 
-          <!-- Nueva Tarjeta: Ritmo de Gasto Mensual vs Promedio Anual -->
-          <div class="md:col-span-3 group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden flex flex-col justify-center">
+          <!-- Ritmo de Gasto Mensual vs Promedio Anual (2 columnas: bajo Ingresos y Balance) -->
+          <div class="md:col-span-2 group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden flex flex-col justify-center">
             <div class="absolute inset-0 bg-gradient-to-br from-indigo-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
             <div class="flex justify-between items-start mb-2.5 relative z-10">
               <div>
@@ -2455,6 +2460,35 @@
             <div class="flex justify-between mt-2.5 relative z-10">
               <p id="gasto-actual-val" class="text-[11px] text-slate-300 mono font-bold">Actual: $0</p>
               <p id="gasto-promedio-val" class="text-[11px] text-slate-400 mono font-bold">Promedio mensual: $0</p>
+            </div>
+          </div>
+
+          <!-- Tarjeta: Herramientas (1 columna: bajo Gastos) -->
+          <div class="md:col-span-1 group bg-black p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden flex flex-col justify-between">
+            <div class="absolute inset-0 bg-gradient-to-br from-indigo-900/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-2xl pointer-events-none"></div>
+            <div class="flex items-center justify-between mb-2 relative z-10">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-lg bg-indigo-900/50 border border-indigo-500/30 flex items-center justify-center">
+                  <i class="fas fa-chart-pie text-indigo-400 text-xs"></i>
+                </div>
+                <span class="text-[10px] font-black text-white uppercase tracking-[0.18em]">Herramientas</span>
+              </div>
+              <span class="text-[9px] font-bold text-indigo-300 mono px-2 py-0.5 rounded-full bg-indigo-500/15 border border-indigo-500/25">Análisis</span>
+            </div>
+            <p class="text-[11px] text-slate-400 mb-3 relative z-10 leading-snug">Consultas y estadísticas avanzadas del historial financiero.</p>
+            <div class="space-y-2 relative z-10 mt-auto">
+              <button type="button" onclick="abrirModalHistoricoCategoria()" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/70 hover:border-indigo-500/50 text-slate-200 hover:text-white transition-all duration-200 group/btn shadow-sm">
+                <div class="flex items-center gap-2.5 text-left">
+                  <div class="w-6 h-6 rounded-md bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-xs group-hover/btn:bg-indigo-500 group-hover/btn:text-white transition-colors">
+                    <i class="fas fa-layer-group"></i>
+                  </div>
+                  <div>
+                    <span class="text-xs font-bold block leading-tight">Histórico por Categoría</span>
+                    <span class="text-[9px] text-slate-400 block font-medium leading-tight">Total y promedio mensual</span>
+                  </div>
+                </div>
+                <i class="fas fa-chevron-right text-xs text-slate-500 group-hover/btn:text-indigo-400 group-hover/btn:translate-x-0.5 transition-all"></i>
+              </button>
             </div>
           </div>
         </div>
@@ -2554,6 +2588,84 @@
                   </thead>
                   <tbody id="modal-tabla-meses"></tbody>
                 </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODAL HISTÓRICO POR CATEGORÍA -->
+        <div id="modal-historico-categoria" class="fixed inset-0 z-[200] flex items-center justify-center p-4" style="display:none!important">
+          <div class="absolute inset-0 bg-black/75 backdrop-blur-sm" onclick="cerrarModalHistoricoCategoria()"></div>
+          <div class="relative bg-black rounded-2xl border border-slate-700/60 shadow-2xl w-full max-w-xl max-h-[90vh] flex flex-col overflow-hidden">
+            <!-- Header -->
+            <div class="px-6 py-4 border-b border-slate-700/60 flex items-center justify-between bg-slate-900/40">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-indigo-900/40 border border-indigo-500/30 flex items-center justify-center">
+                  <i class="fas fa-layer-group text-indigo-400 text-xs"></i>
+                </div>
+                <div>
+                  <h3 class="font-black text-white uppercase tracking-widest text-sm">Histórico por Categoría</h3>
+                  <p class="text-[10px] text-slate-400 mt-0.5">Total acumulado y promedio mensual según período</p>
+                </div>
+              </div>
+              <button onclick="cerrarModalHistoricoCategoria()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-800 hover:bg-slate-700 transition-colors text-slate-400 hover:text-white">
+                <i class="fas fa-times text-xs"></i>
+              </button>
+            </div>
+
+            <!-- Body -->
+            <div class="overflow-y-auto flex-1 p-5 sm:p-6 space-y-4">
+              <!-- Selector de Categoría (única cosa a seleccionar) -->
+              <div>
+                <label for="modal-cat-select" class="block text-[10px] font-black text-white uppercase tracking-widest mb-1.5">
+                  Seleccionar Categoría
+                </label>
+                <div class="relative">
+                  <select id="modal-cat-select" onchange="calcularHistoricoCategoria()"
+                          class="w-full h-11 px-4 pr-10 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/60 text-sm font-bold text-white cursor-pointer appearance-none">
+                    <!-- Dinámico con optgroups Gastos e Ingresos -->
+                  </select>
+                  <div class="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 text-xs">
+                    <i class="fas fa-chevron-down"></i>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Selector de Período con estilos de filtro de página -->
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="text-[10px] font-black text-white uppercase tracking-widest">Período</span>
+                  <span id="modal-cat-rango-info" class="text-[10px] mono text-slate-400 font-medium"></span>
+                </div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <button type="button" id="modal-cat-btn-historico" onclick="setModoFiltroCat('historico')"
+                          class="h-8 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all bg-blue-600 text-white shadow-lg shadow-blue-600/25 border border-blue-500">
+                    Histórico
+                  </button>
+                  <button type="button" id="modal-cat-btn-personalizado" onclick="setModoFiltroCat('personalizado')"
+                          class="h-8 px-3.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5 bg-slate-900 border border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-white">
+                    <i class="fas fa-calendar-alt"></i> Personalizado
+                  </button>
+                </div>
+
+                <!-- Controles personalizado (Desde / Hasta) -->
+                <div id="modal-cat-custom-dates" class="hidden items-center gap-2 mt-3 p-3 bg-slate-900/60 border border-slate-800 rounded-xl flex-wrap sm:flex-nowrap">
+                  <div class="flex-1 min-w-[120px]">
+                    <span class="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Desde</span>
+                    <input type="date" id="modal-cat-fecha-inicio" onchange="calcularHistoricoCategoria()"
+                           class="w-full h-8 px-2.5 bg-slate-800 border border-slate-700 rounded-lg text-xs font-bold text-white mono outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50">
+                  </div>
+                  <div class="flex-1 min-w-[120px]">
+                    <span class="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Hasta</span>
+                    <input type="date" id="modal-cat-fecha-fin" onchange="calcularHistoricoCategoria()"
+                           class="w-full h-8 px-2.5 bg-slate-800 border border-slate-700 rounded-lg text-xs font-bold text-white mono outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Resultados: Total y Promedio Mensual -->
+              <div id="modal-cat-results" class="space-y-3 pt-2">
+                <!-- Se inyecta dinámicamente con las tarjetas de resultado -->
               </div>
             </div>
           </div>
@@ -7966,6 +8078,7 @@ document.addEventListener('keydown', e => {
     cerrarModalEditarOp();
     cerrarModalIA();
     cerrarModalIAListas();
+    cerrarModalHistoricoCategoria();
   }
 });
 
@@ -8059,6 +8172,330 @@ function renderModalAnio(anio) {
         <td class="px-4 py-3 text-sm text-right mono font-black ${balColor}">${esFuturo ? '—' : balStr}</td>
       </tr>`;
   }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// MODAL HISTÓRICO POR CATEGORÍA
+// ═══════════════════════════════════════════════════════════════════════════════
+let modalCatPeriodo = 'historico'; // 'historico' | 'personalizado'
+
+function abrirModalHistoricoCategoria() {
+  const modal = document.getElementById('modal-historico-categoria');
+  if (!modal) return;
+  modal.style.removeProperty('display');
+  modal.style.display = 'flex';
+
+  const hoy = new Date();
+  const anio = hoy.getFullYear();
+  const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+  const dia = String(hoy.getDate()).padStart(2, '0');
+  const fechaHoyStr = `${anio}-${mes}-${dia}`;
+  const fechaInicioAnioStr = `${anio}-01-01`;
+
+  const inpDesde = document.getElementById('modal-cat-fecha-inicio');
+  const inpHasta = document.getElementById('modal-cat-fecha-fin');
+  if (inpDesde && !inpDesde.value) inpDesde.value = fechaInicioAnioStr;
+  if (inpHasta && !inpHasta.value) inpHasta.value = fechaHoyStr;
+
+  poblarSelectCategoriasHistorico();
+  setModoFiltroCat('historico');
+}
+
+function cerrarModalHistoricoCategoria() {
+  const modal = document.getElementById('modal-historico-categoria');
+  if (modal) modal.style.setProperty('display', 'none', 'important');
+}
+
+function poblarSelectCategoriasHistorico() {
+  const selEl = document.getElementById('modal-cat-select');
+  if (!selEl) return;
+
+  const mapGastos = new Map();
+  const mapIngresos = new Map();
+
+  (datosHistoricos || []).forEach(r => {
+    const tipo = String(r[1] || '').trim();
+    const cat = String(r[3] || '').trim();
+    if (!cat) return;
+    if (tipo.toLowerCase() === 'ingreso') {
+      mapIngresos.set(cat, (mapIngresos.get(cat) || 0) + 1);
+    } else {
+      mapGastos.set(cat, (mapGastos.get(cat) || 0) + 1);
+    }
+  });
+
+  const sidebarCatSelect = document.getElementById('categoria');
+  if (sidebarCatSelect && sidebarCatSelect.options) {
+    for (let i = 0; i < sidebarCatSelect.options.length; i++) {
+      const optVal = sidebarCatSelect.options[i].value;
+      if (optVal && !mapGastos.has(optVal) && !mapIngresos.has(optVal)) {
+        mapGastos.set(optVal, 0);
+      }
+    }
+  }
+
+  const gastosList = Array.from(mapGastos.keys()).sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
+  const ingresosList = Array.from(mapIngresos.keys()).sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
+
+  if (gastosList.length === 0 && ingresosList.length === 0) {
+    selEl.innerHTML = '<option value="">Sin categorías registradas</option>';
+    return;
+  }
+
+  let html = '';
+  if (gastosList.length > 0) {
+    html += '<optgroup label="Gastos">';
+    gastosList.forEach((c, idx) => {
+      const meta = getCategoriaMeta(c, idx, false);
+      const icon = meta && meta.emoji ? meta.emoji + ' ' : '';
+      html += `<option value="Gasto:::${c}">${icon}${c}</option>`;
+    });
+    html += '</optgroup>';
+  }
+  if (ingresosList.length > 0) {
+    html += '<optgroup label="Ingresos">';
+    ingresosList.forEach((c, idx) => {
+      const meta = getCategoriaMeta(c, idx, true);
+      const icon = meta && meta.emoji ? meta.emoji + ' ' : '';
+      html += `<option value="Ingreso:::${c}">${icon}${c}</option>`;
+    });
+    html += '</optgroup>';
+  }
+
+  selEl.innerHTML = html;
+}
+
+function setModoFiltroCat(modo) {
+  modalCatPeriodo = modo;
+  const btnHist = document.getElementById('modal-cat-btn-historico');
+  const btnPers = document.getElementById('modal-cat-btn-personalizado');
+  const boxDates = document.getElementById('modal-cat-custom-dates');
+
+  const activeCls = ['bg-blue-600', 'text-white', 'shadow-lg', 'shadow-blue-600/25', 'border', 'border-blue-500'];
+  const inactiveCls = ['bg-slate-900', 'border', 'border-slate-800', 'text-slate-400', 'hover:bg-slate-800', 'hover:text-white'];
+
+  if (modo === 'historico') {
+    if (btnHist) {
+      btnHist.classList.remove(...inactiveCls);
+      btnHist.classList.add(...activeCls);
+    }
+    if (btnPers) {
+      btnPers.classList.remove(...activeCls);
+      btnPers.classList.add(...inactiveCls);
+    }
+    if (boxDates) boxDates.classList.add('hidden');
+  } else {
+    if (btnPers) {
+      btnPers.classList.remove(...inactiveCls);
+      btnPers.classList.add(...activeCls);
+    }
+    if (btnHist) {
+      btnHist.classList.remove(...activeCls);
+      btnHist.classList.add(...inactiveCls);
+    }
+    if (boxDates) {
+      boxDates.classList.remove('hidden');
+      boxDates.classList.add('flex');
+    }
+  }
+  calcularHistoricoCategoria();
+}
+
+function calcularHistoricoCategoria() {
+  const selEl = document.getElementById('modal-cat-select');
+  const resContainer = document.getElementById('modal-cat-results');
+  const rangoInfoEl = document.getElementById('modal-cat-rango-info');
+  if (!selEl || !resContainer) return;
+
+  const val = selEl.value;
+  if (!val) {
+    if (rangoInfoEl) rangoInfoEl.textContent = '';
+    resContainer.innerHTML = `
+      <div class="p-6 text-center text-slate-500 text-xs">
+        <i class="fas fa-layer-group text-2xl mb-2 text-slate-600"></i>
+        <p>Selecciona una categoría para ver su historial y promedios.</p>
+      </div>`;
+    return;
+  }
+
+  const parts = val.split(':::');
+  const selTipo = parts[0] || 'Gasto';
+  const selCat = parts[1] || '';
+  const esIngreso = selTipo.toLowerCase() === 'ingreso';
+
+  let rows = (datosHistoricos || []).filter(r => {
+    const t = String(r[1] || '').trim().toLowerCase();
+    const c = String(r[3] || '').trim().toLowerCase();
+    return t === selTipo.toLowerCase() && c === selCat.toLowerCase();
+  });
+
+  const inpDesde = document.getElementById('modal-cat-fecha-inicio')?.value;
+  const inpHasta = document.getElementById('modal-cat-fecha-fin')?.value;
+  let dInicio = null;
+  let dFin = null;
+
+  if (modalCatPeriodo === 'personalizado') {
+    if (inpDesde && inpHasta) {
+      dInicio = new Date(inpDesde + 'T00:00:00');
+      dFin = new Date(inpHasta + 'T23:59:59');
+      if (dInicio > dFin) {
+        const temp = dInicio;
+        dInicio = dFin;
+        dFin = temp;
+      }
+      rows = rows.filter(r => {
+        const f = new Date(r[0]);
+        return !isNaN(f) && f >= dInicio && f <= dFin;
+      });
+    }
+  }
+
+  rows.sort((a, b) => new Date(b[0]) - new Date(a[0]));
+
+  const format = n => '$' + Math.abs(n).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  const meta = getCategoriaMeta(selCat, 0, esIngreso);
+
+  if (rows.length === 0) {
+    if (rangoInfoEl) rangoInfoEl.textContent = '0 movimientos';
+    resContainer.innerHTML = `
+      <div class="p-4 rounded-xl bg-slate-900/40 border border-slate-800 text-center">
+        <div class="w-10 h-10 mx-auto rounded-xl flex items-center justify-center text-lg mb-2 ${esIngreso ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}">
+          ${meta && meta.emoji ? meta.emoji : (esIngreso ? '💰' : '📌')}
+        </div>
+        <h4 class="text-xs font-bold text-white uppercase tracking-wider">${selCat}</h4>
+        <p class="text-[11px] text-slate-400 mt-1">No se encontraron movimientos registrados en el período seleccionado.</p>
+        <div class="grid grid-cols-2 gap-3 mt-4">
+          <div class="p-3 bg-slate-950/50 rounded-lg border border-slate-800">
+            <span class="block text-[9px] uppercase font-bold text-slate-500">Total</span>
+            <span class="text-lg font-black mono text-slate-400">$0</span>
+          </div>
+          <div class="p-3 bg-slate-950/50 rounded-lg border border-slate-800">
+            <span class="block text-[9px] uppercase font-bold text-slate-500">Promedio mensual</span>
+            <span class="text-lg font-black mono text-slate-400">$0</span>
+          </div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  let total = 0;
+  const mesesConRegistros = new Set();
+  let minFecha = null;
+  let maxFecha = null;
+
+  rows.forEach(r => {
+    const m = parseFloat(r[4]) || 0;
+    total += m;
+    const f = new Date(r[0]);
+    if (!isNaN(f)) {
+      mesesConRegistros.add(`${f.getFullYear()}-${f.getMonth()}`);
+      if (!minFecha || f < minFecha) minFecha = f;
+      if (!maxFecha || f > maxFecha) maxFecha = f;
+    }
+  });
+
+  let mesesEnRango = 1;
+  let infoRango = '';
+
+  const formatMesAnio = d => {
+    if (!d || isNaN(d)) return '';
+    return d.toLocaleDateString('es-AR', { month: 'short', year: 'numeric' });
+  };
+
+  if (modalCatPeriodo === 'personalizado' && dInicio && dFin) {
+    mesesEnRango = Math.max(1, (dFin.getFullYear() - dInicio.getFullYear()) * 12 + (dFin.getMonth() - dInicio.getMonth()) + 1);
+    infoRango = `${inpDesde.split('-').reverse().join('/')} al ${inpHasta.split('-').reverse().join('/')}`;
+  } else {
+    if (minFecha && maxFecha) {
+      mesesEnRango = Math.max(1, (maxFecha.getFullYear() - minFecha.getFullYear()) * 12 + (maxFecha.getMonth() - minFecha.getMonth()) + 1);
+      infoRango = `${formatMesAnio(minFecha)} - ${formatMesAnio(maxFecha)}`;
+    } else {
+      mesesEnRango = 1;
+      infoRango = 'Histórico';
+    }
+  }
+
+  const promedioMensual = total / mesesEnRango;
+  if (rangoInfoEl) {
+    rangoInfoEl.textContent = `${mesesEnRango} ${mesesEnRango === 1 ? 'mes' : 'meses'} · ${rows.length} ${rows.length === 1 ? 'movimiento' : 'movimientos'}`;
+  }
+
+  const badgeColor = esIngreso
+    ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+    : 'bg-rose-500/15 text-rose-300 border-rose-500/30';
+  const cardColor = esIngreso
+    ? 'bg-emerald-950/20 border-emerald-500/30'
+    : 'bg-rose-950/20 border-rose-500/30';
+  const textAmountColor = esIngreso ? 'text-green-300' : 'text-red-300';
+  const labelColor = esIngreso ? 'text-green-400' : 'text-red-400';
+
+  resContainer.innerHTML = `
+    <!-- Header de categoría -->
+    <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-lg shrink-0 ${esIngreso ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'}">
+          ${meta && meta.emoji ? meta.emoji : (esIngreso ? '💰' : '📌')}
+        </div>
+        <div class="min-w-0">
+          <h4 class="text-sm font-black text-white truncate">${selCat}</h4>
+          <p class="text-[10px] text-slate-400 mono">${infoRango}</p>
+        </div>
+      </div>
+      <span class="text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full border shrink-0 ${badgeColor}">
+        ${esIngreso ? 'Ingreso' : 'Gasto'}
+      </span>
+    </div>
+
+    <!-- Tarjetas de métricas: Total y Promedio -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <!-- Total -->
+      <div class="p-4 rounded-xl border ${cardColor} relative overflow-hidden">
+        <p class="text-[10px] font-black uppercase tracking-widest ${labelColor} mb-1">
+          Total ${esIngreso ? 'Ingresos' : 'Gastos'}
+        </p>
+        <p class="text-2xl sm:text-3xl font-black mono tracking-tight ${textAmountColor}">
+          ${format(total)}
+        </p>
+        <p class="text-[10px] text-slate-400 mt-1.5 mono">
+          ${rows.length} ${rows.length === 1 ? 'movimiento registrado' : 'movimientos registrados'}
+        </p>
+      </div>
+
+      <!-- Promedio Mensual -->
+      <div class="p-4 rounded-xl border border-indigo-500/30 bg-indigo-950/20 relative overflow-hidden">
+        <p class="text-[10px] font-black uppercase tracking-widest text-indigo-300 mb-1">
+          Promedio Mensual
+        </p>
+        <p class="text-2xl sm:text-3xl font-black text-white mono tracking-tight">
+          ${format(promedioMensual)}
+        </p>
+        <p class="text-[10px] text-slate-400 mt-1.5 mono">
+          En ${mesesEnRango} ${mesesEnRango === 1 ? 'mes evaluado' : 'meses evaluados'} ${mesesConRegistros.size !== mesesEnRango ? `(${mesesConRegistros.size} con act.)` : ''}
+        </p>
+      </div>
+    </div>
+
+    <!-- Lista de movimientos de la categoría -->
+    <div class="rounded-xl border border-slate-800 bg-slate-900/40 overflow-hidden">
+      <div class="px-4 py-2 bg-slate-800/60 border-b border-slate-800 flex items-center justify-between">
+        <span class="text-[10px] font-black text-white uppercase tracking-wider">Detalle de movimientos</span>
+        <span class="text-[9px] text-slate-400 mono font-bold">${rows.length} reg.</span>
+      </div>
+      <div class="max-h-44 overflow-y-auto divide-y divide-slate-800/60">
+        ${rows.slice(0, 50).map(r => `
+          <div class="px-4 py-2 flex items-center justify-between text-xs hover:bg-slate-800/30 transition-colors">
+            <div class="min-w-0 pr-2">
+              <p class="font-bold text-white truncate text-[11px]">${r[2] || 'Sin concepto'}</p>
+              <p class="text-[9px] text-slate-400 mono">${formatFecha(r[0])}${r[5] ? ` · ${r[5]}` : ''}</p>
+            </div>
+            <span class="font-black mono text-xs shrink-0 ${textAmountColor}">
+              ${format(parseFloat(r[4]) || 0)}
+            </span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
