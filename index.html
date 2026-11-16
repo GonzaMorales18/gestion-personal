@@ -2791,6 +2791,13 @@
               <label class="text-[10px] font-bold text-white uppercase ml-1">Tipo de Activo a comprar</label>
               <select id="ah-tipo" onchange="onAhTipoChange()" class="w-full h-11 px-4 bg-slate-900 border border-slate-700/80 rounded-xl outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 text-sm text-white font-bold">
                 <option value="">— Seleccioná —</option>
+                <option value="Divisas">Divisas</option>
+                <option value="Cripto">Cripto</option>
+                <option value="Acciones BYMA">Acciones BYMA</option>
+                <option value="CEDEARs">CEDEARs</option>
+                <option value="Bonos">Bonos</option>
+                <option value="Obligaciones Negociables">Obligaciones Negociables</option>
+                <option value="Fondos de Inversión">Fondos de Inversión</option>
               </select>
             </div>
 
@@ -8926,7 +8933,7 @@ function isDolarActivo(a) {
   const tipo = (typeof a === 'string' ? a : (a.tipo || '')).toUpperCase();
   const ticker = (typeof a === 'object' && a.ticker ? a.ticker : '').toUpperCase();
   const desc = (typeof a === 'object' && (a.plataforma || a.descripcion) ? (a.plataforma || a.descripcion) : '').toUpperCase();
-  if (tipo.includes('OBLIGACI') || tipo === 'ON' || tipo === 'ACCION' || tipo === 'ACCIÓN' || tipo === 'CEDEAR' || tipo === 'BONO') return false;
+  if (tipo.includes('OBLIGACI') || tipo === 'ON' || tipo === 'ACCION' || tipo === 'ACCIÓN' || tipo === 'CEDEAR' || tipo === 'BONO' || tipo.includes('FONDO') || tipo === 'FCI') return false;
   if (ticker === 'EUR' || ticker === 'BRL' || ticker === 'GBP') return false;
   return tipo === 'USD' || ticker === 'USD' || (tipo.includes('DIVISA') && (ticker === 'USD' || !ticker)) || tipo.includes('DOLAR') || tipo.includes('DÓLAR') || desc.includes('DOLAR') || desc.includes('DÓLAR') || desc.includes('USD');
 }
@@ -8943,6 +8950,12 @@ function isCriptoActivo(a) {
   const tipo = (typeof a === 'string' ? a : (a.tipo || '')).toUpperCase();
   const ticker = (typeof a === 'object' && a.ticker ? a.ticker : '').toUpperCase();
   return tipo === 'BTC' || tipo.includes('CRIPTO') || ticker === 'BTC' || ticker === 'ETH' || ticker === 'USDT' || ticker === 'SOL';
+}
+
+function isFondoActivo(a) {
+  if (!a) return false;
+  const tipo = (typeof a === 'string' ? a : (a.tipo || '')).toUpperCase();
+  return tipo.includes('FONDO') || tipo === 'FCI';
 }
 
 function tipoRequiereTicker(tipo) {
@@ -10048,6 +10061,10 @@ function usarCotizacionEnFormulario(symbol, precio, tipo, moneda) {
       chkUsd.checked = (moneda === 'USD' || symbol.toUpperCase().endsWith('O') || symbol.toUpperCase().endsWith('D'));
       onMonedaCotizacionChange();
     }
+  } else if (tUp.includes('FONDO') || tUp === 'FCI') {
+    if (selTipo) selTipo.value = 'Fondos de Inversión';
+    onAhTipoChange();
+    if (inpTicker) inpTicker.value = symbol.toUpperCase();
   }
 
   if (inpPrecio && precio) {
@@ -10220,7 +10237,13 @@ const COLORES_TIPOS_ACTIVO = {
   ON: '#38bdf8',
   CEDEAR: '#8b5cf6',
   CEDEARs: '#8b5cf6',
-  FCI: '#f97316'
+  FCI: '#f97316',
+  'Fondos de Inversión': '#f97316',
+  'Fondo de Inversión': '#f97316',
+  'Fondos Comunes de Inversión': '#f97316',
+  'Fondo Común de Inversión': '#f97316',
+  'Fondos': '#f97316',
+  'Fondo': '#f97316'
 };
 const PALETA_FALLBACK_TIPOS = ['#ec4899', '#3b82f6', '#14b8a6', '#a855f7', '#f43f5e', '#84cc16'];
 const PALETA_PLATAFORMAS = ['#10b981', '#6366f1', '#06b6d4', '#f59e0b', '#ec4899', '#8b5cf6', '#3b82f6', '#14b8a6', '#f43f5e'];
@@ -10600,7 +10623,7 @@ function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
     CEDEAR: '🌐', CEDEARs: '🌐',
     Bono: '📜', Bonos: '📜',
     'Obligación Negociable': '📑', 'Obligaciones Negociables': '📑', 'Obligacion Negociable': '📑', ON: '📑',
-    FCI: '📊'
+    FCI: '📊', 'Fondos de Inversión': '📊', 'Fondo de Inversión': '📊', 'Fondos Comunes de Inversión': '📊', 'Fondo Común de Inversión': '📊', 'Fondos': '📊'
   };
 
   // 1. Agrupar estrictamente POR ACTIVO / TICKER
@@ -10629,6 +10652,7 @@ function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
       else if (a.tipo === 'Accion' || a.tipo === 'Acción') icon = '📈';
       else if (a.tipo === 'Bono') icon = '📄';
       else if (a.tipo === 'Obligación Negociable' || a.tipo === 'ON') icon = '📑';
+      else if (a.tipo === 'Fondos de Inversión' || a.tipo === 'FCI' || (a.tipo && a.tipo.includes('Fondo'))) icon = '📊';
     } else {
       key = (a.tipo || 'OTRO').toUpperCase();
       nombreActivo = a.tipo || 'Activo';
@@ -10935,7 +10959,7 @@ function renderModalVerMasFiltrado(query) {
     CEDEAR: '🌐', CEDEARs: '🌐',
     Bono: '📜', Bonos: '📜',
     'Obligación Negociable': '📑', 'Obligaciones Negociables': '📑', 'Obligacion Negociable': '📑', ON: '📑',
-    FCI: '📊'
+    FCI: '📊', 'Fondos de Inversión': '📊', 'Fondo de Inversión': '📊', 'Fondos Comunes de Inversión': '📊', 'Fondo Común de Inversión': '📊', 'Fondos': '📊'
   };
 
   let rowsHtml = '';
@@ -11026,7 +11050,7 @@ function renderTablaAhorros() {
     CEDEAR: '🌐', CEDEARs: '🌐',
     Bono: '📜', Bonos: '📜',
     'Obligación Negociable': '📑', 'Obligaciones Negociables': '📑', 'Obligacion Negociable': '📑', ON: '📑',
-    FCI: '📊'
+    FCI: '📊', 'Fondos de Inversión': '📊', 'Fondo de Inversión': '📊', 'Fondos Comunes de Inversión': '📊', 'Fondo Común de Inversión': '📊', 'Fondos': '📊'
   };
   const tipoColor = {
     USD:    'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
@@ -11037,7 +11061,12 @@ function renderTablaAhorros() {
     Bono:   'bg-cyan-500/15 text-cyan-300 border-cyan-500/30',
     'Obligación Negociable': 'bg-sky-500/15 text-sky-300 border-sky-500/30',
     'Obligacion Negociable': 'bg-sky-500/15 text-sky-300 border-sky-500/30',
-    ON:     'bg-sky-500/15 text-sky-300 border-sky-500/30'
+    ON:     'bg-sky-500/15 text-sky-300 border-sky-500/30',
+    FCI:    'bg-orange-500/15 text-orange-300 border-orange-500/30',
+    'Fondos de Inversión': 'bg-orange-500/15 text-orange-300 border-orange-500/30',
+    'Fondo de Inversión': 'bg-orange-500/15 text-orange-300 border-orange-500/30',
+    'Fondos Comunes de Inversión': 'bg-orange-500/15 text-orange-300 border-orange-500/30',
+    'Fondo Común de Inversión': 'bg-orange-500/15 text-orange-300 border-orange-500/30'
   };
   let totalARS = 0, totalUSD = 0;
 
@@ -11507,7 +11536,8 @@ function fillTiposActivo() {
     'Acciones BYMA',
     'CEDEARs',
     'Bonos',
-    'Obligaciones Negociables'
+    'Obligaciones Negociables',
+    'Fondos de Inversión'
   ];
 
   let opciones = [...CANONICAL_TIPOS];
@@ -11522,7 +11552,9 @@ function fillTiposActivo() {
         (tNorm.toLowerCase().includes('accion') && o === 'Acciones BYMA') ||
         (tNorm.toLowerCase().includes('cedear') && o === 'CEDEARs') ||
         (tNorm.toLowerCase().includes('bono') && o === 'Bonos') ||
-        (tNorm.toLowerCase().includes('obligaci') && o === 'Obligaciones Negociables')
+        (tNorm.toLowerCase().includes('obligaci') && o === 'Obligaciones Negociables') ||
+        (tNorm.toLowerCase().includes('fondo') && o === 'Fondos de Inversión') ||
+        (tNorm.toLowerCase() === 'fci' && o === 'Fondos de Inversión')
       );
       if (!yaExiste) opciones.push(tNorm);
     });
@@ -11549,6 +11581,7 @@ function fillTiposActivo() {
       else if (vUp.includes('CEDEAR')) selCompra.value = 'CEDEARs';
       else if (vUp.includes('BONO')) selCompra.value = 'Bonos';
       else if (vUp.includes('OBLIGACI') || vUp === 'ON') selCompra.value = 'Obligaciones Negociables';
+      else if (vUp.includes('FONDO') || vUp === 'FCI') selCompra.value = 'Fondos de Inversión';
     }
   }
 }
@@ -11611,6 +11644,7 @@ function aplicarColorTipoCompraAhorro(tipo) {
   const previewVal = document.getElementById('compra-pnl-valor');
   const esDolar = isDivisaActivo(tipo);
   const esCripto = isCriptoActivo(tipo);
+  const esFondo = isFondoActivo(tipo);
 
   if (sel) {
     if (esDolar) {
@@ -11619,6 +11653,9 @@ function aplicarColorTipoCompraAhorro(tipo) {
     } else if (esCripto) {
       sel.style.borderColor = COLORES_ACTIVOS_AHORRO.BTC;
       sel.style.color = '#fde047';
+    } else if (esFondo) {
+      sel.style.borderColor = '#f97316';
+      sel.style.color = '#fdba74';
     } else {
       sel.style.borderColor = '';
       sel.style.color = '';
@@ -11699,6 +11736,14 @@ function onAhTipoChange() {
     if (tInp) tInp.placeholder = 'YMCXO';
     if (chkUsd && !chkUsd.checked) {
       chkUsd.checked = true;
+      onMonedaCotizacionChange();
+    }
+  } else if (tipo.includes('Fondo') || tipo === 'FCI') {
+    if (tLabel) tLabel.innerHTML = 'Fondo / Símbolo';
+    if (tHint) tHint.innerHTML = '(ej: Balanz Ahorro, FIMA, Delta, Premier)';
+    if (tInp) tInp.placeholder = 'Ej: Balanz Ahorro';
+    if (chkUsd && chkUsd.checked) {
+      chkUsd.checked = false;
       onMonedaCotizacionChange();
     }
   } else {
@@ -11792,7 +11837,15 @@ function onCompraActivoExistenteChange() {
   }
   const a = posiciones[idx];
   const selTipo = document.getElementById('ah-tipo');
-  if (selTipo) selTipo.value = a.tipo;
+  if (selTipo) {
+    if (Array.from(selTipo.options).some(o => o.value === a.tipo)) {
+      selTipo.value = a.tipo;
+    } else if (a.tipo && (a.tipo.toUpperCase().includes('FONDO') || a.tipo.toUpperCase() === 'FCI')) {
+      selTipo.value = 'Fondos de Inversión';
+    } else {
+      selTipo.value = a.tipo;
+    }
+  }
   onAhTipoChange();
 
   const inpTicker = document.getElementById('ah-ticker');
@@ -11829,6 +11882,7 @@ document.getElementById('ahorrosForm').addEventListener('submit', async e => {
   if (!cant || cant <= 0) return showToast('Ingresá una cantidad válida', 'error');
   if (isDivisaActivo(tipo) && !ticker) ticker = 'USD';
   if (isCriptoActivo(tipo) && !ticker) ticker = 'BTC';
+  if ((tipo.includes('Fondo') || tipo === 'FCI') && !ticker) ticker = (plataforma || 'FCI').toUpperCase();
   if (tipoRequiereTicker(tipo) && !ticker) return showToast('Ingresá el ticker', 'error');
 
   let precioActual = parseFloat(document.getElementById('ah-precio-manual').value);
@@ -12208,7 +12262,7 @@ function renderTablaOperaciones() {
     CEDEAR: '🌐', CEDEARs: '🌐',
     Bono: '📜', Bonos: '📜',
     'Obligación Negociable': '📑', 'Obligaciones Negociables': '📑', 'Obligacion Negociable': '📑', ON: '📑',
-    FCI: '📊'
+    FCI: '📊', 'Fondos de Inversión': '📊', 'Fondo de Inversión': '📊', 'Fondos Comunes de Inversión': '📊', 'Fondo Común de Inversión': '📊', 'Fondos': '📊'
   };
 
   tbody.innerHTML = operacionesData.map((op, i) => {
