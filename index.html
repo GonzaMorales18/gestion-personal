@@ -48,6 +48,7 @@
   #modal-anual,
   #modal-historico-categoria,
   #modal-gestion-plataformas,
+  #modal-ver-mas-inversiones,
   #modal-ia-listas,
   #modal-keep-edit,
   #modal-domotica-config,
@@ -104,6 +105,7 @@
   #modal-anual > div.relative,
   #modal-historico-categoria > div.relative,
   #modal-gestion-plataformas > div.relative,
+  #modal-ver-mas-inversiones > div.relative,
   #modal-ia-listas > div.relative,
   #modal-keep-edit > div,
   #modal-domotica-config > div,
@@ -183,7 +185,8 @@
   #modal-keep-edit > div,
   #modal-detalle-sueno > div,
   #modal-historico-categoria > div.relative,
-  #modal-gestion-plataformas > div.relative {
+  #modal-gestion-plataformas > div.relative,
+  #modal-ver-mas-inversiones > div.relative {
     max-width: 36rem !important;
   }
   #globalEditModal > div,
@@ -301,6 +304,15 @@
 
   /* Chart center text plugin */
   .chart-wrapper { position: relative; }
+  
+  #center-ahorros-cartera,
+  #center-ahorros-tipo,
+  #center-ahorros-plat {
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+  }
+
   .chart-center-label {
     position: absolute; top: 50%; left: 50%;
     transform: translate(-50%, -60%);
@@ -3030,7 +3042,7 @@
             <span id="ah-composicion-badge" class="text-[9px] font-black mono px-2.5 py-0.5 rounded-full bg-violet-500/15 text-violet-300 border border-violet-400/30">0 activos · 100%</span>
           </div>
 
-          <!-- Tres gráficos de torta: Por Activo, Por Tipo de Activo y Por Plataforma -->
+          <!-- Tres gráficos de torta: Por Activo, Por Tipo de Activo y Por Plataforma (Tamaño simétrico uniforme) -->
           <div class="grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x divide-slate-700/60 border-b border-slate-700/60 bg-slate-900/20">
             <!-- Gráfico 1: Por Activo -->
             <div class="p-5 flex flex-col items-center justify-center">
@@ -3038,14 +3050,16 @@
                 <span class="w-2 h-2 rounded-full bg-violet-400"></span>
                 <span class="text-[10px] font-black text-slate-300 uppercase tracking-wider">Por Activo</span>
               </div>
-              <div class="chart-wrapper w-full max-w-[220px]">
-                <canvas id="chartAhorrosCartera" class="max-h-[180px]"></canvas>
+              <div class="chart-wrapper w-[170px] h-[170px] max-w-full mx-auto relative flex items-center justify-center">
+                <canvas id="chartAhorrosCartera" class="max-h-[170px] cursor-pointer" title="Hacé clic para ver desglose"></canvas>
                 <div class="chart-center-label" id="center-ahorros-cartera">
                   <p class="text-[8px] text-slate-500 uppercase tracking-widest">Total Invertido</p>
                   <p id="center-ahorros-val" class="text-xs sm:text-sm font-black text-white mono">$0</p>
                   <p id="center-ahorros-usd" class="text-[9px] font-bold text-emerald-400 mono mt-0.5">U$S 0</p>
                 </div>
               </div>
+              <!-- Leyenda compacta en una sola fila -->
+              <div id="legend-ahorros-cartera" class="w-full flex items-center justify-center gap-1.5 mt-3 h-6 overflow-hidden px-1 text-center"></div>
             </div>
 
             <!-- Gráfico 2: Por Tipo de Activo -->
@@ -3054,14 +3068,16 @@
                 <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
                 <span class="text-[10px] font-black text-slate-300 uppercase tracking-wider">Por Tipo de Activo</span>
               </div>
-              <div class="chart-wrapper w-full max-w-[220px]">
-                <canvas id="chartAhorrosTipoActivo" class="max-h-[180px]"></canvas>
+              <div class="chart-wrapper w-[170px] h-[170px] max-w-full mx-auto relative flex items-center justify-center">
+                <canvas id="chartAhorrosTipoActivo" class="max-h-[170px] cursor-pointer" title="Hacé clic para ver desglose"></canvas>
                 <div class="chart-center-label" id="center-ahorros-tipo">
                   <p class="text-[8px] text-slate-500 uppercase tracking-widest">Diversificación</p>
                   <p id="center-ahorros-tipo-val" class="text-xs sm:text-sm font-black text-white mono">0</p>
                   <p class="text-[9px] font-bold text-cyan-400 mono mt-0.5">Tipos</p>
                 </div>
               </div>
+              <!-- Leyenda compacta en una sola fila -->
+              <div id="legend-ahorros-tipo" class="w-full flex items-center justify-center gap-1.5 mt-3 h-6 overflow-hidden px-1 text-center"></div>
             </div>
 
             <!-- Gráfico 3: Por Plataforma -->
@@ -3070,105 +3086,131 @@
                 <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
                 <span class="text-[10px] font-black text-slate-300 uppercase tracking-wider">Por Plataforma</span>
               </div>
-              <div class="chart-wrapper w-full max-w-[220px]">
-                <canvas id="chartAhorrosPlataforma" class="max-h-[180px]"></canvas>
+              <div class="chart-wrapper w-[170px] h-[170px] max-w-full mx-auto relative flex items-center justify-center">
+                <canvas id="chartAhorrosPlataforma" class="max-h-[170px] cursor-pointer" title="Hacé clic para ver desglose"></canvas>
                 <div class="chart-center-label" id="center-ahorros-plat">
                   <p class="text-[8px] text-slate-500 uppercase tracking-widest">Distribución</p>
                   <p id="center-ahorros-plat-val" class="text-xs sm:text-sm font-black text-white mono">0</p>
                   <p class="text-[9px] font-bold text-emerald-400 mono mt-0.5">Plataformas</p>
                 </div>
               </div>
+              <!-- Leyenda compacta en una sola fila -->
+              <div id="legend-ahorros-plat" class="w-full flex items-center justify-center gap-1.5 mt-3 h-6 overflow-hidden px-1 text-center"></div>
             </div>
           </div>
 
-          <!-- Tres Tablas Porcentuales: Distribución por Activo, por Tipo de Activo y por Plataforma -->
+          <!-- Tres Tablas Porcentuales: Distribución por Activo, por Tipo de Activo y por Plataforma (Top 5 + Ver más) -->
           <div class="grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x divide-slate-700/60">
             <!-- Tabla 1: Distribución por Activo -->
-            <div class="flex flex-col">
-              <div class="h-10 px-4 bg-slate-800/40 border-b border-slate-700/60 flex items-center justify-between">
-                <span class="text-[10px] font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5 truncate">
-                  <i class="fas fa-layer-group text-violet-400 text-[10px]"></i> Distribución por Activo
-                </span>
-                <span id="ah-activos-count" class="text-[9px] font-black mono text-violet-400 shrink-0">0 activos</span>
+            <div class="flex flex-col justify-between">
+              <div>
+                <div class="h-10 px-4 bg-slate-800/40 border-b border-slate-700/60 flex items-center justify-between">
+                  <span class="text-[10px] font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5 truncate">
+                    <i class="fas fa-layer-group text-violet-400 text-[10px]"></i> Distribución por Activo
+                  </span>
+                  <span id="ah-activos-count" class="text-[9px] font-black mono text-violet-400 shrink-0">0 activos</span>
+                </div>
+                <table class="w-full text-sm table-fixed">
+                  <colgroup>
+                    <col class="w-[50%]">
+                    <col class="w-[28%]">
+                    <col class="w-[22%]">
+                  </colgroup>
+                  <thead>
+                    <tr class="h-9 bg-slate-800 border-b border-slate-700/60">
+                      <th class="px-3 py-2 text-[10px] text-left font-black text-white uppercase tracking-widest truncate">Activo</th>
+                      <th class="px-3 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Total</th>
+                      <th class="px-3 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Peso %</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbody-composicion-ahorros">
+                    <tr><td colspan="3" class="text-center py-8 text-slate-500 text-xs">Sin activos en cartera</td></tr>
+                  </tbody>
+                </table>
               </div>
-              <table class="w-full text-sm table-fixed">
-                <colgroup>
-                  <col class="w-[50%]">
-                  <col class="w-[28%]">
-                  <col class="w-[22%]">
-                </colgroup>
-                <thead>
-                  <tr class="h-9 bg-slate-800 border-b border-slate-700/60">
-                    <th class="px-3 py-2 text-[10px] text-left font-black text-white uppercase tracking-widest truncate">Activo</th>
-                    <th class="px-3 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Total</th>
-                    <th class="px-3 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Peso %</th>
-                  </tr>
-                </thead>
-                <tbody id="tbody-composicion-ahorros">
-                  <tr><td colspan="3" class="text-center py-8 text-slate-500 text-xs">Sin activos en cartera</td></tr>
-                </tbody>
-              </table>
+              <div id="footer-ver-mas-activos" class="hidden border-t border-slate-800 bg-slate-900/40">
+                <button type="button" onclick="abrirModalVerMas('activos')" class="w-full h-8 px-4 flex items-center justify-center gap-1.5 text-[11px] font-bold text-violet-400 hover:text-violet-300 hover:bg-slate-800/60 transition-colors">
+                  <span id="btn-txt-ver-mas-activos">Ver todos los activos</span>
+                  <i class="fas fa-arrow-right text-[9px]"></i>
+                </button>
+              </div>
             </div>
 
             <!-- Tabla 2: Distribución por Tipo de Activo -->
-            <div class="flex flex-col">
-              <div class="h-10 px-4 bg-slate-800/40 border-b border-slate-700/60 flex items-center justify-between">
-                <span class="text-[10px] font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5 truncate">
-                  <i class="fas fa-shapes text-cyan-400 text-[10px]"></i> Distribución por Tipo de Activo
-                </span>
-                <span id="ah-tipos-count" class="text-[9px] font-black mono text-cyan-400 shrink-0">0 tipos</span>
+            <div class="flex flex-col justify-between">
+              <div>
+                <div class="h-10 px-4 bg-slate-800/40 border-b border-slate-700/60 flex items-center justify-between">
+                  <span class="text-[10px] font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5 truncate">
+                    <i class="fas fa-shapes text-cyan-400 text-[10px]"></i> Distribución por Tipo de Activo
+                  </span>
+                  <span id="ah-tipos-count" class="text-[9px] font-black mono text-cyan-400 shrink-0">0 tipos</span>
+                </div>
+                <table class="w-full text-sm table-fixed">
+                  <colgroup>
+                    <col class="w-[50%]">
+                    <col class="w-[28%]">
+                    <col class="w-[22%]">
+                  </colgroup>
+                  <thead>
+                    <tr class="h-9 bg-slate-800 border-b border-slate-700/60">
+                      <th class="px-3 py-2 text-[10px] text-left font-black text-white uppercase tracking-widest truncate">Tipo de Activo</th>
+                      <th class="px-3 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Total</th>
+                      <th class="px-3 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Peso %</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbody-tipos-ahorros">
+                    <tr><td colspan="3" class="text-center py-8 text-slate-500 text-xs">Sin datos de tipos</td></tr>
+                  </tbody>
+                </table>
               </div>
-              <table class="w-full text-sm table-fixed">
-                <colgroup>
-                  <col class="w-[50%]">
-                  <col class="w-[28%]">
-                  <col class="w-[22%]">
-                </colgroup>
-                <thead>
-                  <tr class="h-9 bg-slate-800 border-b border-slate-700/60">
-                    <th class="px-3 py-2 text-[10px] text-left font-black text-white uppercase tracking-widest truncate">Tipo de Activo</th>
-                    <th class="px-3 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Total</th>
-                    <th class="px-3 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Peso %</th>
-                  </tr>
-                </thead>
-                <tbody id="tbody-tipos-ahorros">
-                  <tr><td colspan="3" class="text-center py-8 text-slate-500 text-xs">Sin datos de tipos</td></tr>
-                </tbody>
-              </table>
+              <div id="footer-ver-mas-tipos" class="hidden border-t border-slate-800 bg-slate-900/40">
+                <button type="button" onclick="abrirModalVerMas('tipos')" class="w-full h-8 px-4 flex items-center justify-center gap-1.5 text-[11px] font-bold text-cyan-400 hover:text-cyan-300 hover:bg-slate-800/60 transition-colors">
+                  <span id="btn-txt-ver-mas-tipos">Ver todos los tipos</span>
+                  <i class="fas fa-arrow-right text-[9px]"></i>
+                </button>
+              </div>
             </div>
 
             <!-- Tabla 3: Distribución por Plataforma -->
-            <div class="flex flex-col">
-              <div class="h-10 px-4 bg-slate-800/40 border-b border-slate-700/60 flex items-center justify-between">
-                <span class="text-[10px] font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5 truncate">
-                  <i class="fas fa-landmark text-emerald-400 text-[10px]"></i> Distribución por Plataforma
-                </span>
-                <span id="ah-plataformas-count" class="text-[9px] font-black mono text-emerald-400 shrink-0">0 plataformas</span>
+            <div class="flex flex-col justify-between">
+              <div>
+                <div class="h-10 px-4 bg-slate-800/40 border-b border-slate-700/60 flex items-center justify-between">
+                  <span class="text-[10px] font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5 truncate">
+                    <i class="fas fa-landmark text-emerald-400 text-[10px]"></i> Distribución por Plataforma
+                  </span>
+                  <span id="ah-plataformas-count" class="text-[9px] font-black mono text-emerald-400 shrink-0">0 plataformas</span>
+                </div>
+                <table class="w-full text-sm table-fixed">
+                  <colgroup>
+                    <col class="w-[50%]">
+                    <col class="w-[28%]">
+                    <col class="w-[22%]">
+                  </colgroup>
+                  <thead>
+                    <tr class="h-9 bg-slate-800 border-b border-slate-700/60">
+                      <th class="px-3 py-2 text-[10px] text-left font-black text-white uppercase tracking-widest truncate">
+                        <div class="inline-flex items-center gap-1.5">
+                          <span>Plataforma</span>
+                          <button type="button" onclick="abrirModalGestionPlataformas()" title="Gestionar links y colores de plataformas" class="text-slate-400 hover:text-emerald-400 transition-colors">
+                            <i class="fas fa-cog text-[10px]"></i>
+                          </button>
+                        </div>
+                      </th>
+                      <th class="px-3 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Total</th>
+                      <th class="px-3 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Peso %</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbody-plataformas-ahorros">
+                    <tr><td colspan="3" class="text-center py-8 text-slate-500 text-xs">Sin datos de plataformas</td></tr>
+                  </tbody>
+                </table>
               </div>
-              <table class="w-full text-sm table-fixed">
-                <colgroup>
-                  <col class="w-[50%]">
-                  <col class="w-[28%]">
-                  <col class="w-[22%]">
-                </colgroup>
-                <thead>
-                  <tr class="h-9 bg-slate-800 border-b border-slate-700/60">
-                    <th class="px-3 py-2 text-[10px] text-left font-black text-white uppercase tracking-widest truncate">
-                      <div class="inline-flex items-center gap-1.5">
-                        <span>Plataforma</span>
-                        <button type="button" onclick="abrirModalGestionPlataformas()" title="Gestionar links y colores de plataformas" class="text-slate-400 hover:text-emerald-400 transition-colors">
-                          <i class="fas fa-cog text-[10px]"></i>
-                        </button>
-                      </div>
-                    </th>
-                    <th class="px-3 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Total</th>
-                    <th class="px-3 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Peso %</th>
-                  </tr>
-                </thead>
-                <tbody id="tbody-plataformas-ahorros">
-                  <tr><td colspan="3" class="text-center py-8 text-slate-500 text-xs">Sin datos de plataformas</td></tr>
-                </tbody>
-              </table>
+              <div id="footer-ver-mas-plataformas" class="hidden border-t border-slate-800 bg-slate-900/40">
+                <button type="button" onclick="abrirModalVerMas('plataformas')" class="w-full h-8 px-4 flex items-center justify-center gap-1.5 text-[11px] font-bold text-emerald-400 hover:text-emerald-300 hover:bg-slate-800/60 transition-colors">
+                  <span id="btn-txt-ver-mas-plataformas">Ver todas las plataformas</span>
+                  <i class="fas fa-arrow-right text-[9px]"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -4755,6 +4797,67 @@
             </div>
           </div>
         </div>
+
+<!-- MODAL VER MÁS DISTRIBUCIÓN INVERSIONES (ACTIVO, TIPO O PLATAFORMA) -->
+<div id="modal-ver-mas-inversiones" class="fixed inset-0 z-[200] flex items-center justify-center p-4" style="display:none!important">
+  <div class="absolute inset-0 bg-black/75 backdrop-blur-sm" onclick="cerrarModalVerMas()"></div>
+  <div class="relative bg-black rounded-2xl border border-slate-700/60 shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
+    <!-- Header -->
+    <div class="px-6 py-4 border-b border-slate-700/60 flex items-center justify-between bg-slate-900/40 shrink-0">
+      <div class="flex items-center gap-2.5">
+        <div id="modal-ver-mas-icon-container" class="w-8 h-8 rounded-xl bg-violet-900/40 border border-violet-500/30 flex items-center justify-center">
+          <i id="modal-ver-mas-icon" class="fas fa-layer-group text-violet-400 text-xs"></i>
+        </div>
+        <div>
+          <h3 id="modal-ver-mas-title" class="font-black text-white uppercase tracking-widest text-sm">Distribución Completa</h3>
+          <p id="modal-ver-mas-subtitle" class="text-[10px] text-slate-400 mt-0.5">Listado completo con porcentajes y montos</p>
+        </div>
+      </div>
+      <button type="button" onclick="cerrarModalVerMas()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-800 hover:bg-slate-700 transition-colors text-slate-400 hover:text-white">
+        <i class="fas fa-times text-xs"></i>
+      </button>
+    </div>
+
+    <!-- Buscador rápido -->
+    <div id="modal-ver-mas-search-box" class="px-5 py-2.5 border-b border-slate-800 bg-slate-900/20 shrink-0">
+      <div class="relative">
+        <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+        <input type="text" id="modal-ver-mas-search" placeholder="Buscar en la lista..." oninput="filtrarModalVerMas(this.value)"
+               class="w-full h-8 pl-9 pr-4 bg-slate-900 border border-slate-700/80 rounded-lg text-xs text-white placeholder-slate-500 outline-none focus:border-violet-500/60">
+      </div>
+    </div>
+
+    <!-- Body con tabla completa scrolleable -->
+    <div class="overflow-y-auto flex-1 p-0">
+      <table class="w-full text-sm table-fixed">
+        <colgroup>
+          <col class="w-[50%]">
+          <col class="w-[28%]">
+          <col class="w-[22%]">
+        </colgroup>
+        <thead class="sticky top-0 z-10">
+          <tr class="h-9 bg-slate-800 border-b border-slate-700/60">
+            <th id="modal-ver-mas-th-col1" class="px-4 py-2 text-[10px] text-left font-black text-white uppercase tracking-widest truncate">Concepto</th>
+            <th class="px-4 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Total</th>
+            <th class="px-4 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Peso %</th>
+          </tr>
+        </thead>
+        <tbody id="modal-ver-mas-tbody">
+          <!-- Inyectado dinámicamente -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Footer -->
+    <div class="px-6 py-3 border-t border-slate-700/60 bg-slate-900/40 flex items-center justify-between shrink-0">
+      <span id="modal-ver-mas-count" class="text-[11px] mono text-slate-400 font-bold"></span>
+      <button type="button" onclick="cerrarModalVerMas()" 
+              class="h-8 px-4 rounded-xl text-xs font-bold uppercase tracking-wider bg-slate-800 hover:bg-slate-700 text-white transition-colors">
+        Cerrar
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- MODAL IA LISTAS (GOOGLE TASKS) -->
 <div id="modal-ia-listas" class="fixed inset-0 z-[320] flex items-center justify-center p-4" style="display:none!important">
@@ -7796,8 +7899,8 @@ function renderPie(id, obj, colors) {
   if (!keys.length) {
     window['_chart_' + id] = new Chart(ctx, {
       type: 'doughnut',
-      data: { labels: ['Sin datos'], datasets: [{ data: [1], backgroundColor: ['#f1f5f9'], borderWidth: 0 }] },
-      options: { cutout: '72%', plugins: { legend: { display: false } } }
+      data: { labels: ['Sin datos'], datasets: [{ data: [1], backgroundColor: ['#334155'], borderWidth: 0 }] },
+      options: { cutout: '70%', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
     });
     return;
   }
@@ -7808,11 +7911,23 @@ function renderPie(id, obj, colors) {
       datasets: [{ data: Object.values(obj), backgroundColor: colors.slice(0, keys.length), borderWidth: 0 }]
     },
     options: {
-      cutout: '72%',
+      cutout: '70%',
+      responsive: true,
+      maintainAspectRatio: false,
+      onClick: (evt, activeEls) => {
+        if (activeEls && activeEls.length > 0) {
+          const idx = activeEls[0].index;
+          const label = keys[idx];
+          if (label === 'Otros' || keys.length > 5) {
+            if (id === 'chartAhorrosCartera') abrirModalVerMas('activos');
+            else if (id === 'chartAhorrosTipoActivo') abrirModalVerMas('tipos');
+            else if (id === 'chartAhorrosPlataforma') abrirModalVerMas('plataformas');
+          }
+        }
+      },
       plugins: {
         legend: {
-          position: 'bottom',
-          labels: { boxWidth: 8, font: { size: 9, weight: 'bold', family: 'Space Grotesk' }, padding: 10, color: '#94a3b8' }
+          display: false // Leyendas manejadas en una sola fila HTML externa para asegurar tamaño uniforme de los tres gráficos
         },
         tooltip: {
           callbacks: {
@@ -7820,13 +7935,177 @@ function renderPie(id, obj, colors) {
               const val   = ctx.raw;
               const total = ctx.dataset.data.reduce((a,b) => a+b, 0);
               const pct   = total ? ((val/total)*100).toFixed(1) : 0;
-              return ` $${val.toLocaleString('es-AR',{maximumFractionDigits:0})} (${pct}%)`;
+              return ` ${ctx.label}: $${val.toLocaleString('es-AR',{maximumFractionDigits:0})} (${pct}%)`;
             }
           }
         }
       }
     }
   });
+}
+
+function renderSingleRowLegend(containerId, items, maxItems, onMoreClick) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  if (!items || !items.length) {
+    container.innerHTML = '';
+    return;
+  }
+  const visible = items.slice(0, maxItems);
+  const remainingCount = items.length - maxItems;
+
+  const chipsHtml = visible.map(item => `
+    <span class="inline-flex items-center gap-1 text-[9px] font-bold text-slate-300 shrink-0 select-none" title="${item.label}: ${item.pct}%">
+      <span class="w-1.5 h-1.5 rounded-full shrink-0" style="background:${item.color};box-shadow:0 0 5px ${item.color}88"></span>
+      <span class="truncate max-w-[50px] sm:max-w-[65px]">${item.label}</span>
+    </span>
+  `).join('');
+
+  let moreButtonHtml = '';
+  if (remainingCount > 0) {
+    moreButtonHtml = `
+      <button type="button" onclick="${onMoreClick}" 
+              class="inline-flex items-center gap-0.5 text-[9px] font-black mono text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 px-1.5 py-0.5 rounded transition-all shrink-0" 
+              title="Ver desglose completo (${items.length} en total)">
+        ... +${remainingCount}
+      </button>
+    `;
+  }
+
+  container.innerHTML = `<div class="flex items-center justify-center gap-2 w-full overflow-hidden flex-nowrap">${chipsHtml}${moreButtonHtml}</div>`;
+}
+
+function renderActivoRowHtml(a, i, totalARS, fmtARS, fmtUSD) {
+  const val = a.valorARS || 0;
+  const pct = totalARS > 0 ? ((val / totalARS) * 100).toFixed(1) : '0.0';
+  const barWidth = totalARS > 0 ? Math.min(100, (val / totalARS) * 100) : 0;
+  const color = getColorActivoAhorro(a.rawActivo, i);
+
+  const usdSub = a.valorUSD != null
+    ? `<div class="text-[10px] font-bold text-emerald-400/80 mono mt-0.5">${fmtUSD(a.valorUSD)}</div>`
+    : '<div class="text-[10px] text-transparent mono mt-0.5 select-none">&nbsp;</div>';
+
+  const platsArr = Array.from(a.plataformas || []);
+  let platBadgeHtml = '';
+  if (platsArr.length === 1) {
+    const pName = platsArr[0];
+    const urlP = getPlataformaRedireccionUrl(pName);
+    platBadgeHtml = urlP
+      ? `<div class="text-[10px] flex items-center gap-1 mt-0.5 truncate"><i class="fas fa-landmark text-slate-400 text-[9px] flex-shrink-0"></i><a href="${urlP}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="text-slate-300 hover:text-white hover:underline truncate inline-flex items-center gap-1" title="Abrir ${pName}"><span class="truncate text-slate-300 hover:text-white">${pName}</span><i class="fas fa-external-link-alt text-[7.5px] text-slate-400"></i></a></div>`
+      : `<div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 truncate"><i class="fas fa-landmark text-slate-500 text-[9px] flex-shrink-0"></i><span class="truncate">${pName}</span></div>`;
+  } else if (platsArr.length > 1) {
+    const pLinks = platsArr.map(pName => {
+      const urlP = getPlataformaRedireccionUrl(pName);
+      return urlP
+        ? `<a href="${urlP}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="text-emerald-400 hover:text-emerald-300 hover:underline inline-flex items-center gap-0.5" title="Abrir ${pName}">${pName}<i class="fas fa-external-link-alt text-[7px] opacity-75"></i></a>`
+        : `<span>${pName}</span>`;
+    });
+    platBadgeHtml = `<div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 truncate"><i class="fas fa-layer-group text-violet-400/80 text-[9px] flex-shrink-0"></i><span class="truncate">${pLinks.map((l, idx) => idx > 0 ? ', ' + l : l).join('')}</span></div>`;
+  } else {
+    platBadgeHtml = `<div class="text-[10px] text-slate-500 flex items-center gap-1 mt-0.5"><i class="fas fa-wallet text-slate-500 text-[9px] flex-shrink-0"></i><span>General</span></div>`;
+  }
+
+  return `<tr class="border-b border-slate-800 hover:bg-slate-800/60 transition-colors">
+    <td class="px-3 py-2.5 align-top">
+      <div class="flex items-start gap-2">
+        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0 mt-1" style="background:${color};box-shadow:0 0 8px ${color}99"></span>
+        <div class="flex-1 min-w-0">
+          <span class="text-xs font-bold text-slate-200 truncate block" title="${a.nombre}">${a.icon || '💎'} ${a.nombre}</span>
+          ${platBadgeHtml}
+          <div class="mt-2 h-1.5 w-full bg-slate-800/90 rounded-full overflow-hidden">
+            <div class="h-full rounded-full transition-all duration-500" style="width:${barWidth}%;background:${color}"></div>
+          </div>
+        </div>
+      </div>
+    </td>
+    <td class="px-3 py-2.5 text-right align-top">
+      <div class="mono font-black text-white text-sm leading-tight">${fmtARS(val)}</div>
+      ${usdSub}
+    </td>
+    <td class="px-3 py-2.5 text-right align-top">
+      <span class="inline-block px-2 py-0.5 rounded-md text-[11px] font-black mono" style="background:${color}22;color:${color};border:1px solid ${color}44">${pct}%</span>
+    </td>
+  </tr>`;
+}
+
+function renderTipoRowHtml(t, idx, totalARS, fmtARS, fmtUSD, tipoIcon) {
+  const pct = totalARS > 0 ? ((t.valorARS / totalARS) * 100).toFixed(1) : '0.0';
+  const barWidth = totalARS > 0 ? Math.min(100, (t.valorARS / totalARS) * 100) : 0;
+  const color = COLORES_TIPOS_ACTIVO[t.tipo] || PALETA_FALLBACK_TIPOS[idx % PALETA_FALLBACK_TIPOS.length];
+  const icon = (tipoIcon && tipoIcon[t.tipo]) || '💎';
+  const usdSub = t.valorUSD > 0
+    ? `<div class="text-[10px] font-bold text-emerald-400/80 mono mt-0.5">${fmtUSD(t.valorUSD)}</div>`
+    : '<div class="text-[10px] text-transparent mono mt-0.5 select-none">&nbsp;</div>';
+  const subtext = `<div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 truncate"><i class="fas fa-layer-group text-cyan-400/80 text-[9px] flex-shrink-0"></i><span>${t.count} activo${t.count !== 1 ? 's' : ''}</span></div>`;
+
+  return `<tr class="border-b border-slate-800 hover:bg-slate-800/60 transition-colors">
+    <td class="px-3 py-2.5 align-top">
+      <div class="flex items-start gap-2">
+        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0 mt-1" style="background:${color};box-shadow:0 0 8px ${color}99"></span>
+        <div class="flex-1 min-w-0">
+          <span class="text-xs font-bold text-slate-200 truncate block" title="${t.tipo}">
+            ${icon} ${t.tipo}
+          </span>
+          ${subtext}
+          <div class="mt-2 h-1.5 w-full bg-slate-800/90 rounded-full overflow-hidden">
+            <div class="h-full rounded-full transition-all duration-500" style="width:${barWidth}%;background:${color}"></div>
+          </div>
+        </div>
+      </div>
+    </td>
+    <td class="px-3 py-2.5 text-right align-top">
+      <div class="mono font-black text-white text-sm leading-tight">${fmtARS(t.valorARS)}</div>
+      ${usdSub}
+    </td>
+    <td class="px-3 py-2.5 text-right align-top">
+      <span class="inline-block px-2 py-0.5 rounded-md text-[11px] font-black mono" style="background:${color}22;color:${color};border:1px solid ${color}44">${pct}%</span>
+    </td>
+  </tr>`;
+}
+
+function renderPlatRowHtml(p, i, totalARS, fmtARS, fmtUSD) {
+  const pct = totalARS > 0 ? ((p.valorARS / totalARS) * 100).toFixed(1) : '0.0';
+  const barWidth = totalARS > 0 ? Math.min(100, (p.valorARS / totalARS) * 100) : 0;
+  const color = getPlataformaColor(p.nombre, i);
+  const usdSub = p.valorUSD > 0
+    ? `<div class="text-[10px] font-bold text-emerald-400/80 mono mt-0.5">${fmtUSD(p.valorUSD)}</div>`
+    : '<div class="text-[10px] text-transparent mono mt-0.5 select-none">&nbsp;</div>';
+  const subtext = `<div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 truncate"><i class="fas fa-layer-group text-emerald-400/80 text-[9px] flex-shrink-0"></i><span>${p.count} activo${p.count !== 1 ? 's' : ''}</span></div>`;
+  const urlPlat = getPlataformaRedireccionUrl(p.nombre);
+  const platLinkHtml = urlPlat
+    ? `<a href="${urlPlat}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"
+          class="text-xs font-bold text-white hover:text-slate-200 inline-flex items-center gap-1.5 transition-colors group/plat" title="Abrir ${p.nombre}">
+         <span class="truncate text-white">${p.nombre}</span>
+         <i class="fas fa-external-link-alt text-[9px] text-slate-400 group-hover/plat:text-emerald-400 transition-colors"></i>
+       </a>`
+    : `<span class="text-xs font-bold text-white truncate block" title="${p.nombre}">
+         ${p.nombre}
+       </span>`;
+
+  const rowClickAttr = urlPlat ? `onclick="window.open('${urlPlat}', '_blank', 'noopener,noreferrer')"` : '';
+  const rowCursorClass = urlPlat ? 'cursor-pointer hover:bg-slate-800/80' : 'hover:bg-slate-800/60';
+
+  return `<tr class="border-b border-slate-800 ${rowCursorClass} transition-colors" ${rowClickAttr}>
+    <td class="px-3 py-2.5 align-top">
+      <div class="flex items-start gap-2">
+        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0 mt-1" style="background:${color};box-shadow:0 0 8px ${color}99"></span>
+        <div class="flex-1 min-w-0">
+          ${platLinkHtml}
+          ${subtext}
+          <div class="mt-2 h-1.5 w-full bg-slate-800/90 rounded-full overflow-hidden">
+            <div class="h-full rounded-full transition-all duration-500" style="width:${barWidth}%;background:${color}"></div>
+          </div>
+        </div>
+      </div>
+    </td>
+    <td class="px-3 py-2.5 text-right align-top">
+      <div class="mono font-black text-white text-sm leading-tight">${fmtARS(p.valorARS)}</div>
+      ${usdSub}
+    </td>
+    <td class="px-3 py-2.5 text-right align-top">
+      <span class="inline-block px-2 py-0.5 rounded-md text-[11px] font-black mono" style="background:${color}22;color:${color};border:1px solid ${color}44">${pct}%</span>
+    </td>
+  </tr>`;
 }
 
 // ─── SUBMIT FORMULARIO FINANZAS ───────────────────────────────────────────────
@@ -8211,6 +8490,7 @@ document.addEventListener('keydown', e => {
     cerrarModalIAListas();
     cerrarModalHistoricoCategoria();
     cerrarModalGestionPlataformas();
+    cerrarModalVerMas();
   }
 });
 
@@ -10266,6 +10546,17 @@ function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
   const tiposBadge = document.getElementById('ah-tipos-count');
   const platBadge = document.getElementById('ah-plataformas-count');
 
+  const footerActivos = document.getElementById('footer-ver-mas-activos');
+  const footerTipos = document.getElementById('footer-ver-mas-tipos');
+  const footerPlat = document.getElementById('footer-ver-mas-plataformas');
+  const btnTxtActivos = document.getElementById('btn-txt-ver-mas-activos');
+  const btnTxtTipos = document.getElementById('btn-txt-ver-mas-tipos');
+  const btnTxtPlat = document.getElementById('btn-txt-ver-mas-plataformas');
+
+  const legendActivos = document.getElementById('legend-ahorros-cartera');
+  const legendTipos = document.getElementById('legend-ahorros-tipo');
+  const legendPlat = document.getElementById('legend-ahorros-plat');
+
   const fmtARS = v => '$' + Math.round(v || 0).toLocaleString('es-AR', { maximumFractionDigits: 0 });
   const fmtUSD = v => 'U$S ' + (v || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
@@ -10288,6 +10579,14 @@ function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
     if (tbodyPlat) {
       tbodyPlat.innerHTML = '<tr><td colspan="3" class="text-center py-8 text-slate-500 text-xs">Sin datos de plataformas</td></tr>';
     }
+    if (footerActivos) footerActivos.classList.add('hidden');
+    if (footerTipos) footerTipos.classList.add('hidden');
+    if (footerPlat) footerPlat.classList.add('hidden');
+    if (legendActivos) legendActivos.innerHTML = '';
+    if (legendTipos) legendTipos.innerHTML = '';
+    if (legendPlat) legendPlat.innerHTML = '';
+
+    window._cachedComposicionAhorros = { sortedActivos: [], sortedTipos: [], sortedPlats: [], totalARS: 0, totalUSD: 0 };
     renderPie('chartAhorrosCartera', {}, PALETA_OTROS_ACTIVOS_AHORRO);
     renderPie('chartAhorrosTipoActivo', {}, PALETA_FALLBACK_TIPOS);
     renderPie('chartAhorrosPlataforma', {}, PALETA_PLATAFORMAS);
@@ -10304,7 +10603,7 @@ function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
     FCI: '📊'
   };
 
-  // 1. Agrupar estrictamente POR ACTIVO / TICKER (sin dividir por plataforma)
+  // 1. Agrupar estrictamente POR ACTIVO / TICKER
   const activosMap = {};
   enriquecidas.forEach(a => {
     const esDol = isDolarActivo(a);
@@ -10368,71 +10667,58 @@ function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
     badge.textContent = `${sortedActivos.length} activo${sortedActivos.length !== 1 ? 's' : ''} · Mayor: ${topLabel} (${topPct}%)`;
   }
   if (activosBadge) {
-    activosBadge.textContent = `${sortedActivos.length} activo${sortedActivos.length !== 1 ? 's' : ''}`;
+    activosBadge.textContent = sortedActivos.length > 5 ? `${sortedActivos.length} activos (top 5)` : `${sortedActivos.length} activos`;
   }
 
-  // 1. Gráfico y Desglose agrupado por Activo
+  // 1. Gráfico y Desglose por Activo (Tope de 9 + Otros en gráfico, Top 5 en tabla)
   const pieObj = {};
   const pieColors = [];
+  const legendActivosItems = [];
 
-  const rowsHtml = sortedActivos.map((a, i) => {
-    const val = a.valorARS || 0;
-    const pct = totalARS > 0 ? ((val / totalARS) * 100).toFixed(1) : '0.0';
-    const barWidth = totalARS > 0 ? Math.min(100, (val / totalARS) * 100) : 0;
-    const color = getColorActivoAhorro(a.rawActivo, i);
-
-    pieObj[a.nombre] = val;
-    pieColors.push(color);
-
-    const usdSub = a.valorUSD != null
-      ? `<div class="text-[10px] font-bold text-emerald-400/80 mono mt-0.5">${fmtUSD(a.valorUSD)}</div>`
-      : '<div class="text-[10px] text-transparent mono mt-0.5 select-none">&nbsp;</div>';
-
-    const platsArr = Array.from(a.plataformas);
-    let platBadgeHtml = '';
-    if (platsArr.length === 1) {
-      const pName = platsArr[0];
-      const urlP = getPlataformaRedireccionUrl(pName);
-      platBadgeHtml = urlP
-        ? `<div class="text-[10px] flex items-center gap-1 mt-0.5 truncate"><i class="fas fa-landmark text-slate-400 text-[9px] flex-shrink-0"></i><a href="${urlP}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="text-slate-300 hover:text-white hover:underline truncate inline-flex items-center gap-1" title="Abrir ${pName}"><span class="truncate text-slate-300 hover:text-white">${pName}</span><i class="fas fa-external-link-alt text-[7.5px] text-slate-400"></i></a></div>`
-        : `<div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 truncate"><i class="fas fa-landmark text-slate-500 text-[9px] flex-shrink-0"></i><span class="truncate">${pName}</span></div>`;
-    } else if (platsArr.length > 1) {
-      const pLinks = platsArr.map(pName => {
-        const urlP = getPlataformaRedireccionUrl(pName);
-        return urlP
-          ? `<a href="${urlP}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="text-emerald-400 hover:text-emerald-300 hover:underline inline-flex items-center gap-0.5" title="Abrir ${pName}">${pName}<i class="fas fa-external-link-alt text-[7px] opacity-75"></i></a>`
-          : `<span>${pName}</span>`;
-      });
-      platBadgeHtml = `<div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 truncate"><i class="fas fa-layer-group text-violet-400/80 text-[9px] flex-shrink-0"></i><span class="truncate">${pLinks.map((l, idx) => idx > 0 ? ', ' + l : l).join('')}</span></div>`;
-    } else {
-      platBadgeHtml = `<div class="text-[10px] text-slate-500 flex items-center gap-1 mt-0.5"><i class="fas fa-wallet text-slate-500 text-[9px] flex-shrink-0"></i><span>General</span></div>`;
+  if (sortedActivos.length <= 9) {
+    sortedActivos.forEach((a, i) => {
+      const color = getColorActivoAhorro(a.rawActivo, i);
+      const pct = totalARS > 0 ? ((a.valorARS / totalARS) * 100).toFixed(1) : '0.0';
+      pieObj[a.nombre] = a.valorARS;
+      pieColors.push(color);
+      legendActivosItems.push({ label: a.nombre, color, pct });
+    });
+  } else {
+    // Top 9 individuales
+    for (let i = 0; i < 9; i++) {
+      const a = sortedActivos[i];
+      const color = getColorActivoAhorro(a.rawActivo, i);
+      const pct = totalARS > 0 ? ((a.valorARS / totalARS) * 100).toFixed(1) : '0.0';
+      pieObj[a.nombre] = a.valorARS;
+      pieColors.push(color);
+      legendActivosItems.push({ label: a.nombre, color, pct });
     }
+    // Agrupar a partir del 10mo en "Otros"
+    const otrosVal = sortedActivos.slice(9).reduce((acc, a) => acc + (a.valorARS || 0), 0);
+    const otrosColor = '#64748b';
+    const otrosPct = totalARS > 0 ? ((otrosVal / totalARS) * 100).toFixed(1) : '0.0';
+    pieObj['Otros'] = otrosVal;
+    pieColors.push(otrosColor);
+    legendActivosItems.push({ label: 'Otros', color: otrosColor, pct: otrosPct });
+  }
 
-    return `<tr class="border-b border-slate-800 hover:bg-slate-800/60 transition-colors">
-      <td class="px-3 py-2.5 align-top">
-        <div class="flex items-start gap-2">
-          <span class="w-2.5 h-2.5 rounded-full flex-shrink-0 mt-1" style="background:${color};box-shadow:0 0 8px ${color}99"></span>
-          <div class="flex-1 min-w-0">
-            <span class="text-xs font-bold text-slate-200 truncate block" title="${a.nombre}">${a.icon} ${a.nombre}</span>
-            ${platBadgeHtml}
-            <div class="mt-2 h-1.5 w-full bg-slate-800/90 rounded-full overflow-hidden">
-              <div class="h-full rounded-full transition-all duration-500" style="width:${barWidth}%;background:${color}"></div>
-            </div>
-          </div>
-        </div>
-      </td>
-      <td class="px-3 py-2.5 text-right align-top">
-        <div class="mono font-black text-white text-sm leading-tight">${fmtARS(val)}</div>
-        ${usdSub}
-      </td>
-      <td class="px-3 py-2.5 text-right align-top">
-        <span class="inline-block px-2 py-0.5 rounded-md text-[11px] font-black mono" style="background:${color}22;color:${color};border:1px solid ${color}44">${pct}%</span>
-      </td>
-    </tr>`;
-  }).join('');
-
-  if (tbody) tbody.innerHTML = rowsHtml;
   renderPie('chartAhorrosCartera', pieObj, pieColors);
+  renderSingleRowLegend('legend-ahorros-cartera', legendActivosItems, 4, "abrirModalVerMas('activos')");
+
+  // Tabla 1: Top 5 filas
+  const top5Activos = sortedActivos.slice(0, 5);
+  if (tbody) {
+    tbody.innerHTML = top5Activos.map((a, i) => renderActivoRowHtml(a, i, totalARS, fmtARS, fmtUSD)).join('');
+  }
+
+  if (footerActivos) {
+    if (sortedActivos.length > 5) {
+      footerActivos.classList.remove('hidden');
+      if (btnTxtActivos) btnTxtActivos.textContent = `Ver todos (${sortedActivos.length} activos)`;
+    } else {
+      footerActivos.classList.add('hidden');
+    }
+  }
 
   // 2. Gráfico y Desglose agrupado por Tipo de Activo
   const tiposMap = {};
@@ -10452,56 +10738,38 @@ function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
 
   if (centerTipoVal) centerTipoVal.textContent = sortedTipos.length;
   if (tiposBadge) {
-    tiposBadge.textContent = `${sortedTipos.length} tipo${sortedTipos.length !== 1 ? 's' : ''}`;
+    tiposBadge.textContent = sortedTipos.length > 5 ? `${sortedTipos.length} tipos (top 5)` : `${sortedTipos.length} tipos`;
   }
 
   const pieTiposObj = {};
   const pieTiposColors = [];
+  const legendTiposItems = [];
   sortedTipos.forEach((t, idx) => {
     const color = COLORES_TIPOS_ACTIVO[t.tipo] || PALETA_FALLBACK_TIPOS[idx % PALETA_FALLBACK_TIPOS.length];
+    const pct = totalARS > 0 ? ((t.valorARS / totalARS) * 100).toFixed(1) : '0.0';
     pieTiposObj[t.tipo] = t.valorARS;
     pieTiposColors.push(color);
+    legendTiposItems.push({ label: t.tipo, color, pct });
   });
   renderPie('chartAhorrosTipoActivo', pieTiposObj, pieTiposColors);
+  renderSingleRowLegend('legend-ahorros-tipo', legendTiposItems, 4, "abrirModalVerMas('tipos')");
 
+  // Tabla 2: Top 5 filas
+  const top5Tipos = sortedTipos.slice(0, 5);
   if (tbodyTipos) {
     if (!sortedTipos.length) {
       tbodyTipos.innerHTML = '<tr><td colspan="3" class="text-center py-8 text-slate-500 text-xs">Sin datos de tipos</td></tr>';
     } else {
-      tbodyTipos.innerHTML = sortedTipos.map((t, idx) => {
-        const pct = totalARS > 0 ? ((t.valorARS / totalARS) * 100).toFixed(1) : '0.0';
-        const barWidth = totalARS > 0 ? Math.min(100, (t.valorARS / totalARS) * 100) : 0;
-        const color = COLORES_TIPOS_ACTIVO[t.tipo] || PALETA_FALLBACK_TIPOS[idx % PALETA_FALLBACK_TIPOS.length];
-        const icon = tipoIcon[t.tipo] || '💎';
-        const usdSub = t.valorUSD > 0
-          ? `<div class="text-[10px] font-bold text-emerald-400/80 mono mt-0.5">${fmtUSD(t.valorUSD)}</div>`
-          : '<div class="text-[10px] text-transparent mono mt-0.5 select-none">&nbsp;</div>';
-        const subtext = `<div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 truncate"><i class="fas fa-layer-group text-cyan-400/80 text-[9px] flex-shrink-0"></i><span>${t.count} activo${t.count !== 1 ? 's' : ''}</span></div>`;
+      tbodyTipos.innerHTML = top5Tipos.map((t, idx) => renderTipoRowHtml(t, idx, totalARS, fmtARS, fmtUSD, tipoIcon)).join('');
+    }
+  }
 
-        return `<tr class="border-b border-slate-800 hover:bg-slate-800/60 transition-colors">
-          <td class="px-3 py-2.5 align-top">
-            <div class="flex items-start gap-2">
-              <span class="w-2.5 h-2.5 rounded-full flex-shrink-0 mt-1" style="background:${color};box-shadow:0 0 8px ${color}99"></span>
-              <div class="flex-1 min-w-0">
-                <span class="text-xs font-bold text-slate-200 truncate block" title="${t.tipo}">
-                  ${icon} ${t.tipo}
-                </span>
-                ${subtext}
-                <div class="mt-2 h-1.5 w-full bg-slate-800/90 rounded-full overflow-hidden">
-                  <div class="h-full rounded-full transition-all duration-500" style="width:${barWidth}%;background:${color}"></div>
-                </div>
-              </div>
-            </div>
-          </td>
-          <td class="px-3 py-2.5 text-right align-top">
-            <div class="mono font-black text-white text-sm leading-tight">${fmtARS(t.valorARS)}</div>
-            ${usdSub}
-          </td>
-          <td class="px-3 py-2.5 text-right align-top">
-            <span class="inline-block px-2 py-0.5 rounded-md text-[11px] font-black mono" style="background:${color}22;color:${color};border:1px solid ${color}44">${pct}%</span>
-          </td>
-        </tr>`;
-      }).join('');
+  if (footerTipos) {
+    if (sortedTipos.length > 5) {
+      footerTipos.classList.remove('hidden');
+      if (btnTxtTipos) btnTxtTipos.textContent = `Ver todos (${sortedTipos.length} tipos)`;
+    } else {
+      footerTipos.classList.add('hidden');
     }
   }
 
@@ -10523,69 +10791,194 @@ function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
 
   if (centerPlatVal) centerPlatVal.textContent = sortedPlats.length;
   if (platBadge) {
-    platBadge.textContent = `${sortedPlats.length} plataforma${sortedPlats.length !== 1 ? 's' : ''}`;
+    platBadge.textContent = sortedPlats.length > 5 ? `${sortedPlats.length} plataformas (top 5)` : `${sortedPlats.length} plataformas`;
   }
 
-  // Gráfico 3: Por Plataforma (usando getPlataformaColor para cada una)
+  // Gráfico 3: Por Plataforma (si > 9 plataformas, top 9 + Otros)
   const piePlatObj = {};
   const piePlatColors = [];
-  sortedPlats.forEach((p, idx) => {
-    const color = getPlataformaColor(p.nombre, idx);
-    piePlatObj[p.nombre] = p.valorARS;
-    piePlatColors.push(color);
-  });
-  renderPie('chartAhorrosPlataforma', piePlatObj, piePlatColors);
+  const legendPlatItems = [];
 
-  // Tabla 3: Distribución por Plataforma (usando getPlataformaColor y manteniendo texto en blanco)
+  if (sortedPlats.length <= 9) {
+    sortedPlats.forEach((p, idx) => {
+      const color = getPlataformaColor(p.nombre, idx);
+      const pct = totalARS > 0 ? ((p.valorARS / totalARS) * 100).toFixed(1) : '0.0';
+      piePlatObj[p.nombre] = p.valorARS;
+      piePlatColors.push(color);
+      legendPlatItems.push({ label: p.nombre, color, pct });
+    });
+  } else {
+    for (let idx = 0; idx < 9; idx++) {
+      const p = sortedPlats[idx];
+      const color = getPlataformaColor(p.nombre, idx);
+      const pct = totalARS > 0 ? ((p.valorARS / totalARS) * 100).toFixed(1) : '0.0';
+      piePlatObj[p.nombre] = p.valorARS;
+      piePlatColors.push(color);
+      legendPlatItems.push({ label: p.nombre, color, pct });
+    }
+    const otrosPlatVal = sortedPlats.slice(9).reduce((acc, p) => acc + (p.valorARS || 0), 0);
+    const otrosPlatColor = '#64748b';
+    const otrosPlatPct = totalARS > 0 ? ((otrosPlatVal / totalARS) * 100).toFixed(1) : '0.0';
+    piePlatObj['Otros'] = otrosPlatVal;
+    piePlatColors.push(otrosPlatColor);
+    legendPlatItems.push({ label: 'Otros', color: otrosPlatColor, pct: otrosPlatPct });
+  }
+
+  renderPie('chartAhorrosPlataforma', piePlatObj, piePlatColors);
+  renderSingleRowLegend('legend-ahorros-plat', legendPlatItems, 4, "abrirModalVerMas('plataformas')");
+
+  // Tabla 3: Top 5 filas
+  const top5Plats = sortedPlats.slice(0, 5);
   if (tbodyPlat) {
     if (!sortedPlats.length) {
       tbodyPlat.innerHTML = '<tr><td colspan="3" class="text-center py-8 text-slate-500 text-xs">Sin datos de plataformas</td></tr>';
     } else {
-      tbodyPlat.innerHTML = sortedPlats.map((p, i) => {
-        const pct = totalARS > 0 ? ((p.valorARS / totalARS) * 100).toFixed(1) : '0.0';
-        const barWidth = totalARS > 0 ? Math.min(100, (p.valorARS / totalARS) * 100) : 0;
-        const color = getPlataformaColor(p.nombre, i);
-        const usdSub = p.valorUSD > 0
-          ? `<div class="text-[10px] font-bold text-emerald-400/80 mono mt-0.5">${fmtUSD(p.valorUSD)}</div>`
-          : '<div class="text-[10px] text-transparent mono mt-0.5 select-none">&nbsp;</div>';
-        const subtext = `<div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 truncate"><i class="fas fa-layer-group text-emerald-400/80 text-[9px] flex-shrink-0"></i><span>${p.count} activo${p.count !== 1 ? 's' : ''}</span></div>`;
-        const urlPlat = getPlataformaRedireccionUrl(p.nombre);
-        const platLinkHtml = urlPlat
-          ? `<a href="${urlPlat}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"
-                class="text-xs font-bold text-white hover:text-slate-200 inline-flex items-center gap-1.5 transition-colors group/plat" title="Abrir ${p.nombre}">
-               <span class="truncate text-white">${p.nombre}</span>
-               <i class="fas fa-external-link-alt text-[9px] text-slate-400 group-hover/plat:text-emerald-400 transition-colors"></i>
-             </a>`
-          : `<span class="text-xs font-bold text-white truncate block" title="${p.nombre}">
-               ${p.nombre}
-             </span>`;
-
-        const rowClickAttr = urlPlat ? `onclick="window.open('${urlPlat}', '_blank', 'noopener,noreferrer')"` : '';
-        const rowCursorClass = urlPlat ? 'cursor-pointer hover:bg-slate-800/80' : 'hover:bg-slate-800/60';
-
-        return `<tr class="border-b border-slate-800 ${rowCursorClass} transition-colors" ${rowClickAttr}>
-          <td class="px-3 py-2.5 align-top">
-            <div class="flex items-start gap-2">
-              <span class="w-2.5 h-2.5 rounded-full flex-shrink-0 mt-1" style="background:${color};box-shadow:0 0 8px ${color}99"></span>
-              <div class="flex-1 min-w-0">
-                ${platLinkHtml}
-                ${subtext}
-                <div class="mt-2 h-1.5 w-full bg-slate-800/90 rounded-full overflow-hidden">
-                  <div class="h-full rounded-full transition-all duration-500" style="width:${barWidth}%;background:${color}"></div>
-                </div>
-              </div>
-            </div>
-          </td>
-          <td class="px-3 py-2.5 text-right align-top">
-            <div class="mono font-black text-white text-sm leading-tight">${fmtARS(p.valorARS)}</div>
-            ${usdSub}
-          </td>
-          <td class="px-3 py-2.5 text-right align-top">
-            <span class="inline-block px-2 py-0.5 rounded-md text-[11px] font-black mono" style="background:${color}22;color:${color};border:1px solid ${color}44">${pct}%</span>
-          </td>
-        </tr>`;
-      }).join('');
+      tbodyPlat.innerHTML = top5Plats.map((p, i) => renderPlatRowHtml(p, i, totalARS, fmtARS, fmtUSD)).join('');
     }
+  }
+
+  if (footerPlat) {
+    if (sortedPlats.length > 5) {
+      footerPlat.classList.remove('hidden');
+      if (btnTxtPlat) btnTxtPlat.textContent = `Ver todas (${sortedPlats.length} plataformas)`;
+    } else {
+      footerPlat.classList.add('hidden');
+    }
+  }
+
+  // Guardar datos en caché para el modal Ver Más
+  window._cachedComposicionAhorros = {
+    sortedActivos,
+    sortedTipos,
+    sortedPlats,
+    totalARS,
+    totalUSD
+  };
+}
+
+// ─── MODAL VER MÁS (DESGLOSE COMPLETO) ─────────────────────────────────────────
+function abrirModalVerMas(categoria) {
+  const modal = document.getElementById('modal-ver-mas-inversiones');
+  if (!modal) return;
+  window._modalVerMasActual = categoria;
+
+  const data = window._cachedComposicionAhorros || {};
+  const totalARS = data.totalARS || 0;
+  const totalUSD = data.totalUSD || 0;
+  const fmtARS = v => '$' + Math.round(v || 0).toLocaleString('es-AR', { maximumFractionDigits: 0 });
+  const fmtUSD = v => 'U$S ' + (v || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  const titleEl = document.getElementById('modal-ver-mas-title');
+  const subEl = document.getElementById('modal-ver-mas-subtitle');
+  const iconEl = document.getElementById('modal-ver-mas-icon');
+  const iconContainer = document.getElementById('modal-ver-mas-icon-container');
+  const thCol1 = document.getElementById('modal-ver-mas-th-col1');
+  const searchInput = document.getElementById('modal-ver-mas-search');
+
+  if (searchInput) searchInput.value = '';
+
+  if (categoria === 'activos') {
+    const list = data.sortedActivos || [];
+    if (titleEl) titleEl.textContent = 'Distribución Completa por Activo';
+    if (subEl) subEl.textContent = `${list.length} activos en cartera · Total: ${fmtARS(totalARS)} (${fmtUSD(totalUSD)})`;
+    if (iconEl) iconEl.className = 'fas fa-layer-group text-violet-400 text-xs';
+    if (iconContainer) iconContainer.className = 'w-8 h-8 rounded-xl bg-violet-900/40 border border-violet-500/30 flex items-center justify-center';
+    if (thCol1) thCol1.textContent = 'Activo';
+  } else if (categoria === 'tipos') {
+    const list = data.sortedTipos || [];
+    if (titleEl) titleEl.textContent = 'Distribución Completa por Tipo de Activo';
+    if (subEl) subEl.textContent = `${list.length} tipos de activo · Total: ${fmtARS(totalARS)} (${fmtUSD(totalUSD)})`;
+    if (iconEl) iconEl.className = 'fas fa-shapes text-cyan-400 text-xs';
+    if (iconContainer) iconContainer.className = 'w-8 h-8 rounded-xl bg-cyan-900/40 border border-cyan-500/30 flex items-center justify-center';
+    if (thCol1) thCol1.textContent = 'Tipo de Activo';
+  } else if (categoria === 'plataformas') {
+    const list = data.sortedPlats || [];
+    if (titleEl) titleEl.textContent = 'Distribución Completa por Plataforma';
+    if (subEl) subEl.textContent = `${list.length} plataformas · Total: ${fmtARS(totalARS)} (${fmtUSD(totalUSD)})`;
+    if (iconEl) iconEl.className = 'fas fa-landmark text-emerald-400 text-xs';
+    if (iconContainer) iconContainer.className = 'w-8 h-8 rounded-xl bg-emerald-900/40 border border-emerald-500/30 flex items-center justify-center';
+    if (thCol1) thCol1.textContent = 'Plataforma';
+  }
+
+  renderModalVerMasFiltrado('');
+  modal.style.removeProperty('display');
+  modal.style.display = 'flex';
+  const cardBody = modal.querySelector('.overflow-y-auto');
+  if (cardBody) cardBody.scrollTop = 0;
+}
+
+function cerrarModalVerMas() {
+  const modal = document.getElementById('modal-ver-mas-inversiones');
+  if (modal) modal.style.setProperty('display', 'none', 'important');
+}
+
+function filtrarModalVerMas(query) {
+  renderModalVerMasFiltrado((query || '').trim().toLowerCase());
+}
+
+function renderModalVerMasFiltrado(query) {
+  const tbody = document.getElementById('modal-ver-mas-tbody');
+  const countEl = document.getElementById('modal-ver-mas-count');
+  if (!tbody) return;
+
+  const categoria = window._modalVerMasActual || 'activos';
+  const data = window._cachedComposicionAhorros || {};
+  const totalARS = data.totalARS || 0;
+  const totalUSD = data.totalUSD || 0;
+  const fmtARS = v => '$' + Math.round(v || 0).toLocaleString('es-AR', { maximumFractionDigits: 0 });
+  const fmtUSD = v => 'U$S ' + (v || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  const tipoIcon = {
+    USD: '💵', Divisa: '💵', Divisas: '💵', 'Dólar': '💵', Dolar: '💵', Euro: '💶', Real: '🪙',
+    BTC: '₿', Cripto: '🪙', Criptomonedas: '🪙',
+    Accion: '📈', 'Acción': '📈', 'Acción BYMA': '📈', 'Acciones BYMA': '📈', Acciones: '📈',
+    CEDEAR: '🌐', CEDEARs: '🌐',
+    Bono: '📜', Bonos: '📜',
+    'Obligación Negociable': '📑', 'Obligaciones Negociables': '📑', 'Obligacion Negociable': '📑', ON: '📑',
+    FCI: '📊'
+  };
+
+  let rowsHtml = '';
+  let countShown = 0;
+  let countTotal = 0;
+
+  if (categoria === 'activos') {
+    const list = data.sortedActivos || [];
+    countTotal = list.length;
+    const filtered = query
+      ? list.filter(a => (a.nombre || '').toLowerCase().includes(query) || (a.ticker || '').toLowerCase().includes(query) || (a.tipo || '').toLowerCase().includes(query))
+      : list;
+    countShown = filtered.length;
+    rowsHtml = filtered.length
+      ? filtered.map((a, i) => renderActivoRowHtml(a, i, totalARS, fmtARS, fmtUSD)).join('')
+      : '<tr><td colspan="3" class="text-center py-8 text-slate-500 text-xs">No se encontraron activos</td></tr>';
+  } else if (categoria === 'tipos') {
+    const list = data.sortedTipos || [];
+    countTotal = list.length;
+    const filtered = query
+      ? list.filter(t => (t.tipo || '').toLowerCase().includes(query))
+      : list;
+    countShown = filtered.length;
+    rowsHtml = filtered.length
+      ? filtered.map((t, idx) => renderTipoRowHtml(t, idx, totalARS, fmtARS, fmtUSD, tipoIcon)).join('')
+      : '<tr><td colspan="3" class="text-center py-8 text-slate-500 text-xs">No se encontraron tipos</td></tr>';
+  } else if (categoria === 'plataformas') {
+    const list = data.sortedPlats || [];
+    countTotal = list.length;
+    const filtered = query
+      ? list.filter(p => (p.nombre || '').toLowerCase().includes(query))
+      : list;
+    countShown = filtered.length;
+    rowsHtml = filtered.length
+      ? filtered.map((p, i) => renderPlatRowHtml(p, i, totalARS, fmtARS, fmtUSD)).join('')
+      : '<tr><td colspan="3" class="text-center py-8 text-slate-500 text-xs">No se encontraron plataformas</td></tr>';
+  }
+
+  tbody.innerHTML = rowsHtml;
+  if (countEl) {
+    countEl.textContent = query
+      ? `Mostrando ${countShown} de ${countTotal}`
+      : `Total: ${countTotal} registro${countTotal !== 1 ? 's' : ''}`;
   }
 }
 
