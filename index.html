@@ -3187,19 +3187,19 @@
             <span id="ah-composicion-badge" class="text-[9px] font-black mono px-2.5 py-0.5 rounded-full bg-violet-500/15 text-violet-300 border border-violet-400/30">0 activos · 100%</span>
           </div>
 
-          <!-- Dos gráficos de torta lado a lado -->
-          <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-700/60 border-b border-slate-700/60 bg-slate-900/20">
+          <!-- Tres gráficos de torta: Por Activo, Por Tipo de Activo y Por Plataforma -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x divide-slate-700/60 border-b border-slate-700/60 bg-slate-900/20">
             <!-- Gráfico 1: Por Activo -->
             <div class="p-5 flex flex-col items-center justify-center">
               <div class="flex items-center gap-2 mb-2 self-start ml-2">
                 <span class="w-2 h-2 rounded-full bg-violet-400"></span>
                 <span class="text-[10px] font-black text-slate-300 uppercase tracking-wider">Por Activo</span>
               </div>
-              <div class="chart-wrapper w-full max-w-[240px]">
-                <canvas id="chartAhorrosCartera" class="max-h-[190px]"></canvas>
+              <div class="chart-wrapper w-full max-w-[220px]">
+                <canvas id="chartAhorrosCartera" class="max-h-[180px]"></canvas>
                 <div class="chart-center-label" id="center-ahorros-cartera">
                   <p class="text-[8px] text-slate-500 uppercase tracking-widest">Total Invertido</p>
-                  <p id="center-ahorros-val" class="text-sm font-black text-white mono">$0</p>
+                  <p id="center-ahorros-val" class="text-xs sm:text-sm font-black text-white mono">$0</p>
                   <p id="center-ahorros-usd" class="text-[9px] font-bold text-emerald-400 mono mt-0.5">U$S 0</p>
                 </div>
               </div>
@@ -3208,29 +3208,45 @@
             <!-- Gráfico 2: Por Tipo de Activo -->
             <div class="p-5 flex flex-col items-center justify-center">
               <div class="flex items-center gap-2 mb-2 self-start ml-2">
-                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
                 <span class="text-[10px] font-black text-slate-300 uppercase tracking-wider">Por Tipo de Activo</span>
               </div>
-              <div class="chart-wrapper w-full max-w-[240px]">
-                <canvas id="chartAhorrosTipoActivo" class="max-h-[190px]"></canvas>
+              <div class="chart-wrapper w-full max-w-[220px]">
+                <canvas id="chartAhorrosTipoActivo" class="max-h-[180px]"></canvas>
                 <div class="chart-center-label" id="center-ahorros-tipo">
                   <p class="text-[8px] text-slate-500 uppercase tracking-widest">Diversificación</p>
-                  <p id="center-ahorros-tipo-val" class="text-sm font-black text-white mono">0</p>
-                  <p class="text-[9px] font-bold text-violet-400 mono mt-0.5">Tipos</p>
+                  <p id="center-ahorros-tipo-val" class="text-xs sm:text-sm font-black text-white mono">0</p>
+                  <p class="text-[9px] font-bold text-cyan-400 mono mt-0.5">Tipos</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Gráfico 3: Por Plataforma -->
+            <div class="p-5 flex flex-col items-center justify-center">
+              <div class="flex items-center gap-2 mb-2 self-start ml-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span class="text-[10px] font-black text-slate-300 uppercase tracking-wider">Por Plataforma</span>
+              </div>
+              <div class="chart-wrapper w-full max-w-[220px]">
+                <canvas id="chartAhorrosPlataforma" class="max-h-[180px]"></canvas>
+                <div class="chart-center-label" id="center-ahorros-plat">
+                  <p class="text-[8px] text-slate-500 uppercase tracking-widest">Distribución</p>
+                  <p id="center-ahorros-plat-val" class="text-xs sm:text-sm font-black text-white mono">0</p>
+                  <p class="text-[9px] font-bold text-emerald-400 mono mt-0.5">Plataformas</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Dos Tablas Porcentuales: Por Activo y Por Plataforma -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-700/60">
-            <!-- Tabla 1: Desglose por Activo / Ticker -->
+          <!-- Tres Tablas Porcentuales: Distribución por Activo, por Tipo de Activo y por Plataforma -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x divide-slate-700/60">
+            <!-- Tabla 1: Distribución por Activo -->
             <div class="flex flex-col">
-              <div class="h-10 px-5 bg-slate-800/40 border-b border-slate-700/60 flex items-center justify-between">
-                <span class="text-[10px] font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-                  <i class="fas fa-layer-group text-violet-400 text-[10px]"></i> Desglose por Activo
+              <div class="h-10 px-4 bg-slate-800/40 border-b border-slate-700/60 flex items-center justify-between">
+                <span class="text-[10px] font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5 truncate">
+                  <i class="fas fa-layer-group text-violet-400 text-[10px]"></i> Distribución por Activo
                 </span>
-                <span id="ah-activos-count" class="text-[9px] font-black mono text-violet-400">0 activos</span>
+                <span id="ah-activos-count" class="text-[9px] font-black mono text-violet-400 shrink-0">0 activos</span>
               </div>
               <table class="w-full text-sm table-fixed">
                 <colgroup>
@@ -3240,9 +3256,9 @@
                 </colgroup>
                 <thead>
                   <tr class="h-9 bg-slate-800 border-b border-slate-700/60">
-                    <th class="px-4 py-2 text-[10px] text-left font-black text-white uppercase tracking-widest truncate">Concepto / Activo</th>
-                    <th class="px-4 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Total</th>
-                    <th class="px-4 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Peso %</th>
+                    <th class="px-3 py-2 text-[10px] text-left font-black text-white uppercase tracking-widest truncate">Activo</th>
+                    <th class="px-3 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Total</th>
+                    <th class="px-3 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Peso %</th>
                   </tr>
                 </thead>
                 <tbody id="tbody-composicion-ahorros">
@@ -3251,13 +3267,13 @@
               </table>
             </div>
 
-            <!-- Tabla 2: Desglose por Plataforma -->
+            <!-- Tabla 2: Distribución por Tipo de Activo -->
             <div class="flex flex-col">
-              <div class="h-10 px-5 bg-slate-800/40 border-b border-slate-700/60 flex items-center justify-between">
-                <span class="text-[10px] font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-                  <i class="fas fa-landmark text-emerald-400 text-[10px]"></i> Distribución por Plataforma
+              <div class="h-10 px-4 bg-slate-800/40 border-b border-slate-700/60 flex items-center justify-between">
+                <span class="text-[10px] font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5 truncate">
+                  <i class="fas fa-shapes text-cyan-400 text-[10px]"></i> Distribución por Tipo de Activo
                 </span>
-                <span id="ah-plataformas-count" class="text-[9px] font-black mono text-emerald-400">0 plataformas</span>
+                <span id="ah-tipos-count" class="text-[9px] font-black mono text-cyan-400 shrink-0">0 tipos</span>
               </div>
               <table class="w-full text-sm table-fixed">
                 <colgroup>
@@ -3267,16 +3283,43 @@
                 </colgroup>
                 <thead>
                   <tr class="h-9 bg-slate-800 border-b border-slate-700/60">
-                    <th class="px-4 py-2 text-[10px] text-left font-black text-white uppercase tracking-widest truncate">
+                    <th class="px-3 py-2 text-[10px] text-left font-black text-white uppercase tracking-widest truncate">Tipo de Activo</th>
+                    <th class="px-3 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Total</th>
+                    <th class="px-3 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Peso %</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-tipos-ahorros">
+                  <tr><td colspan="3" class="text-center py-8 text-slate-500 text-xs">Sin datos de tipos</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Tabla 3: Distribución por Plataforma -->
+            <div class="flex flex-col">
+              <div class="h-10 px-4 bg-slate-800/40 border-b border-slate-700/60 flex items-center justify-between">
+                <span class="text-[10px] font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5 truncate">
+                  <i class="fas fa-landmark text-emerald-400 text-[10px]"></i> Distribución por Plataforma
+                </span>
+                <span id="ah-plataformas-count" class="text-[9px] font-black mono text-emerald-400 shrink-0">0 plataformas</span>
+              </div>
+              <table class="w-full text-sm table-fixed">
+                <colgroup>
+                  <col class="w-[50%]">
+                  <col class="w-[28%]">
+                  <col class="w-[22%]">
+                </colgroup>
+                <thead>
+                  <tr class="h-9 bg-slate-800 border-b border-slate-700/60">
+                    <th class="px-3 py-2 text-[10px] text-left font-black text-white uppercase tracking-widest truncate">
                       <div class="inline-flex items-center gap-1.5">
                         <span>Plataforma</span>
-                        <button type="button" onclick="abrirModalGestionPlataformas()" title="Gestionar links de plataformas" class="text-slate-400 hover:text-emerald-400 transition-colors">
+                        <button type="button" onclick="abrirModalGestionPlataformas()" title="Gestionar links y colores de plataformas" class="text-slate-400 hover:text-emerald-400 transition-colors">
                           <i class="fas fa-cog text-[10px]"></i>
                         </button>
                       </div>
                     </th>
-                    <th class="px-4 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Total</th>
-                    <th class="px-4 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Peso %</th>
+                    <th class="px-3 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Total</th>
+                    <th class="px-3 py-2 text-[10px] text-right font-black text-white uppercase tracking-widest truncate">Peso %</th>
                   </tr>
                 </thead>
                 <tbody id="tbody-plataformas-ahorros">
@@ -5516,7 +5559,7 @@
         </div>
         <div>
           <h3 class="font-black text-white uppercase tracking-widest text-sm">Gestionar Plataformas</h3>
-          <p class="text-[10px] text-slate-400 mt-0.5">Configurá las URLs de redirección para cada plataforma</p>
+          <p class="text-[10px] text-slate-400 mt-0.5">Configurá las URLs de redirección y el color representativo de cada plataforma</p>
         </div>
       </div>
       <button type="button" onclick="cerrarModalGestionPlataformas()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-800 hover:bg-slate-700 transition-colors text-slate-400 hover:text-white">
@@ -5529,7 +5572,7 @@
       <div class="p-3 bg-emerald-950/20 border border-emerald-500/20 rounded-xl flex items-start gap-2.5">
         <i class="fas fa-info-circle text-emerald-400 text-xs mt-0.5 shrink-0"></i>
         <p class="text-[11px] text-slate-300 leading-snug">
-          Al hacer clic sobre el nombre de una plataforma en el panel, se abrirá la URL que configures aquí. Si dejas el campo vacío, la plataforma no redirigirá.
+          Al hacer clic sobre el nombre de una plataforma, se abrirá la URL que configures aquí. Podés también personalizar el color representativo para los gráficos y barras de distribución.
         </p>
       </div>
 
@@ -5548,6 +5591,9 @@
       <div class="pt-3 border-t border-slate-800">
         <span class="text-[10px] font-black uppercase tracking-wider text-slate-400 block mb-2">Agregar otra plataforma</span>
         <div class="flex flex-col sm:flex-row items-center gap-2">
+          <div class="flex items-center gap-1.5 shrink-0 bg-slate-950 px-2 py-1 rounded-lg border border-slate-800" title="Color de la plataforma">
+            <input type="color" id="nueva-plat-color" value="#10b981" class="w-6 h-6 rounded cursor-pointer bg-transparent border-0 p-0 outline-none">
+          </div>
           <input type="text" id="nueva-plat-nombre" placeholder="Nombre (ej: Balanz)" 
                  class="w-full sm:w-1/3 h-8 px-3 bg-slate-900 border border-slate-700/80 rounded-lg text-xs text-white font-bold outline-none focus:border-emerald-500/60">
           <input type="url" id="nueva-plat-url" placeholder="https://..." 
@@ -9907,11 +9953,23 @@ function getColorActivoAhorro(activo, index = 0) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// GESTIÓN Y REDIRECCIÓN DE PLATAFORMAS DE INVERSIÓN
+// GESTIÓN, REDIRECCIÓN Y COLORES DE PLATAFORMAS DE INVERSIÓN
 // ═══════════════════════════════════════════════════════════════════════════════
 const PLATAFORMAS_LINKS_DEFAULTS = {
   'Bull Market': 'https://inversiones.bullmarket.com.ar/Clients/Dashboard',
   'Galicia': 'https://onlinebanking.bancogalicia.com.ar/login'
+};
+
+const PLATAFORMAS_COLORES_DEFAULTS = {
+  'Bull Market': '#10b981',
+  'Galicia': '#f59e0b',
+  'Balanz': '#ef4444',
+  'IOL': '#3b82f6',
+  'InvertirOnline': '#3b82f6',
+  'Binance': '#eab308',
+  'Lemon': '#84cc16',
+  'Buenbit': '#8b5cf6',
+  'Santander': '#dc2626'
 };
 
 function getPlataformasLinksConfig() {
@@ -9931,6 +9989,46 @@ function savePlataformasLinksConfig(map) {
   } catch (e) {
     console.error('Error al guardar enlaces de plataformas:', e);
   }
+}
+
+function getPlataformasColoresConfig() {
+  try {
+    const raw = localStorage.getItem('gm_plataformas_colores');
+    if (!raw) return { ...PLATAFORMAS_COLORES_DEFAULTS };
+    const custom = JSON.parse(raw);
+    return { ...PLATAFORMAS_COLORES_DEFAULTS, ...custom };
+  } catch (e) {
+    return { ...PLATAFORMAS_COLORES_DEFAULTS };
+  }
+}
+
+function savePlataformasColoresConfig(map) {
+  try {
+    localStorage.setItem('gm_plataformas_colores', JSON.stringify(map));
+  } catch (e) {
+    console.error('Error al guardar colores de plataformas:', e);
+  }
+}
+
+function getPlataformaColor(platName, defaultIndex = 0) {
+  if (!platName) return PALETA_PLATAFORMAS[defaultIndex % PALETA_PLATAFORMAS.length];
+  const target = String(platName).trim().toLowerCase();
+  const colores = getPlataformasColoresConfig();
+
+  for (const [key, color] of Object.entries(colores)) {
+    if (!color || !String(color).trim()) continue;
+    const k = String(key).trim().toLowerCase();
+    if (k === target) return String(color).trim();
+    if (['bull market', 'bullmarket', 'bull market brokers'].includes(target) &&
+        ['bull market', 'bullmarket', 'bull market brokers'].includes(k)) {
+      return String(color).trim();
+    }
+    if (['galicia', 'banco galicia'].includes(target) &&
+        ['galicia', 'banco galicia'].includes(k)) {
+      return String(color).trim();
+    }
+  }
+  return PALETA_PLATAFORMAS[defaultIndex % PALETA_PLATAFORMAS.length];
 }
 
 function getPlataformaRedireccionUrl(platName) {
@@ -9982,6 +10080,11 @@ function detectarPlataformasCargadas() {
     if (p && String(p).trim()) setPlats.add(String(p).trim());
   });
 
+  const colores = getPlataformasColoresConfig();
+  Object.keys(colores).forEach(p => {
+    if (p && String(p).trim()) setPlats.add(String(p).trim());
+  });
+
   if (!setPlats.has('Bull Market')) setPlats.add('Bull Market');
   if (!setPlats.has('Galicia')) setPlats.add('Galicia');
 
@@ -10024,17 +10127,16 @@ function renderListaPlataformasConfig() {
 
   container.innerHTML = plataformas.map((plat, idx) => {
     const url = config[plat] || '';
+    const color = getPlataformaColor(plat, idx);
     const hasUrl = Boolean(url && String(url).trim());
     const escapedPlat = plat.replace(/"/g, '&quot;');
     const escapedUrl = url.replace(/"/g, '&quot;');
 
     return `
-      <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 hover:border-slate-700/80 transition-all space-y-2">
+      <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 hover:border-slate-700/80 transition-all space-y-2.5">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <div class="w-6 h-6 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px]">
-              <i class="fas fa-landmark"></i>
-            </div>
+            <span class="w-3 h-3 rounded-full shrink-0" style="background:${color};box-shadow:0 0 6px ${color}88"></span>
             <span class="text-xs font-bold text-white">${plat}</span>
           </div>
           <span class="text-[9px] font-black mono px-2 py-0.5 rounded-full ${hasUrl ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' : 'bg-slate-800 text-slate-500 border border-slate-700'}">
@@ -10042,6 +10144,17 @@ function renderListaPlataformasConfig() {
           </span>
         </div>
         <div class="flex items-center gap-2">
+          <!-- Selector de color -->
+          <div class="flex items-center gap-1.5 shrink-0 bg-slate-950 px-2 py-1 rounded-lg border border-slate-800" title="Elegir color para ${plat}">
+            <input type="color" 
+                   data-plat="${escapedPlat}" 
+                   id="input-plat-color-${idx}"
+                   value="${color}" 
+                   oninput="this.nextElementSibling.textContent = this.value.toUpperCase();"
+                   class="plat-color-input w-6 h-6 rounded cursor-pointer bg-transparent border-0 p-0 outline-none">
+            <span class="text-[10px] mono text-slate-400 font-bold">${color.toUpperCase()}</span>
+          </div>
+          <!-- Input de URL -->
           <div class="relative flex-1">
             <input type="url" 
                    data-plat="${escapedPlat}" 
@@ -10071,10 +10184,12 @@ function renderListaPlataformasConfig() {
 function agregarPlataformaManual() {
   const inpNombre = document.getElementById('nueva-plat-nombre');
   const inpUrl = document.getElementById('nueva-plat-url');
+  const inpColor = document.getElementById('nueva-plat-color');
   if (!inpNombre || !inpUrl) return;
 
   const nombre = (inpNombre.value || '').trim();
   const url = (inpUrl.value || '').trim();
+  const color = inpColor ? (inpColor.value || '').trim() : '';
 
   if (!nombre) {
     if (typeof showToast === 'function') showToast('Ingresá el nombre de la plataforma', 'warning');
@@ -10082,8 +10197,14 @@ function agregarPlataformaManual() {
   }
 
   const config = getPlataformasLinksConfig();
-  config[nombre] = url;
+  if (url) config[nombre] = url;
   savePlataformasLinksConfig(config);
+
+  if (color) {
+    const colores = getPlataformasColoresConfig();
+    colores[nombre] = color;
+    savePlataformasColoresConfig(colores);
+  }
 
   inpNombre.value = '';
   inpUrl.value = '';
@@ -10093,22 +10214,35 @@ function agregarPlataformaManual() {
 }
 
 function guardarLinksPlataformas() {
-  const inputs = document.querySelectorAll('.plat-url-input');
-  const config = getPlataformasLinksConfig();
+  const inputsLinks = document.querySelectorAll('.plat-url-input');
+  const inputsColores = document.querySelectorAll('.plat-color-input');
+  const configLinks = getPlataformasLinksConfig();
+  const configColores = getPlataformasColoresConfig();
 
-  inputs.forEach(inp => {
+  inputsLinks.forEach(inp => {
     const plat = inp.getAttribute('data-plat');
     const val = (inp.value || '').trim();
     if (!plat) return;
     if (val) {
-      config[plat] = val;
+      configLinks[plat] = val;
     } else {
-      delete config[plat];
+      delete configLinks[plat];
     }
   });
 
-  savePlataformasLinksConfig(config);
-  if (typeof showToast === 'function') showToast('Enlaces de plataformas actualizados ✓', 'ok');
+  inputsColores.forEach(inp => {
+    const plat = inp.getAttribute('data-plat');
+    const color = (inp.value || '').trim();
+    if (!plat) return;
+    if (color) {
+      configColores[plat] = color;
+    }
+  });
+
+  savePlataformasLinksConfig(configLinks);
+  savePlataformasColoresConfig(configColores);
+
+  if (typeof showToast === 'function') showToast('Plataformas y colores actualizados ✓', 'ok');
   cerrarModalGestionPlataformas();
 
   if (typeof renderTablaAhorros === 'function') {
@@ -10118,12 +10252,15 @@ function guardarLinksPlataformas() {
 
 function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
   const tbody = document.getElementById('tbody-composicion-ahorros');
+  const tbodyTipos = document.getElementById('tbody-tipos-ahorros');
   const tbodyPlat = document.getElementById('tbody-plataformas-ahorros');
   const centerVal = document.getElementById('center-ahorros-val');
   const centerUsd = document.getElementById('center-ahorros-usd');
   const centerTipoVal = document.getElementById('center-ahorros-tipo-val');
+  const centerPlatVal = document.getElementById('center-ahorros-plat-val');
   const badge = document.getElementById('ah-composicion-badge');
   const activosBadge = document.getElementById('ah-activos-count');
+  const tiposBadge = document.getElementById('ah-tipos-count');
   const platBadge = document.getElementById('ah-plataformas-count');
 
   const fmtARS = v => '$' + Math.round(v || 0).toLocaleString('es-AR', { maximumFractionDigits: 0 });
@@ -10134,17 +10271,23 @@ function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
 
   if (!enriquecidas || !enriquecidas.length || totalARS <= 0) {
     if (centerTipoVal) centerTipoVal.textContent = '0';
+    if (centerPlatVal) centerPlatVal.textContent = '0';
     if (badge) badge.textContent = '0 activos · 0%';
     if (activosBadge) activosBadge.textContent = '0 activos';
+    if (tiposBadge) tiposBadge.textContent = '0 tipos';
     if (platBadge) platBadge.textContent = '0 plataformas';
     if (tbody) {
       tbody.innerHTML = '<tr><td colspan="3" class="text-center py-8 text-slate-500 text-xs">Sin activos en cartera</td></tr>';
+    }
+    if (tbodyTipos) {
+      tbodyTipos.innerHTML = '<tr><td colspan="3" class="text-center py-8 text-slate-500 text-xs">Sin datos de tipos</td></tr>';
     }
     if (tbodyPlat) {
       tbodyPlat.innerHTML = '<tr><td colspan="3" class="text-center py-8 text-slate-500 text-xs">Sin datos de plataformas</td></tr>';
     }
     renderPie('chartAhorrosCartera', {}, PALETA_OTROS_ACTIVOS_AHORRO);
     renderPie('chartAhorrosTipoActivo', {}, PALETA_FALLBACK_TIPOS);
+    renderPie('chartAhorrosPlataforma', {}, PALETA_PLATAFORMAS);
     return;
   }
 
@@ -10263,8 +10406,8 @@ function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
     }
 
     return `<tr class="border-b border-slate-800 hover:bg-slate-800/60 transition-colors">
-      <td class="px-4 py-3 align-top">
-        <div class="flex items-start gap-2.5">
+      <td class="px-3 py-2.5 align-top">
+        <div class="flex items-start gap-2">
           <span class="w-2.5 h-2.5 rounded-full flex-shrink-0 mt-1" style="background:${color};box-shadow:0 0 8px ${color}99"></span>
           <div class="flex-1 min-w-0">
             <span class="text-xs font-bold text-slate-200 truncate block" title="${a.nombre}">${a.icon} ${a.nombre}</span>
@@ -10275,11 +10418,11 @@ function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
           </div>
         </div>
       </td>
-      <td class="px-4 py-3 text-right align-top">
+      <td class="px-3 py-2.5 text-right align-top">
         <div class="mono font-black text-white text-sm leading-tight">${fmtARS(val)}</div>
         ${usdSub}
       </td>
-      <td class="px-4 py-3 text-right align-top">
+      <td class="px-3 py-2.5 text-right align-top">
         <span class="inline-block px-2 py-0.5 rounded-md text-[11px] font-black mono" style="background:${color}22;color:${color};border:1px solid ${color}44">${pct}%</span>
       </td>
     </tr>`;
@@ -10288,27 +10431,78 @@ function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
   if (tbody) tbody.innerHTML = rowsHtml;
   renderPie('chartAhorrosCartera', pieObj, pieColors);
 
-  // 2. Gráfico Por Tipo de Activo
+  // 2. Gráfico y Desglose agrupado por Tipo de Activo
   const tiposMap = {};
   enriquecidas.forEach(a => {
-    const t = a.tipo || 'Otro';
-    tiposMap[t] = (tiposMap[t] || 0) + (a.valorARS || 0);
+    const t = (a.tipo || 'Otro').trim() || 'Otro';
+    if (!tiposMap[t]) {
+      tiposMap[t] = { tipo: t, valorARS: 0, valorUSD: 0, count: 0 };
+    }
+    tiposMap[t].valorARS += (a.valorARS || 0);
+    tiposMap[t].valorUSD += (a.valorUSD || 0);
+    tiposMap[t].count += 1;
   });
-  const sortedTipos = Object.entries(tiposMap)
-    .filter(([, v]) => v > 0)
-    .sort((a, b) => b[1] - a[1]);
+
+  const sortedTipos = Object.values(tiposMap)
+    .filter(t => t.valorARS > 0)
+    .sort((a, b) => b.valorARS - a.valorARS);
 
   if (centerTipoVal) centerTipoVal.textContent = sortedTipos.length;
+  if (tiposBadge) {
+    tiposBadge.textContent = `${sortedTipos.length} tipo${sortedTipos.length !== 1 ? 's' : ''}`;
+  }
 
   const pieTiposObj = {};
   const pieTiposColors = [];
-  sortedTipos.forEach(([tipo, val], idx) => {
-    pieTiposObj[tipo] = val;
-    pieTiposColors.push(COLORES_TIPOS_ACTIVO[tipo] || PALETA_FALLBACK_TIPOS[idx % PALETA_FALLBACK_TIPOS.length]);
+  sortedTipos.forEach((t, idx) => {
+    const color = COLORES_TIPOS_ACTIVO[t.tipo] || PALETA_FALLBACK_TIPOS[idx % PALETA_FALLBACK_TIPOS.length];
+    pieTiposObj[t.tipo] = t.valorARS;
+    pieTiposColors.push(color);
   });
   renderPie('chartAhorrosTipoActivo', pieTiposObj, pieTiposColors);
 
-  // 3. Tabla Desglose Por Plataforma
+  if (tbodyTipos) {
+    if (!sortedTipos.length) {
+      tbodyTipos.innerHTML = '<tr><td colspan="3" class="text-center py-8 text-slate-500 text-xs">Sin datos de tipos</td></tr>';
+    } else {
+      tbodyTipos.innerHTML = sortedTipos.map((t, idx) => {
+        const pct = totalARS > 0 ? ((t.valorARS / totalARS) * 100).toFixed(1) : '0.0';
+        const barWidth = totalARS > 0 ? Math.min(100, (t.valorARS / totalARS) * 100) : 0;
+        const color = COLORES_TIPOS_ACTIVO[t.tipo] || PALETA_FALLBACK_TIPOS[idx % PALETA_FALLBACK_TIPOS.length];
+        const icon = tipoIcon[t.tipo] || '💎';
+        const usdSub = t.valorUSD > 0
+          ? `<div class="text-[10px] font-bold text-emerald-400/80 mono mt-0.5">${fmtUSD(t.valorUSD)}</div>`
+          : '<div class="text-[10px] text-transparent mono mt-0.5 select-none">&nbsp;</div>';
+        const subtext = `<div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 truncate"><i class="fas fa-layer-group text-cyan-400/80 text-[9px] flex-shrink-0"></i><span>${t.count} activo${t.count !== 1 ? 's' : ''}</span></div>`;
+
+        return `<tr class="border-b border-slate-800 hover:bg-slate-800/60 transition-colors">
+          <td class="px-3 py-2.5 align-top">
+            <div class="flex items-start gap-2">
+              <span class="w-2.5 h-2.5 rounded-full flex-shrink-0 mt-1" style="background:${color};box-shadow:0 0 8px ${color}99"></span>
+              <div class="flex-1 min-w-0">
+                <span class="text-xs font-bold text-slate-200 truncate block" title="${t.tipo}">
+                  ${icon} ${t.tipo}
+                </span>
+                ${subtext}
+                <div class="mt-2 h-1.5 w-full bg-slate-800/90 rounded-full overflow-hidden">
+                  <div class="h-full rounded-full transition-all duration-500" style="width:${barWidth}%;background:${color}"></div>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="px-3 py-2.5 text-right align-top">
+            <div class="mono font-black text-white text-sm leading-tight">${fmtARS(t.valorARS)}</div>
+            ${usdSub}
+          </td>
+          <td class="px-3 py-2.5 text-right align-top">
+            <span class="inline-block px-2 py-0.5 rounded-md text-[11px] font-black mono" style="background:${color}22;color:${color};border:1px solid ${color}44">${pct}%</span>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+  }
+
+  // 3. Gráfico y Desglose agrupado por Plataforma
   const platMap = {};
   enriquecidas.forEach(a => {
     const p = (a.plataforma || a.descripcion || 'General').trim() || 'General';
@@ -10324,10 +10518,22 @@ function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
     .filter(p => p.valorARS > 0)
     .sort((a, b) => b.valorARS - a.valorARS);
 
+  if (centerPlatVal) centerPlatVal.textContent = sortedPlats.length;
   if (platBadge) {
     platBadge.textContent = `${sortedPlats.length} plataforma${sortedPlats.length !== 1 ? 's' : ''}`;
   }
 
+  // Gráfico 3: Por Plataforma (usando getPlataformaColor para cada una)
+  const piePlatObj = {};
+  const piePlatColors = [];
+  sortedPlats.forEach((p, idx) => {
+    const color = getPlataformaColor(p.nombre, idx);
+    piePlatObj[p.nombre] = p.valorARS;
+    piePlatColors.push(color);
+  });
+  renderPie('chartAhorrosPlataforma', piePlatObj, piePlatColors);
+
+  // Tabla 3: Distribución por Plataforma (usando getPlataformaColor y manteniendo texto en blanco)
   if (tbodyPlat) {
     if (!sortedPlats.length) {
       tbodyPlat.innerHTML = '<tr><td colspan="3" class="text-center py-8 text-slate-500 text-xs">Sin datos de plataformas</td></tr>';
@@ -10335,11 +10541,11 @@ function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
       tbodyPlat.innerHTML = sortedPlats.map((p, i) => {
         const pct = totalARS > 0 ? ((p.valorARS / totalARS) * 100).toFixed(1) : '0.0';
         const barWidth = totalARS > 0 ? Math.min(100, (p.valorARS / totalARS) * 100) : 0;
-        const color = PALETA_PLATAFORMAS[i % PALETA_PLATAFORMAS.length];
+        const color = getPlataformaColor(p.nombre, i);
         const usdSub = p.valorUSD > 0
           ? `<div class="text-[10px] font-bold text-emerald-400/80 mono mt-0.5">${fmtUSD(p.valorUSD)}</div>`
           : '<div class="text-[10px] text-transparent mono mt-0.5 select-none">&nbsp;</div>';
-        const subtext = `<div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 truncate"><i class="fas fa-layer-group text-violet-400/80 text-[9px] flex-shrink-0"></i><span>${p.count} activo${p.count !== 1 ? 's' : ''}</span></div>`;
+        const subtext = `<div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5 truncate"><i class="fas fa-layer-group text-emerald-400/80 text-[9px] flex-shrink-0"></i><span>${p.count} activo${p.count !== 1 ? 's' : ''}</span></div>`;
         const urlPlat = getPlataformaRedireccionUrl(p.nombre);
         const platLinkHtml = urlPlat
           ? `<a href="${urlPlat}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"
@@ -10355,8 +10561,8 @@ function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
         const rowCursorClass = urlPlat ? 'cursor-pointer hover:bg-slate-800/80' : 'hover:bg-slate-800/60';
 
         return `<tr class="border-b border-slate-800 ${rowCursorClass} transition-colors" ${rowClickAttr}>
-          <td class="px-4 py-3 align-top">
-            <div class="flex items-start gap-2.5">
+          <td class="px-3 py-2.5 align-top">
+            <div class="flex items-start gap-2">
               <span class="w-2.5 h-2.5 rounded-full flex-shrink-0 mt-1" style="background:${color};box-shadow:0 0 8px ${color}99"></span>
               <div class="flex-1 min-w-0">
                 ${platLinkHtml}
@@ -10367,11 +10573,11 @@ function renderComposicionCarteraAhorros(enriquecidas, totalARS, totalUSD) {
               </div>
             </div>
           </td>
-          <td class="px-4 py-3 text-right align-top">
+          <td class="px-3 py-2.5 text-right align-top">
             <div class="mono font-black text-white text-sm leading-tight">${fmtARS(p.valorARS)}</div>
             ${usdSub}
           </td>
-          <td class="px-4 py-3 text-right align-top">
+          <td class="px-3 py-2.5 text-right align-top">
             <span class="inline-block px-2 py-0.5 rounded-md text-[11px] font-black mono" style="background:${color}22;color:${color};border:1px solid ${color}44">${pct}%</span>
           </td>
         </tr>`;
