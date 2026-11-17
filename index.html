@@ -13,6 +13,7 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+<script src="bullmarket_data.js"></script>
 <style>
   * { box-sizing: border-box; }
   /* Bloqueo de desplazamiento horizontal en móvil y tablet */
@@ -9108,7 +9109,12 @@ function aplicarDatosBullMarket(cacheObj) {
 }
 
 async function cargarBullMarketCache() {
-  // 1. Cargar desde localStorage
+  // 1. Usar window.BULLMARKET_DATA si está disponible (soporte offline y apertura local file://)
+  if (typeof window !== 'undefined' && window.BULLMARKET_DATA && typeof window.BULLMARKET_DATA === 'object') {
+    aplicarDatosBullMarket(window.BULLMARKET_DATA);
+  }
+
+  // 2. Cargar desde localStorage si ya existe versión más reciente
   try {
     const raw = localStorage.getItem('gm_bullmarket_cache');
     if (raw) {
@@ -9117,7 +9123,7 @@ async function cargarBullMarketCache() {
     }
   } catch (e) {}
 
-  // 2. Cargar desde archivo local bullmarket_cache.json
+  // 3. Cargar desde archivo local bullmarket_cache.json
   try {
     const r = await fetch('./bullmarket_cache.json', { signal: AbortSignal.timeout(3000) });
     if (r.ok) {
@@ -9854,12 +9860,6 @@ function getPrecioUSD(activo) {
     if (t && cotizaciones.tickers[t]) return cotizaciones.tickers[t];
     return activo.precioManual != null ? activo.precioManual : (activo.precioRef != null ? activo.precioRef : (activo.precioPromCompra || null));
   }
-
-  const ars     = getPrecioARS(activo);
-  const usdRate = cotizaciones.USD_MEP || cotizaciones.USD;
-  if (!ars || !usdRate) return null;
-  return ars / usdRate;
-}
 
   const ars     = getPrecioARS(activo);
   const usdRate = cotizaciones.USD_MEP || cotizaciones.USD;
