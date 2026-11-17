@@ -10678,10 +10678,15 @@ function renderModalCotizaciones() {
   lista.innerHTML = items.map(it => {
     let pctBadge = '';
     if (it.pct != null) {
-      const pos = it.pct >= 0;
+      const isZero = Math.abs(it.pct) < 0.005;
+      const pos = it.pct > 0;
       pctBadge = `
-        <span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-[10px] font-black mono ${pos ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/15 text-rose-400 border border-rose-500/30'}">
-          ${pos ? '▲ +' : '▼ '}${it.pct.toFixed(2)}%
+        <span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded text-[10px] font-black mono ${
+          isZero
+            ? 'bg-amber-500/15 text-amber-300 border border-amber-500/30'
+            : (pos ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/15 text-rose-400 border border-rose-500/30')
+        }">
+          ${isZero ? '0.00%' : `${pos ? '▲ +' : '▼ '}${Math.abs(it.pct).toFixed(2)}%`}
         </span>
       `;
     }
@@ -11863,13 +11868,27 @@ function renderTablaAhorros() {
     if (valorARS != null && costoARS > 0) {
       const diffARS = valorARS - costoARS;
       const pctARS  = (diffARS / costoARS) * 100;
-      const esPosA  = diffARS >= -0.01;
+      const esCeroA = Math.abs(pctARS) < 0.05 || Math.round(Math.abs(diffARS)) === 0;
+      const esPosA  = diffARS > 0;
+      const badgeClsA = esCeroA
+        ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
+        : (esPosA ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-rose-500/15 text-rose-300 border-rose-500/30');
+      const txtClsA = esCeroA
+        ? 'text-amber-400/80'
+        : (esPosA ? 'text-emerald-400/80' : 'text-rose-400/80');
+      const badgeTxtA = esCeroA
+        ? '0.0%'
+        : `${esPosA ? '▲ +' : '▼ '}${Math.abs(pctARS).toFixed(1)}%`;
+      const diffTxtA = esCeroA
+        ? '$0'
+        : `${esPosA ? '+' : '-'}$${Math.round(Math.abs(diffARS)).toLocaleString('es-AR')}`;
+
       rendARSHtml = `
         <div class="flex flex-col items-end">
-          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black mono border ${esPosA ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-rose-500/15 text-rose-300 border-rose-500/30'}">
-            ${esPosA ? '▲ +' : '▼ '}${Math.abs(pctARS).toFixed(1)}%
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black mono border ${badgeClsA}">
+            ${badgeTxtA}
           </span>
-          <span class="text-[9px] font-bold mono mt-0.5 ${esPosA ? 'text-emerald-400/80' : 'text-rose-400/80'}">${esPosA ? '+' : '-'}$${Math.round(Math.abs(diffARS)).toLocaleString('es-AR')}</span>
+          <span class="text-[9px] font-bold mono mt-0.5 ${txtClsA}">${diffTxtA}</span>
         </div>`;
     }
 
@@ -11879,13 +11898,27 @@ function renderTablaAhorros() {
     if (valorUSD != null && costoUSD > 0) {
       const diffUSD = valorUSD - costoUSD;
       const pctUSD  = (diffUSD / costoUSD) * 100;
-      const esPosU  = diffUSD >= -0.001;
+      const esCeroU = Math.abs(pctUSD) < 0.05 || Math.abs(diffUSD) < 0.005;
+      const esPosU  = diffUSD > 0;
+      const badgeClsU = esCeroU
+        ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
+        : (esPosU ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-rose-500/15 text-rose-300 border-rose-500/30');
+      const txtClsU = esCeroU
+        ? 'text-amber-400/80'
+        : (esPosU ? 'text-emerald-400/80' : 'text-rose-400/80');
+      const badgeTxtU = esCeroU
+        ? '0.0%'
+        : `${esPosU ? '▲ +' : '▼ '}${Math.abs(pctUSD).toFixed(1)}%`;
+      const diffTxtU = esCeroU
+        ? 'U$S 0.00'
+        : `${esPosU ? '+' : '-'}U$S ${Math.abs(diffUSD).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
       rendUSDHtml = `
         <div class="flex flex-col items-end">
-          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black mono border ${esPosU ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-rose-500/15 text-rose-300 border-rose-500/30'}">
-            ${esPosU ? '▲ +' : '▼ '}${Math.abs(pctUSD).toFixed(1)}%
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black mono border ${badgeClsU}">
+            ${badgeTxtU}
           </span>
-          <span class="text-[9px] font-bold mono mt-0.5 ${esPosU ? 'text-emerald-400/80' : 'text-rose-400/80'}">${esPosU ? '+' : '-'}U$S ${Math.abs(diffUSD).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+          <span class="text-[9px] font-bold mono mt-0.5 ${txtClsU}">${diffTxtU}</span>
         </div>`;
     }
 
@@ -11989,21 +12022,23 @@ function renderTablaAhorros() {
   // 2. Rendimientos separados y reales en ARS y USD
   const diffARS = totalARS - netoInvertidoARS;
   const pctARS  = netoInvertidoARS > 0 ? ((diffARS / netoInvertidoARS) * 100) : 0;
-  const esPosARS = diffARS >= -0.01;
+  const esCeroARS = Math.abs(pctARS) < 0.05 || Math.round(Math.abs(diffARS)) === 0;
+  const esPosARS = diffARS > 0;
 
   const diffUSD = totalUSD - netoInvertidoUSD;
   const pctUSD  = netoInvertidoUSD > 0 ? ((diffUSD / netoInvertidoUSD) * 100) : 0;
-  const esPosUSD = diffUSD >= -0.001;
+  const esCeroUSD = Math.abs(pctUSD) < 0.05 || Math.abs(diffUSD) < 0.005;
+  const esPosUSD = diffUSD > 0;
 
-  const signoARS = esPosARS ? '+' : '-';
-  const diffStrARS = `${signoARS}$${Math.round(Math.abs(diffARS)).toLocaleString('es-AR')}`;
-  const pctStrARS = `${signoARS}${Math.abs(pctARS).toFixed(1)}%`;
-  const colorClsARS = esPosARS ? 'text-emerald-400' : 'text-rose-400';
+  const signoARS = esCeroARS ? '' : (esPosARS ? '+' : '-');
+  const diffStrARS = esCeroARS ? '$0' : `${signoARS}$${Math.round(Math.abs(diffARS)).toLocaleString('es-AR')}`;
+  const pctStrARS = esCeroARS ? '0.0%' : `${signoARS}${Math.abs(pctARS).toFixed(1)}%`;
+  const colorClsARS = esCeroARS ? 'text-amber-400' : (esPosARS ? 'text-emerald-400' : 'text-rose-400');
 
-  const signoUSD = esPosUSD ? '+' : '-';
-  const diffStrUSD = `${signoUSD}U$S ${Math.abs(diffUSD).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  const pctStrUSD = `${signoUSD}${Math.abs(pctUSD).toFixed(1)}%`;
-  const colorClsUSD = esPosUSD ? 'text-emerald-400' : 'text-rose-400';
+  const signoUSD = esCeroUSD ? '' : (esPosUSD ? '+' : '-');
+  const diffStrUSD = esCeroUSD ? 'U$S 0.00' : `${signoUSD}U$S ${Math.abs(diffUSD).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  const pctStrUSD = esCeroUSD ? '0.0%' : `${signoUSD}${Math.abs(pctUSD).toFixed(1)}%`;
+  const colorClsUSD = esCeroUSD ? 'text-amber-400' : (esPosUSD ? 'text-emerald-400' : 'text-rose-400');
 
   // 3. Cálculo de días promedio ponderados e Interés Anual (TNA estimada) individual por moneda
   const ahora = Date.now();
@@ -12028,8 +12063,10 @@ function renderTablaAhorros() {
   const tasaAnualARS = (pctARS / diasEfectivosARS) * 365;
   const tasaAnualUSD = (pctUSD / diasEfectivosUSD) * 365;
 
-  const tasaAnualARSStr = `${tasaAnualARS >= 0 ? '+' : ''}${tasaAnualARS.toFixed(1)}% anual`;
-  const tasaAnualUSDStr = `${tasaAnualUSD >= 0 ? '+' : ''}${tasaAnualUSD.toFixed(1)}% anual`;
+  const esCeroTnaArs = Math.abs(tasaAnualARS) < 0.05;
+  const esCeroTnaUsd = Math.abs(tasaAnualUSD) < 0.05;
+  const tasaAnualARSStr = esCeroTnaArs ? '0.0% anual' : `${tasaAnualARS > 0 ? '+' : ''}${tasaAnualARS.toFixed(1)}% anual`;
+  const tasaAnualUSDStr = esCeroTnaUsd ? '0.0% anual' : `${tasaAnualUSD > 0 ? '+' : ''}${tasaAnualUSD.toFixed(1)}% anual`;
 
   // 4. Actualizar footer de la tabla
   tfoot.classList.remove('hidden');
@@ -12038,22 +12075,42 @@ function renderTablaAhorros() {
   
   const footRendARS = document.getElementById('ah-footer-rend-ars');
   if (footRendARS) {
+    const badgeClsARS = esCeroARS
+      ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
+      : (esPosARS ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-rose-500/15 text-rose-300 border-rose-500/30');
+    const txtClsARS = esCeroARS
+      ? 'text-amber-400/80'
+      : (esPosARS ? 'text-emerald-400/80' : 'text-rose-400/80');
+    const badgeTxtARS = esCeroARS
+      ? '0.0% ARS'
+      : `${esPosARS ? '▲ +' : '▼ '}${Math.abs(pctARS).toFixed(1)}% ARS`;
+
     footRendARS.innerHTML = `
       <div class="flex flex-col items-end">
-        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black mono border ${esPosARS ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-rose-500/15 text-rose-300 border-rose-500/30'}">
-          ${esPosARS ? '▲ +' : '▼ '}${Math.abs(pctARS).toFixed(1)}% ARS
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black mono border ${badgeClsARS}">
+          ${badgeTxtARS}
         </span>
-        <span class="text-[9px] font-bold mono mt-0.5 ${esPosARS ? 'text-emerald-400/80' : 'text-rose-400/80'}">${diffStrARS}</span>
+        <span class="text-[9px] font-bold mono mt-0.5 ${txtClsARS}">${diffStrARS}</span>
       </div>`;
   }
   const footRendUSD = document.getElementById('ah-footer-rend-usd');
   if (footRendUSD) {
+    const badgeClsUSD = esCeroUSD
+      ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
+      : (esPosUSD ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-rose-500/15 text-rose-300 border-rose-500/30');
+    const txtClsUSD = esCeroUSD
+      ? 'text-amber-400/80'
+      : (esPosUSD ? 'text-emerald-400/80' : 'text-rose-400/80');
+    const badgeTxtUSD = esCeroUSD
+      ? '0.0% USD'
+      : `${esPosUSD ? '▲ +' : '▼ '}${Math.abs(pctUSD).toFixed(1)}% USD`;
+
     footRendUSD.innerHTML = `
       <div class="flex flex-col items-end">
-        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black mono border ${esPosUSD ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-rose-500/15 text-rose-300 border-rose-500/30'}">
-          ${esPosUSD ? '▲ +' : '▼ '}${Math.abs(pctUSD).toFixed(1)}% USD
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black mono border ${badgeClsUSD}">
+          ${badgeTxtUSD}
         </span>
-        <span class="text-[9px] font-bold mono mt-0.5 ${esPosUSD ? 'text-emerald-400/80' : 'text-rose-400/80'}">${diffStrUSD}</span>
+        <span class="text-[9px] font-bold mono mt-0.5 ${txtClsUSD}">${diffStrUSD}</span>
       </div>`;
   }
 
@@ -12069,12 +12126,12 @@ function renderTablaAhorros() {
   const elIntArs = document.getElementById('ah-interes-anual-val');
   if (elIntArs) {
     elIntArs.textContent = `${tasaAnualARSStr} (ARS)`;
-    elIntArs.className = `mono font-black ${tasaAnualARS >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+    elIntArs.className = `mono font-black ${esCeroTnaArs ? 'text-amber-400' : (tasaAnualARS > 0 ? 'text-emerald-400' : 'text-rose-400')}`;
   }
   const elIntUsd = document.getElementById('ah-interes-anual-usd-val');
   if (elIntUsd) {
     elIntUsd.textContent = `${tasaAnualUSDStr} (USD)`;
-    elIntUsd.className = `mono font-black ${tasaAnualUSD >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+    elIntUsd.className = `mono font-black ${esCeroTnaUsd ? 'text-amber-400' : (tasaAnualUSD > 0 ? 'text-emerald-400' : 'text-rose-400')}`;
   }
 
   // Interés anual en badge de cabecera de la tabla
@@ -12084,12 +12141,15 @@ function renderTablaAhorros() {
     elHeaderBadge.classList.remove('hidden');
     elHeaderTxt.textContent = `TNA: ${tasaAnualARSStr} ARS · ${tasaAnualUSDStr} USD`;
 
-    // Si el rendimiento global o la TNA es negativa, mostrar en ROJO (rose), si es positiva en VERDE (emerald)
+    // Si el rendimiento global o la TNA es negativa, mostrar en ROJO (rose), si es positiva en VERDE (emerald), si es neutro en AMARILLO (amber)
     const usdRateVal = cotizaciones.USD_MEP || cotizaciones.USD || 1;
     const diffTotalEqARS = diffARS + (diffUSD * usdRateVal);
-    const esPositivoTNA = diffTotalEqARS >= -0.01 && (netoInvertidoARS > 0 ? tasaAnualARS >= 0 : tasaAnualUSD >= 0);
+    const esCeroTNA = (Math.abs(tasaAnualARS) < 0.05 && Math.abs(tasaAnualUSD) < 0.05) || Math.abs(diffTotalEqARS) < 1;
+    const esPositivoTNA = diffTotalEqARS > 0 && (netoInvertidoARS > 0 ? tasaAnualARS >= 0 : tasaAnualUSD >= 0);
 
-    if (esPositivoTNA) {
+    if (esCeroTNA) {
+      elHeaderBadge.className = 'text-[10px] font-black mono px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 transition-all';
+    } else if (esPositivoTNA) {
       elHeaderBadge.className = 'text-[10px] font-black mono px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 transition-all';
     } else {
       elHeaderBadge.className = 'text-[10px] font-black mono px-2.5 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30 transition-all';
@@ -12107,14 +12167,16 @@ function renderTablaAhorros() {
   if (badgeContainer && badgeText) {
     badgeContainer.classList.remove('hidden');
     badgeContainer.className = `mt-1 inline-flex items-center gap-1`;
-    badgeText.className = `text-[9px] font-bold uppercase tracking-widest ${esPosARS ? 'text-green-400' : 'text-red-400'}`;
-    badgeText.textContent = `${esPosARS ? '↑' : '↓'} ${diffStrARS} (${pctStrARS}) vs inv.`;
+    const txtColor = esCeroARS ? 'text-amber-400' : (esPosARS ? 'text-green-400' : 'text-red-400');
+    const arrow = esCeroARS ? '•' : (esPosARS ? '↑' : '↓');
+    badgeText.className = `text-[9px] font-bold uppercase tracking-widest ${txtColor}`;
+    badgeText.textContent = `${arrow} ${diffStrARS} (${pctStrARS}) vs inv.`;
   }
 
   const elInicioInt = document.getElementById('inicio-ahorros-interes-anual');
   if (elInicioInt) {
     elInicioInt.textContent = tasaAnualARSStr;
-    elInicioInt.className = `mono text-[10px] font-black ${tasaAnualARS >= 0 ? 'text-emerald-300' : 'text-rose-400'}`;
+    elInicioInt.className = `mono text-[10px] font-black ${esCeroTnaArs ? 'text-amber-300' : (tasaAnualARS > 0 ? 'text-emerald-300' : 'text-rose-400')}`;
   }
 
   const cardAhorros = document.getElementById('card-inicio-ahorros');
