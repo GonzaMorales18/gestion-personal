@@ -5336,7 +5336,7 @@
         </div>
         <div class="min-w-0">
           <h3 class="font-black text-white text-xs sm:text-sm uppercase tracking-wider truncate">Cotizaciones de Mercado</h3>
-          <p class="text-[10px] text-slate-400 mt-0.5 truncate max-w-[170px] sm:max-w-none" id="modal-cotizaciones-subtitle">BYMA en vivo (Acciones &amp; CEDEARs), Dólares &amp; Cripto</p>
+          <p class="text-[10px] text-slate-400 mt-0.5 truncate max-w-[170px] sm:max-w-none" id="modal-cotizaciones-subtitle">Bull Market en vivo: Acciones, CEDEARs, Bonos, Letras, Fondos, Cauciones &amp; ONs</p>
         </div>
       </div>
       <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
@@ -5349,24 +5349,28 @@
       </div>
     </div>
 
-    <!-- Buscador y Tabs de Filtro -->
+    <!-- Buscador y Tabs de Filtro estilo Bull Market -->
     <div class="px-6 pt-3 pb-2.5 bg-slate-900/40 border-b border-slate-800 flex-shrink-0 space-y-2.5">
       <div class="relative">
         <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
         <input type="text" id="filtro-cotizaciones-input" oninput="filtrarModalCotizaciones()"
-               placeholder="Buscar acción, CEDEAR o divisa (ej: GGAL, AAPL, YPFD, NVDA, Blue, MEP)..."
+               placeholder="Buscar acción, CEDEAR, bono o fondo (ej: GGAL, AAPL, AL30, GAMMIIA, CDEUARA)..."
                class="w-full h-10 pl-9 pr-4 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500/60 font-medium">
       </div>
       <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-[10px] font-bold">
-        <button onclick="setTabCotizaciones('todos')" id="tab-cot-todos" class="px-3 py-1.5 rounded-lg bg-violet-600 text-white border border-violet-500/50 transition-colors whitespace-nowrap">Todos</button>
-        <button onclick="setTabCotizaciones('divisas')" id="tab-cot-divisas" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Divisas</button>
-        <button onclick="setTabCotizaciones('cripto')" id="tab-cot-cripto" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Cripto</button>
-        <button onclick="setTabCotizaciones('acciones')" id="tab-cot-acciones" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Acciones BYMA</button>
+        <button onclick="setTabCotizaciones('acciones')" id="tab-cot-acciones" class="px-3 py-1.5 rounded-lg bg-violet-600 text-white border border-violet-500/50 transition-colors whitespace-nowrap">Acciones</button>
         <button onclick="setTabCotizaciones('cedears')" id="tab-cot-cedears" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">CEDEARs</button>
         <button onclick="setTabCotizaciones('bonos')" id="tab-cot-bonos" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Bonos</button>
-        <button onclick="setTabCotizaciones('ons')" id="tab-cot-ons" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Obligaciones Negociables</button>
+        <button onclick="setTabCotizaciones('letras')" id="tab-cot-letras" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Letras</button>
+        <button onclick="setTabCotizaciones('licitaciones')" id="tab-cot-licitaciones" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Licitaciones</button>
+        <button onclick="setTabCotizaciones('fondos')" id="tab-cot-fondos" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Fondos</button>
+        <button onclick="setTabCotizaciones('cauciones')" id="tab-cot-cauciones" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Cauciones</button>
+        <button onclick="setTabCotizaciones('ons')" id="tab-cot-ons" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Oblig. Negociables</button>
+        <button onclick="setTabCotizaciones('fideicomisos')" id="tab-cot-fideicomisos" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Fideicomisos</button>
         <button onclick="setTabCotizaciones('cartera')" id="tab-cot-cartera" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Mi Cartera</button>
+        <button onclick="setTabCotizaciones('divisas')" id="tab-cot-divisas" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Divisas &amp; Cripto</button>
         <button onclick="setTabCotizaciones('futuras')" id="tab-cot-futuras" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap flex items-center gap-1.5"><i class="fas fa-bookmark text-amber-400 text-[10px]"></i><span>Futuras Compras</span><span id="tab-cot-futuras-count" class="px-1.5 py-0.2 rounded-full text-[9px] bg-amber-500/20 text-amber-300 mono font-bold">0</span></button>
+        <button onclick="setTabCotizaciones('todos')" id="tab-cot-todos" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition-colors whitespace-nowrap">Todos</button>
       </div>
     </div>
 
@@ -8936,8 +8940,224 @@ function calcularHistoricoCategoria() {
 // ═══════════════════════════════════════════════════════════════════════════════
 let ahorrosData     = [];
 let cotizaciones    = { USD: null, USD_BLUE: null, USD_MEP: null, USD_CCL: null, BTC: null, BTC_USD: null, tickers: {}, tickerSymbol: {} };
-let marketData      = { stocks: {}, cedears: {}, bonds: {}, notes: {}, dolares: [], cotizacionesExtra: [], criptos: [], tabActual: 'todos', filtroTexto: '', lastUpdated: null, loading: false };
+let marketData      = {
+  stocks: {},
+  cedears: {},
+  bonds: {},
+  notes: {},
+  fondos: {},
+  fondosLista: [],
+  letras: {},
+  letrasLista: [],
+  cauciones: [],
+  licitaciones: [],
+  fideicomisos: [],
+  bmAcciones: {},
+  bmCedears: {},
+  bmBonos: {},
+  bmObligaciones: {},
+  dolares: [],
+  cotizacionesExtra: [],
+  criptos: [],
+  tabActual: 'acciones',
+  filtroTexto: '',
+  lastUpdated: null,
+  loading: false
+};
 let ahorrosIniciado = false;
+
+// ─── INTEGRACIÓN DE COTIZACIONES EN VIVO BULL MARKET BROKERS ─────────────────
+const BULLMARKET_API_BASE = 'https://bullmarket.com.ar/wp-content/themes/sasico/cotizaciones/api.php';
+
+// Semilla de resguardo para fondos del usuario (garantiza precio en vivo incluso sin red)
+const BM_FONDOS_USUARIO_SEED = {
+  'GAMMIIA': { symbol: 'GAMMIIA', fundName: 'GALILEO MULTIMERCADO II - CLASE A', personType: 'Física o jurídica', lastPrice: 26.455282, dailyVariationPercentage: -0.049, monthlyVariationPercentage: 0.897, yearOverYearVariationPercentage: 42.082, ytdVariationPercentage: 36.904, minimumInvestment: 1000, currency: 'ARS' },
+  'CDEUARA': { symbol: 'CDEUARA', fundName: 'CONSULTATIO DEUDA ARGENTINA - CLASE A', personType: 'Fisica', lastPrice: 2585.59899, dailyVariationPercentage: 0.044, monthlyVariationPercentage: 1.164, yearOverYearVariationPercentage: 41.391, ytdVariationPercentage: 36.193, minimumInvestment: 1000, currency: 'ARS' },
+  'RTAPLUA': { symbol: 'RTAPLUA', fundName: 'FIMA RENTA PLUS - CLASE A', personType: 'Física o jurídica', lastPrice: 1004.587685, dailyVariationPercentage: 0.028, monthlyVariationPercentage: 1.125, yearOverYearVariationPercentage: 39.167, ytdVariationPercentage: 34.026, minimumInvestment: 1000, currency: 'ARS' }
+};
+
+function aplicarSemillaFondosUsuario() {
+  marketData.fondos = marketData.fondos || {};
+  marketData.fondosLista = marketData.fondosLista || [];
+  Object.keys(BM_FONDOS_USUARIO_SEED).forEach(sym => {
+    const item = BM_FONDOS_USUARIO_SEED[sym];
+    if (!marketData.fondos[sym] || !marketData.fondos[sym].lastPrice) {
+      marketData.fondos[sym] = item;
+    }
+    if (!cotizaciones.tickers[sym]) {
+      cotizaciones.tickers[sym] = item.lastPrice;
+    }
+    if (!marketData.fondosLista.some(f => (f.symbol || '').toUpperCase() === sym)) {
+      marketData.fondosLista.push(item);
+    }
+  });
+}
+
+function aplicarDatosBullMarket(cacheObj) {
+  if (!cacheObj || typeof cacheObj !== 'object') return;
+  marketData.fondos = marketData.fondos || {};
+  marketData.fondosLista = marketData.fondosLista || [];
+  marketData.letras = marketData.letras || {};
+  marketData.letrasLista = marketData.letrasLista || [];
+  marketData.bmAcciones = marketData.bmAcciones || {};
+  marketData.bmCedears = marketData.bmCedears || {};
+  marketData.bmBonos = marketData.bmBonos || {};
+  marketData.bmObligaciones = marketData.bmObligaciones || {};
+
+  // Fondos Comunes de Inversión (FCI)
+  if (Array.isArray(cacheObj.fondos) && cacheObj.fondos.length > 0) {
+    marketData.fondosLista = cacheObj.fondos;
+    cacheObj.fondos.forEach(f => {
+      if (f && f.symbol) {
+        const sym = f.symbol.trim().toUpperCase();
+        marketData.fondos[sym] = f;
+        if (f.lastPrice && f.lastPrice > 0) cotizaciones.tickers[sym] = f.lastPrice;
+      }
+    });
+  }
+
+  // Letras del Tesoro
+  if (Array.isArray(cacheObj.letras) && cacheObj.letras.length > 0) {
+    marketData.letrasLista = cacheObj.letras;
+    cacheObj.letras.forEach(l => {
+      if (l && l.symbol) {
+        const sym = l.symbol.trim().toUpperCase();
+        marketData.letras[sym] = l;
+        if (l.lastPrice && l.lastPrice > 0) cotizaciones.tickers[sym] = l.lastPrice;
+      }
+    });
+  }
+
+  // Cauciones
+  if (Array.isArray(cacheObj.cauciones) && cacheObj.cauciones.length > 0) {
+    marketData.cauciones = cacheObj.cauciones;
+  }
+
+  // Licitaciones
+  if (Array.isArray(cacheObj.licitaciones) && cacheObj.licitaciones.length > 0) {
+    marketData.licitaciones = cacheObj.licitaciones;
+  }
+
+  // Fideicomisos
+  if (Array.isArray(cacheObj.fideicomisos) && cacheObj.fideicomisos.length > 0) {
+    marketData.fideicomisos = cacheObj.fideicomisos;
+  }
+
+  // Acciones (Líderes + General)
+  const accionesArr = [
+    ...(Array.isArray(cacheObj.acciones_lider) ? cacheObj.acciones_lider : []),
+    ...(Array.isArray(cacheObj.acciones_general) ? cacheObj.acciones_general : []),
+    ...(Array.isArray(cacheObj.acciones) ? cacheObj.acciones : [])
+  ];
+  if (accionesArr.length > 0) {
+    accionesArr.forEach(a => {
+      if (a && a.symbol) {
+        const sym = a.symbol.trim().toUpperCase();
+        marketData.bmAcciones[sym] = a;
+        if (a.lastPrice && a.lastPrice > 0) {
+          cotizaciones.tickers[sym] = a.lastPrice;
+          if (!marketData.stocks[sym]) marketData.stocks[sym] = { symbol: sym, c: a.lastPrice, pct_change: a.dailyVariation, v: a.nominalVolume };
+        }
+      }
+    });
+  }
+
+  // CEDEARs
+  if (Array.isArray(cacheObj.cedears) && cacheObj.cedears.length > 0) {
+    cacheObj.cedears.forEach(c => {
+      if (c && c.symbol) {
+        const sym = c.symbol.trim().toUpperCase();
+        marketData.bmCedears[sym] = c;
+        if (c.lastPrice && c.lastPrice > 0) {
+          cotizaciones.tickers[sym] = c.lastPrice;
+          if (!marketData.cedears[sym]) marketData.cedears[sym] = { symbol: sym, c: c.lastPrice, pct_change: c.dailyVariation, v: c.nominalVolume };
+        }
+      }
+    });
+  }
+
+  // Bonos
+  if (Array.isArray(cacheObj.bonos) && cacheObj.bonos.length > 0) {
+    cacheObj.bonos.forEach(b => {
+      if (b && b.symbol) {
+        const sym = b.symbol.trim().toUpperCase();
+        marketData.bmBonos[sym] = b;
+        if (b.lastPrice && b.lastPrice > 0) {
+          cotizaciones.tickers[sym] = b.lastPrice;
+          if (!marketData.bonds[sym]) marketData.bonds[sym] = { symbol: sym, c: b.lastPrice, pct_change: b.dailyVariation, v: b.nominalVolume };
+        }
+      }
+    });
+  }
+
+  // Obligaciones Negociables
+  if (Array.isArray(cacheObj.obligaciones) && cacheObj.obligaciones.length > 0) {
+    cacheObj.obligaciones.forEach(o => {
+      if (o && o.symbol) {
+        const sym = o.symbol.trim().toUpperCase();
+        marketData.bmObligaciones[sym] = o;
+        if (o.lastPrice && o.lastPrice > 0) {
+          cotizaciones.tickers[sym] = o.lastPrice;
+          if (!marketData.notes[sym]) marketData.notes[sym] = { symbol: sym, c: o.lastPrice, pct_change: o.dailyVariationPercentage };
+        }
+      }
+    });
+  }
+
+  aplicarSemillaFondosUsuario();
+}
+
+async function cargarBullMarketCache() {
+  // 1. Cargar desde localStorage
+  try {
+    const raw = localStorage.getItem('gm_bullmarket_cache');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      aplicarDatosBullMarket(parsed);
+    }
+  } catch (e) {}
+
+  // 2. Cargar desde archivo local bullmarket_cache.json
+  try {
+    const r = await fetch('./bullmarket_cache.json', { signal: AbortSignal.timeout(3000) });
+    if (r.ok) {
+      const data = await r.json();
+      if (data && typeof data === 'object') {
+        aplicarDatosBullMarket(data);
+        try { localStorage.setItem('gm_bullmarket_cache', JSON.stringify(data)); } catch (e) {}
+      }
+    }
+  } catch (e) {}
+
+  aplicarSemillaFondosUsuario();
+}
+
+async function fetchBullMarket(type, extraParams = {}) {
+  // 1. Intentar vía Google Apps Script proxy (sin CORS en producción)
+  try {
+    const p = new URLSearchParams({ sheet: 'bullmarket', type, ...extraParams });
+    const res = await fetch(`${scriptURL}?${p.toString()}`, { signal: AbortSignal.timeout(8000) });
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) return data;
+    }
+  } catch (e) {}
+
+  // 2. Intentar llamada directa a Bull Market
+  try {
+    let u = `${BULLMARKET_API_BASE}?type=${encodeURIComponent(type)}`;
+    Object.keys(extraParams).forEach(k => {
+      u += `&${encodeURIComponent(k)}=${encodeURIComponent(extraParams[k])}`;
+    });
+    const res = await fetch(u, { signal: AbortSignal.timeout(6000) });
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) return data;
+    }
+  } catch (e) {}
+
+  return null;
+}
 
 // ─── HELPERS PARA RECONOCER ACTIVOS ──────────────────────────────────────────
 function isDolarActivo(a) {
@@ -8967,14 +9187,16 @@ function isCriptoActivo(a) {
 function isFondoActivo(a) {
   if (!a) return false;
   const tipo = (typeof a === 'string' ? a : (a.tipo || '')).toUpperCase();
-  return tipo.includes('FONDO') || tipo === 'FCI';
+  const desc = (typeof a === 'object' && (a.plataforma || a.descripcion) ? (a.plataforma || a.descripcion) : '').toUpperCase();
+  return tipo.includes('FONDO') || tipo === 'FCI' || desc.includes('FONDO') || desc.includes('FCI');
 }
 
 function tipoRequiereTicker(tipo) {
   if (!tipo) return false;
   const t = tipo.toUpperCase();
   return t.includes('ACCION') || t.includes('ACCI') || t.includes('CEDEAR') || 
-         t.includes('BONO') || t.includes('OBLIGACI') || t === 'ON';
+         t.includes('BONO') || t.includes('OBLIGACI') || t === 'ON' ||
+         t.includes('FONDO') || t === 'FCI' || t.includes('LETRA') || t.includes('CAUCION');
 }
 
 // ─── GESTIÓN DE PRECIOS MANUALES Y PERSISTENCIA (LOCALSTORAGE) ───────────────
@@ -9100,13 +9322,34 @@ function getSyncStatusActivo(a) {
     }
   }
 
-  // Mercado BYMA (Acciones, CEDEARs, Bonos, ONs)
+  // Fondos Comunes de Inversión (FCI) Bull Market
+  if (isFondoActivo(a)) {
+    const t = (a.ticker || '').trim().toUpperCase();
+    if (t && marketData.fondos && marketData.fondos[t]?.lastPrice > 0) {
+      return { status: 'vivo', label: 'En vivo', source: 'Bull Market Fondos', esAutomatico: true };
+    }
+    const platFondo = (a.plataforma || a.descripcion || '').trim().toUpperCase();
+    if (marketData.fondosLista && marketData.fondosLista.length > 0) {
+      const match = marketData.fondosLista.find(f => 
+        (t && (f.symbol || '').toUpperCase() === t) ||
+        (platFondo && f.fundName && (f.fundName.toUpperCase().includes(platFondo) || platFondo.includes(f.fundName.toUpperCase())))
+      );
+      if (match && match.lastPrice > 0) {
+        return { status: 'vivo', label: 'En vivo', source: 'Bull Market Fondos', esAutomatico: true };
+      }
+    }
+  }
+
+  // Mercado BYMA y Bull Market (Acciones, CEDEARs, Bonos, ONs, Letras)
   const t = (a.ticker || '').trim().toUpperCase();
   if (t) {
-    if (marketData.cedears[t]?.c) return { status: 'vivo', label: 'En vivo', source: 'BYMA CEDEARs', esAutomatico: true };
-    if (marketData.stocks[t]?.c) return { status: 'vivo', label: 'En vivo', source: 'BYMA Acciones', esAutomatico: true };
-    if (marketData.bonds[t]?.c) return { status: 'vivo', label: 'En vivo', source: 'BYMA Bonos', esAutomatico: true };
-    if (marketData.notes[t]?.c) return { status: 'vivo', label: 'En vivo', source: 'BYMA ONs', esAutomatico: true };
+    if (marketData.fondos && marketData.fondos[t]?.lastPrice > 0) return { status: 'vivo', label: 'En vivo', source: 'Bull Market Fondos', esAutomatico: true };
+    if (marketData.cedears[t]?.c || (marketData.bmCedears && marketData.bmCedears[t]?.lastPrice > 0)) return { status: 'vivo', label: 'En vivo', source: 'Bull Market CEDEARs', esAutomatico: true };
+    if (marketData.stocks[t]?.c || (marketData.bmAcciones && marketData.bmAcciones[t]?.lastPrice > 0)) return { status: 'vivo', label: 'En vivo', source: 'Bull Market Acciones', esAutomatico: true };
+    if (marketData.bonds[t]?.c || (marketData.bmBonos && marketData.bmBonos[t]?.lastPrice > 0)) return { status: 'vivo', label: 'En vivo', source: 'Bull Market Bonos', esAutomatico: true };
+    if (marketData.notes[t]?.c || (marketData.bmObligaciones && marketData.bmObligaciones[t]?.lastPrice > 0)) return { status: 'vivo', label: 'En vivo', source: 'Bull Market ONs', esAutomatico: true };
+    if (marketData.letras && marketData.letras[t]?.lastPrice > 0) return { status: 'vivo', label: 'En vivo', source: 'Bull Market Letras', esAutomatico: true };
+    if (cotizaciones.tickers[t] > 0) return { status: 'vivo', label: 'En vivo', source: 'Bull Market / Finance', esAutomatico: true };
   }
 
   // Si no tiene cotización en vivo automática, revisar si tiene precio manual guardado
@@ -9157,6 +9400,7 @@ async function iniciarAhorros() {
   fillTiposActivo();
   actualizarDatalistActivos();
   cargarPreciosManuales();
+  await cargarBullMarketCache();
 
   const cachedCot = leerCacheModulo('cotizaciones');
   if (cachedCot && !cotizaciones.USD) {
@@ -9201,14 +9445,24 @@ async function fetchMarketQuotes() {
   if (marketData.loading) return;
   marketData.loading = true;
   try {
-    const [stocksRes, cedearsRes, bondsRes, notesRes, dolaresRes, cotizRes, criptoRes] = await Promise.allSettled([
+    const [stocksRes, cedearsRes, bondsRes, notesRes, dolaresRes, cotizRes, criptoRes, bmFondos, bmLider, bmGeneral, bmCedears, bmBonos, bmLetras, bmCauciones, bmONs, bmLicit, bmFidei] = await Promise.allSettled([
       fetch('https://data912.com/live/arg_stocks', { signal: AbortSignal.timeout(8000) }),
       fetch('https://data912.com/live/arg_cedears', { signal: AbortSignal.timeout(8000) }),
       fetch('https://data912.com/live/arg_bonds', { signal: AbortSignal.timeout(8000) }),
       fetch('https://data912.com/live/arg_notes', { signal: AbortSignal.timeout(8000) }),
       fetch('https://dolarapi.com/v1/dolares', { signal: AbortSignal.timeout(8000) }),
       fetch('https://dolarapi.com/v1/cotizaciones', { signal: AbortSignal.timeout(8000) }),
-      fetch('https://api.binance.com/api/v3/ticker/price?symbols=%5B%22BTCUSDT%22,%22ETHUSDT%22,%22SOLUSDT%22,%22BNBUSDT%22,%22ADAUSDT%22,%22XRPUSDT%22,%22DOGEUSDT%22%5D', { signal: AbortSignal.timeout(6000) })
+      fetch('https://api.binance.com/api/v3/ticker/price?symbols=%5B%22BTCUSDT%22,%22ETHUSDT%22,%22SOLUSDT%22,%22BNBUSDT%22,%22ADAUSDT%22,%22XRPUSDT%22,%22DOGEUSDT%22%5D', { signal: AbortSignal.timeout(6000) }),
+      fetchBullMarket('fondos'),
+      fetchBullMarket('acciones', { Subgroup: 'LIDER' }),
+      fetchBullMarket('acciones', { Subgroup: 'GENERAL' }),
+      fetchBullMarket('cedears'),
+      fetchBullMarket('bonos'),
+      fetchBullMarket('letras'),
+      fetchBullMarket('cauciones'),
+      fetchBullMarket('obligaciones'),
+      fetchBullMarket('licitaciones'),
+      fetchBullMarket('fideicomisos')
     ]);
 
     // 1. Acciones BYMA (data912.com)
@@ -9324,6 +9578,29 @@ async function fetchMarketQuotes() {
       } catch (e) { console.warn('Error procesando Criptos Binance:', e); }
     }
 
+    // 8. Cotizaciones en vivo Bull Market Brokers (Fondos, Acciones, CEDEARs, Bonos, Letras, Cauciones, ONs, Fideicomisos)
+    const bmSnapshot = {};
+    if (bmFondos.status === 'fulfilled' && Array.isArray(bmFondos.value)) bmSnapshot.fondos = bmFondos.value;
+    if (bmLider.status === 'fulfilled' && Array.isArray(bmLider.value)) bmSnapshot.acciones_lider = bmLider.value;
+    if (bmGeneral.status === 'fulfilled' && Array.isArray(bmGeneral.value)) bmSnapshot.acciones_general = bmGeneral.value;
+    if (bmCedears.status === 'fulfilled' && Array.isArray(bmCedears.value)) bmSnapshot.cedears = bmCedears.value;
+    if (bmBonos.status === 'fulfilled' && Array.isArray(bmBonos.value)) bmSnapshot.bonos = bmBonos.value;
+    if (bmLetras.status === 'fulfilled' && Array.isArray(bmLetras.value)) bmSnapshot.letras = bmLetras.value;
+    if (bmCauciones.status === 'fulfilled' && Array.isArray(bmCauciones.value)) bmSnapshot.cauciones = bmCauciones.value;
+    if (bmONs.status === 'fulfilled' && Array.isArray(bmONs.value)) bmSnapshot.obligaciones = bmONs.value;
+    if (bmLicit.status === 'fulfilled' && Array.isArray(bmLicit.value)) bmSnapshot.licitaciones = bmLicit.value;
+    if (bmFidei.status === 'fulfilled' && Array.isArray(bmFidei.value)) bmSnapshot.fideicomisos = bmFidei.value;
+
+    if (Object.keys(bmSnapshot).length > 0) {
+      aplicarDatosBullMarket(bmSnapshot);
+      try {
+        const existing = JSON.parse(localStorage.getItem('gm_bullmarket_cache') || '{}');
+        localStorage.setItem('gm_bullmarket_cache', JSON.stringify({ ...existing, ...bmSnapshot }));
+      } catch (e) {}
+    } else {
+      aplicarSemillaFondosUsuario();
+    }
+
     marketData.lastUpdated = new Date();
   } catch (err) {
     console.error('Error al actualizar cotizaciones de mercado:', err);
@@ -9408,7 +9685,6 @@ async function fetchBTC() {
 async function fetchTickers() {
   const tickersRaw = [...new Set(
     calcularPosicionesNetas()
-      .filter(a => tipoRequiereTicker(a.tipo))
       .map(a => a.ticker?.trim().toUpperCase())
       .filter(Boolean)
   )];
@@ -9417,7 +9693,7 @@ async function fetchTickers() {
   const faltantes = tickersRaw.filter(t => !cotizaciones.tickers[t]);
   if (faltantes.length === 0) return;
 
-  // Consultar directo al Apps Script para los que no estén en data912
+  // Consultar directo al Apps Script para los que no estén en data912 ni Bull Market
   await Promise.allSettled(faltantes.map(async t => {
     try {
       const url = `${scriptURL}?sheet=cotizacion&ticker=${encodeURIComponent(t)}`;
@@ -9434,15 +9710,32 @@ async function fetchTickers() {
 
 async function fetchTickerPrecio(ticker) {
   const t = ticker.trim().toUpperCase();
-  // 1. Revisar si ya está en data912 (CEDEARs o Acciones)
-  if (marketData.cedears[t]?.c) {
-    cotizaciones.tickers[t] = marketData.cedears[t].c;
+  // 1. Revisar si ya está en data912 o Bull Market
+  if (marketData.fondos && marketData.fondos[t]?.lastPrice > 0) {
+    cotizaciones.tickers[t] = marketData.fondos[t].lastPrice;
     return true;
   }
-  if (marketData.stocks[t]?.c) {
-    cotizaciones.tickers[t] = marketData.stocks[t].c;
+  if (marketData.cedears[t]?.c || (marketData.bmCedears && marketData.bmCedears[t]?.lastPrice > 0)) {
+    cotizaciones.tickers[t] = marketData.cedears[t]?.c || marketData.bmCedears[t].lastPrice;
     return true;
   }
+  if (marketData.stocks[t]?.c || (marketData.bmAcciones && marketData.bmAcciones[t]?.lastPrice > 0)) {
+    cotizaciones.tickers[t] = marketData.stocks[t]?.c || marketData.bmAcciones[t].lastPrice;
+    return true;
+  }
+  if (marketData.bonds[t]?.c || (marketData.bmBonos && marketData.bmBonos[t]?.lastPrice > 0)) {
+    cotizaciones.tickers[t] = marketData.bonds[t]?.c || marketData.bmBonos[t].lastPrice;
+    return true;
+  }
+  if (marketData.notes[t]?.c || (marketData.bmObligaciones && marketData.bmObligaciones[t]?.lastPrice > 0)) {
+    cotizaciones.tickers[t] = marketData.notes[t]?.c || marketData.bmObligaciones[t].lastPrice;
+    return true;
+  }
+  if (marketData.letras && marketData.letras[t]?.lastPrice > 0) {
+    cotizaciones.tickers[t] = marketData.letras[t].lastPrice;
+    return true;
+  }
+
   // 2. Fallback Apps Script
   try {
     const url = `${scriptURL}?sheet=cotizacion&ticker=${encodeURIComponent(t)}`;
@@ -9487,12 +9780,33 @@ function getPrecioARS(activo) {
     const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
     return (pUsd || 0) * usdRate;
   }
+
+  // Fondos Comunes de Inversión (FCI) Bull Market
+  if (isFondoActivo(activo)) {
+    const t = (activo.ticker || '').trim().toUpperCase();
+    if (t && marketData.fondos && marketData.fondos[t]?.lastPrice > 0) return marketData.fondos[t].lastPrice;
+    const platFondo = (activo.plataforma || activo.descripcion || '').trim().toUpperCase();
+    if (marketData.fondosLista && marketData.fondosLista.length > 0) {
+      const match = marketData.fondosLista.find(f => 
+        (t && (f.symbol || '').toUpperCase() === t) ||
+        (platFondo && f.fundName && (f.fundName.toUpperCase().includes(platFondo) || platFondo.includes(f.fundName.toUpperCase())))
+      );
+      if (match && match.lastPrice > 0) return match.lastPrice;
+    }
+  }
+
   const t = (activo.ticker || '').trim().toUpperCase();
   if (t) {
+    if (marketData.fondos && marketData.fondos[t]?.lastPrice > 0) return marketData.fondos[t].lastPrice;
     if (marketData.cedears[t]?.c) return marketData.cedears[t].c;
+    if (marketData.bmCedears && marketData.bmCedears[t]?.lastPrice > 0) return marketData.bmCedears[t].lastPrice;
     if (marketData.stocks[t]?.c) return marketData.stocks[t].c;
+    if (marketData.bmAcciones && marketData.bmAcciones[t]?.lastPrice > 0) return marketData.bmAcciones[t].lastPrice;
     if (marketData.bonds[t]?.c) return marketData.bonds[t].c;
+    if (marketData.bmBonos && marketData.bmBonos[t]?.lastPrice > 0) return marketData.bmBonos[t].lastPrice;
     if (marketData.notes[t]?.c) return marketData.notes[t].c;
+    if (marketData.bmObligaciones && marketData.bmObligaciones[t]?.lastPrice > 0) return marketData.bmObligaciones[t].lastPrice;
+    if (marketData.letras && marketData.letras[t]?.lastPrice > 0) return marketData.letras[t].lastPrice;
   }
   // Revisar si el usuario guardó un precio manual en el navegador
   const manual = getPrecioManualGuardado(activo);
@@ -9527,7 +9841,9 @@ function getPrecioUSD(activo) {
     const t = (activo.ticker || '').trim().toUpperCase();
     if (t) {
       if (marketData.notes[t]?.c) return marketData.notes[t].c;
+      if (marketData.bmObligaciones && marketData.bmObligaciones[t]?.lastPrice > 0) return marketData.bmObligaciones[t].lastPrice;
       if (marketData.bonds[t]?.c) return marketData.bonds[t].c;
+      if (marketData.bmBonos && marketData.bmBonos[t]?.lastPrice > 0) return marketData.bmBonos[t].lastPrice;
     }
     const manual = getPrecioManualGuardado(activo);
     if (manual && manual.precio > 0) {
@@ -9538,6 +9854,12 @@ function getPrecioUSD(activo) {
     if (t && cotizaciones.tickers[t]) return cotizaciones.tickers[t];
     return activo.precioManual != null ? activo.precioManual : (activo.precioRef != null ? activo.precioRef : (activo.precioPromCompra || null));
   }
+
+  const ars     = getPrecioARS(activo);
+  const usdRate = cotizaciones.USD_MEP || cotizaciones.USD;
+  if (!ars || !usdRate) return null;
+  return ars / usdRate;
+}
 
   const ars     = getPrecioARS(activo);
   const usdRate = cotizaciones.USD_MEP || cotizaciones.USD;
@@ -9698,11 +10020,8 @@ function abrirModalCotizaciones(tabInicial) {
   depurarFuturasComprasCompradas();
   const modal = document.getElementById('modal-cotizaciones');
   if (modal) modal.classList.remove('hidden');
-  if (tabInicial) {
-    setTabCotizaciones(tabInicial);
-  } else {
-    renderModalCotizaciones();
-  }
+  const tab = tabInicial || marketData.tabActual || 'acciones';
+  setTabCotizaciones(tab);
 }
 
 function cerrarModalCotizaciones() {
@@ -9710,7 +10029,7 @@ function cerrarModalCotizaciones() {
   if (modal) modal.classList.add('hidden');
 }
 
-const TABS_COTIZACIONES = ['todos', 'divisas', 'cripto', 'acciones', 'cedears', 'bonos', 'ons', 'cartera', 'futuras'];
+const TABS_COTIZACIONES = ['acciones', 'cedears', 'bonos', 'letras', 'licitaciones', 'fondos', 'cauciones', 'ons', 'fideicomisos', 'cartera', 'divisas', 'futuras', 'todos'];
 
 function setTabCotizaciones(tab) {
   marketData.tabActual = tab;
@@ -9748,9 +10067,15 @@ function renderModalCotizaciones() {
   const fmtUSD = n => n != null ? 'U$S ' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—';
   const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1200;
 
-  const tab = marketData.tabActual || 'todos';
+  const tab = marketData.tabActual || 'acciones';
   const q = marketData.filtroTexto || '';
   let items = [];
+
+  // Helper de filtrado
+  const matchQ = (...fields) => {
+    if (!q) return true;
+    return fields.some(f => f && String(f).toLowerCase().includes(q));
+  };
 
   // Catálogo de Bonos Soberanos y Subsoberanos más operados
   const BONOS_DESTACADOS = [
@@ -9766,7 +10091,7 @@ function renderModalCotizaciones() {
     { symbol: 'AL41',  nombre: 'Bonar 2041 (Ley Local)', emisor: 'Gobierno Nacional', tipoBono: 'Soberano ARS', moneda: 'ARS', ref: 95000 },
     { symbol: 'AL41D', nombre: 'Bonar 2041 USD (Ley Local)', emisor: 'Gobierno Nacional', tipoBono: 'Soberano USD', moneda: 'USD', ref: 50.10 },
 
-    // Globales en Dólares (Ley Extranjera / NY)
+    // Globales en Dólares (Ley New York)
     { symbol: 'GD30',  nombre: 'Global 2030 (Ley New York)', emisor: 'Gobierno Nacional', tipoBono: 'Global ARS', moneda: 'ARS', ref: 83980 },
     { symbol: 'GD30D', nombre: 'Global 2030 USD (Ley New York)', emisor: 'Gobierno Nacional', tipoBono: 'Global USD', moneda: 'USD', ref: 53.07 },
     { symbol: 'GD29',  nombre: 'Global 2029 (Ley New York)', emisor: 'Gobierno Nacional', tipoBono: 'Global ARS', moneda: 'ARS', ref: 81200 },
@@ -9798,53 +10123,34 @@ function renderModalCotizaciones() {
 
   // Catálogo ampliado de Obligaciones Negociables Corporativas
   const ONS_DESTACADAS = [
-    // YPF
     { symbol: 'YMCXO', emisor: 'YPF Clase 16 (8.5% 2026)', empresa: 'YPF', moneda: 'USD', ref: 1.01 },
     { symbol: 'YCA6O', emisor: 'YPF Clase 26 (9.0% 2029)', empresa: 'YPF', moneda: 'USD', ref: 0.99 },
     { symbol: 'YMCQO', emisor: 'YPF Clase 39 (7.0% 2033)', empresa: 'YPF', moneda: 'USD', ref: 0.96 },
     { symbol: 'YMCHO', emisor: 'YPF Clase 53 (4.0% 2026)', empresa: 'YPF', moneda: 'USD', ref: 0.98 },
     { symbol: 'YFC3O', emisor: 'YPF Luz Clase 3 (2026)',   empresa: 'YPF Luz', moneda: 'USD', ref: 1.00 },
-
-    // Pan American Energy (PAE)
     { symbol: 'PN39O', emisor: 'PAE Clase 9 (8.5% 2032)',   empresa: 'Pan American Energy', moneda: 'USD', ref: 1.02 },
     { symbol: 'PNDCO', emisor: 'PAE Clase 10 (2027)',       empresa: 'Pan American Energy', moneda: 'USD', ref: 1.01 },
-
-    // Pampa Energía
     { symbol: 'MGC1O', emisor: 'Pampa Energía Clase 1 (9.5% 2026)', empresa: 'Pampa Energía', moneda: 'USD', ref: 1.02 },
     { symbol: 'MGCLO', emisor: 'Pampa Energía Clase 12 (7.95% 2031)', empresa: 'Pampa Energía', moneda: 'USD', ref: 1.01 },
     { symbol: 'MGC3O', emisor: 'Pampa Energía Clase 3 (2028)', empresa: 'Pampa Energía', moneda: 'USD', ref: 1.00 },
     { symbol: 'MGCXO', emisor: 'Pampa Energía Clase 25', empresa: 'Pampa Energía', moneda: 'USD', ref: 1.00 },
-
-    // Telecom Argentina
     { symbol: 'TLC1O', emisor: 'Telecom Clase 1 (8.0% 2026)', empresa: 'Telecom Argentina', moneda: 'USD', ref: 1.00 },
     { symbol: 'TLC5O', emisor: 'Telecom Clase 5 (8.5% 2027)', empresa: 'Telecom Argentina', moneda: 'USD', ref: 0.98 },
     { symbol: 'TLCSO', emisor: 'Telecom Clase 6 (9.5% 2031)', empresa: 'Telecom Argentina', moneda: 'USD', ref: 0.99 },
-
-    // Vista Energy
     { symbol: 'VSC3O', emisor: 'Vista Energy Clase 3 (9.25% 2027)', empresa: 'Vista Energy', moneda: 'USD', ref: 1.03 },
     { symbol: 'VSC4O', emisor: 'Vista Energy Clase 4 (8.5% 2029)',  empresa: 'Vista Energy', moneda: 'USD', ref: 1.02 },
     { symbol: 'VSC2O', emisor: 'Vista Energy Clase 2 (2025)',       empresa: 'Vista Energy', moneda: 'USD', ref: 1.00 },
-
-    // IRSA / Cresud
     { symbol: 'IRCFO', emisor: 'IRSA Clase 14 (8.75% 2028)', empresa: 'IRSA', moneda: 'USD', ref: 1.02 },
     { symbol: 'IRCSO', emisor: 'IRSA Clase 17 (8.75% 2031)', empresa: 'IRSA', moneda: 'USD', ref: 1.01 },
     { symbol: 'CS38O', emisor: 'Cresud Clase 38 (8.0% 2026)', empresa: 'Cresud', moneda: 'USD', ref: 1.00 },
     { symbol: 'CS42O', emisor: 'Cresud Clase 42 (8.0% 2028)', empresa: 'Cresud', moneda: 'USD', ref: 0.99 },
-
-    // Genneia (Energías Renovables)
     { symbol: 'MRCAO', emisor: 'Genneia Clase 36 (8.75% 2027)', empresa: 'Genneia', moneda: 'USD', ref: 0.99 },
     { symbol: 'GNCXO', emisor: 'Genneia Clase 41 (2030)',    empresa: 'Genneia', moneda: 'USD', ref: 0.98 },
     { symbol: 'GN34O', emisor: 'Genneia Clase 44 (2033)',    empresa: 'Genneia', moneda: 'USD', ref: 0.97 },
-
-    // Transportadora de Gas del Sur (TGS)
     { symbol: 'TSC3O', emisor: 'TGS Clase 3 (8.5% 2025)',     empresa: 'TGS', moneda: 'USD', ref: 1.00 },
     { symbol: 'TSCAO', emisor: 'TGS Clase 4 (6.75% 2031)',    empresa: 'TGS', moneda: 'USD', ref: 0.99 },
-
-    // Edenor
     { symbol: 'DNC2O', emisor: 'Edenor Clase 2 (9.75% 2026)', empresa: 'Edenor', moneda: 'USD', ref: 0.98 },
     { symbol: 'DNC3O', emisor: 'Edenor Clase 3 (2025)',       empresa: 'Edenor', moneda: 'USD', ref: 1.00 },
-
-    // Aluar / Arcor / Capex / AA2000 / Mastellone / Tecpetrol
     { symbol: 'CAC2O', emisor: 'Aluar Clase 2 (2025)',        empresa: 'Aluar', moneda: 'USD', ref: 1.00 },
     { symbol: 'LMS6O', emisor: 'Aluar Clase 6 (2026)',        empresa: 'Aluar', moneda: 'USD', ref: 0.99 },
     { symbol: 'RCCMO', emisor: 'Arcor Clase 18 (8.25% 2027)', empresa: 'Arcor', moneda: 'USD', ref: 1.03 },
@@ -9855,13 +10161,358 @@ function renderModalCotizaciones() {
     { symbol: 'TTC9D', emisor: 'Tecpetrol Clase 9 (TTC9D)',   empresa: 'Tecpetrol', moneda: 'USD', ref: 1.00 }
   ];
 
-  // 1. DIVISAS (Dólares, Euro, Real, etc.)
+  // 1. ACCIONES (Bull Market Líderes y General + BYMA)
+  if (tab === 'todos' || tab === 'acciones') {
+    const mapAcc = new Map();
+    Object.values(marketData.bmAcciones || {}).forEach(a => {
+      if (!a || !a.symbol) return;
+      if (!matchQ(a.symbol, a.companyName, a.sector)) return;
+      mapAcc.set(a.symbol.toUpperCase(), {
+        tipo: 'Acciones',
+        moneda: 'ARS',
+        badgeColor: 'bg-violet-500/15 text-violet-300 border-violet-500/30',
+        symbol: a.symbol.toUpperCase(),
+        tickerForm: a.symbol.toUpperCase(),
+        sub: `${a.companyName || 'Acción'} · ${a.sector || 'BYMA'}${a.nominalVolume ? ' · Vol: ' + Math.round(a.nominalVolume).toLocaleString('es-AR') : ''}`,
+        precio: fmtARS(a.lastPrice),
+        rawPrecio: a.lastPrice,
+        pct: a.dailyVariation != null ? a.dailyVariation : null,
+        vol: a.nominalVolume || 0
+      });
+    });
+    Object.values(marketData.stocks || {}).forEach(s => {
+      if (!s || !s.symbol) return;
+      const sym = s.symbol.trim().toUpperCase();
+      if (mapAcc.has(sym)) return;
+      if (!matchQ(sym)) return;
+      mapAcc.set(sym, {
+        tipo: 'Acciones',
+        moneda: 'ARS',
+        badgeColor: 'bg-violet-500/15 text-violet-300 border-violet-500/30',
+        symbol: sym,
+        tickerForm: sym,
+        sub: s.v ? `Vol: ${Math.round(s.v).toLocaleString('es-AR')} ops · BYMA` : 'Acción BYMA',
+        precio: fmtARS(s.c),
+        rawPrecio: s.c,
+        pct: s.pct_change,
+        vol: s.v || 0
+      });
+    });
+    items.push(...mapAcc.values());
+  }
+
+  // 2. CEDEARs (Bull Market + BYMA)
+  if (tab === 'todos' || tab === 'cedears') {
+    const mapCed = new Map();
+    Object.values(marketData.bmCedears || {}).forEach(c => {
+      if (!c || !c.symbol) return;
+      if (!matchQ(c.symbol, c.companyName, c.sector)) return;
+      mapCed.set(c.symbol.toUpperCase(), {
+        tipo: 'CEDEARs',
+        moneda: 'ARS',
+        badgeColor: 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30',
+        symbol: c.symbol.toUpperCase(),
+        tickerForm: c.symbol.toUpperCase(),
+        sub: `${c.companyName || 'CEDEAR'}${c.conversionRatio ? ' · Ratio: ' + c.conversionRatio : ''}${c.nominalVolume ? ' · Vol: ' + Math.round(c.nominalVolume).toLocaleString('es-AR') : ''}`,
+        precio: fmtARS(c.lastPrice),
+        rawPrecio: c.lastPrice,
+        pct: c.dailyVariation != null ? c.dailyVariation : null,
+        vol: c.nominalVolume || 0
+      });
+    });
+    Object.values(marketData.cedears || {}).forEach(c => {
+      if (!c || !c.symbol) return;
+      const sym = c.symbol.trim().toUpperCase();
+      if (mapCed.has(sym)) return;
+      if (!matchQ(sym)) return;
+      mapCed.set(sym, {
+        tipo: 'CEDEARs',
+        moneda: 'ARS',
+        badgeColor: 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30',
+        symbol: sym,
+        tickerForm: sym,
+        sub: c.v ? `Vol: ${Math.round(c.v).toLocaleString('es-AR')} ops · BYMA` : 'CEDEAR BYMA',
+        precio: fmtARS(c.c),
+        rawPrecio: c.c,
+        pct: c.pct_change,
+        vol: c.v || 0
+      });
+    });
+    items.push(...mapCed.values());
+  }
+
+  // 3. BONOS (Soberanos y Subsoberanos)
+  if (tab === 'todos' || tab === 'bonos') {
+    const mapBon = new Map();
+    BONOS_DESTACADOS.forEach(b => {
+      if (!matchQ(b.symbol, b.nombre, b.emisor, b.tipoBono)) return;
+      const bmBono = (marketData.bmBonos && marketData.bmBonos[b.symbol]) || null;
+      const live = bmBono || marketData.bonds[b.symbol] || cotizaciones.tickers[b.symbol];
+      const p = bmBono?.lastPrice ? bmBono.lastPrice : (typeof live === 'object' ? live.c : (parseFloat(live) || b.ref));
+      const pct = bmBono?.dailyVariation != null ? bmBono.dailyVariation : (typeof live === 'object' ? live.pct_change : null);
+      const vol = bmBono?.nominalVolume || (typeof live === 'object' ? (live.v || 0) : 0);
+      const esUsd = b.moneda === 'USD';
+      mapBon.set(b.symbol.toUpperCase(), {
+        tipo: 'Bonos',
+        moneda: b.moneda,
+        badgeColor: esUsd ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30',
+        symbol: b.symbol.toUpperCase(),
+        tickerForm: b.symbol.toUpperCase(),
+        sub: `${b.nombre} · ${b.tipoBono}${vol ? ' · Vol: ' + Math.round(vol).toLocaleString('es-AR') : ''}`,
+        precio: esUsd ? fmtUSD(p) : fmtARS(p),
+        rawPrecio: p,
+        pct: pct,
+        vol: vol
+      });
+    });
+    Object.values(marketData.bmBonos || {}).forEach(b => {
+      if (!b || !b.symbol) return;
+      const sym = b.symbol.toUpperCase();
+      if (mapBon.has(sym)) return;
+      if (!matchQ(sym, b.name, b.bondType)) return;
+      const esUsd = sym.endsWith('D');
+      mapBon.set(sym, {
+        tipo: 'Bonos',
+        moneda: esUsd ? 'USD' : 'ARS',
+        badgeColor: esUsd ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30',
+        symbol: sym,
+        tickerForm: sym,
+        sub: `${b.name || 'Bono Soberano'} · ${b.bondType || 'Títulos Públicos'}${b.nominalVolume ? ' · Vol: ' + Math.round(b.nominalVolume).toLocaleString('es-AR') : ''}`,
+        precio: esUsd ? fmtUSD(b.lastPrice) : fmtARS(b.lastPrice),
+        rawPrecio: b.lastPrice,
+        pct: b.dailyVariation != null ? b.dailyVariation : null,
+        vol: b.nominalVolume || 0
+      });
+    });
+    Object.values(marketData.bonds || {}).forEach(b => {
+      if (!b || !b.symbol) return;
+      const sym = b.symbol.toUpperCase();
+      if (mapBon.has(sym)) return;
+      if (!matchQ(sym)) return;
+      const esUsd = sym.endsWith('D');
+      mapBon.set(sym, {
+        tipo: 'Bonos',
+        moneda: esUsd ? 'USD' : 'ARS',
+        badgeColor: esUsd ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30',
+        symbol: sym,
+        tickerForm: sym,
+        sub: esUsd ? 'Bono USD · BYMA' : (b.v ? `Vol: ${Math.round(b.v).toLocaleString('es-AR')} ops · BYMA` : 'Bono BYMA'),
+        precio: esUsd ? fmtUSD(b.c) : fmtARS(b.c),
+        rawPrecio: b.c,
+        pct: b.pct_change,
+        vol: b.v || 0
+      });
+    });
+    items.push(...mapBon.values());
+  }
+
+  // 4. LETRAS Y LICITACIONES
+  if (tab === 'todos' || tab === 'letras') {
+    (marketData.letrasLista || []).forEach(l => {
+      if (!l || !l.symbol) return;
+      if (!matchQ(l.symbol, l.maturityDate)) return;
+      const vtoDate = l.maturityDate ? new Date(l.maturityDate).toLocaleDateString('es-AR') : '—';
+      items.push({
+        tipo: 'Letras',
+        moneda: 'ARS',
+        badgeColor: 'bg-blue-500/15 text-blue-300 border-blue-500/30',
+        symbol: l.symbol.toUpperCase(),
+        tickerForm: l.symbol.toUpperCase(),
+        sub: `Letra del Tesoro (LECAP / BONCAP) · Vto: ${vtoDate}${l.nominalVolume ? ' · Vol: ' + Math.round(l.nominalVolume).toLocaleString('es-AR') : ''}`,
+        precio: fmtARS(l.lastPrice),
+        rawPrecio: l.lastPrice,
+        pct: l.dailyVariationPercentage != null ? l.dailyVariationPercentage : null,
+        vol: l.nominalVolume || 0
+      });
+    });
+  }
+
+  // 5. LICITACIONES
+  if (tab === 'licitaciones') {
+    (marketData.licitaciones || []).forEach(lic => {
+      if (!lic || !lic.instrumentName) return;
+      if (!matchQ(lic.instrumentName, lic.subscriptionCurrency)) return;
+      const fFin = lic.submissionEndDate ? new Date(lic.submissionEndDate).toLocaleDateString('es-AR') : '—';
+      items.push({
+        tipo: 'Licitaciones',
+        moneda: lic.subscriptionCurrency || 'ARS',
+        badgeColor: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
+        symbol: lic.instrumentName,
+        tickerForm: lic.instrumentName,
+        sub: `Moneda: ${lic.subscriptionCurrency || 'ARS'} · Min: $${(lic.minimumInvestment || 100).toLocaleString('es-AR')} · Cierre: ${fFin}`,
+        precio: lic.subscriptionCurrency || 'ARS',
+        rawPrecio: lic.minimumInvestment || 0,
+        pct: null,
+        vol: 0
+      });
+    });
+  }
+
+  // 6. FONDOS COMUNES DE INVERSIÓN (FCI)
+  if (tab === 'todos' || tab === 'fondos') {
+    (marketData.fondosLista || []).forEach(f => {
+      if (!f || !f.symbol) return;
+      if (!matchQ(f.symbol, f.fundName, f.personType)) return;
+      const mesStr = f.monthlyVariationPercentage != null ? (f.monthlyVariationPercentage >= 0 ? '+' : '') + f.monthlyVariationPercentage.toFixed(2) + '%' : '—';
+      const anoStr = f.yearOverYearVariationPercentage != null ? (f.yearOverYearVariationPercentage >= 0 ? '+' : '') + f.yearOverYearVariationPercentage.toFixed(1) + '%' : '—';
+      items.push({
+        tipo: 'Fondos',
+        moneda: 'ARS',
+        badgeColor: 'bg-orange-500/15 text-orange-300 border-orange-500/30',
+        symbol: f.symbol.toUpperCase(),
+        tickerForm: f.symbol.toUpperCase(),
+        sub: `${f.fundName || 'Fondo Común de Inversión'} · Mes: ${mesStr} · Año: ${anoStr}`,
+        precio: f.lastPrice != null ? '$' + f.lastPrice.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 4 }) : '—',
+        rawPrecio: f.lastPrice,
+        pct: f.dailyVariationPercentage != null ? f.dailyVariationPercentage : null,
+        vol: 0
+      });
+    });
+  }
+
+  // 7. CAUCIONES
+  if (tab === 'todos' || tab === 'cauciones') {
+    (marketData.cauciones || []).forEach(cau => {
+      if (!cau || !cau.symbol) return;
+      if (!matchQ(cau.symbol, cau.termDays)) return;
+      const vto = cau.maturityDate ? new Date(cau.maturityDate).toLocaleDateString('es-AR') : '—';
+      items.push({
+        tipo: 'Cauciones',
+        moneda: '%',
+        badgeColor: 'bg-lime-500/15 text-lime-300 border-lime-500/30',
+        symbol: cau.symbol,
+        tickerForm: cau.symbol,
+        sub: `Plazo: ${cau.termDays || 1} días · Rango: ${(cau.rateRangeMin||0).toFixed(1)}% - ${(cau.rateRangeMax||0).toFixed(1)}% · Vto: ${vto}`,
+        precio: `${(cau.lastRateTna || 0).toFixed(2)}% TNA`,
+        rawPrecio: cau.lastRateTna || 0,
+        pct: cau.rateVariationPercentage != null ? cau.rateVariationPercentage : null,
+        vol: cau.tradedAmount || 0
+      });
+    });
+  }
+
+  // 8. OBLIGACIONES NEGOCIABLES
+  if (tab === 'todos' || tab === 'ons') {
+    const mapON = new Map();
+    ONS_DESTACADAS.forEach(on => {
+      if (!matchQ(on.symbol, on.emisor, on.empresa)) return;
+      const bmON = (marketData.bmObligaciones && marketData.bmObligaciones[on.symbol]) || null;
+      const live = bmON || marketData.notes[on.symbol] || marketData.bonds[on.symbol] || cotizaciones.tickers[on.symbol];
+      const p = bmON?.lastPrice ? bmON.lastPrice : (typeof live === 'object' ? live.c : (parseFloat(live) || on.ref));
+      const pct = bmON?.dailyVariationPercentage != null ? bmON.dailyVariationPercentage : (typeof live === 'object' ? live.pct_change : null);
+      const vol = typeof live === 'object' ? (live.v || 0) : 0;
+      mapON.set(on.symbol.toUpperCase(), {
+        tipo: 'Obligaciones Negociables',
+        moneda: 'USD',
+        badgeColor: 'bg-sky-500/15 text-sky-300 border-sky-500/30',
+        symbol: on.symbol.toUpperCase(),
+        tickerForm: on.symbol.toUpperCase(),
+        sub: `${on.emisor} · ${on.empresa}${vol ? ' · Vol: ' + Math.round(vol).toLocaleString('es-AR') : ''}`,
+        precio: fmtUSD(p),
+        rawPrecio: p,
+        pct: pct,
+        vol: vol
+      });
+    });
+    Object.values(marketData.bmObligaciones || {}).forEach(o => {
+      if (!o || !o.symbol) return;
+      const sym = o.symbol.toUpperCase();
+      if (mapON.has(sym)) return;
+      if (!matchQ(sym, o.issuer, o.issueLaw)) return;
+      mapON.set(sym, {
+        tipo: 'Obligaciones Negociables',
+        moneda: 'USD',
+        badgeColor: 'bg-sky-500/15 text-sky-300 border-sky-500/30',
+        symbol: sym,
+        tickerForm: sym,
+        sub: `${o.issuer || 'ON Corporativa'}${o.annualInterest ? ' · Int: ' + o.annualInterest + '%' : ''}${o.issueLaw ? ' · Ley: ' + o.issueLaw : ''}`,
+        precio: o.lastPrice > 0 ? fmtUSD(o.lastPrice) : '—',
+        rawPrecio: o.lastPrice,
+        pct: o.dailyVariationPercentage != null ? o.dailyVariationPercentage : null,
+        vol: 0
+      });
+    });
+    Object.values(marketData.notes || {}).forEach(n => {
+      if (!n || !n.symbol) return;
+      const sym = n.symbol.toUpperCase();
+      if (mapON.has(sym)) return;
+      if (!matchQ(sym)) return;
+      mapON.set(sym, {
+        tipo: 'Obligaciones Negociables',
+        moneda: 'USD',
+        badgeColor: 'bg-sky-500/15 text-sky-300 border-sky-500/30',
+        symbol: sym,
+        tickerForm: sym,
+        sub: n.v ? `Vol: ${Math.round(n.v).toLocaleString('es-AR')} ops · ON BYMA` : 'ON Corporativa BYMA',
+        precio: fmtUSD(n.c),
+        rawPrecio: n.c,
+        pct: n.pct_change,
+        vol: n.v || 0
+      });
+    });
+    items.push(...mapON.values());
+  }
+
+  // 9. FIDEICOMISOS
+  if (tab === 'todos' || tab === 'fideicomisos') {
+    (marketData.fideicomisos || []).forEach(f => {
+      if (!f || !f.symbol) return;
+      if (!matchQ(f.symbol, f.name, f.currency)) return;
+      items.push({
+        tipo: 'Fideicomisos',
+        moneda: f.currency || 'ARS',
+        badgeColor: 'bg-purple-500/15 text-purple-300 border-purple-500/30',
+        symbol: f.symbol.toUpperCase(),
+        tickerForm: f.symbol.toUpperCase(),
+        sub: `${f.name || 'Fideicomiso Financiero'} · Moneda: ${f.currency || 'ARS'}`,
+        precio: f.lastPrice ? fmtARS(f.lastPrice) : (f.closePrice ? fmtARS(f.closePrice) : '—'),
+        rawPrecio: f.lastPrice || f.closePrice || 0,
+        pct: f.dailyVariation != null ? f.dailyVariation : null,
+        vol: f.totalNominalValue || 0
+      });
+    });
+  }
+
+  // 10. MI CARTERA
+  if (tab === 'cartera') {
+    const posiciones = calcularPosicionesNetas();
+    posiciones.forEach(p => {
+      const isDol = isDivisaActivo(p);
+      const isCr  = isCriptoActivo(p);
+      const isFci = isFondoActivo(p);
+      const sym   = isDol ? 'USD' : (isCr ? (p.ticker || 'BTC') : (p.ticker || p.tipo));
+      if (!matchQ(sym, p.plataforma, p.descripcion, p.tipo)) return;
+      const esUSD = p.moneda === 'USD' || isDol;
+      const pVal = esUSD ? getPrecioUSD(p) : getPrecioARS(p);
+      const mkt = (marketData.fondos && marketData.fondos[sym.toUpperCase()]) ||
+                  (marketData.bmCedears && marketData.bmCedears[sym.toUpperCase()]) ||
+                  (marketData.bmAcciones && marketData.bmAcciones[sym.toUpperCase()]) ||
+                  (marketData.cedears && marketData.cedears[sym.toUpperCase()]) ||
+                  (marketData.stocks && marketData.stocks[sym.toUpperCase()]) ||
+                  (marketData.bonds && marketData.bonds[sym.toUpperCase()]) ||
+                  (marketData.notes && marketData.notes[sym.toUpperCase()]);
+      const pct = mkt?.dailyVariation != null ? mkt.dailyVariation : (mkt?.dailyVariationPercentage != null ? mkt.dailyVariationPercentage : mkt?.pct_change);
+      items.push({
+        tipo: p.tipo,
+        moneda: esUSD ? 'USD' : 'ARS',
+        badgeColor: esUSD ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : (isFci ? 'bg-orange-500/15 text-orange-300 border-orange-500/30' : 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30'),
+        symbol: sym.toUpperCase(),
+        tickerForm: sym.toUpperCase(),
+        sub: `${p.plataforma || p.descripcion || 'General'} · Cant: ${p.cantidad.toLocaleString('es-AR', { maximumFractionDigits: 4 })}`,
+        precio: esUSD ? fmtUSD(pVal) : fmtARS(pVal),
+        rawPrecio: pVal,
+        pct: pct != null ? pct : null,
+        vol: 0
+      });
+    });
+  }
+
+  // 11. DIVISAS & CRIPTO
   if (tab === 'todos' || tab === 'divisas') {
-    // Dólares DolarApi
     (marketData.dolares || []).forEach(d => {
       const nombre = d.nombre || d.casa;
       const nombreFull = nombre.toLowerCase().startsWith('dólar') || nombre.toLowerCase().startsWith('dolar') ? nombre : `Dólar ${nombre}`;
-      if (q && !nombreFull.toLowerCase().includes(q) && !(d.casa || '').toLowerCase().includes(q)) return;
+      if (!matchQ(nombreFull, d.casa)) return;
       items.push({
         tipo: 'Divisas',
         moneda: 'ARS',
@@ -9876,46 +10527,6 @@ function renderModalCotizaciones() {
       });
     });
 
-    // Monedas extranjeras extra (Euro, Real, etc.)
-    (marketData.cotizacionesExtra || []).forEach(c => {
-      const mon = (c.moneda || '').toUpperCase();
-      if (mon === 'USD') return;
-      const nombre = c.nombre || mon;
-      if (q && !nombre.toLowerCase().includes(q) && !mon.toLowerCase().includes(q)) return;
-      items.push({
-        tipo: 'Divisas',
-        moneda: 'ARS',
-        badgeColor: 'bg-teal-500/15 text-teal-300 border-teal-500/30',
-        symbol: `${nombre} (${mon})`,
-        tickerForm: mon,
-        sub: `Oficial · Compra: ${fmtARS(c.compra)} · Venta: ${fmtARS(c.venta)}`,
-        precio: fmtARS(c.venta),
-        rawPrecio: c.venta,
-        pct: null,
-        vol: null
-      });
-    });
-
-    // Euro Blue / Paralelo
-    if (cotizaciones.EUR && cotizaciones.USD_BLUE && cotizaciones.USD && (!q || 'euro blue paralelo'.includes(q))) {
-      const euroBlue = (cotizaciones.EUR / cotizaciones.USD) * cotizaciones.USD_BLUE;
-      items.push({
-        tipo: 'Divisas',
-        moneda: 'ARS',
-        badgeColor: 'bg-teal-500/15 text-teal-300 border-teal-500/30',
-        symbol: 'Euro Blue',
-        tickerForm: 'EUR',
-        sub: 'Mercado informal · Estimado por paridad',
-        precio: fmtARS(euroBlue),
-        rawPrecio: euroBlue,
-        pct: null,
-        vol: null
-      });
-    }
-  }
-
-  // 2. CRIPTO (Binance)
-  if (tab === 'todos' || tab === 'cripto') {
     const nombresCripto = {
       BTCUSDT: { ticker: 'BTC', name: 'BTC (Bitcoin)' },
       ETHUSDT: { ticker: 'ETH', name: 'ETH (Ethereum)' },
@@ -9925,11 +10536,10 @@ function renderModalCotizaciones() {
       XRPUSDT: { ticker: 'XRP', name: 'XRP (Ripple)' },
       DOGEUSDT: { ticker: 'DOGE', name: 'DOGE (Dogecoin)' }
     };
-
     (marketData.criptos || []).forEach(c => {
       const info = nombresCripto[c.symbol];
       if (!info) return;
-      if (q && !info.name.toLowerCase().includes(q) && !info.ticker.toLowerCase().includes(q)) return;
+      if (!matchQ(info.name, info.ticker)) return;
       const pUsd = parseFloat(c.price);
       const pArs = pUsd * usdRate;
       items.push({
@@ -9946,255 +10556,102 @@ function renderModalCotizaciones() {
       });
     });
 
-    // USDT
-    if (!q || 'usdt tether cripto'.includes(q)) {
+    (marketData.cotizacionesExtra || []).forEach(c => {
+      const mon = (c.moneda || '').toUpperCase();
+      if (mon === 'USD') return;
+      const nombre = c.nombre || mon;
+      if (!matchQ(nombre, mon)) return;
       items.push({
-        tipo: 'Cripto',
-        moneda: 'USD',
-        badgeColor: 'bg-yellow-500/15 text-yellow-300 border-yellow-500/30',
-        symbol: 'USDT (Tether USD)',
-        tickerForm: 'USDT',
-        sub: `Stablecoin · ${fmtARS(usdRate)} ARS`,
-        precio: fmtUSD(1),
-        rawPrecio: 1,
+        tipo: 'Divisas',
+        moneda: 'ARS',
+        badgeColor: 'bg-teal-500/15 text-teal-300 border-teal-500/30',
+        symbol: `${nombre} (${mon})`,
+        tickerForm: mon,
+        sub: `Oficial · Compra: ${fmtARS(c.compra)} · Venta: ${fmtARS(c.venta)}`,
+        precio: fmtARS(c.venta),
+        rawPrecio: c.venta,
         pct: null,
         vol: null
       });
-    }
-  }
-
-  // 3. ACCIONES BYMA
-  if (tab === 'todos' || tab === 'acciones') {
-    Object.values(marketData.stocks || {}).forEach(s => {
-      if (!s || !s.symbol) return;
-      if (q && !s.symbol.toLowerCase().includes(q)) return;
-      items.push({
-        tipo: 'Acciones BYMA',
-        moneda: 'ARS',
-        badgeColor: 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30',
-        symbol: s.symbol,
-        tickerForm: s.symbol,
-        sub: s.v ? `Vol: ${Math.round(s.v).toLocaleString('es-AR')} ops · BYMA` : 'Mercado BYMA',
-        precio: fmtARS(s.c),
-        rawPrecio: s.c,
-        pct: s.pct_change,
-        vol: s.v || 0
-      });
     });
   }
 
-  // 4. CEDEARs
-  if (tab === 'todos' || tab === 'cedears') {
-    Object.values(marketData.cedears || {}).forEach(c => {
-      if (!c || !c.symbol) return;
-      if (q && !c.symbol.toLowerCase().includes(q)) return;
-      items.push({
-        tipo: 'CEDEARs',
-        moneda: 'ARS',
-        badgeColor: 'bg-violet-500/15 text-violet-300 border-violet-500/30',
-        symbol: c.symbol,
-        tickerForm: c.symbol,
-        sub: c.v ? `Vol: ${Math.round(c.v).toLocaleString('es-AR')} ops · CEDEAR` : 'CEDEAR BYMA',
-        precio: fmtARS(c.c),
-        rawPrecio: c.c,
-        pct: c.pct_change,
-        vol: c.v || 0
-      });
-    });
-  }
-
-  // 5. BONOS SOBERANOS Y SUBSOBERANOS
-  if (tab === 'todos' || tab === 'bonos') {
-    // A) Bonos destacados con nombres oficiales
-    BONOS_DESTACADOS.forEach(b => {
-      if (q && !b.symbol.toLowerCase().includes(q) &&
-               !b.nombre.toLowerCase().includes(q) &&
-               !b.emisor.toLowerCase().includes(q) &&
-               !b.tipoBono.toLowerCase().includes(q)) return;
-
-      const live = marketData.bonds[b.symbol] || cotizaciones.tickers[b.symbol];
-      const p = typeof live === 'object' ? live.c : (parseFloat(live) || b.ref);
-      const pct = typeof live === 'object' ? live.pct_change : null;
-      const vol = typeof live === 'object' ? (live.v || 0) : 0;
-      const esUsd = b.moneda === 'USD';
-
-      items.push({
-        tipo: 'Bonos',
-        moneda: b.moneda,
-        badgeColor: esUsd ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30',
-        symbol: b.symbol,
-        tickerForm: b.symbol,
-        sub: `${b.nombre} · ${b.tipoBono}${vol ? ' · Vol: ' + Math.round(vol).toLocaleString('es-AR') : ''}`,
-        precio: esUsd ? fmtUSD(p) : fmtARS(p),
-        rawPrecio: p,
-        pct: pct,
-        vol: vol
-      });
-    });
-
-    // B) Todos los demás bonos de data912 que no estén en destacados
-    Object.values(marketData.bonds || {}).forEach(b => {
-      if (!b || !b.symbol) return;
-      if (BONOS_DESTACADOS.some(d => d.symbol === b.symbol)) return;
-      if (q && !b.symbol.toLowerCase().includes(q)) return;
-      const esUsd = b.symbol.endsWith('D');
-      items.push({
-        tipo: 'Bonos',
-        moneda: esUsd ? 'USD' : 'ARS',
-        badgeColor: esUsd ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30',
-        symbol: b.symbol,
-        tickerForm: b.symbol,
-        sub: esUsd ? 'Bono Soberano USD · BYMA' : (b.v ? `Vol: ${Math.round(b.v).toLocaleString('es-AR')} ops · BYMA` : 'Bono BYMA'),
-        precio: esUsd ? fmtUSD(b.c) : fmtARS(b.c),
-        rawPrecio: b.c,
-        pct: b.pct_change,
-        vol: b.v || 0
-      });
-    });
-  }
-
-  // 6. OBLIGACIONES NEGOCIABLES
-  if (tab === 'todos' || tab === 'ons') {
-    // A) ONs destacadas de empresas líderes con metadata enriquecida
-    ONS_DESTACADAS.forEach(on => {
-      if (q && !on.symbol.toLowerCase().includes(q) &&
-               !on.emisor.toLowerCase().includes(q) &&
-               !on.empresa.toLowerCase().includes(q)) return;
-
-      const live = marketData.notes[on.symbol] || marketData.bonds[on.symbol] || cotizaciones.tickers[on.symbol];
-      const p = typeof live === 'object' ? live.c : (parseFloat(live) || on.ref);
-      const pct = typeof live === 'object' ? live.pct_change : null;
-      const vol = typeof live === 'object' ? (live.v || 0) : 0;
-
-      items.push({
-        tipo: 'Obligaciones Negociables',
-        moneda: 'USD',
-        badgeColor: 'bg-sky-500/15 text-sky-300 border-sky-500/30',
-        symbol: on.symbol,
-        tickerForm: on.symbol,
-        sub: `${on.emisor} · ${on.empresa}${vol ? ' · Vol: ' + Math.round(vol).toLocaleString('es-AR') : ''}`,
-        precio: fmtUSD(p),
-        rawPrecio: p,
-        pct: pct,
-        vol: vol
-      });
-    });
-
-    // B) Demás ONs de data912 notes que no estén en destacadas
-    Object.values(marketData.notes || {}).forEach(n => {
-      if (!n || !n.symbol) return;
-      if (ONS_DESTACADAS.some(o => o.symbol === n.symbol)) return;
-      if (q && !n.symbol.toLowerCase().includes(q)) return;
-      items.push({
-        tipo: 'Obligaciones Negociables',
-        moneda: 'USD',
-        badgeColor: 'bg-sky-500/15 text-sky-300 border-sky-500/30',
-        symbol: n.symbol,
-        tickerForm: n.symbol,
-        sub: n.v ? `Vol: ${Math.round(n.v).toLocaleString('es-AR')} ops · ON BYMA` : 'ON Corporativa BYMA',
-        precio: fmtUSD(n.c),
-        rawPrecio: n.c,
-        pct: n.pct_change,
-        vol: n.v || 0
-      });
-    });
-  }
-
-  // 7. MI CARTERA// 7. MI CARTERA
-  if (tab === 'cartera') {
-    const posiciones = calcularPosicionesNetas();
-    posiciones.forEach(p => {
-      const isDol = isDivisaActivo(p);
-      const isCr  = isCriptoActivo(p);
-      const sym   = isDol ? 'USD' : (isCr ? (p.ticker || 'BTC') : (p.ticker || p.tipo));
-      if (q && !sym.toLowerCase().includes(q) && !(p.plataforma || '').toLowerCase().includes(q)) return;
-      const esUSD = p.moneda === 'USD' || isDol;
-      const pVal = esUSD ? getPrecioUSD(p) : getPrecioARS(p);
-      const mkt = (marketData.cedears && marketData.cedears[sym.toUpperCase()]) ||
-                  (marketData.stocks && marketData.stocks[sym.toUpperCase()]) ||
-                  (marketData.bonds && marketData.bonds[sym.toUpperCase()]) ||
-                  (marketData.notes && marketData.notes[sym.toUpperCase()]);
-      items.push({
-        tipo: p.tipo,
-        moneda: esUSD ? 'USD' : 'ARS',
-        badgeColor: esUSD ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30',
-        symbol: sym.toUpperCase(),
-        tickerForm: sym.toUpperCase(),
-        sub: `${p.plataforma || p.descripcion || 'General'} · Cant: ${p.cantidad}`,
-        precio: esUSD ? fmtUSD(pVal) : fmtARS(pVal),
-        rawPrecio: pVal,
-        pct: mkt?.pct_change != null ? mkt.pct_change : null,
-        vol: 0
-      });
-    });
-  }
-
-  // 8. FUTURAS COMPRAS
+  // 12. FUTURAS COMPRAS
   if (tab === 'futuras') {
     const mapFuturas = leerFuturasCompras();
     const symbols = Object.keys(mapFuturas);
     symbols.forEach(sym => {
       const symUp = sym.toUpperCase();
-      if (q && !symUp.toLowerCase().includes(q)) return;
-
+      if (!matchQ(symUp)) return;
       const fInfo = mapFuturas[sym] || {};
-      const cedear = marketData.cedears ? marketData.cedears[symUp] : null;
-      const stock = marketData.stocks ? marketData.stocks[symUp] : null;
-      const bond = marketData.bonds ? marketData.bonds[symUp] : null;
-      const note = marketData.notes ? marketData.notes[symUp] : null;
-      const dolarMatch = (marketData.dolares || []).find(d => (d.nombre || d.casa || '').toUpperCase().includes(symUp));
+      const fondo = marketData.fondos ? marketData.fondos[symUp] : null;
+      const cedear = (marketData.bmCedears && marketData.bmCedears[symUp]) || (marketData.cedears && marketData.cedears[symUp]);
+      const stock = (marketData.bmAcciones && marketData.bmAcciones[symUp]) || (marketData.stocks && marketData.stocks[symUp]);
+      const bond = (marketData.bmBonos && marketData.bmBonos[symUp]) || (marketData.bonds && marketData.bonds[symUp]);
+      const note = (marketData.bmObligaciones && marketData.bmObligaciones[symUp]) || (marketData.notes && marketData.notes[symUp]);
+      const letra = marketData.letras ? marketData.letras[symUp] : null;
 
-      if (cedear) {
+      if (fondo) {
         items.push({
-          tipo: 'CEDEARs', moneda: 'ARS', badgeColor: 'bg-violet-500/15 text-violet-300 border-violet-500/30',
-          symbol: symUp, tickerForm: symUp, sub: 'CEDEAR BYMA', precio: fmtARS(cedear.c), rawPrecio: cedear.c, pct: cedear.pct_change, vol: cedear.v || 0
+          tipo: 'Fondos', moneda: 'ARS', badgeColor: 'bg-orange-500/15 text-orange-300 border-orange-500/30',
+          symbol: symUp, tickerForm: symUp, sub: fondo.fundName || 'Fondo Bull Market', precio: fmtARS(fondo.lastPrice), rawPrecio: fondo.lastPrice, pct: fondo.dailyVariationPercentage, vol: 0
+        });
+      } else if (cedear) {
+        items.push({
+          tipo: 'CEDEARs', moneda: 'ARS', badgeColor: 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30',
+          symbol: symUp, tickerForm: symUp, sub: cedear.companyName || 'CEDEAR BYMA', precio: fmtARS(cedear.lastPrice || cedear.c), rawPrecio: cedear.lastPrice || cedear.c, pct: cedear.dailyVariation || cedear.pct_change, vol: cedear.nominalVolume || cedear.v || 0
         });
       } else if (stock) {
         items.push({
-          tipo: 'Acciones BYMA', moneda: 'ARS', badgeColor: 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30',
-          symbol: symUp, tickerForm: symUp, sub: 'Mercado BYMA', precio: fmtARS(stock.c), rawPrecio: stock.c, pct: stock.pct_change, vol: stock.v || 0
+          tipo: 'Acciones', moneda: 'ARS', badgeColor: 'bg-violet-500/15 text-violet-300 border-violet-500/30',
+          symbol: symUp, tickerForm: symUp, sub: stock.companyName || 'Acción BYMA', precio: fmtARS(stock.lastPrice || stock.c), rawPrecio: stock.lastPrice || stock.c, pct: stock.dailyVariation || stock.pct_change, vol: stock.nominalVolume || stock.v || 0
         });
       } else if (bond) {
         const esUsd = symUp.endsWith('D');
+        const p = bond.lastPrice || bond.c;
         items.push({
           tipo: 'Bonos', moneda: esUsd ? 'USD' : 'ARS', badgeColor: 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30',
-          symbol: symUp, tickerForm: symUp, sub: 'Bono Soberano BYMA', precio: esUsd ? fmtUSD(bond.c) : fmtARS(bond.c), rawPrecio: bond.c, pct: bond.pct_change, vol: bond.v || 0
+          symbol: symUp, tickerForm: symUp, sub: bond.name || 'Bono Soberano', precio: esUsd ? fmtUSD(p) : fmtARS(p), rawPrecio: p, pct: bond.dailyVariation || bond.pct_change, vol: bond.nominalVolume || bond.v || 0
         });
       } else if (note) {
+        const p = note.lastPrice || note.c;
         items.push({
           tipo: 'Obligaciones Negociables', moneda: 'USD', badgeColor: 'bg-sky-500/15 text-sky-300 border-sky-500/30',
-          symbol: symUp, tickerForm: symUp, sub: 'ON Corporativa BYMA', precio: fmtUSD(note.c), rawPrecio: note.c, pct: note.pct_change, vol: note.v || 0
+          symbol: symUp, tickerForm: symUp, sub: note.issuer || 'ON Corporativa', precio: fmtUSD(p), rawPrecio: p, pct: note.dailyVariationPercentage || note.pct_change, vol: 0
         });
-      } else if (dolarMatch) {
+      } else if (letra) {
         items.push({
-          tipo: 'Divisas', moneda: 'ARS', badgeColor: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
-          symbol: symUp, tickerForm: 'USD', sub: `Compra: ${fmtARS(dolarMatch.compra)} · Venta: ${fmtARS(dolarMatch.venta)}`, precio: fmtARS(dolarMatch.venta), rawPrecio: dolarMatch.venta, pct: null, vol: null
+          tipo: 'Letras', moneda: 'ARS', badgeColor: 'bg-blue-500/15 text-blue-300 border-blue-500/30',
+          symbol: symUp, tickerForm: symUp, sub: 'Letra del Tesoro', precio: fmtARS(letra.lastPrice), rawPrecio: letra.lastPrice, pct: letra.dailyVariationPercentage, vol: letra.nominalVolume || 0
         });
       } else {
         items.push({
-          tipo: fInfo.tipo || 'Futura Inversión', moneda: 'USD', badgeColor: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
-          symbol: symUp, tickerForm: symUp, sub: 'Guardado para futura compra', precio: fInfo.precioRef ? fmtUSD(fInfo.precioRef) : '—', rawPrecio: fInfo.precioRef || 0, pct: null, vol: 0
+          tipo: fInfo.tipo || 'Futura Inversión', moneda: 'ARS', badgeColor: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
+          symbol: symUp, tickerForm: symUp, sub: 'Guardado para futura compra', precio: fInfo.precioRef ? fmtARS(fInfo.precioRef) : '—', rawPrecio: fInfo.precioRef || 0, pct: null, vol: 0
         });
       }
     });
   }
 
-  // Ordenamiento de 'todos'
+  // 13. Ordenamiento de 'todos'
   if (tab === 'todos' && !q) {
+    const accPart = items.filter(it => it.tipo === 'Acciones').slice(0, 10);
+    const cedPart = items.filter(it => it.tipo === 'CEDEARs').slice(0, 15);
+    const bonPart = items.filter(it => it.tipo === 'Bonos').slice(0, 10);
+    const fciPart = items.filter(it => it.tipo === 'Fondos').slice(0, 10);
+    const letPart = items.filter(it => it.tipo === 'Letras').slice(0, 5);
+    const cauPart = items.filter(it => it.tipo === 'Cauciones').slice(0, 5);
+    const onPart  = items.filter(it => it.tipo === 'Obligaciones Negociables').slice(0, 8);
     const divPart = items.filter(it => it.tipo === 'Divisas').slice(0, 6);
     const crPart  = items.filter(it => it.tipo === 'Cripto').slice(0, 4);
-    const stPart  = items.filter(it => it.tipo === 'Acciones BYMA').sort((a,b)=>(b.vol||0)-(a.vol||0)).slice(0, 15);
-    const cdPart  = items.filter(it => it.tipo === 'CEDEARs').sort((a,b)=>(b.vol||0)-(a.vol||0)).slice(0, 20);
-    const bnPart  = items.filter(it => it.tipo === 'Bonos').sort((a,b)=>(b.vol||0)-(a.vol||0)).slice(0, 15);
-    const onPart  = items.filter(it => it.tipo === 'Obligaciones Negociables').slice(0, 10);
-    items = [...divPart, ...crPart, ...stPart, ...cdPart, ...bnPart, ...onPart];
+    items = [...accPart, ...cedPart, ...bonPart, ...fciPart, ...letPart, ...cauPart, ...onPart, ...divPart, ...crPart];
   } else if (!q && (tab === 'acciones' || tab === 'cedears' || tab === 'bonos' || tab === 'ons')) {
     items.sort((a, b) => (b.vol || 0) - (a.vol || 0));
   }
 
   if (countEl) countEl.textContent = `${items.length} instrumentos`;
   const timeStr = marketData.lastUpdated ? marketData.lastUpdated.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }) : '';
-  if (subEl && timeStr) subEl.textContent = `Precios en vivo BYMA & DólarApi (${timeStr})`;
+  if (subEl && timeStr) subEl.textContent = `Precios en vivo Bull Market & DólarApi (${timeStr})`;
 
   if (!items.length) {
     if (tab === 'futuras' && !q) {
@@ -10323,6 +10780,18 @@ function usarCotizacionEnFormulario(symbol, precio, tipo, moneda) {
       onMonedaCotizacionChange();
     }
   } else if (tUp.includes('FONDO') || tUp === 'FCI') {
+    if (selTipo) selTipo.value = 'Fondos de Inversión';
+    onAhTipoChange();
+    if (inpTicker) inpTicker.value = symbol.toUpperCase();
+  } else if (tUp.includes('LETRA')) {
+    if (selTipo) selTipo.value = 'Bono';
+    onAhTipoChange();
+    if (inpTicker) inpTicker.value = symbol.toUpperCase();
+  } else if (tUp.includes('CAUCION') || tUp.includes('CAUCIÓN')) {
+    if (selTipo) selTipo.value = 'Bono';
+    onAhTipoChange();
+    if (inpTicker) inpTicker.value = symbol.toUpperCase();
+  } else if (tUp.includes('FIDEICOMISO')) {
     if (selTipo) selTipo.value = 'Fondos de Inversión';
     onAhTipoChange();
     if (inpTicker) inpTicker.value = symbol.toUpperCase();

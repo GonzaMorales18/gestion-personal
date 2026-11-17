@@ -2,7 +2,28 @@ function doGet(e) {
 
   const ss = SpreadsheetApp.getActiveSpreadsheet();
 
-  // Cotización de ticker vía Google Finance Nativo
+  // Proxy de cotizaciones Bull Market Brokers en vivo (Acciones, CEDEARs, Bonos, Fondos FCI, Cauciones, etc.)
+  if (e && e.parameter && e.parameter.sheet === 'bullmarket') {
+    const type = e.parameter.type || 'merval';
+    const settle = e.parameter.SettlePeriod || 'VEINTICUATROHS';
+    const subgroup = e.parameter.Subgroup || '';
+    const currency = e.parameter.Currency || '';
+    let bUrl = 'https://bullmarket.com.ar/wp-content/themes/sasico/cotizaciones/api.php?type=' + encodeURIComponent(type);
+    if (settle) bUrl += '&SettlePeriod=' + encodeURIComponent(settle);
+    if (subgroup) bUrl += '&Subgroup=' + encodeURIComponent(subgroup);
+    if (currency) bUrl += '&Currency=' + encodeURIComponent(currency);
+    try {
+      const res = UrlFetchApp.fetch(bUrl, {
+        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' },
+        muteHttpExceptions: true
+      });
+      return ContentService.createTextOutput(res.getContentText()).setMimeType(ContentService.MimeType.JSON);
+    } catch (err) {
+      return ContentService.createTextOutput(JSON.stringify([])).setMimeType(ContentService.MimeType.JSON);
+    }
+  }
+
+  // Cotización de ticker vía Google Finance Nativo y Bull Market
   if (e && e.parameter && e.parameter.sheet === 'cotizacion') {
     const ticker = (e.parameter.ticker || '').toUpperCase();
     
@@ -31,7 +52,27 @@ function doGet(e) {
     
     tempCell.clear(); // Limpiamos la celda
     
-    const parsedPrice = parseFloat(price);
+    let parsedPrice = parseFloat(price);
+
+    // Si Google Finance no lo encontró, buscar en Fondos Comunes y Mercado de Bull Market
+    if (isNaN(parsedPrice) || parsedPrice <= 0) {
+      try {
+        const bRes = UrlFetchApp.fetch('https://bullmarket.com.ar/wp-content/themes/sasico/cotizaciones/api.php?type=fondos', {
+          headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' },
+          muteHttpExceptions: true
+        });
+        if (bRes.getResponseCode() === 200) {
+          const arr = JSON.parse(bRes.getContentText());
+          if (Array.isArray(arr)) {
+            const match = arr.find(f => (f.symbol || '').toUpperCase() === ticker);
+            if (match && match.lastPrice > 0) {
+              parsedPrice = parseFloat(match.lastPrice);
+            }
+          }
+        }
+      } catch (err) {}
+    }
+
     if (!isNaN(parsedPrice) && parsedPrice > 0) {
       return ContentService.createTextOutput(JSON.stringify({ precio: parsedPrice, simbolo: ticker }))
         .setMimeType(ContentService.MimeType.JSON);
