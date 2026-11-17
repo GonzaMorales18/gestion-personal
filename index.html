@@ -234,6 +234,15 @@
   }
   .fade-row { animation: fadeInUp 0.2s ease forwards; }
 
+  /* Highlight updated investment rows */
+  @keyframes highlightUpdatedRow {
+    0% { background-color: rgba(16, 185, 129, 0.25); }
+    100% { background-color: transparent; }
+  }
+  .row-updated-flash {
+    animation: highlightUpdatedRow 3.5s ease-out forwards;
+  }
+
   /* Section transition */
   @keyframes sectionIn {
     from { opacity: 0; transform: translateY(10px); }
@@ -3229,14 +3238,17 @@
               <i class="fas fa-Briefcase text-violet-400 text-xs hidden"></i>
               <i class="fas fa-layer-group text-violet-400 text-xs"></i>
               <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Mis Inversiones</h3>
-              <span id="ah-interes-anual-badge-header" class="hidden text-[10px] font-black mono px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+              <span id="ah-interes-anual-badge-header" class="hidden text-[10px] font-black mono px-2.5 py-0.5 rounded-full transition-all">
                 <i class="fas fa-chart-line text-[9px] mr-1"></i><span id="ah-interes-anual-header-txt">+0.0% anual</span>
               </span>
             </div>
-            <button onclick="actualizarCotizacionesAhorros(true)" id="btn-refrescar-ah"
-                    class="h-8 px-3 rounded-xl bg-slate-900 border border-slate-700/80 flex items-center gap-1.5 text-[10px] font-black text-slate-300 hover:text-violet-300 hover:border-violet-500/50 transition-all uppercase tracking-wider">
-              <i id="icon-refresh-ah" class="fas fa-sync-alt text-[10px]"></i> Actualizar precios
-            </button>
+            <div class="flex items-center gap-2 flex-wrap">
+              <span id="ah-ultima-actualizacion" class="text-[9px] font-bold text-slate-400 hidden sm:inline-block mono"></span>
+              <button onclick="actualizarCotizacionesAhorros(true)" id="btn-refrescar-ah"
+                      class="h-8 px-3 rounded-xl bg-slate-900 border border-slate-700/80 flex items-center gap-1.5 text-[10px] font-black text-slate-300 hover:text-violet-300 hover:border-violet-500/50 transition-all uppercase tracking-wider">
+                <i id="icon-refresh-ah" class="fas fa-sync-alt text-[10px]"></i> <span id="btn-refrescar-ah-txt">Actualizar precios</span>
+              </button>
+            </div>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-sm">
@@ -5373,20 +5385,20 @@
   </div>
 </div>
 
-<!-- Modal tickers sin precio -->
-<div id="modal-fallidos" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex items-center justify-center p-4">
+<!-- Modal tickers sin precio / precios manuales desactualizados -->
+<div id="modal-fallidos" onclick="if(event.target === this) cerrarModalFallidos()" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex items-center justify-center p-4">
   <div class="bg-black border border-slate-700/80 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
     <div class="px-6 py-4 border-b border-slate-700/80 bg-slate-900/60 flex items-center justify-between">
       <div class="flex items-center gap-2.5">
-        <div class="w-8 h-8 rounded-xl bg-amber-900/50 border border-amber-500/30 flex items-center justify-center">
+        <div class="w-8 h-8 rounded-xl bg-amber-900/50 border border-amber-500/30 flex items-center justify-center shrink-0">
           <i class="fas fa-triangle-exclamation text-amber-400 text-xs"></i>
         </div>
-        <div>
-          <h3 class="font-black text-white text-sm uppercase tracking-wider">Precios no encontrados</h3>
-          <p class="text-[10px] text-slate-400 mt-0.5">Ingresá el precio manualmente en ARS</p>
+        <div class="min-w-0">
+          <h3 id="modal-fallidos-titulo" class="font-black text-white text-sm uppercase tracking-wider truncate">Precios no encontrados</h3>
+          <p id="modal-fallidos-subtitulo" class="text-[10px] text-slate-400 mt-0.5 truncate">Ingresá el precio manualmente en ARS</p>
         </div>
       </div>
-      <button onclick="cerrarModalFallidos()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors">
+      <button onclick="cerrarModalFallidos()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors shrink-0">
         <i class="fas fa-times text-sm"></i>
       </button>
     </div>
@@ -8965,16 +8977,203 @@ function tipoRequiereTicker(tipo) {
          t.includes('BONO') || t.includes('OBLIGACI') || t === 'ON';
 }
 
+// ─── GESTIÓN DE PRECIOS MANUALES Y PERSISTENCIA (LOCALSTORAGE) ───────────────
+let preciosManuales = {};
+let ultimosPreciosActualizados = new Set();
+let timestampUltimaActualizacion = null;
+
+function cargarPreciosManuales() {
+  try {
+    const raw = localStorage.getItem('gm_precios_manuales') || localStorage.getItem('gm_cache_precios_manuales');
+    preciosManuales = raw ? JSON.parse(raw) : {};
+  } catch (e) {
+    preciosManuales = {};
+  }
+  return preciosManuales;
+}
+
+function getActivoKey(a) {
+  if (!a) return '';
+  const tipo = (a.tipo || '').trim().toUpperCase();
+  const ticker = (a.ticker || '').trim().toUpperCase();
+  const plat = (a.plataforma || a.descripcion || '').trim().toUpperCase();
+  const mon = (a.moneda || 'ARS').trim().toUpperCase();
+  return `${tipo}||${ticker}||${plat}||${mon}`;
+}
+
+function getPrecioManualGuardado(activo) {
+  if (!activo) return null;
+  cargarPreciosManuales();
+  const k1 = getActivoKey(activo);
+  if (k1 && preciosManuales[k1]) return preciosManuales[k1];
+
+  const sym = (activo.ticker || '').trim().toUpperCase();
+  if (sym && preciosManuales[sym]) return preciosManuales[sym];
+
+  const tipo = (activo.tipo || '').trim().toUpperCase();
+  const plat = (activo.plataforma || activo.descripcion || '').trim().toUpperCase();
+  const k2 = `${tipo}||${plat}`;
+  if (preciosManuales[k2]) return preciosManuales[k2];
+
+  return null;
+}
+
+function guardarPrecioManualActivo(key, precio, moneda = 'ARS') {
+  if (!key || isNaN(precio) || precio <= 0) return false;
+  cargarPreciosManuales();
+  preciosManuales[key] = {
+    precio: parseFloat(precio),
+    moneda: moneda,
+    fecha: new Date().toISOString()
+  };
+  try {
+    localStorage.setItem('gm_precios_manuales', JSON.stringify(preciosManuales));
+    localStorage.setItem('gm_cache_precios_manuales', JSON.stringify(preciosManuales));
+  } catch (e) {}
+
+  // Si key tiene un ticker, también sincronizar cotizaciones.tickers
+  const partes = key.split('||');
+  const sym = partes.length >= 2 && partes[1] ? partes[1] : (key.length <= 10 && !key.includes('||') ? key : '');
+  if (sym) {
+    cotizaciones.tickers = cotizaciones.tickers || {};
+    cotizaciones.tickers[sym] = parseFloat(precio);
+    guardarCacheModulo('cotizaciones', cotizaciones);
+  }
+
+  renderTablaAhorros();
+  showToast('Precio guardado exitosamente en tu navegador ✓', 'ok');
+  return true;
+}
+
+function eliminarPrecioManualActivo(safeKey) {
+  const key = decodeURIComponent(safeKey);
+  cargarPreciosManuales();
+  delete preciosManuales[key];
+  const partes = key.split('||');
+  if (partes.length >= 2 && partes[1]) {
+    delete preciosManuales[partes[1]];
+  }
+  try {
+    localStorage.setItem('gm_precios_manuales', JSON.stringify(preciosManuales));
+    localStorage.setItem('gm_cache_precios_manuales', JSON.stringify(preciosManuales));
+  } catch (e) {}
+  renderTablaAhorros();
+  cerrarModalFallidos();
+  showToast('Precio manual restablecido ✓', 'ok');
+}
+
+function getNombreActivoParaMostrar(a) {
+  if (!a) return 'Activo';
+  if (isDolarActivo(a)) return 'Dólar (USD)';
+  if (isCriptoActivo(a)) return a.ticker ? (a.ticker.toUpperCase() === 'BTC' ? 'Bitcoin' : a.ticker.toUpperCase()) : 'Cripto';
+  if (a.ticker) return a.ticker.toUpperCase();
+  return a.tipo || a.descripcion || 'Activo';
+}
+
+function getSyncStatusActivo(a) {
+  if (!a) return { status: 'desactualizado', label: 'Sin precio', source: null, esAutomatico: false };
+
+  // Dólares
+  if (isDolarActivo(a)) {
+    if (cotizaciones.USD != null) {
+      return { status: 'vivo', label: 'En vivo', source: 'DolarApi', esAutomatico: true };
+    }
+  }
+
+  // Divisas EUR/BRL
+  if (isDivisaActivo(a)) {
+    const t = (a.ticker || '').toUpperCase();
+    if ((t === 'EUR' && cotizaciones.EUR) || (t === 'BRL' && cotizaciones.BRL)) {
+      return { status: 'vivo', label: 'En vivo', source: 'DolarApi', esAutomatico: true };
+    }
+  }
+
+  // Criptos
+  if (isCriptoActivo(a)) {
+    const t = (a.ticker || '').toUpperCase();
+    if ((t === 'BTC' || !t) && cotizaciones.BTC_USD) {
+      return { status: 'vivo', label: 'En vivo', source: 'Binance', esAutomatico: true };
+    }
+    if (marketData.criptos && Array.isArray(marketData.criptos)) {
+      const match = marketData.criptos.find(c => c.symbol === `${t}USDT`);
+      if (match) return { status: 'vivo', label: 'En vivo', source: 'Binance', esAutomatico: true };
+    }
+  }
+
+  // Mercado BYMA (Acciones, CEDEARs, Bonos, ONs)
+  const t = (a.ticker || '').trim().toUpperCase();
+  if (t) {
+    if (marketData.cedears[t]?.c) return { status: 'vivo', label: 'En vivo', source: 'BYMA CEDEARs', esAutomatico: true };
+    if (marketData.stocks[t]?.c) return { status: 'vivo', label: 'En vivo', source: 'BYMA Acciones', esAutomatico: true };
+    if (marketData.bonds[t]?.c) return { status: 'vivo', label: 'En vivo', source: 'BYMA Bonos', esAutomatico: true };
+    if (marketData.notes[t]?.c) return { status: 'vivo', label: 'En vivo', source: 'BYMA ONs', esAutomatico: true };
+  }
+
+  // Si no tiene cotización en vivo automática, revisar si tiene precio manual guardado
+  const manual = getPrecioManualGuardado(a);
+  if (manual && manual.fecha) {
+    const fechaObj = new Date(manual.fecha);
+    const hoyStr = new Date().toDateString();
+    const esHoy = !isNaN(fechaObj.getTime()) && fechaObj.toDateString() === hoyStr;
+    const horaStr = !isNaN(fechaObj.getTime()) ? fechaObj.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }) : '';
+    const fechaStr = !isNaN(fechaObj.getTime()) ? fechaObj.toLocaleDateString('es-AR') : '';
+
+    if (esHoy) {
+      return {
+        status: 'manual_hoy',
+        label: 'Manual (Hoy)',
+        hora: horaStr,
+        source: 'Manual',
+        esAutomatico: false,
+        precio: manual.precio,
+        moneda: manual.moneda
+      };
+    } else {
+      return {
+        status: 'desactualizado',
+        label: '⚠️ Desactualizado',
+        razon: `Última actualización manual el ${fechaStr}`,
+        source: 'Manual previo',
+        esAutomatico: false,
+        precio: manual.precio,
+        moneda: manual.moneda
+      };
+    }
+  }
+
+  // Si no tiene cotización en vivo ni manual previa, está usando precio de compra histórico
+  return {
+    status: 'desactualizado',
+    label: '⚠️ Desactualizado',
+    razon: 'Sin sincronización automática. Usando precio de compra',
+    source: 'Sin sincronizar',
+    esAutomatico: false
+  };
+}
+
 async function iniciarAhorros() {
   if (ahorrosIniciado) return;
   ahorrosIniciado = true;
   fillTiposActivo();
   actualizarDatalistActivos();
+  cargarPreciosManuales();
 
   const cachedCot = leerCacheModulo('cotizaciones');
   if (cachedCot && !cotizaciones.USD) {
     cotizaciones = { ...cotizaciones, ...cachedCot, tickers: { ...(cachedCot.tickers || {}), ...cotizaciones.tickers } };
   }
+  // Sincronizar tickers de precios manuales guardados
+  Object.keys(preciosManuales).forEach(k => {
+    const item = preciosManuales[k];
+    if (item && item.precio > 0) {
+      const partes = k.split('||');
+      const sym = partes.length >= 2 && partes[1] ? partes[1] : (k.length <= 10 && !k.includes('||') ? k : '');
+      if (sym && !cotizaciones.tickers[sym]) {
+        cotizaciones.tickers[sym] = item.precio;
+      }
+    }
+  });
+
   const cachedOps = leerCacheModulo('operaciones');
   if (cachedOps && operacionesData.length === 0) {
     operacionesData = cachedOps;
@@ -9135,32 +9334,56 @@ async function fetchMarketQuotes() {
 
 async function actualizarCotizacionesAhorros(mostrarModal = false) {
   const iconR = document.getElementById('icon-refresh-ah');
+  const btnTxt = document.getElementById('btn-refrescar-ah-txt');
   if (iconR) iconR.classList.add('spin');
+  if (btnTxt) btnTxt.textContent = 'Actualizando...';
 
   await Promise.allSettled([fetchMarketQuotes(), fetchTickers()]);
 
   if (cotizaciones.BTC_USD && cotizaciones.USD) {
     cotizaciones.BTC = cotizaciones.BTC_USD * cotizaciones.USD;
   }
+
+  // Registrar fecha y hora de la actualización
+  timestampUltimaActualizacion = new Date();
+  const elUltAct = document.getElementById('ah-ultima-actualizacion');
+  if (elUltAct) {
+    const horaStr = timestampUltimaActualizacion.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+    elUltAct.textContent = `Actualizado ${horaStr} hs`;
+  }
+
+  // Identificar qué activos tienen cotización en vivo y cuáles están desactualizados
+  ultimosPreciosActualizados = new Set();
+  const posiciones = calcularPosicionesNetas();
+  const desactualizados = [];
+  let enVivoCount = 0;
+
+  posiciones.forEach(a => {
+    const st = getSyncStatusActivo(a);
+    if (st.status === 'vivo') {
+      const k = getActivoKey(a);
+      if (k) ultimosPreciosActualizados.add(k);
+      if (a.ticker) ultimosPreciosActualizados.add(a.ticker.toUpperCase());
+      enVivoCount++;
+    } else if (st.status === 'desactualizado') {
+      desactualizados.push(a);
+    }
+  });
+
   guardarCacheModulo('cotizaciones', cotizaciones);
   renderCotizacionesBadge();
   renderTablaAhorros();
   renderModalCotizaciones();
 
   if (iconR) iconR.classList.remove('spin');
+  if (btnTxt) btnTxt.textContent = 'Actualizar precios';
+
   if (mostrarModal) {
-    const fallidos = calcularPosicionesNetas()
-      .filter(a => {
-        if (!tipoRequiereTicker(a.tipo)) return false;
-        const sym = (a.ticker || '').toUpperCase();
-        return !cotizaciones.tickers[sym] && !marketData.cedears[sym]?.c && !marketData.stocks[sym]?.c;
-      })
-      .map(a => a.ticker?.toUpperCase())
-      .filter((v, i, arr) => v && arr.indexOf(v) === i);
-    if (fallidos.length > 0) {
-      mostrarModalFallidos(fallidos);
+    if (desactualizados.length > 0) {
+      showToast(`Cotizaciones: ${enVivoCount} en vivo · ⚠️ ${desactualizados.length} requieren precio manual`, 'info');
+      mostrarModalFallidos(desactualizados);
     } else {
-      showToast('Cotizaciones actualizadas en vivo ✓', 'ok');
+      showToast(`¡Todos los precios de tus inversiones actualizados en vivo! (${enVivoCount}) ✓`, 'ok');
     }
   }
 }
@@ -9243,10 +9466,18 @@ function getPrecioARS(activo) {
   if (isDivisaActivo(activo)) {
     const t = (activo.ticker || '').toUpperCase();
     if (t === 'EUR' && cotizaciones.EUR) return cotizaciones.EUR;
+    if (t === 'BRL' && cotizaciones.BRL) return cotizaciones.BRL;
+    const manual = getPrecioManualGuardado(activo);
+    if (manual && manual.precio > 0) return manual.precio;
     return activo.precioPromCompra || activo.precioManual || activo.precioRef || 1;
   }
   if (isCriptoActivo(activo)) {
     if (cotizaciones.BTC) return cotizaciones.BTC;
+    const manual = getPrecioManualGuardado(activo);
+    if (manual && manual.precio > 0) {
+      if (manual.moneda === 'USD') return manual.precio * (cotizaciones.USD || 1);
+      return manual.precio;
+    }
     const btcUsd = cotizaciones.BTC_USD || activo.precioManual;
     return btcUsd ? btcUsd * (cotizaciones.USD || 1) : 0;
   }
@@ -9260,8 +9491,19 @@ function getPrecioARS(activo) {
   if (t) {
     if (marketData.cedears[t]?.c) return marketData.cedears[t].c;
     if (marketData.stocks[t]?.c) return marketData.stocks[t].c;
-    if (cotizaciones.tickers[t]) return cotizaciones.tickers[t];
+    if (marketData.bonds[t]?.c) return marketData.bonds[t].c;
+    if (marketData.notes[t]?.c) return marketData.notes[t].c;
   }
+  // Revisar si el usuario guardó un precio manual en el navegador
+  const manual = getPrecioManualGuardado(activo);
+  if (manual && manual.precio > 0) {
+    if (manual.moneda === 'USD') {
+      const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
+      return manual.precio * usdRate;
+    }
+    return manual.precio;
+  }
+  if (t && cotizaciones.tickers[t]) return cotizaciones.tickers[t];
   return activo.precioPromCompra || activo.precioManual || activo.precioRef || 0;
 }
 
@@ -9269,11 +9511,30 @@ function getPrecioUSD(activo) {
   if (!activo) return null;
   // REGLA FUNDAMENTAL: Para divisa dólar (USD), 1 USD siempre vale exactamente 1 USD
   if (isDolarActivo(activo)) return 1;
-  if (isCriptoActivo(activo)) return cotizaciones.BTC_USD || null;
+  if (isCriptoActivo(activo)) {
+    if (cotizaciones.BTC_USD) return cotizaciones.BTC_USD;
+    const manual = getPrecioManualGuardado(activo);
+    if (manual && manual.precio > 0) {
+      if (manual.moneda === 'USD') return manual.precio;
+      const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
+      return manual.precio / usdRate;
+    }
+    return null;
+  }
 
   // Si el activo cotiza en USD (ej. Obligación Negociable en dólares), su precio base está en dólares
   if (activo.moneda === 'USD') {
     const t = (activo.ticker || '').trim().toUpperCase();
+    if (t) {
+      if (marketData.notes[t]?.c) return marketData.notes[t].c;
+      if (marketData.bonds[t]?.c) return marketData.bonds[t].c;
+    }
+    const manual = getPrecioManualGuardado(activo);
+    if (manual && manual.precio > 0) {
+      if (manual.moneda === 'USD') return manual.precio;
+      const usdRate = cotizaciones.USD_MEP || cotizaciones.USD || 1;
+      return manual.precio / usdRate;
+    }
     if (t && cotizaciones.tickers[t]) return cotizaciones.tickers[t];
     return activo.precioManual != null ? activo.precioManual : (activo.precioRef != null ? activo.precioRef : (activo.precioPromCompra || null));
   }
@@ -11160,8 +11421,36 @@ function renderTablaAhorros() {
     }
 
     const pillCls = tipoColor[a.tipo] || 'bg-slate-800 text-slate-300 border-slate-700';
+    const key = getActivoKey(a);
+    const safeKey = encodeURIComponent(key);
+    const syncInfo = getSyncStatusActivo(a);
+    const fueActualizadoAhora = ultimosPreciosActualizados && (ultimosPreciosActualizados.has(key) || (a.ticker && ultimosPreciosActualizados.has(a.ticker.toUpperCase())));
+    const flashCls = fueActualizadoAhora ? 'row-updated-flash' : '';
+
+    let syncBadgeHtml = '';
+    if (syncInfo.status === 'vivo') {
+      syncBadgeHtml = `
+        <span class="inline-flex items-center gap-1 text-[8px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded-full border border-emerald-500/25" title="Cotización sincronizada en vivo (${syncInfo.source || 'Online'})">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span>En vivo
+        </span>`;
+    } else if (syncInfo.status === 'manual_hoy') {
+      syncBadgeHtml = `
+        <button type="button" onclick="abrirModalPrecioManualActivo('${safeKey}')"
+                class="inline-flex items-center gap-1 text-[8px] font-bold text-sky-300 bg-sky-500/15 hover:bg-sky-500/25 px-1.5 py-0.5 rounded-full border border-sky-500/30 transition-colors"
+                title="Precio actualizado manualmente hoy ${syncInfo.hora || ''}. Clic para modificar">
+          <i class="fas fa-check text-[7.5px] text-sky-400"></i>Manual (Hoy)
+        </button>`;
+    } else {
+      syncBadgeHtml = `
+        <button type="button" onclick="abrirModalPrecioManualActivo('${safeKey}')"
+                class="inline-flex items-center gap-1 text-[8px] font-black text-amber-300 bg-amber-500/20 hover:bg-amber-500/30 px-1.5 py-0.5 rounded-full border border-amber-500/40 transition-all hover:scale-105 active:scale-95 animate-pulse shadow-sm"
+                title="${syncInfo.razon || 'Precio desactualizado'}. Hacé clic para actualizar el precio puntual de este activo">
+          <i class="fas fa-triangle-exclamation text-[7.5px] text-amber-400"></i>Desactualizado <i class="fas fa-pencil-alt text-[6.5px] ml-0.5 opacity-90"></i>
+        </button>`;
+    }
+
     return `
-      <tr class="table-row border-b border-slate-800 fade-row" style="animation-delay:${i*0.03}s">
+      <tr class="table-row border-b border-slate-800 fade-row ${flashCls}" style="animation-delay:${i*0.03}s">
         <td class="px-2.5 py-2.5 text-xs whitespace-nowrap">
           <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border ${pillCls} text-[10px] font-bold">${tipoIcon[a.tipo]||'💎'} ${a.tipo}</span>
         </td>
@@ -11185,8 +11474,16 @@ function renderTablaAhorros() {
           <div class="text-[9px] text-emerald-400/80 font-bold">${fmtUSD(a.precioPromUSD)}</div>
         </td>
         <td class="px-2 py-2.5 text-xs text-right mono whitespace-nowrap">
-          <div class="font-bold text-slate-200">${fmtARS(precioARS)}</div>
+          <div class="flex items-center justify-end gap-1.5">
+            <span class="font-bold text-slate-200">${fmtARS(precioARS)}</span>
+            <button type="button" onclick="abrirModalPrecioManualActivo('${safeKey}')" title="Modificar precio manualmente" class="text-slate-500 hover:text-violet-300 opacity-60 hover:opacity-100 transition-opacity">
+              <i class="fas fa-pencil-alt text-[8.5px]"></i>
+            </button>
+          </div>
           <div class="text-[9px] text-emerald-400/80 font-bold">${fmtUSD(precioUSD)}</div>
+          <div class="mt-1 flex justify-end">
+            ${syncBadgeHtml}
+          </div>
         </td>
         <td class="px-2.5 py-2.5 text-xs text-right mono font-black text-white whitespace-nowrap">${fmtARS(valorARS)}</td>
         <td class="px-2.5 py-2.5 text-xs text-right mono font-black text-emerald-300 whitespace-nowrap">${fmtUSD(valorUSD)}</td>
@@ -11317,6 +11614,17 @@ function renderTablaAhorros() {
   if (elHeaderBadge && elHeaderTxt) {
     elHeaderBadge.classList.remove('hidden');
     elHeaderTxt.textContent = `TNA: ${tasaAnualARSStr} ARS · ${tasaAnualUSDStr} USD`;
+
+    // Si el rendimiento global o la TNA es negativa, mostrar en ROJO (rose), si es positiva en VERDE (emerald)
+    const usdRateVal = cotizaciones.USD_MEP || cotizaciones.USD || 1;
+    const diffTotalEqARS = diffARS + (diffUSD * usdRateVal);
+    const esPositivoTNA = diffTotalEqARS >= -0.01 && (netoInvertidoARS > 0 ? tasaAnualARS >= 0 : tasaAnualUSD >= 0);
+
+    if (esPositivoTNA) {
+      elHeaderBadge.className = 'text-[10px] font-black mono px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 transition-all';
+    } else {
+      elHeaderBadge.className = 'text-[10px] font-black mono px-2.5 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30 transition-all';
+    }
   }
 
   // 6. Actualizar Tarjeta de Inicio / Dashboard Principal
@@ -11349,51 +11657,213 @@ function renderTablaAhorros() {
   poblarSelectorCompraExistente();
 }
 
-function mostrarModalFallidos(tickers) {
+function mostrarModalFallidos(items) {
   const modal = document.getElementById('modal-fallidos');
   const lista = document.getElementById('modal-fallidos-lista');
+  const titulo = document.getElementById('modal-fallidos-titulo');
+  const subtitulo = document.getElementById('modal-fallidos-subtitulo');
   if (!modal || !lista) return;
-  if (!tickers.length) { showToast('Todos los precios actualizados ✓', 'ok'); return; }
-  lista.innerHTML = tickers.map(t => {
-    const activo = calcularPosicionesNetas().find(a => a.ticker?.toUpperCase() === t);
+
+  const arr = Array.isArray(items) ? items : [];
+  if (!arr.length) {
+    showToast('Todos los precios actualizados ✓', 'ok');
+    return;
+  }
+
+  if (titulo) titulo.textContent = 'Precios desactualizados o no sincronizados';
+  if (subtitulo) subtitulo.textContent = 'Los siguientes activos no tienen cotización automática en vivo. Podés ingresar sus precios hoy y se guardarán en tu navegador:';
+
+  const posiciones = calcularPosicionesNetas();
+  lista.innerHTML = arr.map(item => {
+    let activo = null;
+    let ticker = '';
+    if (typeof item === 'string') {
+      ticker = item.toUpperCase();
+      activo = posiciones.find(a => (a.ticker || '').toUpperCase() === ticker);
+    } else if (typeof item === 'object' && item) {
+      activo = item;
+      ticker = (activo.ticker || '').toUpperCase();
+    }
+    const key = activo ? getActivoKey(activo) : ticker;
+    const safeKey = encodeURIComponent(key);
+    const safeId = key.replace(/[^a-zA-Z0-9]/g, '_');
+    const nombre = activo ? getNombreActivoParaMostrar(activo) : ticker;
+    const plat = (activo?.plataforma || activo?.descripcion || '').trim();
+    const esUSD = activo?.moneda === 'USD';
+    const manual = activo ? getPrecioManualGuardado(activo) : null;
+    const precioPrev = manual?.precio || (activo ? (esUSD ? activo.precioPromUSD : activo.precioPromCompra) : '');
+
     return `
-      <div class="flex items-center gap-3 py-3 border-b border-slate-700/60 last:border-0">
-        <div class="flex-1">
-          <p class="text-sm font-bold text-white mono">${t}</p>
-          <p class="text-[11px] text-slate-400">${activo?.descripcion||''}</p>
+      <div class="py-3 border-b border-slate-700/60 last:border-0" id="item-fallido-${safeId}">
+        <div class="flex items-center justify-between mb-1.5 gap-2">
+          <div class="min-w-0">
+            <p class="text-xs font-bold text-white flex items-center gap-1.5 truncate">
+              <span>${nombre}</span>
+              ${plat ? `<span class="text-[10px] text-emerald-400 font-normal truncate">(${plat})</span>` : ''}
+            </p>
+            <p class="text-[10px] text-slate-400 mt-0.5">
+              ${activo ? `P. Compra: <span class="mono">${esUSD ? 'U$S ' + Number(activo.precioPromUSD||0).toFixed(2) : '$' + Math.round(activo.precioPromCompra||0).toLocaleString('es-AR')}</span>` : ''}
+              ${manual?.fecha ? ` · Último: <span class="mono text-sky-300">${manual.moneda === 'USD' ? 'U$S ' : '$'}${manual.precio}</span>` : ''}
+            </p>
+          </div>
+          <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 shrink-0">
+            Desactualizado
+          </span>
         </div>
         <div class="flex items-center gap-2">
-          <div class="relative">
-            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold mono">$</span>
-            <input type="number" id="precio-fallido-${t}" placeholder="0.00" step="any" min="0"
-                   class="w-32 h-9 pl-7 pr-3 bg-slate-800 border border-slate-700 rounded-lg text-sm font-bold text-white mono outline-none focus:ring-2 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50">
+          <div class="relative flex-1">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold mono">
+              ${esUSD ? 'U$S' : '$'}
+            </span>
+            <input type="number" id="precio-fallido-${safeId}" placeholder="0.00" step="any" min="0" value="${precioPrev || ''}"
+                   class="w-full h-9 pl-8 pr-3 bg-slate-800 border border-slate-700 rounded-lg text-sm font-bold text-white mono outline-none focus:ring-2 focus:ring-violet-500/40">
           </div>
-          <button onclick="guardarPrecioManual('${t}')"
-                  class="h-9 px-3 bg-black text-white rounded-lg text-[11px] font-bold uppercase hover:bg-blue-600 transition-colors">OK</button>
+          <button type="button" onclick="guardarPrecioManualItem('${safeKey}')"
+                  class="h-9 px-3.5 bg-violet-600 hover:bg-violet-500 text-white rounded-lg text-[11px] font-bold uppercase transition-colors shrink-0 shadow-sm">
+            Guardar
+          </button>
         </div>
       </div>`;
   }).join('');
+
   modal.classList.remove('hidden');
 }
 
 function cerrarModalFallidos() {
-  document.getElementById('modal-fallidos').classList.add('hidden');
+  const modal = document.getElementById('modal-fallidos');
+  if (modal) modal.classList.add('hidden');
+}
+
+function guardarPrecioManualItem(safeKey) {
+  const key = decodeURIComponent(safeKey);
+  const safeId = key.replace(/[^a-zA-Z0-9]/g, '_');
+  const input = document.getElementById(`precio-fallido-${safeId}`);
+  const precio = parseFloat(input?.value);
+  if (!precio || precio <= 0) {
+    input?.classList.add('ring-2', 'ring-red-400');
+    setTimeout(() => input?.classList.remove('ring-2', 'ring-red-400'), 1500);
+    return;
+  }
+  const posiciones = calcularPosicionesNetas();
+  const activo = posiciones.find(a => getActivoKey(a) === key || (a.ticker && a.ticker.toUpperCase() === key.toUpperCase()));
+  const moneda = activo?.moneda || 'ARS';
+  guardarPrecioManualActivo(key, precio, moneda);
+
+  const fila = document.getElementById(`item-fallido-${safeId}`);
+  if (fila) fila.remove();
+
+  if (!document.getElementById('modal-fallidos-lista').querySelector('input')) {
+    cerrarModalFallidos();
+  }
 }
 
 function guardarPrecioManual(ticker) {
-  const input  = document.getElementById(`precio-fallido-${ticker}`);
+  const safeId = ticker.replace(/[^a-zA-Z0-9]/g, '_');
+  const input  = document.getElementById(`precio-fallido-${ticker}`) || document.getElementById(`precio-fallido-${safeId}`);
   const precio = parseFloat(input?.value);
   if (!precio || precio <= 0) {
-    input.classList.add('ring-2','ring-red-400');
-    setTimeout(() => input.classList.remove('ring-2','ring-red-400'), 1500);
+    input?.classList.add('ring-2','ring-red-400');
+    setTimeout(() => input?.classList.remove('ring-2','ring-red-400'), 1500);
     return;
   }
-  cotizaciones.tickers[ticker] = precio;
-  const fila = input.closest('div.flex');
+  guardarPrecioManualActivo(ticker, precio, 'ARS');
+  const fila = input?.closest('div.flex') || input?.closest(`div[id^="item-fallido-"]`);
   if (fila) fila.remove();
   if (!document.getElementById('modal-fallidos-lista').querySelector('input')) cerrarModalFallidos();
-  renderTablaAhorros();
-  showToast(`Precio de ${ticker} actualizado`, 'ok');
+}
+
+function abrirModalPrecioManualActivo(safeKey) {
+  const modal = document.getElementById('modal-fallidos');
+  const lista = document.getElementById('modal-fallidos-lista');
+  const titulo = document.getElementById('modal-fallidos-titulo');
+  const subtitulo = document.getElementById('modal-fallidos-subtitulo');
+  if (!modal || !lista) return;
+
+  const key = decodeURIComponent(safeKey);
+  const posiciones = calcularPosicionesNetas();
+  const activo = posiciones.find(a => getActivoKey(a) === key || (a.ticker && a.ticker.toUpperCase() === key.toUpperCase()));
+  if (!activo) return;
+
+  const nombre = getNombreActivoParaMostrar(activo);
+  const plat = (activo.plataforma || activo.descripcion || '').trim();
+  const syncInfo = getSyncStatusActivo(activo);
+  const manual = getPrecioManualGuardado(activo);
+  const esUSD = activo.moneda === 'USD';
+  const precioActual = manual?.precio || (esUSD ? getPrecioUSD(activo) : getPrecioARS(activo)) || (esUSD ? activo.precioPromUSD : activo.precioPromCompra) || '';
+
+  if (titulo) titulo.textContent = 'Actualizar precio puntual';
+  if (subtitulo) subtitulo.textContent = `${nombre} ${plat ? '(' + plat + ')' : ''} · Se guardará en tu navegador`;
+
+  lista.innerHTML = `
+    <div class="py-3 space-y-3">
+      <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 text-xs space-y-1.5">
+        <div class="flex justify-between items-center text-slate-300">
+          <span>Precio prom. compra:</span>
+          <span class="mono font-bold text-white">${esUSD ? 'U$S ' + Number(activo.precioPromUSD||0).toFixed(2) : '$' + Math.round(activo.precioPromCompra||0).toLocaleString('es-AR')}</span>
+        </div>
+        ${manual?.fecha ? `
+        <div class="flex justify-between items-center text-slate-400 text-[11px]">
+          <span>Último guardado:</span>
+          <span class="mono text-sky-300">${manual.moneda === 'USD' ? 'U$S ' : '$'}${manual.precio} (${new Date(manual.fecha).toLocaleDateString('es-AR')})</span>
+        </div>` : ''}
+        <div class="flex justify-between items-center text-slate-400 text-[11px]">
+          <span>Estado cotización:</span>
+          <span class="font-bold ${syncInfo.status === 'vivo' ? 'text-emerald-400' : (syncInfo.status === 'manual_hoy' ? 'text-sky-300' : 'text-amber-400')}">
+            ${syncInfo.label}
+          </span>
+        </div>
+      </div>
+
+      <div class="space-y-1.5">
+        <label class="text-[11px] font-black uppercase tracking-wider text-slate-300 block">Nuevo precio hoy</label>
+        <div class="flex items-center gap-2">
+          <div class="relative flex-1">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold mono">
+              ${esUSD ? 'U$S' : '$'}
+            </span>
+            <input type="number" id="input-precio-manual-puntual" value="${precioActual}" step="any" min="0" placeholder="0.00"
+                   class="w-full h-10 pl-9 pr-3 bg-slate-800 border border-slate-700 rounded-xl text-sm font-bold text-white mono outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500">
+          </div>
+          <select id="select-moneda-manual-puntual" class="h-10 px-3 bg-slate-800 border border-slate-700 rounded-xl text-xs font-bold text-slate-200 outline-none">
+            <option value="ARS" ${!esUSD ? 'selected' : ''}>ARS</option>
+            <option value="USD" ${esUSD ? 'selected' : ''}>USD</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between pt-2">
+        ${manual ? `
+        <button type="button" onclick="eliminarPrecioManualActivo('${safeKey}')" class="text-[11px] text-rose-400 hover:text-rose-300 underline font-semibold transition-colors">
+          Quitar precio manual
+        </button>` : '<div></div>'}
+        <button type="button" onclick="confirmarGuardadoPrecioManualPuntual('${safeKey}')"
+                class="h-9 px-4 bg-violet-600 hover:bg-violet-500 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-colors shadow-lg shadow-violet-600/30 flex items-center gap-1.5">
+          <i class="fas fa-save text-xs"></i> Guardar precio
+        </button>
+      </div>
+    </div>
+  `;
+
+  modal.classList.remove('hidden');
+  setTimeout(() => {
+    const inp = document.getElementById('input-precio-manual-puntual');
+    if (inp) { inp.focus(); inp.select(); }
+  }, 100);
+}
+
+function confirmarGuardadoPrecioManualPuntual(safeKey) {
+  const key = decodeURIComponent(safeKey);
+  const input = document.getElementById('input-precio-manual-puntual');
+  const selectMon = document.getElementById('select-moneda-manual-puntual');
+  const precio = parseFloat(input?.value);
+  const moneda = selectMon?.value || 'ARS';
+  if (!precio || precio <= 0) {
+    input?.classList.add('ring-2', 'ring-red-400');
+    setTimeout(() => input?.classList.remove('ring-2', 'ring-red-400'), 1500);
+    return;
+  }
+  guardarPrecioManualActivo(key, precio, moneda);
+  cerrarModalFallidos();
 }
 
 function resetTickerStatus() {
