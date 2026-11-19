@@ -20616,6 +20616,14 @@ async function enviarComandoSmartLife(dispositivo, accion, payload = {}) {
           true
         );
         msgCorto = `Sign Invalid (Secret tiene ${secLen} caract., debe tener 32)`;
+      } else if (msgCorto.includes('28841002') || msgCorto.toLowerCase().includes('subscription has expired')) {
+        registrarLogDomotica(
+          'Suscripción Tuya Vencida',
+          `<span class="text-rose-400 font-bold">La suscripción de prueba al servicio "IoT Core" en Tuya Cloud venció.</span><br>` +
+          `<span class="text-slate-300">Para renovarla gratis por 6 meses más: ingresá a <a href="https://iot.tuya.com" target="_blank" rel="noopener noreferrer" class="text-cyan-400 underline font-semibold">iot.tuya.com</a> &rarr; <b>Cloud</b> &rarr; <b>Cloud Services</b> &rarr; <b>IoT Core</b> y hacé clic en <b>Renew / Apply for Extension</b>.</span>`,
+          true
+        );
+        msgCorto = 'Suscripción Tuya IoT Core vencida (renovar gratis en iot.tuya.com)';
       }
       registrarLogDomotica('Error Tuya/AppsScript', `<span class="text-rose-400 font-bold">${msgCorto}</span>`, true);
       showToast(msgCorto, 'error');
@@ -20623,7 +20631,19 @@ async function enviarComandoSmartLife(dispositivo, accion, payload = {}) {
     }
 
     if (data.tuya && data.tuya.success === false) {
-      const errTuya = `Código Tuya ${data.tuya.code}: ${data.tuya.msg || 'Comando rechazado'}`;
+      const code = data.tuya.code;
+      const msg = data.tuya.msg || 'Comando rechazado';
+      if (code === 28841002 || (typeof msg === 'string' && msg.toLowerCase().includes('subscription has expired'))) {
+        registrarLogDomotica(
+          'Suscripción Tuya Vencida',
+          `<span class="text-rose-400 font-bold">La suscripción gratuita del servicio "IoT Core" en Tuya Cloud venció (Código 28841002).</span><br>` +
+          `<span class="text-slate-300">Para renovarla gratis por 6 meses más: ingresá a <a href="https://iot.tuya.com" target="_blank" rel="noopener noreferrer" class="text-cyan-400 underline font-semibold">iot.tuya.com</a> &rarr; <b>Cloud</b> &rarr; <b>Cloud Services</b> &rarr; buscar <b>IoT Core</b> y hacer clic en <b>Renew / Apply for Extension</b>.</span>`,
+          true
+        );
+        showToast('Suscripción Tuya IoT Core vencida. Renovala gratis en iot.tuya.com', 'error');
+        return false;
+      }
+      const errTuya = `Código Tuya ${code}: ${msg}`;
       registrarLogDomotica('Aviso Tuya API', `<span class="text-amber-400 font-bold">${errTuya}</span>`, true);
       showToast(errTuya, 'error');
       return false;
