@@ -6340,9 +6340,9 @@ async function recargarDatos() {
   const icon = document.getElementById('icon-refresh');
   if (icon) icon.classList.add('spin');
 
-  // Verificar/conectar Google inmediatamente aprovechando el gesto del usuario
-  if (typeof asegurarConexionGoogle === 'function') {
-    asegurarConexionGoogle(false);
+  // Sincronizar Google en segundo plano solo si ya hay una sesión activa válida
+  if (typeof tieneTokenGoogleValido === 'function' && tieneTokenGoogleValido()) {
+    sincronizarDatosGoogle();
   }
 
   // Sincronizar estado de dispositivos Smart Life / Tuya Cloud
@@ -15320,12 +15320,12 @@ window.onload = () => {
   // Cargar datos y precargar todas las pestañas (incluyendo conexión automática con Google)
   cargarDatos();
 
-  // Verificar cada 10 minutos que siga conectado a Google (y si no está logueado, ejecutar el logueo automáticamente)
+  // Sincronizar en segundo plano cada 5 minutos datos de Google si la sesión está activa
   setInterval(() => {
     if (typeof verificarConexionPeriodicaGoogle === 'function') {
       verificarConexionPeriodicaGoogle();
     }
-  }, 10 * 60 * 1000);
+  }, 5 * 60 * 1000);
 
   // Flatpickr para filtros de fecha en DD/MM/YYYY
   flatpickr("#fecha-inicio", {
@@ -16168,28 +16168,34 @@ function desconectarServicios() {
 }
 
 function tieneTokenGoogleValido() {
-  if (!gapiInited || typeof gapi === 'undefined' || !gapi.client) return false;
   const stored = localStorage.getItem('gcal_token');
   if (stored) {
     try {
       const tokenData = JSON.parse(stored);
       if (tokenData && tokenData.access_token && tokenData.expireTime > (Date.now() + 60 * 1000)) {
-        const currentToken = gapi.client.getToken();
-        if (!currentToken || currentToken.access_token !== tokenData.access_token) {
-          gapi.client.setToken({ access_token: tokenData.access_token });
+        if (typeof gapi !== 'undefined' && gapi.client) {
+          const currentToken = gapi.client.getToken();
+          if (!currentToken || currentToken.access_token !== tokenData.access_token) {
+            gapi.client.setToken({ access_token: tokenData.access_token });
+          }
         }
         return true;
       } else {
         localStorage.removeItem('gcal_token');
-        gapi.client.setToken(null);
+        if (typeof gapi !== 'undefined' && gapi.client) {
+          gapi.client.setToken(null);
+        }
         return false;
       }
     } catch (e) {
       localStorage.removeItem('gcal_token');
     }
   }
-  const currentToken = gapi.client.getToken();
-  return !!(currentToken && currentToken.access_token);
+  if (typeof gapi !== 'undefined' && gapi.client) {
+    const currentToken = gapi.client.getToken();
+    return !!(currentToken && currentToken.access_token);
+  }
+  return false;
 }
 
 async function sincronizarDatosGoogle() {
@@ -16232,9 +16238,6 @@ function invalidarYReconectarGoogle() {
     gapi.client.setToken(null);
   }
   actualizarUIGoogleConectado(false);
-  if (localStorage.getItem('gcal_explicit_disconnect') !== 'true') {
-    solicitarTokenGoogle(false);
-  }
 }
 
 function asegurarConexionGoogle(esAutomatico = true) {
@@ -16247,10 +16250,9 @@ function asegurarConexionGoogle(esAutomatico = true) {
     sincronizarDatosGoogle();
   } else {
     actualizarUIGoogleConectado(false);
-    if (esAutomatico && localStorage.getItem('gcal_explicit_disconnect') === 'true') {
-      return;
+    if (!esAutomatico && localStorage.getItem('gcal_explicit_disconnect') !== 'true') {
+      solicitarTokenGoogle(false);
     }
-    solicitarTokenGoogle(false);
   }
 }
 
@@ -16260,36 +16262,14 @@ function verificarConexionPeriodicaGoogle() {
     checkGoogleApis();
     return;
   }
-  let requiereLogin = !tieneTokenGoogleValido();
-  if (!requiereLogin) {
-    const stored = localStorage.getItem('gcal_token');
-    if (stored) {
-      try {
-        const td = JSON.parse(stored);
-        // Si faltan menos de 12 minutos para que venza el token, renovarlo preventivamente
-        if (!td.expireTime || (td.expireTime - Date.now()) < 12 * 60 * 1000) {
-          requiereLogin = true;
-        }
-      } catch (e) {
-        requiereLogin = true;
-      }
-    }
-  }
-  if (requiereLogin) {
-    solicitarTokenGoogle(false);
-  } else {
+  // En segundo plano solo sincronizamos datos si la sesión está activa y es válida;
+  // nunca abrimos modales ni popups que interrumpan al usuario mientras interactúa.
+  if (tieneTokenGoogleValido()) {
     sincronizarDatosGoogle();
+  } else {
+    actualizarUIGoogleConectado(false);
   }
 }
-
-// Si el navegador bloquea el popup automático al cargar sin clic previo, dispararlo en el primer clic del usuario
-document.addEventListener('click', (e) => {
-  if (e.target && e.target.closest && e.target.closest('#btn-desconectar-google, #btn-conectar-google')) return;
-  if (localStorage.getItem('gcal_explicit_disconnect') === 'true') return;
-  if (gapiInited && gisInited && !tieneTokenGoogleValido() && !window._googleAuthInProgress) {
-    solicitarTokenGoogle(false);
-  }
-}, { passive: true });
 
 function checkGoogleApis() {
   if (localStorage.getItem('gcal_scope_version') !== 'v2_events') {
@@ -16605,7 +16585,7 @@ async function fetchGoogleEvents() {
 
   } catch (err) {
     console.error('Error en fetchGoogleEvents:', err);
-    if (err && (err.status === 401 || err.status === 403 || (err.result && err.result.error && (err.result.error.code === 401 || err.result.error.code === 403)))) {
+    if (err && (err.status === 401 || (err.result && err.result.error && err.result.error.code === 401))) {
       invalidarYReconectarGoogle();
       return;
     }
@@ -17742,7 +17722,6 @@ async function fetchGoogleFitness() {
     const promisesActivity = [];
     const promisesWeight = [];
     const promisesHeartRate = [];
-    let huboNoAutorizado = false;
 
     chunks.forEach(chunk => {
       const bodyActivity = {
@@ -17780,7 +17759,6 @@ async function fetchGoogleFitness() {
         fetch(url, { method: 'POST', headers, body: JSON.stringify(bodyActivity) })
           .then(async r => {
             if (!r.ok) {
-              if (r.status === 401 || r.status === 403) huboNoAutorizado = true;
               const errTxt = await r.text().catch(() => '');
               console.warn('[Google Fit Activity Chunk] Error', r.status, errTxt);
               return {};
@@ -17794,7 +17772,6 @@ async function fetchGoogleFitness() {
         fetch(url, { method: 'POST', headers, body: JSON.stringify(bodyWeight) })
           .then(async r => {
             if (!r.ok) {
-              if (r.status === 401 || r.status === 403) huboNoAutorizado = true;
               const errTxt = await r.text().catch(() => '');
               console.warn('[Google Fit Weight Chunk] Error', r.status, errTxt);
               return {};
@@ -17823,13 +17800,6 @@ async function fetchGoogleFitness() {
       Promise.all(promisesWeight),
       Promise.all(promisesHeartRate)
     ]);
-
-    if (huboNoAutorizado) {
-      if (typeof invalidarYReconectarGoogle === 'function') {
-        invalidarYReconectarGoogle();
-      }
-      return false;
-    }
 
     const activityByDate = new Map();
     const weightByDate = new Map();
