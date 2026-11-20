@@ -1886,49 +1886,58 @@
       </div>
     </div>
 
-    <!-- SECCIÓN NOTICIAS Y RADAR DE ACTUALIDAD (Debajo de Agenda y Mis Tareas) -->
-    <div class="mt-6 mb-8" id="inicio-seccion-noticias">
-      <!-- Encabezado de la Sección -->
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-3.5 ml-1">
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-xl bg-cyan-950/70 border border-cyan-700/50 flex items-center justify-center shadow-sm">
-            <i class="fas fa-newspaper text-cyan-400 text-xs"></i>
-          </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Radar de Noticias</h3>
-              <span class="text-[8px] font-black text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 px-1.5 py-0.5 rounded mono uppercase tracking-wider">IA Live Feed</span>
+    <!-- Contenedor Inferior (NOTICIAS) -->
+    <div class="mt-4 mb-6" id="inicio-seccion-noticias">
+      <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em] mb-3 ml-1">Noticias</h3>
+
+      <!-- Gran Tarjeta Contenedora de Noticias -->
+      <div class="group bg-black rounded-2xl border border-slate-700/60 p-5 relative overflow-hidden flex flex-col w-full shadow-xl">
+        <div class="absolute inset-0 bg-gradient-to-br from-cyan-950/15 via-transparent to-transparent pointer-events-none"></div>
+
+        <!-- Cabecera de la Gran Tarjeta: Título, Filtro Integrado y Botón Actualizar -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3.5 mb-5 pb-4 border-b border-slate-800/80 relative z-10">
+          <!-- Identificador del radar -->
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-cyan-950/70 border border-cyan-700/50 flex items-center justify-center shrink-0 shadow-sm">
+              <i class="fas fa-newspaper text-cyan-400 text-xs"></i>
             </div>
-            <span id="noticias-timestamp" class="text-[9px] text-slate-500 font-mono flex items-center gap-1.5 mt-0.5">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse" id="noticias-status-dot"></span>
-              <span id="noticias-status-text">Cargando radar...</span>
-            </span>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Radar de Actualidad</span>
+                <span class="text-[8px] font-black text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 px-1.5 py-0.5 rounded mono uppercase tracking-wider">IA Live Feed</span>
+              </div>
+              <span id="noticias-timestamp" class="text-[9px] text-slate-500 font-mono flex items-center gap-1.5 mt-0.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse" id="noticias-status-dot"></span>
+                <span id="noticias-status-text">Cargando radar...</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Filtro Integrado dentro de la gran tarjeta + Botón Actualizar -->
+          <div class="flex items-center gap-2 flex-wrap">
+            <div class="flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 overflow-x-auto text-[10px] font-bold max-w-full">
+              <button type="button" onclick="filtrarNoticiasCategoria('todas')" id="btn-filtro-noticias-todas" class="px-2.5 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 transition-all shrink-0">Todas</button>
+              <button type="button" onclick="filtrarNoticiasCategoria('ia')" id="btn-filtro-noticias-ia" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white border border-transparent transition-all shrink-0 flex items-center gap-1.5"><i class="fas fa-brain text-purple-400 text-[10px]"></i> IA & Dev</button>
+              <button type="button" onclick="filtrarNoticiasCategoria('finanzas')" id="btn-filtro-noticias-finanzas" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white border border-transparent transition-all shrink-0 flex items-center gap-1.5"><i class="fas fa-chart-line text-emerald-400 text-[10px]"></i> Finanzas</button>
+              <button type="button" onclick="filtrarNoticiasCategoria('motor')" id="btn-filtro-noticias-motor" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white border border-transparent transition-all shrink-0 flex items-center gap-1.5"><i class="fas fa-flag-checkered text-red-400 text-[10px]"></i> Motor</button>
+              <button type="button" onclick="filtrarNoticiasCategoria('boca')" id="btn-filtro-noticias-boca" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white border border-transparent transition-all shrink-0 flex items-center gap-1.5"><i class="fas fa-futbol text-blue-400 text-[10px]"></i> Boca</button>
+              <button type="button" onclick="filtrarNoticiasCategoria('tenis')" id="btn-filtro-noticias-tenis" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white border border-transparent transition-all shrink-0 flex items-center gap-1.5"><i class="fas fa-table-tennis-paddle-ball text-yellow-400 text-[10px]"></i> Tenis</button>
+              <button type="button" onclick="filtrarNoticiasCategoria('ciencia')" id="btn-filtro-noticias-ciencia" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white border border-transparent transition-all shrink-0 flex items-center gap-1.5"><i class="fas fa-rocket text-indigo-400 text-[10px]"></i> Ciencia & Tech</button>
+            </div>
+
+            <button type="button" onclick="actualizarNoticiasIA(true)" id="btn-actualizar-noticias" title="Buscar últimas noticias con IA ahora"
+                    class="h-8 px-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider transition-all shadow-sm shrink-0">
+              <i class="fas fa-rotate" id="icono-refresh-noticias"></i>
+              <span class="hidden sm:inline">Actualizar</span>
+            </button>
           </div>
         </div>
 
-        <!-- Acciones: Filtros por tema y botón actualizar -->
-        <div class="flex items-center gap-2 flex-wrap">
-          <div class="flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 overflow-x-auto text-[10px] font-bold max-w-full">
-            <button type="button" onclick="filtrarNoticiasCategoria('todas')" id="btn-filtro-noticias-todas" class="px-2.5 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 transition-all shrink-0">Todas</button>
-            <button type="button" onclick="filtrarNoticiasCategoria('ia')" id="btn-filtro-noticias-ia" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white border border-transparent transition-all shrink-0 flex items-center gap-1.5"><i class="fas fa-brain text-purple-400 text-[10px]"></i> IA & Dev</button>
-            <button type="button" onclick="filtrarNoticiasCategoria('finanzas')" id="btn-filtro-noticias-finanzas" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white border border-transparent transition-all shrink-0 flex items-center gap-1.5"><i class="fas fa-chart-line text-emerald-400 text-[10px]"></i> Finanzas</button>
-            <button type="button" onclick="filtrarNoticiasCategoria('motor')" id="btn-filtro-noticias-motor" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white border border-transparent transition-all shrink-0 flex items-center gap-1.5"><i class="fas fa-flag-checkered text-red-400 text-[10px]"></i> Motor</button>
-            <button type="button" onclick="filtrarNoticiasCategoria('boca')" id="btn-filtro-noticias-boca" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white border border-transparent transition-all shrink-0 flex items-center gap-1.5"><i class="fas fa-futbol text-blue-400 text-[10px]"></i> Boca</button>
-            <button type="button" onclick="filtrarNoticiasCategoria('tenis')" id="btn-filtro-noticias-tenis" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white border border-transparent transition-all shrink-0 flex items-center gap-1.5"><i class="fas fa-table-tennis-paddle-ball text-yellow-400 text-[10px]"></i> Tenis</button>
-            <button type="button" onclick="filtrarNoticiasCategoria('ciencia')" id="btn-filtro-noticias-ciencia" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white border border-transparent transition-all shrink-0 flex items-center gap-1.5"><i class="fas fa-rocket text-indigo-400 text-[10px]"></i> Ciencia & Tech</button>
-          </div>
-
-          <button type="button" onclick="actualizarNoticiasIA(true)" id="btn-actualizar-noticias" title="Buscar últimas noticias con IA ahora"
-                  class="h-8 px-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider transition-all shadow-sm shrink-0">
-            <i class="fas fa-rotate" id="icono-refresh-noticias"></i>
-            <span class="hidden sm:inline">Actualizar</span>
-          </button>
+        <!-- Grid de tarjetas pequeñas de noticias dentro de la Gran Tarjeta -->
+        <div id="contenedor-tarjetas-noticias" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5 relative z-10">
+          <!-- Renderizado dinámico por JavaScript -->
         </div>
-      </div>
 
-      <!-- Grid de tarjetas de noticias -->
-      <div id="contenedor-tarjetas-noticias" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5">
-        <!-- Renderizado dinámico por JavaScript -->
       </div>
     </div>
 
@@ -24138,7 +24147,7 @@ function renderizarNoticias(noticias, filtro = 'todas') {
 
   if (items.length === 0) {
     contenedor.innerHTML = `
-      <div class="col-span-full py-10 bg-slate-900/30 rounded-2xl border border-slate-800 text-center text-xs text-slate-500 font-bold uppercase tracking-widest">
+      <div class="col-span-full py-10 bg-slate-900/40 rounded-xl border border-slate-800 text-center text-xs text-slate-500 font-bold uppercase tracking-widest">
         No hay noticias para mostrar en este tema.
       </div>
     `;
@@ -24153,7 +24162,7 @@ function renderizarNoticias(noticias, filtro = 'todas') {
 
     return `
       <a href="${url}" target="_blank" rel="noopener noreferrer"
-         class="group bg-black rounded-2xl border border-slate-700/60 hover:border-slate-500 p-4 relative overflow-hidden flex flex-col justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-xl cursor-pointer">
+         class="group bg-slate-900/50 hover:bg-slate-800/60 rounded-xl border border-slate-800/90 hover:border-slate-700 p-4 relative overflow-hidden flex flex-col justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-lg cursor-pointer">
         <!-- Gradiente temático al hover -->
         <div class="absolute inset-0 bg-gradient-to-br ${estilo.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
 
