@@ -2105,10 +2105,10 @@
             </div>
             <button type="button" id="health-workout-badge-today"
                     onclick="abrirModalDetalleEntrenamiento('hoy')"
-                    class="hidden items-center gap-1.5 px-2 py-0.5 rounded-lg border text-xs font-black mono transition-all cursor-pointer bg-slate-800/90 border-slate-700 hover:bg-slate-800 shadow-sm"
+                    class="hidden items-center gap-1 px-1.5 py-0.5 rounded-md border text-[9.5px] font-bold transition-all cursor-pointer bg-slate-800/90 border-slate-700 hover:bg-slate-700/80 hover:border-slate-600 shadow-sm shrink-0"
                     title="Ver detalle del entrenamiento">
-              <span id="health-workout-icon-today">🎾</span>
-              <span id="health-workout-name-today">Tenis</span>
+              <span id="health-workout-icon-today" class="text-[10px] leading-none">🎾</span>
+              <span id="health-workout-name-today" class="truncate max-w-[105px]">Tenis</span>
             </button>
           </div>
           <div class="mt-2.5 mb-1.5 h-1.5 w-full bg-slate-800/80 rounded-full overflow-hidden">
@@ -20519,19 +20519,37 @@ function renderHealthCard(type, period) {
       }
 
       if (workoutsToShow.length > 0) {
-        const mainW = workoutsToShow[workoutsToShow.length - 1];
-        const meta = resolverMetadatosActividad(mainW.activityType, mainW.name);
-        actWorkoutIcon.textContent = meta.emoji;
-        actWorkoutName.textContent = period === 'hoy' ? meta.name : (workoutsToShow.length > 1 ? `${workoutsToShow.length} entrenamientos` : meta.name);
+        // Extraer nombres únicos de deportes (si es tenis 2 veces, solo 'Tenis')
+        const uniqueSports = [];
+        workoutsToShow.forEach(w => {
+          const m = resolverMetadatosActividad(w.activityType, w.name);
+          const name = m.name || 'Entrenamiento';
+          if (!uniqueSports.includes(name)) {
+            uniqueSports.push(name);
+          }
+        });
+
+        const primaryW = workoutsToShow[workoutsToShow.length - 1];
+        const primaryMeta = resolverMetadatosActividad(primaryW.activityType, primaryW.name);
+        actWorkoutIcon.textContent = primaryMeta.emoji;
+
+        // Si es 1 deporte: 'Tenis'. Si son varios: 'Tenis, Pádel'. Con límite de caracteres y '...'
+        let sportText = uniqueSports.join(', ');
+        const MAX_CHARS = 16;
+        if (sportText.length > MAX_CHARS) {
+          sportText = sportText.slice(0, MAX_CHARS).trim() + '...';
+        }
+        actWorkoutName.textContent = sportText;
+
         actWorkoutBox.classList.remove('hidden');
         actWorkoutBox.classList.add('inline-flex');
         actWorkoutBox.onclick = (e) => {
           e.stopPropagation();
           abrirModalDetalleEntrenamiento(period === 'hoy' ? 'hoy' : period);
         };
-        actWorkoutBox.title = period === 'hoy' 
-          ? `${meta.name} (${mainW.durMinutes} min). Clic para ver detalle`
-          : `${workoutsToShow.length} entrenamientos en el período. Clic para ver detalle`;
+        actWorkoutBox.title = workoutsToShow.length > 1 
+          ? `${workoutsToShow.length} entrenamientos (${uniqueSports.join(', ')}). Clic para ver detalle`
+          : `${primaryMeta.name} (${primaryW.durMinutes || 0} min). Clic para ver detalle`;
       } else {
         actWorkoutBox.classList.add('hidden');
         actWorkoutBox.classList.remove('inline-flex');
@@ -20707,33 +20725,44 @@ function renderHealthTable(type, period, filtered, labels, values) {
 
     let workoutBadgeHtml = '';
     if (r.type === 'activeMinutes' && r.workouts && r.workouts.length > 0) {
-      if (r.periodMode === 'month') {
-        const count = r.workouts.length;
-        const mainW = r.workouts[0];
-        const meta = resolverMetadatosActividad(mainW.activityType, mainW.name);
-        workoutBadgeHtml = `
+      // Agrupar por deporte único para mostrar solo el logo/emoji del deporte, estilo botón de sueño
+      const uniqueRowSports = [];
+      r.workouts.forEach((w, wIdx) => {
+        const meta = resolverMetadatosActividad(w.activityType, w.name);
+        const existing = uniqueRowSports.find(s => s.name === meta.name);
+        if (existing) {
+          existing.count += 1;
+          existing.totalDur += (w.durMinutes || 0);
+          existing.indices.push(wIdx);
+        } else {
+          uniqueRowSports.push({
+            name: meta.name,
+            emoji: meta.emoji,
+            color: meta.color,
+            count: 1,
+            totalDur: (w.durMinutes || 0),
+            indices: [wIdx]
+          });
+        }
+      });
+
+      workoutBadgeHtml = uniqueRowSports.map(s => {
+        const titleText = r.periodMode === 'month'
+          ? `${s.name} (${s.count} sesión${s.count > 1 ? 'es' : ''}, ${s.totalDur} min). Clic para ver desglose`
+          : `${s.name}${s.count > 1 ? ` (${s.count} sesiones, ${s.totalDur} min)` : ` (${s.totalDur} min)`}. Clic para ver detalle`;
+        const onclickAction = r.periodMode === 'month'
+          ? `event.stopPropagation(); abrirModalDetalleEntrenamiento('${r.label}', 'month')`
+          : `event.stopPropagation(); abrirModalDetalleEntrenamiento('${r.dateIso}', ${s.indices[0]})`;
+
+        return `
           <button type="button" 
-                  class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[8.5px] font-black uppercase tracking-wider mono cursor-pointer transition-all hover:scale-105 shrink-0 border ${meta.color}"
-                  title="${count} entrenamiento${count > 1 ? 's' : ''} en ${r.label}. Clic para ver desglose"
-                  onclick="event.stopPropagation(); abrirModalDetalleEntrenamiento('${r.label}', 'month')">
-            <span>${meta.emoji}</span>
-            <span>${count > 1 ? count + ' ent.' : meta.name}</span>
+                  class="inline-flex items-center justify-center px-1 py-0.5 rounded text-[8px] font-black mono cursor-pointer transition-all hover:scale-105 shrink-0 border ${s.color}"
+                  title="${escapeHtmlHealth(titleText)}"
+                  onclick="${onclickAction}">
+            <span class="text-[9px] leading-none">${s.emoji}</span>
           </button>
         `;
-      } else {
-        workoutBadgeHtml = r.workouts.map((w, wIdx) => {
-          const meta = resolverMetadatosActividad(w.activityType, w.name);
-          return `
-            <button type="button" 
-                    class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[8.5px] font-black uppercase tracking-wider mono cursor-pointer transition-all hover:scale-105 shrink-0 border ${meta.color}"
-                    title="${meta.name} (${w.durMinutes} min). Clic para ver detalle de la sesión"
-                    onclick="event.stopPropagation(); abrirModalDetalleEntrenamiento('${r.dateIso}', ${wIdx})">
-              <span>${meta.emoji}</span>
-              <span>${meta.name}</span>
-            </button>
-          `;
-        }).join('');
-      }
+      }).join('');
     }
 
     return `
@@ -20741,7 +20770,7 @@ function renderHealthTable(type, period, filtered, labels, values) {
         <td class="py-1 text-slate-300 font-bold text-[9px] truncate" title="${r.label}">${r.label}</td>
         <td class="py-1 text-right mono font-black text-white text-[9.5px]">
           <div class="inline-flex items-center justify-end gap-1.5 max-w-full">
-            <span class="truncate">${r.val}</span>
+            <span class="shrink-0 whitespace-nowrap">${r.val}</span>
             ${sleepBadgeHtml}
             ${workoutBadgeHtml}
             <button type="button" 
