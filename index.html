@@ -2098,9 +2098,18 @@
           </div>
         </div>
         <div class="relative z-10">
-          <div class="flex items-baseline">
-            <h3 id="health-activeMinutes" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
-            <span class="text-xs font-bold text-slate-400 ml-1">min</span>
+          <div class="flex items-center justify-between">
+            <div class="flex items-baseline">
+              <h3 id="health-activeMinutes" class="text-3xl font-black mono tracking-tighter text-white transition-all duration-300">--</h3>
+              <span class="text-xs font-bold text-slate-400 ml-1">min</span>
+            </div>
+            <button type="button" id="health-workout-badge-today"
+                    onclick="abrirModalDetalleEntrenamiento('hoy')"
+                    class="hidden items-center gap-1.5 px-2 py-0.5 rounded-lg border text-xs font-black mono transition-all cursor-pointer bg-slate-800/90 border-slate-700 hover:bg-slate-800 shadow-sm"
+                    title="Ver detalle del entrenamiento">
+              <span id="health-workout-icon-today">🎾</span>
+              <span id="health-workout-name-today">Tenis</span>
+            </button>
           </div>
           <div class="mt-2.5 mb-1.5 h-1.5 w-full bg-slate-800/80 rounded-full overflow-hidden">
             <div id="health-activeMinutes-bar" class="h-full bg-rose-400 rounded-full transition-all duration-500" style="width: 0%"></div>
@@ -5572,6 +5581,29 @@
       </button>
     </div>
     <div class="p-5 space-y-4 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full" id="modal-detalle-sueno-content">
+      <!-- Inyectado dinámicamente -->
+    </div>
+  </div>
+</div>
+
+<!-- Modal Detalle de Sesión de Entrenamiento -->
+<div id="modal-detalle-entrenamiento" onclick="if(event.target===this) cerrarModalDetalleEntrenamiento()" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[300] flex items-center justify-center p-4">
+  <div class="bg-black rounded-2xl border border-slate-700/80 shadow-2xl w-full max-w-xl overflow-hidden animate-scaleIn flex flex-col max-h-[90vh]">
+    <div class="px-6 py-4 border-b border-slate-700/60 bg-slate-900/60 flex items-center justify-between flex-shrink-0">
+      <div class="flex items-center gap-2.5">
+        <div id="modal-detalle-entrenamiento-icon-box" class="w-8 h-8 rounded-xl bg-lime-950/70 border border-lime-500/30 flex items-center justify-center text-sm">
+          🎾
+        </div>
+        <div>
+          <h3 id="modal-detalle-entrenamiento-title" class="font-black text-white text-sm uppercase tracking-wider">Detalle del Entrenamiento</h3>
+          <p id="modal-detalle-entrenamiento-sub" class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">—</p>
+        </div>
+      </div>
+      <button onclick="cerrarModalDetalleEntrenamiento()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-800 hover:bg-slate-700 transition-colors text-slate-400 hover:text-white cursor-pointer">
+        <i class="fas fa-times text-xs"></i>
+      </button>
+    </div>
+    <div class="p-5 space-y-4 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full" id="modal-detalle-entrenamiento-content">
       <!-- Inyectado dinámicamente -->
     </div>
   </div>
@@ -9139,7 +9171,7 @@ async function cargarBullMarketCache() {
 }
 
 async function fetchBullMarket(type, extraParams = {}) {
-  // 1. Intentar vía Google Apps Script proxy (sin CORS en producción)
+  // 1. Intentar vía Google Apps Script proxy (evita bloqueos de CORS en el navegador)
   try {
     const p = new URLSearchParams({ sheet: 'bullmarket', type, ...extraParams });
     const res = await fetch(`${scriptURL}?${p.toString()}`, { signal: AbortSignal.timeout(8000) });
@@ -9149,19 +9181,7 @@ async function fetchBullMarket(type, extraParams = {}) {
     }
   } catch (e) {}
 
-  // 2. Intentar llamada directa a Bull Market
-  try {
-    let u = `${BULLMARKET_API_BASE}?type=${encodeURIComponent(type)}`;
-    Object.keys(extraParams).forEach(k => {
-      u += `&${encodeURIComponent(k)}=${encodeURIComponent(extraParams[k])}`;
-    });
-    const res = await fetch(u, { signal: AbortSignal.timeout(6000) });
-    if (res.ok) {
-      const data = await res.json();
-      if (Array.isArray(data) && data.length > 0) return data;
-    }
-  } catch (e) {}
-
+  // Nota: no se realiza llamada directa a bullmarket.com.ar desde el cliente para evitar bloqueos por CORS / 403 Forbidden
   return null;
 }
 
@@ -15950,7 +15970,7 @@ window.eliminarTenisUI = function(rowIndex) {
 const CALENDAR_CLIENT_ID = '153589356690-gk27a6fhfn1tv19mdeqpac9pdfcvjfuc.apps.googleusercontent.com'; // <--- REEMPLAZAR AQUÍ
 const CALENDAR_API_KEY = 'AIzaSyAqO2e2L2cuqgVu1wYT5iIh8eYeDAgsnFI'; // <--- REEMPLAZAR AQUÍ
 const CALENDAR_DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
-const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/fitness.activity.read https://www.googleapis.com/auth/fitness.body.read https://www.googleapis.com/auth/fitness.heart_rate.read https://www.googleapis.com/auth/fitness.location.read https://www.googleapis.com/auth/fitness.sleep.read https://www.googleapis.com/auth/tasks';
+const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/fitness.activity.read https://www.googleapis.com/auth/fitness.body.read https://www.googleapis.com/auth/fitness.heart_rate.read https://www.googleapis.com/auth/fitness.location.read https://www.googleapis.com/auth/fitness.sleep.read https://www.googleapis.com/auth/tasks';
 
 let tokenClient;
 let gapiInited = false;
@@ -16440,9 +16460,15 @@ async function fetchGoogleEvents() {
     const timeMax = new Date();
     timeMax.setFullYear(timeMax.getFullYear() + 1);
 
-    // Obtener la lista de todos los calendarios del usuario
-    const calendarListResponse = await gapi.client.calendar.calendarList.list();
-    const calendars = calendarListResponse.result.items || [];
+    // Obtener la lista de todos los calendarios del usuario con fallback si falta permiso calendarList
+    let calendars = [];
+    try {
+      const calendarListResponse = await gapi.client.calendar.calendarList.list();
+      calendars = calendarListResponse.result.items || [];
+    } catch (listErr) {
+      console.warn('gapi calendarList.list falló o no tiene permiso suficiente, usando calendario "primary":', listErr);
+      calendars = [{ id: 'primary', summary: 'Principal', backgroundColor: '#db2777', primary: true }];
+    }
 
     window.globalGoogleCalendars = calendars;
     actualizarSelectorCalendariosUI(calendars);
@@ -16585,7 +16611,7 @@ async function fetchGoogleEvents() {
 
   } catch (err) {
     console.error('Error en fetchGoogleEvents:', err);
-    if (err && (err.status === 401 || (err.result && err.result.error && err.result.error.code === 401))) {
+    if (err && (err.status === 401 || err.status === 403 || (err.result && err.result.error && (err.result.error.code === 401 || err.result.error.code === 403)))) {
       invalidarYReconectarGoogle();
       return;
     }
@@ -17417,9 +17443,9 @@ function setActividadFiltro(period) {
 
 function restaurarCacheFitness() {
   try {
-    if (localStorage.getItem('gp_fitness_cache_v') !== '7') {
+    if (localStorage.getItem('gp_fitness_cache_v') !== '8') {
       localStorage.removeItem('gp_fitness_cache');
-      localStorage.setItem('gp_fitness_cache_v', '7');
+      localStorage.setItem('gp_fitness_cache_v', '8');
       return;
     }
     if (window.fitnessData && window.fitnessData.steps && window.fitnessData.steps.length > 0) return;
@@ -17437,6 +17463,9 @@ function restaurarCacheFitness() {
         }));
       }
     });
+    if (Array.isArray(parsed.workouts)) {
+      window.fitnessData.workouts = parsed.workouts;
+    }
     setActividadFiltro(window.currentHealthFilter || 'hoy');
   } catch (e) {
     console.warn('Error restaurando caché de fitness:', e);
@@ -17539,6 +17568,101 @@ function getNombreMetricaLegible(type) {
     heartRate: 'Ritmo Cardíaco'
   };
   return map[type] || 'Actividad';
+}
+
+// ─── CATÁLOGO DE ACTIVIDADES Y DEPORTES GOOGLE FIT ─────────────────────────
+const GOOGLE_FIT_ACTIVITIES = {
+  1: { name: 'Ciclismo', icon: 'fa-bicycle', emoji: '🚴', color: 'text-sky-300 bg-sky-500/15 border-sky-500/35 hover:border-sky-400' },
+  7: { name: 'Caminata', icon: 'fa-walking', emoji: '🚶', color: 'text-emerald-300 bg-emerald-500/15 border-emerald-500/35 hover:border-emerald-400' },
+  8: { name: 'Running', icon: 'fa-running', emoji: '🏃', color: 'text-amber-300 bg-amber-500/15 border-amber-500/35 hover:border-amber-400' },
+  9: { name: 'Aeróbicos', icon: 'fa-heartbeat', emoji: '🤸', color: 'text-pink-300 bg-pink-500/15 border-pink-500/35 hover:border-pink-400' },
+  10: { name: 'Bádminton', icon: 'fa-table-tennis-paddle-ball', emoji: '🏸', color: 'text-teal-300 bg-teal-500/15 border-teal-500/35 hover:border-teal-400' },
+  11: { name: 'Béisbol', icon: 'fa-baseball-bat-ball', emoji: '⚾', color: 'text-amber-300 bg-amber-500/15 border-amber-500/35 hover:border-amber-400' },
+  12: { name: 'Básquetbol', icon: 'fa-basketball', emoji: '🏀', color: 'text-orange-300 bg-orange-500/15 border-orange-500/35 hover:border-orange-400' },
+  15: { name: 'Mountain Bike', icon: 'fa-bicycle', emoji: '🚵', color: 'text-emerald-300 bg-emerald-500/15 border-emerald-500/35 hover:border-emerald-400' },
+  16: { name: 'Ciclismo ruta', icon: 'fa-bicycle', emoji: '🚴', color: 'text-sky-300 bg-sky-500/15 border-sky-500/35 hover:border-sky-400' },
+  17: { name: 'Spinning', icon: 'fa-bicycle', emoji: '🚴', color: 'text-purple-300 bg-purple-500/15 border-purple-500/35 hover:border-purple-400' },
+  20: { name: 'Boxeo', icon: 'fa-hand-back-fist', emoji: '🥊', color: 'text-red-300 bg-red-500/15 border-red-500/35 hover:border-red-400' },
+  21: { name: 'Calistenia', icon: 'fa-dumbbell', emoji: '🤸', color: 'text-yellow-300 bg-yellow-500/15 border-yellow-500/35 hover:border-yellow-400' },
+  22: { name: 'Circuito', icon: 'fa-dumbbell', emoji: '⏱️', color: 'text-rose-300 bg-rose-500/15 border-rose-500/35 hover:border-rose-400' },
+  24: { name: 'Baile', icon: 'fa-music', emoji: '💃', color: 'text-fuchsia-300 bg-fuchsia-500/15 border-fuchsia-500/35 hover:border-fuchsia-400' },
+  25: { name: 'Elíptico', icon: 'fa-person-walking', emoji: '🏃', color: 'text-teal-300 bg-teal-500/15 border-teal-500/35 hover:border-teal-400' },
+  29: { name: 'Fútbol', icon: 'fa-futbol', emoji: '⚽', color: 'text-emerald-300 bg-emerald-500/15 border-emerald-500/35 hover:border-emerald-400' },
+  32: { name: 'Golf', icon: 'fa-golf-ball-tee', emoji: '⛳', color: 'text-lime-300 bg-lime-500/15 border-lime-500/35 hover:border-lime-400' },
+  35: { name: 'HIIT', icon: 'fa-bolt', emoji: '⚡', color: 'text-amber-300 bg-amber-500/15 border-amber-500/35 hover:border-amber-400' },
+  36: { name: 'Senderismo', icon: 'fa-hiking', emoji: '🥾', color: 'text-emerald-300 bg-emerald-500/15 border-emerald-500/35 hover:border-emerald-400' },
+  44: { name: 'Kickboxing', icon: 'fa-hand-back-fist', emoji: '🥊', color: 'text-red-300 bg-red-500/15 border-red-500/35 hover:border-red-400' },
+  46: { name: 'Artes Marciales', icon: 'fa-hand-back-fist', emoji: '🥋', color: 'text-rose-300 bg-rose-500/15 border-rose-500/35 hover:border-rose-400' },
+  50: { name: 'Pilates', icon: 'fa-spa', emoji: '🧘', color: 'text-teal-300 bg-teal-500/15 border-teal-500/35 hover:border-teal-400' },
+  53: { name: 'Racquetball', icon: 'fa-table-tennis-paddle-ball', emoji: '🎾', color: 'text-lime-300 bg-lime-500/15 border-lime-500/35 hover:border-lime-400' },
+  54: { name: 'Escalada', icon: 'fa-mountain', emoji: '🧗', color: 'text-orange-300 bg-orange-500/15 border-orange-500/35 hover:border-orange-400' },
+  55: { name: 'Remo', icon: 'fa-water', emoji: '🚣', color: 'text-cyan-300 bg-cyan-500/15 border-cyan-500/35 hover:border-cyan-400' },
+  58: { name: 'Trote', icon: 'fa-running', emoji: '🏃', color: 'text-amber-300 bg-amber-500/15 border-amber-500/35 hover:border-amber-400' },
+  59: { name: 'Tenis', icon: 'fa-table-tennis-paddle-ball', emoji: '🎾', color: 'text-lime-300 bg-lime-500/20 border-lime-500/50 hover:border-lime-400' },
+  62: { name: 'Voleibol', icon: 'fa-volleyball', emoji: '🏐', color: 'text-amber-300 bg-amber-500/15 border-amber-500/35 hover:border-amber-400' },
+  66: { name: 'Caminata rápida', icon: 'fa-walking', emoji: '🚶', color: 'text-emerald-300 bg-emerald-500/15 border-emerald-500/35 hover:border-emerald-400' },
+  70: { name: 'Pesas', icon: 'fa-dumbbell', emoji: '🏋️', color: 'text-indigo-300 bg-indigo-500/15 border-indigo-500/35 hover:border-indigo-400' },
+  74: { name: 'Squash', icon: 'fa-table-tennis-paddle-ball', emoji: '🎾', color: 'text-lime-300 bg-lime-500/15 border-lime-500/35 hover:border-lime-400' },
+  82: { name: 'Natación', icon: 'fa-person-swimming', emoji: '🏊', color: 'text-cyan-300 bg-cyan-500/15 border-cyan-500/35 hover:border-cyan-400' },
+  83: { name: 'Fuerza', icon: 'fa-dumbbell', emoji: '🏋️', color: 'text-violet-300 bg-violet-500/15 border-violet-500/35 hover:border-violet-400' },
+  85: { name: 'Natación', icon: 'fa-person-swimming', emoji: '🏊', color: 'text-cyan-300 bg-cyan-500/15 border-cyan-500/35 hover:border-cyan-400' },
+  87: { name: 'Natación', icon: 'fa-person-swimming', emoji: '🏊', color: 'text-cyan-300 bg-cyan-500/15 border-cyan-500/35 hover:border-cyan-400' },
+  88: { name: 'Ping Pong', icon: 'fa-table-tennis-paddle-ball', emoji: '🏓', color: 'text-teal-300 bg-teal-500/15 border-teal-500/35 hover:border-teal-400' },
+  90: { name: 'Tenis', icon: 'fa-table-tennis-paddle-ball', emoji: '🎾', color: 'text-lime-300 bg-lime-500/20 border-lime-500/50 hover:border-lime-400' },
+  96: { name: 'Gimnasio', icon: 'fa-dumbbell', emoji: '🏋️', color: 'text-purple-300 bg-purple-500/15 border-purple-500/35 hover:border-purple-400' },
+  97: { name: 'Musculación', icon: 'fa-dumbbell', emoji: '🏋️', color: 'text-purple-300 bg-purple-500/15 border-purple-500/35 hover:border-purple-400' },
+  108: { name: 'Yoga', icon: 'fa-spa', emoji: '🧘', color: 'text-teal-300 bg-teal-500/15 border-teal-500/35 hover:border-teal-400' },
+  113: { name: 'Crossfit', icon: 'fa-dumbbell', emoji: '🏋️', color: 'text-orange-300 bg-orange-500/15 border-orange-500/35 hover:border-orange-400' },
+  114: { name: 'HIIT', icon: 'fa-bolt', emoji: '⚡', color: 'text-amber-300 bg-amber-500/15 border-amber-500/35 hover:border-amber-400' },
+  115: { name: 'Intervalos', icon: 'fa-stopwatch', emoji: '⏱️', color: 'text-yellow-300 bg-yellow-500/15 border-yellow-500/35 hover:border-yellow-400' },
+  116: { name: 'Funcional', icon: 'fa-dumbbell', emoji: '🤸', color: 'text-rose-300 bg-rose-500/15 border-rose-500/35 hover:border-rose-400' },
+  117: { name: 'Pádel', icon: 'fa-table-tennis-paddle-ball', emoji: '🎾', color: 'text-emerald-300 bg-emerald-500/20 border-emerald-500/50 hover:border-emerald-400' },
+  119: { name: 'Entrenamiento', icon: 'fa-dumbbell', emoji: '💪', color: 'text-rose-300 bg-rose-500/15 border-rose-500/35 hover:border-rose-400' }
+};
+
+function resolverMetadatosActividad(activityType, sessionName) {
+  const norm = (sessionName || '').toLowerCase().trim();
+  if (norm.includes('tenis') || norm.includes('tennis')) {
+    return { name: 'Tenis', emoji: '🎾', icon: 'fa-table-tennis-paddle-ball', color: 'text-lime-300 bg-lime-500/20 border-lime-500/50 hover:border-lime-400' };
+  }
+  if (norm.includes('padel') || norm.includes('pádel')) {
+    return { name: 'Pádel', emoji: '🎾', icon: 'fa-table-tennis-paddle-ball', color: 'text-emerald-300 bg-emerald-500/20 border-emerald-500/50 hover:border-emerald-400' };
+  }
+  if (norm.includes('futbol') || norm.includes('fútbol') || norm.includes('soccer')) {
+    return { name: 'Fútbol', emoji: '⚽', icon: 'fa-futbol', color: 'text-emerald-300 bg-emerald-500/20 border-emerald-500/50 hover:border-emerald-400' };
+  }
+  if (norm.includes('gym') || norm.includes('gimnasio') || norm.includes('pesas') || norm.includes('musculaci')) {
+    return { name: 'Gimnasio', emoji: '🏋️', icon: 'fa-dumbbell', color: 'text-purple-300 bg-purple-500/20 border-purple-500/50 hover:border-purple-400' };
+  }
+  if (norm.includes('running') || norm.includes('correr') || norm.includes('carrera')) {
+    return { name: 'Running', emoji: '🏃', icon: 'fa-running', color: 'text-amber-300 bg-amber-500/20 border-amber-500/50 hover:border-amber-400' };
+  }
+  if (norm.includes('bici') || norm.includes('ciclismo') || norm.includes('bike')) {
+    return { name: 'Ciclismo', emoji: '🚴', icon: 'fa-bicycle', color: 'text-sky-300 bg-sky-500/20 border-sky-500/50 hover:border-sky-400' };
+  }
+  if (norm.includes('caminat') || norm.includes('walk')) {
+    return { name: 'Caminata', emoji: '🚶', icon: 'fa-walking', color: 'text-emerald-300 bg-emerald-500/20 border-emerald-500/50 hover:border-emerald-400' };
+  }
+  if (norm.includes('nataci') || norm.includes('swim')) {
+    return { name: 'Natación', emoji: '🏊', icon: 'fa-person-swimming', color: 'text-cyan-300 bg-cyan-500/20 border-cyan-500/50 hover:border-cyan-400' };
+  }
+
+  const act = GOOGLE_FIT_ACTIVITIES[activityType];
+  if (act) {
+    return {
+      name: sessionName || act.name,
+      emoji: act.emoji,
+      icon: act.icon,
+      color: act.color
+    };
+  }
+
+  return {
+    name: sessionName || 'Entrenamiento',
+    emoji: '💪',
+    icon: 'fa-dumbbell',
+    color: 'text-rose-300 bg-rose-500/20 border-rose-500/50 hover:border-rose-400'
+  };
 }
 
 function abrirPopoverFuentesDirecto(type, periodoLabel, fuentesList, triggerEl) {
@@ -18102,14 +18226,15 @@ async function fetchGoogleFitness() {
       const startNs = BigInt(startOfToday.getTime() - (360 * 86400000)) * 1000000n;
       const endNs = BigInt(endOfToday) * 1000000n;
 
-      // 1. Obtener sesiones de sueño (activityType = 72)
-      let sleepPageToken = '';
+      // 1. Obtener sesiones de Google Fit (sueño y entrenamientos)
+      let sessionsPageToken = '';
       const rawSessions = [];
+      const rawWorkouts = [];
       const seenSessionIds = new Set();
 
       do {
-        let sUrl = `https://www.googleapis.com/fitness/v1/users/me/sessions?startTime=${encodeURIComponent(startIso)}&endTime=${encodeURIComponent(endIso)}&activityType=72`;
-        if (sleepPageToken) sUrl += `&pageToken=${encodeURIComponent(sleepPageToken)}`;
+        let sUrl = `https://www.googleapis.com/fitness/v1/users/me/sessions?startTime=${encodeURIComponent(startIso)}&endTime=${encodeURIComponent(endIso)}`;
+        if (sessionsPageToken) sUrl += `&pageToken=${encodeURIComponent(sessionsPageToken)}`;
 
         const sRes = await fetch(sUrl, { headers });
         if (sRes.ok) {
@@ -18122,19 +18247,39 @@ async function fetchGoogleFitness() {
             }
             const startMs = parseInt(s.startTimeMillis, 10);
             const endMs = parseInt(s.endTimeMillis, 10);
+            const actType = parseInt(s.activityType, 10);
             if (!isNaN(startMs) && !isNaN(endMs) && endMs > startMs) {
-              const durHours = (endMs - startMs) / 3600000;
-              if (durHours > 0 && durHours <= 24) {
-                let appName = s.application?.name || formatearNombrePaquete(s.application?.packageName);
-                rawSessions.push({ startMs, endMs, source: appName || 'Google Fit', name: s.name || '' });
+              let appName = s.application?.name || formatearNombrePaquete(s.application?.packageName);
+              
+              if (actType === 72) {
+                // Sesión de sueño
+                const durHours = (endMs - startMs) / 3600000;
+                if (durHours > 0 && durHours <= 24) {
+                  rawSessions.push({ startMs, endMs, source: appName || 'Google Fit', name: s.name || '' });
+                }
+              } else if (actType !== 0 && actType !== 3) {
+                // Sesión deportiva / entrenamiento (Tenis, Running, Gym, etc.)
+                const durMin = Math.round((endMs - startMs) / 60000);
+                if (durMin >= 3) {
+                  rawWorkouts.push({
+                    id: s.id,
+                    name: s.name || '',
+                    description: s.description || '',
+                    activityType: actType,
+                    startMs: startMs,
+                    endMs: endMs,
+                    durMinutes: durMin,
+                    source: appName || 'Xiaomi Fitness'
+                  });
+                }
               }
             }
           });
-          sleepPageToken = sData.nextPageToken || '';
+          sessionsPageToken = sData.nextPageToken || '';
         } else {
-          sleepPageToken = '';
+          sessionsPageToken = '';
         }
-      } while (sleepPageToken);
+      } while (sessionsPageToken);
 
       // 2. Obtener dataSources de segmentos de sueño (com.google.sleep.segment)
       let sleepSources = Array.from(knownDataSourcesMap.values()).filter(ds =>
@@ -18517,7 +18662,69 @@ async function fetchGoogleFitness() {
       console.warn('[Google Fit] Error procesando sesiones y fases de sueño:', errSleep);
     }
 
-    window.fitnessData = { distance: [], sleep: [], steps: [], weight: [], calories: [], activeMinutes: [], heartRate: [] };
+    // 5. Procesar sesiones de entrenamiento (Tenis, Running, Gym, etc.)
+    const workoutsByDate = new Map();
+    const allWorkoutsProcessed = [];
+
+    rawWorkouts.forEach(w => {
+      const startD = new Date(w.startMs);
+      const endD = new Date(w.endMs);
+      const dateKey = `${startD.getFullYear()}-${String(startD.getMonth() + 1).padStart(2, '0')}-${String(startD.getDate()).padStart(2, '0')}`;
+      
+      const startTimeStr = `${String(startD.getHours()).padStart(2, '0')}:${String(startD.getMinutes()).padStart(2, '0')}`;
+      const endTimeStr = `${String(endD.getHours()).padStart(2, '0')}:${String(endD.getMinutes()).padStart(2, '0')}`;
+
+      // Frecuencia cardíaca registrada durante la sesión
+      const wHr = allRawHrPoints.filter(p => p.timeMs >= w.startMs && p.timeMs <= w.endMs);
+      let hrAvg = null, hrMax = null, hrMin = null;
+      if (wHr.length > 0) {
+        const vals = wHr.map(p => p.val);
+        hrAvg = Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
+        hrMax = Math.max(...vals);
+        hrMin = Math.min(...vals);
+      }
+
+      // Extraer calorías si vienen en notas/descripción
+      let calories = null;
+      if (w.description) {
+        const calMatch = w.description.match(/(\d+)\s*(?:kcal|calor(?:ías|ias)?)/i);
+        if (calMatch) calories = parseInt(calMatch[1], 10);
+      }
+
+      const meta = resolverMetadatosActividad(w.activityType, w.name);
+
+      const workoutItem = {
+        id: w.id,
+        name: meta.name,
+        rawName: w.name,
+        activityType: w.activityType,
+        emoji: meta.emoji,
+        icon: meta.icon,
+        color: meta.color,
+        startMs: w.startMs,
+        endMs: w.endMs,
+        date: startD,
+        dateIso: dateKey,
+        startTimeStr: startTimeStr,
+        endTimeStr: endTimeStr,
+        durMinutes: w.durMinutes,
+        source: w.source,
+        description: w.description,
+        hrAvg: hrAvg,
+        hrMax: hrMax,
+        hrMin: hrMin,
+        hrCount: wHr.length,
+        calories: calories
+      };
+
+      if (!workoutsByDate.has(dateKey)) {
+        workoutsByDate.set(dateKey, []);
+      }
+      workoutsByDate.get(dateKey).push(workoutItem);
+      allWorkoutsProcessed.push(workoutItem);
+    });
+
+    window.fitnessData = { distance: [], sleep: [], steps: [], weight: [], calories: [], activeMinutes: [], heartRate: [], workouts: [] };
     const iter = new Date(startOfToday);
     iter.setDate(iter.getDate() - 360);
 
@@ -18541,10 +18748,13 @@ async function fetchGoogleFitness() {
         value: act ? act.calories : 0,
         sources: (act && act.calSources && act.calSources.size > 0) ? Array.from(act.calSources) : (act && act.calories > 0 ? ['Google Fit'] : [])
       });
+      const dayWorkouts = workoutsByDate.get(dateKey) || [];
       window.fitnessData.activeMinutes.push({
         date: currentDay,
+        dateIso: dateKey,
         value: act ? act.activeMinutes : 0,
-        sources: (act && act.activeSources && act.activeSources.size > 0) ? Array.from(act.activeSources) : (act && act.activeMinutes > 0 ? ['Google Fit'] : [])
+        sources: (act && act.activeSources && act.activeSources.size > 0) ? Array.from(act.activeSources) : (act && act.activeMinutes > 0 ? ['Google Fit'] : []),
+        workouts: dayWorkouts
       });
 
       const w = weightByDate.get(dateKey);
@@ -18609,6 +18819,8 @@ async function fetchGoogleFitness() {
       iter.setDate(iter.getDate() + 1);
     }
 
+    window.fitnessData.workouts = allWorkoutsProcessed.sort((a, b) => b.startMs - a.startMs);
+
     const lastWithData = [...window.fitnessData.steps].reverse().find(d => d.value > 0);
     window.fitLastSyncDate = lastWithData ? lastWithData.date : null;
     if (lastWithData) {
@@ -18618,7 +18830,7 @@ async function fetchGoogleFitness() {
 
     try {
       localStorage.setItem('gp_fitness_cache', JSON.stringify(window.fitnessData));
-      localStorage.setItem('gp_fitness_cache_v', '7');
+      localStorage.setItem('gp_fitness_cache_v', '8');
     } catch (e) {}
 
     // Actualizar inmediatamente las tarjetas de Salud en el Panel de Control (Inicio) y en Actividad
@@ -20052,6 +20264,42 @@ function renderHealthCard(type, period) {
     }
   }
 
+  // Actualizar recuadro de entrenamiento en la tarjeta de Actividad
+  if (type === 'activeMinutes') {
+    const actWorkoutBox = document.getElementById('health-workout-badge-today');
+    const actWorkoutIcon = document.getElementById('health-workout-icon-today');
+    const actWorkoutName = document.getElementById('health-workout-name-today');
+    if (actWorkoutBox && actWorkoutIcon && actWorkoutName) {
+      let workoutsToShow = [];
+      if (period === 'hoy') {
+        const todayEntry = dataArray.find(d => isToday(d.date));
+        workoutsToShow = todayEntry?.workouts || [];
+      } else {
+        const entries = (filtered && filtered.length > 0 ? filtered : dataArray);
+        workoutsToShow = entries.flatMap(d => d.workouts || []);
+      }
+
+      if (workoutsToShow.length > 0) {
+        const mainW = workoutsToShow[workoutsToShow.length - 1];
+        const meta = resolverMetadatosActividad(mainW.activityType, mainW.name);
+        actWorkoutIcon.textContent = meta.emoji;
+        actWorkoutName.textContent = period === 'hoy' ? meta.name : (workoutsToShow.length > 1 ? `${workoutsToShow.length} entrenamientos` : meta.name);
+        actWorkoutBox.classList.remove('hidden');
+        actWorkoutBox.classList.add('inline-flex');
+        actWorkoutBox.onclick = (e) => {
+          e.stopPropagation();
+          abrirModalDetalleEntrenamiento(period === 'hoy' ? 'hoy' : period);
+        };
+        actWorkoutBox.title = period === 'hoy' 
+          ? `${meta.name} (${mainW.durMinutes} min). Clic para ver detalle`
+          : `${workoutsToShow.length} entrenamientos en el período. Clic para ver detalle`;
+      } else {
+        actWorkoutBox.classList.add('hidden');
+        actWorkoutBox.classList.remove('inline-flex');
+      }
+    }
+  }
+
   if (type === 'calories') {
     const nutValEl = document.getElementById('nut-health-calories');
     if (nutValEl) {
@@ -20152,6 +20400,8 @@ function renderHealthTable(type, period, filtered, labels, values) {
         }
       }
 
+      const monthWorkouts = monthItems.flatMap(i => i.workouts || []);
+
       rows.push({
         label: mes,
         val: formatVal(v, false),
@@ -20160,7 +20410,8 @@ function renderHealthTable(type, period, filtered, labels, values) {
         periodMode: 'month',
         monthItems: monthItems,
         sleepScore: sleepScore,
-        sleepScoreClass: sleepScoreClass
+        sleepScoreClass: sleepScoreClass,
+        workouts: monthWorkouts
       });
     });
   } else if (filtered && filtered.length > 0) {
@@ -20189,7 +20440,8 @@ function renderHealthTable(type, period, filtered, labels, values) {
         type: type,
         dateIso: dateIso,
         sleepScore: sleepScore,
-        sleepScoreClass: sleepScoreClass
+        sleepScoreClass: sleepScoreClass,
+        workouts: item.workouts || []
       });
     });
   }
@@ -20214,13 +20466,45 @@ function renderHealthTable(type, period, filtered, labels, values) {
          </button>`
       : '';
 
+    let workoutBadgeHtml = '';
+    if (r.type === 'activeMinutes' && r.workouts && r.workouts.length > 0) {
+      if (r.periodMode === 'month') {
+        const count = r.workouts.length;
+        const mainW = r.workouts[0];
+        const meta = resolverMetadatosActividad(mainW.activityType, mainW.name);
+        workoutBadgeHtml = `
+          <button type="button" 
+                  class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[8.5px] font-black uppercase tracking-wider mono cursor-pointer transition-all hover:scale-105 shrink-0 border ${meta.color}"
+                  title="${count} entrenamiento${count > 1 ? 's' : ''} en ${r.label}. Clic para ver desglose"
+                  onclick="event.stopPropagation(); abrirModalDetalleEntrenamiento('${r.label}', 'month')">
+            <span>${meta.emoji}</span>
+            <span>${count > 1 ? count + ' ent.' : meta.name}</span>
+          </button>
+        `;
+      } else {
+        workoutBadgeHtml = r.workouts.map((w, wIdx) => {
+          const meta = resolverMetadatosActividad(w.activityType, w.name);
+          return `
+            <button type="button" 
+                    class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[8.5px] font-black uppercase tracking-wider mono cursor-pointer transition-all hover:scale-105 shrink-0 border ${meta.color}"
+                    title="${meta.name} (${w.durMinutes} min). Clic para ver detalle de la sesión"
+                    onclick="event.stopPropagation(); abrirModalDetalleEntrenamiento('${r.dateIso}', ${wIdx})">
+              <span>${meta.emoji}</span>
+              <span>${meta.name}</span>
+            </button>
+          `;
+        }).join('');
+      }
+    }
+
     return `
       <tr class="hover:bg-slate-800/40 transition-colors group/row">
         <td class="py-1 text-slate-300 font-bold text-[9px] truncate" title="${r.label}">${r.label}</td>
         <td class="py-1 text-right mono font-black text-white text-[9.5px]">
-          <div class="inline-flex items-center justify-end gap-1 max-w-full">
+          <div class="inline-flex items-center justify-end gap-1.5 max-w-full">
             <span class="truncate">${r.val}</span>
             ${sleepBadgeHtml}
+            ${workoutBadgeHtml}
             <button type="button" 
                     class="opacity-60 group-hover/row:opacity-100 hover:text-teal-400 text-slate-500 transition-all p-0.5 rounded cursor-pointer shrink-0" 
                     title="Fuente: ${srcTxt}"
