@@ -16270,7 +16270,7 @@ function asegurarConexionGoogle(esAutomatico = true) {
     sincronizarDatosGoogle();
   } else {
     actualizarUIGoogleConectado(false);
-    if (!esAutomatico && localStorage.getItem('gcal_explicit_disconnect') !== 'true') {
+    if (localStorage.getItem('gcal_explicit_disconnect') !== 'true' && (!esAutomatico || localStorage.getItem('gcal_auto_connect') === 'true')) {
       solicitarTokenGoogle(false);
     }
   }
@@ -16611,7 +16611,7 @@ async function fetchGoogleEvents() {
 
   } catch (err) {
     console.error('Error en fetchGoogleEvents:', err);
-    if (err && (err.status === 401 || err.status === 403 || (err.result && err.result.error && (err.result.error.code === 401 || err.result.error.code === 403)))) {
+    if (err && (err.status === 401 || (err.result && err.result.error && err.result.error.code === 401))) {
       invalidarYReconectarGoogle();
       return;
     }
@@ -17443,11 +17443,6 @@ function setActividadFiltro(period) {
 
 function restaurarCacheFitness() {
   try {
-    if (localStorage.getItem('gp_fitness_cache_v') !== '8') {
-      localStorage.removeItem('gp_fitness_cache');
-      localStorage.setItem('gp_fitness_cache_v', '8');
-      return;
-    }
     if (window.fitnessData && window.fitnessData.steps && window.fitnessData.steps.length > 0) return;
     const raw = localStorage.getItem('gp_fitness_cache');
     if (!raw) return;
@@ -17463,9 +17458,7 @@ function restaurarCacheFitness() {
         }));
       }
     });
-    if (Array.isArray(parsed.workouts)) {
-      window.fitnessData.workouts = parsed.workouts;
-    }
+    window.fitnessData.workouts = Array.isArray(parsed.workouts) ? parsed.workouts : [];
     setActividadFiltro(window.currentHealthFilter || 'hoy');
   } catch (e) {
     console.warn('Error restaurando caché de fitness:', e);
@@ -18220,6 +18213,7 @@ async function fetchGoogleFitness() {
     }
 
     const sleepByDate = new Map();
+    const rawWorkouts = [];
     try {
       const startIso = new Date(startOfToday.getTime() - (360 * 86400000)).toISOString();
       const endIso = new Date(endOfToday).toISOString();
@@ -18229,7 +18223,6 @@ async function fetchGoogleFitness() {
       // 1. Obtener sesiones de Google Fit (sueño y entrenamientos)
       let sessionsPageToken = '';
       const rawSessions = [];
-      const rawWorkouts = [];
       const seenSessionIds = new Set();
 
       do {
@@ -18666,63 +18659,67 @@ async function fetchGoogleFitness() {
     const workoutsByDate = new Map();
     const allWorkoutsProcessed = [];
 
-    rawWorkouts.forEach(w => {
-      const startD = new Date(w.startMs);
-      const endD = new Date(w.endMs);
-      const dateKey = `${startD.getFullYear()}-${String(startD.getMonth() + 1).padStart(2, '0')}-${String(startD.getDate()).padStart(2, '0')}`;
-      
-      const startTimeStr = `${String(startD.getHours()).padStart(2, '0')}:${String(startD.getMinutes()).padStart(2, '0')}`;
-      const endTimeStr = `${String(endD.getHours()).padStart(2, '0')}:${String(endD.getMinutes()).padStart(2, '0')}`;
+    try {
+      (rawWorkouts || []).forEach(w => {
+        const startD = new Date(w.startMs);
+        const endD = new Date(w.endMs);
+        const dateKey = `${startD.getFullYear()}-${String(startD.getMonth() + 1).padStart(2, '0')}-${String(startD.getDate()).padStart(2, '0')}`;
+        
+        const startTimeStr = `${String(startD.getHours()).padStart(2, '0')}:${String(startD.getMinutes()).padStart(2, '0')}`;
+        const endTimeStr = `${String(endD.getHours()).padStart(2, '0')}:${String(endD.getMinutes()).padStart(2, '0')}`;
 
-      // Frecuencia cardíaca registrada durante la sesión
-      const wHr = allRawHrPoints.filter(p => p.timeMs >= w.startMs && p.timeMs <= w.endMs);
-      let hrAvg = null, hrMax = null, hrMin = null;
-      if (wHr.length > 0) {
-        const vals = wHr.map(p => p.val);
-        hrAvg = Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
-        hrMax = Math.max(...vals);
-        hrMin = Math.min(...vals);
-      }
+        // Frecuencia cardíaca registrada durante la sesión
+        const wHr = (allRawHrPoints || []).filter(p => p.timeMs >= w.startMs && p.timeMs <= w.endMs);
+        let hrAvg = null, hrMax = null, hrMin = null;
+        if (wHr.length > 0) {
+          const vals = wHr.map(p => p.val);
+          hrAvg = Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
+          hrMax = Math.max(...vals);
+          hrMin = Math.min(...vals);
+        }
 
-      // Extraer calorías si vienen en notas/descripción
-      let calories = null;
-      if (w.description) {
-        const calMatch = w.description.match(/(\d+)\s*(?:kcal|calor(?:ías|ias)?)/i);
-        if (calMatch) calories = parseInt(calMatch[1], 10);
-      }
+        // Extraer calorías si vienen en notas/descripción
+        let calories = null;
+        if (w.description) {
+          const calMatch = w.description.match(/(\d+)\s*(?:kcal|calor(?:ías|ias)?)/i);
+          if (calMatch) calories = parseInt(calMatch[1], 10);
+        }
 
-      const meta = resolverMetadatosActividad(w.activityType, w.name);
+        const meta = resolverMetadatosActividad(w.activityType, w.name);
 
-      const workoutItem = {
-        id: w.id,
-        name: meta.name,
-        rawName: w.name,
-        activityType: w.activityType,
-        emoji: meta.emoji,
-        icon: meta.icon,
-        color: meta.color,
-        startMs: w.startMs,
-        endMs: w.endMs,
-        date: startD,
-        dateIso: dateKey,
-        startTimeStr: startTimeStr,
-        endTimeStr: endTimeStr,
-        durMinutes: w.durMinutes,
-        source: w.source,
-        description: w.description,
-        hrAvg: hrAvg,
-        hrMax: hrMax,
-        hrMin: hrMin,
-        hrCount: wHr.length,
-        calories: calories
-      };
+        const workoutItem = {
+          id: w.id,
+          name: meta.name,
+          rawName: w.name,
+          activityType: w.activityType,
+          emoji: meta.emoji,
+          icon: meta.icon,
+          color: meta.color,
+          startMs: w.startMs,
+          endMs: w.endMs,
+          date: startD,
+          dateIso: dateKey,
+          startTimeStr: startTimeStr,
+          endTimeStr: endTimeStr,
+          durMinutes: w.durMinutes,
+          source: w.source,
+          description: w.description,
+          hrAvg: hrAvg,
+          hrMax: hrMax,
+          hrMin: hrMin,
+          hrCount: wHr.length,
+          calories: calories
+        };
 
-      if (!workoutsByDate.has(dateKey)) {
-        workoutsByDate.set(dateKey, []);
-      }
-      workoutsByDate.get(dateKey).push(workoutItem);
-      allWorkoutsProcessed.push(workoutItem);
-    });
+        if (!workoutsByDate.has(dateKey)) {
+          workoutsByDate.set(dateKey, []);
+        }
+        workoutsByDate.get(dateKey).push(workoutItem);
+        allWorkoutsProcessed.push(workoutItem);
+      });
+    } catch (eWorkouts) {
+      console.warn('[Google Fit] Error procesando entrenamientos:', eWorkouts);
+    }
 
     window.fitnessData = { distance: [], sleep: [], steps: [], weight: [], calories: [], activeMinutes: [], heartRate: [], workouts: [] };
     const iter = new Date(startOfToday);
