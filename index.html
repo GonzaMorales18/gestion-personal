@@ -1886,6 +1886,52 @@
       </div>
     </div>
 
+    <!-- SECCIÓN NOTICIAS Y RADAR DE ACTUALIDAD (Debajo de Agenda y Mis Tareas) -->
+    <div class="mt-6 mb-8" id="inicio-seccion-noticias">
+      <!-- Encabezado de la Sección -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-3.5 ml-1">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-cyan-950/70 border border-cyan-700/50 flex items-center justify-center shadow-sm">
+            <i class="fas fa-newspaper text-cyan-400 text-xs"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Radar de Noticias</h3>
+              <span class="text-[8px] font-black text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 px-1.5 py-0.5 rounded mono uppercase tracking-wider">IA Live Feed</span>
+            </div>
+            <span id="noticias-timestamp" class="text-[9px] text-slate-500 font-mono flex items-center gap-1.5 mt-0.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse" id="noticias-status-dot"></span>
+              <span id="noticias-status-text">Cargando radar...</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Acciones: Filtros por tema y botón actualizar -->
+        <div class="flex items-center gap-2 flex-wrap">
+          <div class="flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 overflow-x-auto text-[10px] font-bold max-w-full">
+            <button type="button" onclick="filtrarNoticiasCategoria('todas')" id="btn-filtro-noticias-todas" class="px-2.5 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 transition-all shrink-0">Todas</button>
+            <button type="button" onclick="filtrarNoticiasCategoria('ia')" id="btn-filtro-noticias-ia" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white border border-transparent transition-all shrink-0 flex items-center gap-1.5"><i class="fas fa-brain text-purple-400 text-[10px]"></i> IA & Dev</button>
+            <button type="button" onclick="filtrarNoticiasCategoria('finanzas')" id="btn-filtro-noticias-finanzas" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white border border-transparent transition-all shrink-0 flex items-center gap-1.5"><i class="fas fa-chart-line text-emerald-400 text-[10px]"></i> Finanzas</button>
+            <button type="button" onclick="filtrarNoticiasCategoria('motor')" id="btn-filtro-noticias-motor" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white border border-transparent transition-all shrink-0 flex items-center gap-1.5"><i class="fas fa-flag-checkered text-red-400 text-[10px]"></i> Motor</button>
+            <button type="button" onclick="filtrarNoticiasCategoria('boca')" id="btn-filtro-noticias-boca" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white border border-transparent transition-all shrink-0 flex items-center gap-1.5"><i class="fas fa-futbol text-blue-400 text-[10px]"></i> Boca</button>
+            <button type="button" onclick="filtrarNoticiasCategoria('tenis')" id="btn-filtro-noticias-tenis" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white border border-transparent transition-all shrink-0 flex items-center gap-1.5"><i class="fas fa-table-tennis-paddle-ball text-yellow-400 text-[10px]"></i> Tenis</button>
+            <button type="button" onclick="filtrarNoticiasCategoria('ciencia')" id="btn-filtro-noticias-ciencia" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white border border-transparent transition-all shrink-0 flex items-center gap-1.5"><i class="fas fa-rocket text-indigo-400 text-[10px]"></i> Ciencia & Tech</button>
+          </div>
+
+          <button type="button" onclick="actualizarNoticiasIA(true)" id="btn-actualizar-noticias" title="Buscar últimas noticias con IA ahora"
+                  class="h-8 px-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider transition-all shadow-sm shrink-0">
+            <i class="fas fa-rotate" id="icono-refresh-noticias"></i>
+            <span class="hidden sm:inline">Actualizar</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Grid de tarjetas de noticias -->
+      <div id="contenedor-tarjetas-noticias" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5">
+        <!-- Renderizado dinámico por JavaScript -->
+      </div>
+    </div>
+
   </main>
 
   <!-- SECCIÓN SALUD - ACTIVIDAD -->
@@ -15339,6 +15385,10 @@ window.onload = () => {
   showSection(seccionInicial);
   // Cargar datos y precargar todas las pestañas (incluyendo conexión automática con Google)
   cargarDatos();
+  // Inicializar Radar de Noticias en Inicio (debajo de Agenda)
+  if (typeof inicializarNoticias === 'function') {
+    inicializarNoticias();
+  }
 
   // Sincronizar en segundo plano cada 5 minutos datos de Google si la sesión está activa
   setInterval(() => {
@@ -23750,6 +23800,446 @@ Texto del usuario: "${texto}"`;
   }
 }
 
+// ─── RADAR DE NOTICIAS CON IA (GEMINI SEARCH GROUNDING + CACHÉ LOCAL) ────────
+const NOTICIAS_CATEGORIAS_ESTILOS = {
+  ia: {
+    gradient: 'from-purple-900/20 to-transparent',
+    badge: 'bg-purple-500/10 text-purple-300 border-purple-500/30',
+    icon: 'fa-brain',
+    accentColor: 'text-purple-400',
+    label: 'IA & Dev'
+  },
+  finanzas: {
+    gradient: 'from-emerald-900/20 to-transparent',
+    badge: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30',
+    icon: 'fa-chart-line',
+    accentColor: 'text-emerald-400',
+    label: 'Finanzas'
+  },
+  motor: {
+    gradient: 'from-red-900/20 to-transparent',
+    badge: 'bg-red-500/10 text-red-300 border-red-500/30',
+    icon: 'fa-flag-checkered',
+    accentColor: 'text-red-400',
+    label: 'Deporte Motor'
+  },
+  boca: {
+    gradient: 'from-blue-900/25 to-amber-900/15',
+    badge: 'bg-blue-500/10 text-amber-300 border-blue-500/30',
+    icon: 'fa-futbol',
+    accentColor: 'text-amber-400',
+    label: 'Boca Juniors'
+  },
+  tenis: {
+    gradient: 'from-yellow-900/20 to-transparent',
+    badge: 'bg-yellow-500/10 text-yellow-300 border-yellow-500/30',
+    icon: 'fa-table-tennis-paddle-ball',
+    accentColor: 'text-yellow-400',
+    label: 'Tenis'
+  },
+  ciencia: {
+    gradient: 'from-indigo-900/20 to-transparent',
+    badge: 'bg-indigo-500/10 text-indigo-300 border-indigo-500/30',
+    icon: 'fa-rocket',
+    accentColor: 'text-indigo-400',
+    label: 'Ciencia & Tech'
+  }
+};
+
+const NOTICIAS_SEMILLA = [
+  {
+    categoria: "ia",
+    categoriaLabel: "IA & Dev",
+    titulo: "Anthropic, OpenAI y Google aceleran el ecosistema de agentes autónomos y RAG",
+    resumen: "Las nuevas APIs incorporan arquitecturas de orquestación complejas y herramientas en tiempo real, impulsando integraciones con n8n y frameworks en Python (Django/Flask).",
+    fuente: "TechCrunch",
+    url: "https://www.google.com/search?q=Anthropic+OpenAI+Google+Gemini+agentes+n8n+RAG+noticias",
+    tiempo: "Reciente"
+  },
+  {
+    categoria: "ia",
+    categoriaLabel: "IA & Dev",
+    titulo: "Google Gemini expande sus modelos Flash con menor latencia para flujos de automatización",
+    resumen: "Nuevas optimizaciones en la suite Gemini permiten procesar agentes y llamadas de función con mayor velocidad y menor consumo de tokens.",
+    fuente: "Google Developers",
+    url: "https://www.google.com/search?q=Google+Gemini+Flash+API+developers+updates",
+    tiempo: "Reciente"
+  },
+  {
+    categoria: "finanzas",
+    categoriaLabel: "Finanzas",
+    titulo: "Mercado argentino: Merval y bonos soberanos atentos a las medidas del BCRA y CNV",
+    resumen: "Fuerte volumen en Obligaciones Negociables en dólares y Fondos Comunes de Inversión corporativos. Cotizaciones de Dólar MEP y CCL operan en rango estable.",
+    fuente: "Ámbito",
+    url: "https://www.google.com/search?q=mercado+argentino+Merval+dolar+MEP+CCL+ONs+BCRA",
+    tiempo: "Reciente"
+  },
+  {
+    categoria: "finanzas",
+    categoriaLabel: "Finanzas",
+    titulo: "Bitcoin e IBIT de BlackRock consolidan flujos institucionales en Wall Street",
+    resumen: "El ETF IBIT continúa liderando las entradas netas en el mercado cripto global, mientras analistas monitorean los ciclos de liquidez y política monetaria de la Fed.",
+    fuente: "Bloomberg Línea",
+    url: "https://www.google.com/search?q=Bitcoin+ETF+IBIT+BlackRock+criptomonedas+noticias",
+    tiempo: "Reciente"
+  },
+  {
+    categoria: "motor",
+    categoriaLabel: "Deporte Motor",
+    titulo: "Fórmula 1 y Franco Colapinto: novedades en la grilla y desarrollo técnico",
+    resumen: "El piloto argentino sigue en el centro del mercado de pases y la agenda de la F1. Expectativas técnicas de cara a las próximas fechas del calendario internacional.",
+    fuente: "Motorsport",
+    url: "https://www.google.com/search?q=Franco+Colapinto+Formula+1+noticias+actualidad",
+    tiempo: "Reciente"
+  },
+  {
+    categoria: "motor",
+    categoriaLabel: "Deporte Motor",
+    titulo: "Argentinos en el mundo: Mattia Colnaghi en F3, Varrone en Resistencia y los Benavides en Dakar",
+    resumen: "Gran presente de los talentos argentinos en categorías formativas de monoplazas, sportscars internacionales y la preparación de Kevin y Luciano Benavides en motos.",
+    fuente: "Carburando",
+    url: "https://www.google.com/search?q=Mattia+Colnaghi+Nicolas+Varrone+Kevin+Luciano+Benavides+Dakar",
+    tiempo: "Reciente"
+  },
+  {
+    categoria: "boca",
+    categoriaLabel: "Boca Juniors",
+    titulo: "Actualidad del plantel de Boca Juniors, armado del equipo y tabla de posiciones",
+    resumen: "El Xeneize define su alineación para los compromisos decisivos del torneo. Novedades sobre el mercado de pases y recuperación de lesionados.",
+    fuente: "Diario Olé",
+    url: "https://www.google.com/search?q=Boca+Juniors+actualidad+plantel+mercado+pases+partido",
+    tiempo: "Reciente"
+  },
+  {
+    categoria: "boca",
+    categoriaLabel: "Boca Juniors",
+    titulo: "Proyecto La Bombonera: avances en el plan de ampliación y modernización integral",
+    resumen: "La dirigencia xeneize avanza en los proyectos arquitectónicos para elevar la capacidad del estadio y remodelar los accesos y plateas.",
+    fuente: "TyC Sports",
+    url: "https://www.google.com/search?q=Boca+Juniors+ampliacion+remodelacion+La+Bombonera+proyecto",
+    tiempo: "Reciente"
+  },
+  {
+    categoria: "tenis",
+    categoriaLabel: "Tenis",
+    titulo: "Circuito ATP: Francisco Cerúndolo, Tomás Etcheverry y la legión argentina en carrera",
+    resumen: "Resultados clave en torneos sobre polvo de ladrillo y pistas rápidas. Los tenistas argentinos buscan escalar en el ranking ATP de cara a los próximos Grand Slams.",
+    fuente: "ESPN Tenis",
+    url: "https://www.google.com/search?q=tenis+argentino+Francisco+Cerundolo+Tomas+Etcheverry+ATP+noticias",
+    tiempo: "Reciente"
+  },
+  {
+    categoria: "ciencia",
+    categoriaLabel: "Ciencia & Tech",
+    titulo: "SpaceX y NASA avanzan en nuevas misiones de exploración profunda y lanzamientos",
+    resumen: "Nuevas pruebas del programa Artemis y lanzamientos de Falcon 9 marcan el ritmo de la industria aeroespacial junto a nuevos descubrimientos astronómicos.",
+    fuente: "Space.com",
+    url: "https://www.google.com/search?q=SpaceX+NASA+Artemis+misiones+espaciales+noticias",
+    tiempo: "Reciente"
+  },
+  {
+    categoria: "ciencia",
+    categoriaLabel: "Ciencia & Tech",
+    titulo: "Mercado automotor: auge de autos híbridos enchufables (PHEV) e innovaciones en domótica",
+    resumen: "Las principales marcas aceleran su transición con mayor autonomía eléctrica, mientras crecen los protocolos Matter y automatizaciones hogareñas con asistentes de voz.",
+    fuente: "Xataka",
+    url: "https://www.google.com/search?q=autos+hibridos+enchufables+electricos+domotica+smart+home",
+    tiempo: "Reciente"
+  }
+];
+
+let filtroNoticiasActual = 'todas';
+let noticiasDataActual = [];
+let actualizandoNoticiasFlag = false;
+
+function inicializarNoticias() {
+  try {
+    const rawCache = localStorage.getItem('gp_noticias_cache');
+    if (rawCache) {
+      const parsed = JSON.parse(rawCache);
+      if (parsed && Array.isArray(parsed.data) && parsed.data.length > 0) {
+        noticiasDataActual = parsed.data;
+        const diffHoras = (Date.now() - (parsed.timestamp || 0)) / (1000 * 60 * 60);
+        actualizarUINoticiasTimestamp(parsed.timestamp);
+        renderizarNoticias(noticiasDataActual, filtroNoticiasActual);
+
+        // Si la caché tiene más de 4 horas, refrescar en segundo plano sin interrumpir
+        if (diffHoras > 4) {
+          setTimeout(() => { actualizarNoticiasIA(false); }, 3000);
+        }
+        return;
+      }
+    }
+  } catch (e) {
+    console.warn("Error leyendo caché de noticias:", e);
+  }
+
+  // Si no hay caché previa, cargar las semillas inmediatamente
+  noticiasDataActual = [...NOTICIAS_SEMILLA];
+  actualizarUINoticiasTimestamp(Date.now(), "Listo (Semilla)");
+  renderizarNoticias(noticiasDataActual, filtroNoticiasActual);
+}
+
+async function actualizarNoticiasIA(forzar = false) {
+  if (actualizandoNoticiasFlag) return;
+
+  let apiKey = localStorage.getItem('GEMINI_API_KEY');
+  if (!apiKey && forzar) {
+    apiKey = prompt("Ingresa tu API Key de Google Gemini para buscar noticias en tiempo real con IA:");
+    if (!apiKey) return;
+    localStorage.setItem('GEMINI_API_KEY', apiKey.trim());
+  }
+  if (!apiKey) return;
+
+  const btnRefresh = document.getElementById('btn-actualizar-noticias');
+  const iconRefresh = document.getElementById('icono-refresh-noticias');
+  const dotEl = document.getElementById('noticias-status-dot');
+  const statusEl = document.getElementById('noticias-status-text');
+
+  actualizandoNoticiasFlag = true;
+  if (btnRefresh) btnRefresh.classList.add('opacity-70', 'pointer-events-none');
+  if (iconRefresh) iconRefresh.classList.add('fa-spin');
+  if (dotEl) {
+    dotEl.className = 'w-1.5 h-1.5 rounded-full bg-cyan-400 inline-block animate-ping';
+  }
+  if (statusEl) statusEl.innerText = "Buscando noticias con IA y Google Search...";
+
+  const promptNoticias = `Actúa como un curador y sintetizador de noticias en tiempo real para un panel de control personal.
+Fecha de referencia: ${new Date().toLocaleDateString('es-AR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}.
+
+Busca y selecciona las noticias MÁS RECIENTES, RELEVANTES Y FRESCAS (últimas 24 a 48 horas) estrictamente sobre estos 6 ejes temáticos:
+1. "ia": Inteligencia Artificial y Desarrollo (novedades modelos OpenAI, Claude/Anthropic, Gemini; arquitectura de agentes IA, n8n, RAG; desarrollo web Python, Django, Flask).
+2. "finanzas": Finanzas, Inversiones y Economía Argentina/Global (Merval, CEDEARs, Obligaciones Negociables, FCIs; Dólar MEP/CCL/oficial, inflación, medidas BCRA/CNV; Criptomonedas y ETF Bitcoin IBIT).
+3. "motor": Deporte Motor (Fórmula 1 resultados/calendario/técnica; pilotos argentinos: Franco Colapinto en F1, Mattia Colnaghi en F3, Nicolás Varrone, Benavides Dakar; F2, MotoGP, IndyCar).
+4. "boca": Fútbol Club Boca Juniors (actualidad del plantel, mercado de pases, resultados, tabla de posiciones, ampliación o remodelación de La Bombonera).
+5. "tenis": Tenis Profesional (Torneos ATP, Grand Slams, Copa Davis; desempeño de tenistas argentinos: Francisco Cerúndolo, Tomás Etcheverry, Sebastián Báez, Coria).
+6. "ciencia": Ciencia, Espacio y Tecnología (misiones espaciales NASA, SpaceX, descubrimientos; domótica, dispositivos inteligentes, autos híbridos enchufables y eléctricos).
+
+Debes generar 2 noticias destacadas por cada categoría (un total de 12 noticias).
+Responde EXCLUSIVAMENTE con un bloque de código JSON válido con el siguiente formato:
+\`\`\`json
+[
+  {
+    "categoria": "ia",
+    "categoriaLabel": "IA & Dev",
+    "titulo": "Titular conciso y periodístico",
+    "resumen": "Resumen claro y directo de 1 o 2 oraciones (máximo 160 caracteres).",
+    "fuente": "Nombre del medio (ej: Infobae, Ámbito, TechCrunch, Olé, etc.)",
+    "url": "URL directa de la noticia o enlace web relevante",
+    "tiempo": "Hace 2h"
+  }
+]
+\`\`\`
+IMPORTANTE: No agregues saludos ni explicaciones fuera del bloque JSON.`;
+
+  const models = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+  let response = null;
+  let lastError = '';
+
+  try {
+    // Intento 1: Con Google Search Grounding
+    for (const model of models) {
+      try {
+        response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: promptNoticias }] }],
+            tools: [{ googleSearch: {} }]
+          })
+        });
+        if (response.ok) break;
+        const errData = await response.json().catch(() => ({}));
+        lastError = errData.error?.message || `HTTP ${response.status}`;
+      } catch (e) {
+        lastError = e.message;
+      }
+    }
+
+    // Intento 2: Fallback sin tools si grounding no estuviera disponible en esa API key
+    if (!response || !response.ok) {
+      for (const model of models) {
+        try {
+          response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: promptNoticias }] }]
+            })
+          });
+          if (response.ok) break;
+        } catch (e) {}
+      }
+    }
+
+    if (!response || !response.ok) {
+      throw new Error(lastError || "No se pudo conectar con la API de Gemini.");
+    }
+
+    const data = await response.json();
+    const candidateText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+    let jsonStr = candidateText;
+    const match = candidateText.match(/```json\s*([\s\S]*?)\s*```/) || candidateText.match(/```\s*([\s\S]*?)\s*```/);
+    if (match) {
+      jsonStr = match[1];
+    } else {
+      const p1 = candidateText.indexOf('[');
+      const p2 = candidateText.lastIndexOf(']');
+      if (p1 !== -1 && p2 > p1) jsonStr = candidateText.substring(p1, p2 + 1);
+    }
+
+    const noticiasParsed = JSON.parse(jsonStr);
+    if (!Array.isArray(noticiasParsed) || noticiasParsed.length === 0) {
+      throw new Error("El formato devuelto por la IA no fue una lista de noticias válida.");
+    }
+
+    // Normalizar enlaces y tiempos
+    noticiasParsed.forEach(n => {
+      if (!n.url || !n.url.startsWith('http')) {
+        n.url = `https://www.google.com/search?q=${encodeURIComponent((n.titulo || '') + ' ' + (n.fuente || ''))}`;
+      }
+      if (!n.tiempo) n.tiempo = "Hoy";
+    });
+
+    noticiasDataActual = noticiasParsed;
+    localStorage.setItem('gp_noticias_cache', JSON.stringify({
+      timestamp: Date.now(),
+      data: noticiasDataActual
+    }));
+
+    actualizarUINoticiasTimestamp(Date.now(), "Actualizado recién");
+    renderizarNoticias(noticiasDataActual, filtroNoticiasActual);
+    if (typeof showToast === 'function') {
+      showToast("Radar de noticias actualizado con IA ✓", "success");
+    }
+
+  } catch (error) {
+    console.error("Error al actualizar noticias IA:", error);
+    if (statusEl) statusEl.innerText = "Error al actualizar (usando noticias guardadas)";
+    if (dotEl) dotEl.className = 'w-1.5 h-1.5 rounded-full bg-rose-500 inline-block';
+    if (forzar && typeof showToast === 'function') {
+      showToast("Error al conectar con IA: " + error.message, "error");
+    }
+  } finally {
+    actualizandoNoticiasFlag = false;
+    if (btnRefresh) btnRefresh.classList.remove('opacity-70', 'pointer-events-none');
+    if (iconRefresh) iconRefresh.classList.remove('fa-spin');
+  }
+}
+
+function renderizarNoticias(noticias, filtro = 'todas') {
+  const contenedor = document.getElementById('contenedor-tarjetas-noticias');
+  if (!contenedor) return;
+
+  const items = (filtro === 'todas')
+    ? noticias
+    : noticias.filter(n => (n.categoria || '').toLowerCase() === filtro.toLowerCase());
+
+  if (items.length === 0) {
+    contenedor.innerHTML = `
+      <div class="col-span-full py-10 bg-slate-900/30 rounded-2xl border border-slate-800 text-center text-xs text-slate-500 font-bold uppercase tracking-widest">
+        No hay noticias para mostrar en este tema.
+      </div>
+    `;
+    return;
+  }
+
+  contenedor.innerHTML = items.map(n => {
+    const cat = (n.categoria || 'ia').toLowerCase();
+    const estilo = NOTICIAS_CATEGORIAS_ESTILOS[cat] || NOTICIAS_CATEGORIAS_ESTILOS.ia;
+    const catLabel = n.categoriaLabel || estilo.label;
+    const url = n.url || `https://www.google.com/search?q=${encodeURIComponent(n.titulo + ' ' + (n.fuente || ''))}`;
+
+    return `
+      <a href="${url}" target="_blank" rel="noopener noreferrer"
+         class="group bg-black rounded-2xl border border-slate-700/60 hover:border-slate-500 p-4 relative overflow-hidden flex flex-col justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-xl cursor-pointer">
+        <!-- Gradiente temático al hover -->
+        <div class="absolute inset-0 bg-gradient-to-br ${estilo.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col flex-1">
+          <!-- Categoría y Fuente -->
+          <div class="flex items-center justify-between gap-2 mb-2.5">
+            <span class="text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md border ${estilo.badge}">
+              <i class="fas ${estilo.icon} mr-1 text-[8px]"></i>${catLabel}
+            </span>
+            <span class="text-[9px] text-slate-500 font-mono flex items-center gap-1 shrink-0">
+              <span class="text-slate-400 font-bold truncate max-w-[85px]">${n.fuente || 'Noticia'}</span>
+              <span>•</span>
+              <span>${n.tiempo || 'Reciente'}</span>
+            </span>
+          </div>
+
+          <!-- Titular -->
+          <h4 class="text-xs font-bold text-white group-hover:text-cyan-300 line-clamp-2 leading-snug mb-2 transition-colors">
+            ${n.titulo}
+          </h4>
+
+          <!-- Resumen -->
+          <p class="text-[11px] text-slate-400 group-hover:text-slate-300 line-clamp-3 leading-relaxed mb-3 flex-1 transition-colors">
+            ${n.resumen}
+          </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="relative z-10 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-slate-500 group-hover:text-slate-300 transition-colors">
+          <span class="font-bold flex items-center gap-1 text-[9px] uppercase tracking-wider">
+            Leer nota completa
+          </span>
+          <i class="fas fa-arrow-up-right-from-square text-[9px] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"></i>
+        </div>
+      </a>
+    `;
+  }).join('');
+}
+
+function filtrarNoticiasCategoria(cat) {
+  filtroNoticiasActual = cat;
+  const botones = [
+    { id: 'btn-filtro-noticias-todas', cat: 'todas' },
+    { id: 'btn-filtro-noticias-ia', cat: 'ia' },
+    { id: 'btn-filtro-noticias-finanzas', cat: 'finanzas' },
+    { id: 'btn-filtro-noticias-motor', cat: 'motor' },
+    { id: 'btn-filtro-noticias-boca', cat: 'boca' },
+    { id: 'btn-filtro-noticias-tenis', cat: 'tenis' },
+    { id: 'btn-filtro-noticias-ciencia', cat: 'ciencia' }
+  ];
+
+  botones.forEach(b => {
+    const el = document.getElementById(b.id);
+    if (!el) return;
+    if (b.cat === cat) {
+      el.className = 'px-2.5 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 transition-all shrink-0';
+    } else {
+      el.className = 'px-2.5 py-1 rounded-lg text-slate-400 hover:text-white border border-transparent transition-all shrink-0 flex items-center gap-1.5';
+    }
+  });
+
+  renderizarNoticias(noticiasDataActual, filtroNoticiasActual);
+}
+
+function actualizarUINoticiasTimestamp(ts, mensajePersonalizado = null) {
+  const dotEl = document.getElementById('noticias-status-dot');
+  const statusEl = document.getElementById('noticias-status-text');
+  if (dotEl) dotEl.className = 'w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse';
+  if (!statusEl) return;
+
+  if (mensajePersonalizado) {
+    statusEl.innerText = mensajePersonalizado;
+    return;
+  }
+
+  if (!ts) {
+    statusEl.innerText = "Listo";
+    return;
+  }
+
+  const d = new Date(ts);
+  const horaStr = d.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+  const fechaStr = d.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' });
+  statusEl.innerText = `Actualizado ${fechaStr} a las ${horaStr}`;
+}
+
 // ─── BUSCADOR / COMANDO RÁPIDO GLOBAL (CTRL + K) ─────────────────────────────
 let cmdPaletteItems = [];
 let cmdSelectedIdx  = 0;
@@ -23809,6 +24299,8 @@ function filtrarCommandPalette() {
     { title: 'Escena Domótica: Modo Cine',                   sub: 'Enciende TV Living y climatización', icon: 'fa-film text-violet-400', badge: 'Domótica', fn: () => ejecutarEscenaDomotica('modo_cine') },
     { title: 'Asistente IA: Dictar para Listas',             sub: 'Hablar por micrófono para agregar o tildar tareas', icon: 'fa-microphone text-purple-400', badge: 'Listas', fn: () => toggleVozIAListas() },
     { title: 'Asistente IA: Dictar Movimiento en Balance',   sub: 'Hablar por micrófono para registrar gasto o ingreso', icon: 'fa-microphone text-purple-400', badge: 'Balance', fn: () => { showSection('finanzas'); toggleVozIABalance(); } },
+    { title: 'Ir a Radar de Noticias',                       sub: 'Ver últimas novedades personalizadas en Inicio', icon: 'fa-newspaper text-cyan-400', badge: 'Noticias', fn: () => { showSection('inicio'); setTimeout(() => { const el = document.getElementById('inicio-seccion-noticias'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }, 150); } },
+    { title: 'Actualizar Radar de Noticias con IA',          sub: 'Buscar noticias frescas con Google Search y Gemini', icon: 'fa-rotate text-cyan-400', badge: 'Noticias', fn: () => { showSection('inicio'); setTimeout(() => { const el = document.getElementById('inicio-seccion-noticias'); if (el) el.scrollIntoView({ behavior: 'smooth' }); actualizarNoticiasIA(true); }, 150); } },
     { title: 'Alternar Tema Claro / Oscuro',                 sub: 'Cambia entre Obsidian Glass y Nordic Daylight', icon: 'fa-adjust text-amber-400', badge: 'Ajuste', fn: () => toggleThemeMode() },
     { title: 'Exportar vista actual a CSV',                  sub: 'Descarga tabla del módulo activo', icon: 'fa-download text-emerald-400', badge: 'Acción', fn: () => exportarCSV() }
   ];
