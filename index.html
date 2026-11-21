@@ -23861,35 +23861,41 @@ const NOTICIAS_CATEGORIAS_ESTILOS = {
 };
 
 // ─── RADAR DE NOTICIAS EN VIVO CON GNEWS API (100% NOTICIAS REALES AL MINUTO) ───
+const DEFAULT_GNEWS_API_KEY = '969a1c382c93acb4e914d1594b8efa30';
+
+function obtenerGNewsApiKey() {
+  return localStorage.getItem('GNEWS_API_KEY') || DEFAULT_GNEWS_API_KEY;
+}
+
 const GNEWS_TOPICS = {
   ia: {
     label: 'IA & Dev',
     cat: 'ia',
-    query: '"Inteligencia Artificial" OR "OpenAI" OR "Claude" OR "Gemini" OR "Python"',
+    query: 'Inteligencia Artificial OR OpenAI OR Claude OR Gemini OR "Python"',
     country: null
   },
   finanzas: {
     label: 'Finanzas',
     cat: 'finanzas',
-    query: '"Dolar MEP" OR "Merval" OR "CEDEARs" OR "Bitcoin" OR "BCRA"',
+    query: 'Dolar OR Merval OR BCRA OR inflacion OR Bitcoin',
     country: 'ar'
   },
   motor: {
     label: 'Deporte Motor',
     cat: 'motor',
-    query: '"Formula 1" OR "Colapinto" OR "MotoGP" OR "F1"',
+    query: 'Franco Colapinto OR "Formula 1" OR MotoGP OR IndyCar',
     country: null
   },
   boca: {
     label: 'Boca Juniors',
     cat: 'boca',
-    query: '"Boca Juniors" OR "Bombonera"',
+    query: 'Boca Juniors OR Bombonera',
     country: 'ar'
   },
   tenis: {
     label: 'Tenis',
     cat: 'tenis',
-    query: 'Tenis OR "Cerundolo" OR "Etcheverry" OR "ATP"',
+    query: 'Tenis OR Cerundolo OR Etcheverry OR ATP',
     country: null
   },
   ciencia: {
@@ -23917,6 +23923,13 @@ function formatTiempoRelativoGNews(isoDateStr) {
 }
 
 function inicializarNoticias() {
+  // Asegurar clave por defecto si no existe en localStorage
+  if (!localStorage.getItem('GNEWS_API_KEY')) {
+    try {
+      localStorage.setItem('GNEWS_API_KEY', DEFAULT_GNEWS_API_KEY);
+    } catch (e) {}
+  }
+
   try {
     const rawCache = localStorage.getItem('gp_gnews_cache');
     if (rawCache) {
@@ -23927,8 +23940,8 @@ function inicializarNoticias() {
         actualizarUINoticiasTimestamp(parsed.timestamp, "En vivo (Caché)");
         renderizarNoticias(noticiasDataActual, filtroNoticiasActual);
 
-        // Si la caché tiene más de 3 horas y hay API key, refrescar en segundo plano
-        if (diffHoras > 3 && localStorage.getItem('GNEWS_API_KEY')) {
+        // Si la caché tiene más de 3 horas, refrescar en segundo plano
+        if (diffHoras > 3) {
           setTimeout(() => { actualizarNoticiasEnVivo(false); }, 2500);
         }
         return;
@@ -23938,7 +23951,7 @@ function inicializarNoticias() {
     console.warn("Error leyendo caché de noticias GNews:", e);
   }
 
-  const apiKey = localStorage.getItem('GNEWS_API_KEY');
+  const apiKey = obtenerGNewsApiKey();
   if (apiKey) {
     renderizarSkeletonNoticias();
     setTimeout(() => { actualizarNoticiasEnVivo(false); }, 400);
@@ -23980,7 +23993,7 @@ function renderizarEstadoConfigGNews(mensajeError = null) {
   if (statusEl) statusEl.innerText = "Configuración requerida";
 
   if (!contenedor) return;
-  const currentKey = localStorage.getItem('GNEWS_API_KEY') || '';
+  const currentKey = obtenerGNewsApiKey();
 
   contenedor.innerHTML = `
     <div class="col-span-full py-10 px-6 bg-slate-900/50 rounded-2xl border border-slate-800 text-center flex flex-col items-center justify-center max-w-xl mx-auto my-3 shadow-xl">
@@ -24034,7 +24047,7 @@ function abrirConfiguracionGNews() {
 async function actualizarNoticiasEnVivo(forzar = false) {
   if (actualizandoNoticiasFlag) return;
 
-  const apiKey = localStorage.getItem('GNEWS_API_KEY');
+  const apiKey = obtenerGNewsApiKey();
   if (!apiKey) {
     renderizarEstadoConfigGNews();
     return;
@@ -24053,43 +24066,48 @@ async function actualizarNoticiasEnVivo(forzar = false) {
 
   try {
     const keys = Object.keys(GNEWS_TOPICS);
-    const promesas = keys.map(async (key) => {
+    let todasLasNoticias = [];
+    let errores = [];
+
+    // Consulta secuencial con pausa de 1150ms para respetar el límite de 1 req/segundo de GNews
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
       const topic = GNEWS_TOPICS[key];
+
+      if (i > 0) {
+        await new Promise(r => setTimeout(r, 1150));
+      }
+
       let url = `https://gnews.io/api/v4/search?q=${encodeURIComponent(topic.query)}&lang=es&max=2&apikey=${apiKey.trim()}`;
       if (topic.country) {
         url += `&country=${topic.country}`;
       }
-      const res = await fetch(url);
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.errors?.[0] || `HTTP ${res.status}`);
-      }
-      const data = await res.json();
-      const articles = Array.isArray(data.articles) ? data.articles : [];
-      return articles.map(art => ({
-        categoria: key,
-        categoriaLabel: topic.label,
-        titulo: art.title || 'Sin título',
-        resumen: art.description || art.content || '',
-        fuente: art.source?.name || 'Diario Digital',
-        url: art.url,
-        tiempo: formatTiempoRelativoGNews(art.publishedAt),
-        publishedAt: art.publishedAt || new Date().toISOString(),
-        image: art.image || null
-      }));
-    });
 
-    const resultados = await Promise.allSettled(promesas);
-    let todasLasNoticias = [];
-    let errores = [];
-
-    resultados.forEach((r, idx) => {
-      if (r.status === 'fulfilled') {
-        todasLasNoticias = todasLasNoticias.concat(r.value);
-      } else {
-        errores.push(`${keys[idx]}: ${r.reason?.message || 'Error'}`);
+      try {
+        const res = await fetch(url);
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.errors?.[0] || `HTTP ${res.status}`);
+        }
+        const data = await res.json();
+        const articles = Array.isArray(data.articles) ? data.articles : [];
+        const mapeados = articles.map(art => ({
+          categoria: key,
+          categoriaLabel: topic.label,
+          titulo: art.title || 'Sin título',
+          resumen: art.description || art.content || '',
+          fuente: art.source?.name || 'Diario Digital',
+          url: art.url,
+          tiempo: formatTiempoRelativoGNews(art.publishedAt),
+          publishedAt: art.publishedAt || new Date().toISOString(),
+          image: art.image || null
+        }));
+        todasLasNoticias = todasLasNoticias.concat(mapeados);
+      } catch (err) {
+        console.warn(`Error obteniendo noticias para ${key}:`, err);
+        errores.push(`${key}: ${err.message}`);
       }
-    });
+    }
 
     if (todasLasNoticias.length === 0 && errores.length > 0) {
       const primerError = errores[0];
