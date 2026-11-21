@@ -23,6 +23,84 @@ function doGet(e) {
     }
   }
 
+  // Proxy de Noticias en Vivo con GNews API (CORS seguro para GitHub Pages, caché de 1h)
+  if (e && e.parameter && e.parameter.sheet === 'noticias') {
+    const forzar = e.parameter.forzar === 'true';
+    const cache = CacheService.getScriptCache();
+    const cacheKey = 'gp_noticias_feed_cache';
+    
+    if (!forzar) {
+      const cached = cache.get(cacheKey);
+      if (cached) {
+        return ContentService.createTextOutput(cached).setMimeType(ContentService.MimeType.JSON);
+      }
+    }
+
+    const apiKey = e.parameter.apikey || '969a1c382c93acb4e914d1594b8efa30';
+    const topics = [
+      { key: 'ia', label: 'IA & Dev', q: 'Inteligencia Artificial OR OpenAI OR Claude OR Gemini OR "Python"', country: '' },
+      { key: 'finanzas', label: 'Finanzas', q: 'Dolar OR Merval OR BCRA OR inflacion OR Bitcoin', country: 'ar' },
+      { key: 'motor', label: 'Deporte Motor', q: 'Franco Colapinto OR "Formula 1" OR MotoGP OR IndyCar', country: '' },
+      { key: 'boca', label: 'Boca Juniors', q: 'Boca Juniors OR Bombonera', country: 'ar' },
+      { key: 'tenis', label: 'Tenis', q: 'Tenis OR Cerundolo OR Etcheverry OR ATP', country: '' },
+      { key: 'ciencia', label: 'Ciencia & Tech', q: 'SpaceX OR NASA OR "autos electricos" OR "hibridos enchufables"', country: '' }
+    ];
+
+    let allArticles = [];
+
+    for (let i = 0; i < topics.length; i++) {
+      const t = topics[i];
+      if (i > 0) {
+        Utilities.sleep(1150); // Respetar rate limit de 1 req/segundo de GNews
+      }
+      let url = 'https://gnews.io/api/v4/search?q=' + encodeURIComponent(t.q) + '&lang=es&max=2&apikey=' + encodeURIComponent(apiKey);
+      if (t.country) {
+        url += '&country=' + encodeURIComponent(t.country);
+      }
+      try {
+        const resp = UrlFetchApp.fetch(url, {
+          headers: { 'User-Agent': 'Mozilla/5.0' },
+          muteHttpExceptions: true
+        });
+        if (resp.getResponseCode() === 200) {
+          const json = JSON.parse(resp.getContentText());
+          if (json && Array.isArray(json.articles)) {
+            json.articles.forEach(art => {
+              allArticles.push({
+                categoria: t.key,
+                categoriaLabel: t.label,
+                titulo: art.title || 'Sin título',
+                resumen: art.description || art.content || '',
+                fuente: art.source ? art.source.name : 'Diario Digital',
+                url: art.url,
+                publishedAt: art.publishedAt || new Date().toISOString(),
+                image: art.image || null
+              });
+            });
+          }
+        }
+      } catch (err) {
+        Logger.log('Error GNews en ' + t.key + ': ' + err);
+      }
+    }
+
+    allArticles.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+
+    const responsePayload = JSON.stringify({
+      timestamp: Date.now(),
+      status: 'ok',
+      articles: allArticles
+    });
+
+    if (allArticles.length > 0) {
+      try {
+        cache.put(cacheKey, responsePayload, 3600);
+      } catch (e) {}
+    }
+
+    return ContentService.createTextOutput(responsePayload).setMimeType(ContentService.MimeType.JSON);
+  }
+
   // Cotización de ticker vía Google Finance Nativo y Bull Market
   if (e && e.parameter && e.parameter.sheet === 'cotizacion') {
     const ticker = (e.parameter.ticker || '').toUpperCase();

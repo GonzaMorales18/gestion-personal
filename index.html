@@ -24062,72 +24062,90 @@ async function actualizarNoticiasEnVivo(forzar = false) {
   if (btnRefresh) btnRefresh.classList.add('opacity-70', 'pointer-events-none');
   if (iconRefresh) iconRefresh.classList.add('fa-spin');
   if (dotEl) dotEl.className = 'w-1.5 h-1.5 rounded-full bg-cyan-400 inline-block animate-ping';
-  if (statusEl) statusEl.innerText = "Consultando noticias de hoy en GNews...";
+  if (statusEl) statusEl.innerText = "Consultando noticias de hoy en vivo...";
 
   try {
-    const keys = Object.keys(GNEWS_TOPICS);
-    let todasLasNoticias = [];
-    let errores = [];
+    let noticias = [];
 
-    // Consulta secuencial con pausa de 1150ms para respetar el límite de 1 req/segundo de GNews
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i];
-      const topic = GNEWS_TOPICS[key];
-
-      if (i > 0) {
-        await new Promise(r => setTimeout(r, 1150));
-      }
-
-      let url = `https://gnews.io/api/v4/search?q=${encodeURIComponent(topic.query)}&lang=es&max=2&apikey=${apiKey.trim()}`;
-      if (topic.country) {
-        url += `&country=${topic.country}`;
-      }
-
-      try {
-        const res = await fetch(url);
-        if (!res.ok) {
-          const err = await res.json().catch(() => ({}));
-          throw new Error(err.errors?.[0] || `HTTP ${res.status}`);
+    // 1. Intentar vía Google Apps Script proxy (evita bloqueos de CORS en GitHub Pages y ahorra cuota con caché)
+    try {
+      const urlProxy = `${scriptURL}?sheet=noticias${forzar ? '&forzar=true' : ''}&apikey=${encodeURIComponent(apiKey)}`;
+      const res = await fetch(urlProxy);
+      if (res.ok) {
+        const json = await res.json();
+        if (json && json.status === 'ok' && Array.isArray(json.articles) && json.articles.length > 0) {
+          noticias = json.articles.map(art => ({
+            ...art,
+            tiempo: formatTiempoRelativoGNews(art.publishedAt)
+          }));
         }
-        const data = await res.json();
-        const articles = Array.isArray(data.articles) ? data.articles : [];
-        const mapeados = articles.map(art => ({
-          categoria: key,
-          categoriaLabel: topic.label,
-          titulo: art.title || 'Sin título',
-          resumen: art.description || art.content || '',
-          fuente: art.source?.name || 'Diario Digital',
-          url: art.url,
-          tiempo: formatTiempoRelativoGNews(art.publishedAt),
-          publishedAt: art.publishedAt || new Date().toISOString(),
-          image: art.image || null
-        }));
-        todasLasNoticias = todasLasNoticias.concat(mapeados);
-      } catch (err) {
-        console.warn(`Error obteniendo noticias para ${key}:`, err);
-        errores.push(`${key}: ${err.message}`);
+      }
+    } catch (proxyErr) {
+      console.warn("Proxy Apps Script no respondió con noticias:", proxyErr);
+    }
+
+    // 2. Si el proxy aún no devolvió noticias (ej. script.txt aún no re-desplegado), intentar llamada directa
+    if (noticias.length === 0) {
+      const keys = Object.keys(GNEWS_TOPICS);
+      let errores = [];
+
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        const topic = GNEWS_TOPICS[key];
+
+        if (i > 0) {
+          await new Promise(r => setTimeout(r, 1150));
+        }
+
+        let url = `https://gnews.io/api/v4/search?q=${encodeURIComponent(topic.query)}&lang=es&max=2&apikey=${apiKey.trim()}`;
+        if (topic.country) {
+          url += `&country=${topic.country}`;
+        }
+
+        try {
+          const res = await fetch(url);
+          if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.errors?.[0] || `HTTP ${res.status}`);
+          }
+          const data = await res.json();
+          const articles = Array.isArray(data.articles) ? data.articles : [];
+          const mapeados = articles.map(art => ({
+            categoria: key,
+            categoriaLabel: topic.label,
+            titulo: art.title || 'Sin título',
+            resumen: art.description || art.content || '',
+            fuente: art.source?.name || 'Diario Digital',
+            url: art.url,
+            tiempo: formatTiempoRelativoGNews(art.publishedAt),
+            publishedAt: art.publishedAt || new Date().toISOString(),
+            image: art.image || null
+          }));
+          noticias = noticias.concat(mapeados);
+        } catch (err) {
+          console.warn(`Error en consulta ${key}:`, err);
+          errores.push(`${key}: ${err.message}`);
+        }
+      }
+
+      if (noticias.length === 0 && errores.length > 0) {
+        const algunBloqueoCORS = errores.some(e => e.toLowerCase().includes('failed to fetch') || e.toLowerCase().includes('networkerror') || e.includes('429'));
+        if (algunBloqueoCORS) {
+          renderizarAvisoDespliegueAppsScript();
+          return;
+        }
       }
     }
 
-    if (todasLasNoticias.length === 0 && errores.length > 0) {
-      const primerError = errores[0];
-      if (primerError.toLowerCase().includes('forbidden') || primerError.toLowerCase().includes('api key') || primerError.toLowerCase().includes('unauthorized') || primerError.includes('403') || primerError.includes('401')) {
-        renderizarEstadoConfigGNews("La API Key ingresada no es válida o expiró. Por favor verifica tu clave de GNews.");
-        if (typeof showToast === 'function') showToast("API Key de GNews inválida", "error");
-        return;
-      }
-      if (primerError.includes('429') || primerError.toLowerCase().includes('rate limit') || primerError.toLowerCase().includes('quota')) {
-        if (typeof showToast === 'function') showToast("Límite diario de GNews alcanzado (100 consultas)", "warning");
-        if (statusEl) statusEl.innerText = "Límite de consultas diarias alcanzado";
-        return;
-      }
-      throw new Error(errores.join(' | '));
+    if (noticias.length === 0) {
+      renderizarAvisoDespliegueAppsScript();
+      return;
     }
 
     // Ordenar noticias por fecha de publicación descendente (más recientes primero)
-    todasLasNoticias.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+    noticias.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
 
-    noticiasDataActual = todasLasNoticias;
+    noticiasDataActual = noticias;
     localStorage.setItem('gp_gnews_cache', JSON.stringify({
       timestamp: Date.now(),
       data: noticiasDataActual
@@ -24151,6 +24169,40 @@ async function actualizarNoticiasEnVivo(forzar = false) {
     if (btnRefresh) btnRefresh.classList.remove('opacity-70', 'pointer-events-none');
     if (iconRefresh) iconRefresh.classList.remove('fa-spin');
   }
+}
+
+function renderizarAvisoDespliegueAppsScript() {
+  const contenedor = document.getElementById('contenedor-tarjetas-noticias');
+  const dotEl = document.getElementById('noticias-status-dot');
+  const statusEl = document.getElementById('noticias-status-text');
+  if (dotEl) dotEl.className = 'w-1.5 h-1.5 rounded-full bg-amber-400 inline-block';
+  if (statusEl) statusEl.innerText = "Requiere actualizar implementación de Google Apps Script";
+
+  if (!contenedor) return;
+
+  contenedor.innerHTML = `
+    <div class="col-span-full py-8 px-6 bg-slate-900/60 rounded-2xl border border-amber-500/30 text-center flex flex-col items-center justify-center max-w-xl mx-auto my-3 shadow-xl">
+      <div class="w-12 h-12 rounded-2xl bg-amber-950/80 border border-amber-600/50 flex items-center justify-center mb-3 text-amber-400 text-lg shadow-lg">
+        <i class="fas fa-shield-halved"></i>
+      </div>
+      <h4 class="text-xs font-black text-white uppercase tracking-[0.2em] mb-2">Activación de Noticias en GitHub Pages</h4>
+      <p class="text-[11px] text-slate-300 mb-3 leading-relaxed max-w-lg text-left">
+        GitHub Pages bloquea las consultas directas de GNews por restricciones de seguridad del navegador (CORS). Ya dejamos preparado el puente en tu backend para solucionarlo:
+      </p>
+      <ol class="text-[11px] text-slate-400 text-left space-y-1.5 mb-5 max-w-lg list-decimal list-inside bg-slate-950/60 p-3.5 rounded-xl border border-slate-800">
+        <li>Abre tu Google Sheet y entra en <strong>Extensiones → Apps Script</strong>.</li>
+        <li>Copia el archivo <code class="text-cyan-400 font-mono">script.txt</code> y pégalo en el editor de Apps Script.</li>
+        <li>Haz clic en <strong>Implementar → Administrar implementaciones</strong>, pulsa el icono de lápiz (Editar), elige <strong>"Nueva versión"</strong> y dale a <strong>Implementar</strong>.</li>
+      </ol>
+      <div class="flex items-center gap-3">
+        <button type="button" onclick="actualizarNoticiasEnVivo(true)" 
+                class="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-md flex items-center gap-2">
+          <i class="fas fa-rotate"></i>
+          <span>Reintentar ahora</span>
+        </button>
+      </div>
+    </div>
+  `;
 }
 
 // Compatibilidad con llamadas previas
