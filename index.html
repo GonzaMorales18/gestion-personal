@@ -1904,7 +1904,7 @@
             <div>
               <div class="flex items-center gap-2">
                 <span class="text-[10px] font-black text-white uppercase tracking-[0.2em]">Radar de Actualidad</span>
-                <span class="text-[8px] font-black text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 px-1.5 py-0.5 rounded mono uppercase tracking-wider">IA Live Feed</span>
+                <span class="text-[8px] font-black text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-1.5 py-0.5 rounded mono uppercase tracking-wider">Live Feed • GNews</span>
               </div>
               <span id="noticias-timestamp" class="text-[9px] text-slate-500 font-mono flex items-center gap-1.5 mt-0.5">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse" id="noticias-status-dot"></span>
@@ -1913,7 +1913,7 @@
             </div>
           </div>
 
-          <!-- Filtro Integrado dentro de la gran tarjeta + Botón Actualizar -->
+          <!-- Filtro Integrado dentro de la gran tarjeta + Botón Actualizar + Config -->
           <div class="flex items-center gap-2 flex-wrap">
             <div class="flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 overflow-x-auto text-[10px] font-bold max-w-full">
               <button type="button" onclick="filtrarNoticiasCategoria('todas')" id="btn-filtro-noticias-todas" class="px-2.5 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 transition-all shrink-0">Todas</button>
@@ -1925,10 +1925,15 @@
               <button type="button" onclick="filtrarNoticiasCategoria('ciencia')" id="btn-filtro-noticias-ciencia" class="px-2.5 py-1 rounded-lg text-slate-400 hover:text-white border border-transparent transition-all shrink-0 flex items-center gap-1.5"><i class="fas fa-rocket text-indigo-400 text-[10px]"></i> Ciencia & Tech</button>
             </div>
 
-            <button type="button" onclick="actualizarNoticiasIA(true)" id="btn-actualizar-noticias" title="Buscar últimas noticias con IA ahora"
+            <button type="button" onclick="actualizarNoticiasEnVivo(true)" id="btn-actualizar-noticias" title="Buscar noticias en vivo ahora"
                     class="h-8 px-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider transition-all shadow-sm shrink-0">
               <i class="fas fa-rotate" id="icono-refresh-noticias"></i>
               <span class="hidden sm:inline">Actualizar</span>
+            </button>
+
+            <button type="button" onclick="abrirConfiguracionGNews()" id="btn-config-noticias" title="Configurar API Key de GNews"
+                    class="h-8 w-8 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-400 hover:text-white flex items-center justify-center text-[11px] transition-all shadow-sm shrink-0">
+              <i class="fas fa-key"></i>
             </button>
           </div>
         </div>
@@ -23855,163 +23860,90 @@ const NOTICIAS_CATEGORIAS_ESTILOS = {
   }
 };
 
-const NOTICIAS_SEMILLA = [
-  {
-    categoria: "ia",
-    categoriaLabel: "IA & Dev",
-    titulo: "Anthropic lanza Claude 3.7 Sonnet con razonamiento híbrido y control de tokens de pensamiento",
-    resumen: "El nuevo modelo unifica respuestas instantáneas y modo de pensamiento extendido, superando benchmarks en código Python y orquestación de agentes con n8n.",
-    fuente: "TechCrunch",
-    url: "https://techcrunch.com/category/artificial-intelligence/",
-    tiempo: "Hoy"
+// ─── RADAR DE NOTICIAS EN VIVO CON GNEWS API (100% NOTICIAS REALES AL MINUTO) ───
+const GNEWS_TOPICS = {
+  ia: {
+    label: 'IA & Dev',
+    cat: 'ia',
+    query: '"Inteligencia Artificial" OR "OpenAI" OR "Claude" OR "Gemini" OR "Python"',
+    country: null
   },
-  {
-    categoria: "ia",
-    categoriaLabel: "IA & Dev",
-    titulo: "Google actualiza la API de Gemini 2.5 Flash con menor latencia para llamadas de funciones",
-    resumen: "La nueva versión reduce la latencia en un 35% e incorpora soporte avanzado para herramientas de búsqueda web en tiempo real y pipelines RAG.",
-    fuente: "Google Developers",
-    url: "https://developers.googleblog.com/",
-    tiempo: "Hoy"
+  finanzas: {
+    label: 'Finanzas',
+    cat: 'finanzas',
+    query: '"Dolar MEP" OR "Merval" OR "CEDEARs" OR "Bitcoin" OR "BCRA"',
+    country: 'ar'
   },
-  {
-    categoria: "finanzas",
-    categoriaLabel: "Finanzas",
-    titulo: "El Dólar MEP cerró estable en $1.135 y el Banco Central compró otros USD 110 millones",
-    resumen: "Rally en bonos soberanos Bonares y Globales, mientras el índice S&P Merval subió 2,4% impulsado por papeles energéticos de YPF y Pampa Energía.",
-    fuente: "Ámbito Financiero",
-    url: "https://www.ambito.com/finanzas",
-    tiempo: "Hoy"
+  motor: {
+    label: 'Deporte Motor',
+    cat: 'motor',
+    query: '"Formula 1" OR "Colapinto" OR "MotoGP" OR "F1"',
+    country: null
   },
-  {
-    categoria: "finanzas",
-    categoriaLabel: "Finanzas",
-    titulo: "El ETF IBIT de BlackRock alcanza nuevo récord de volumen con ingresos netos por USD 420M",
-    resumen: "Los fondos cotizados de Bitcoin en Wall Street concentran la mayor demanda semanal del trimestre, impulsando la cotización hacia nuevos máximos.",
-    fuente: "Bloomberg Línea",
-    url: "https://www.bloomberglinea.com/mercados/",
-    tiempo: "Ayer"
+  boca: {
+    label: 'Boca Juniors',
+    cat: 'boca',
+    query: '"Boca Juniors" OR "Bombonera"',
+    country: 'ar'
   },
-  {
-    categoria: "motor",
-    categoriaLabel: "Deporte Motor",
-    titulo: "F1: Williams y Alpine avanzan en las negociaciones por el futuro de Franco Colapinto",
-    resumen: "Flavio Briatore y James Vowles mantuvieron reuniones clave en el paddock. Crecen las expectativas sobre la butaca titular del piloto argentino.",
-    fuente: "Motorsport.com",
-    url: "https://es.motorsport.com/f1/",
-    tiempo: "Hoy"
+  tenis: {
+    label: 'Tenis',
+    cat: 'tenis',
+    query: 'Tenis OR "Cerundolo" OR "Etcheverry" OR "ATP"',
+    country: null
   },
-  {
-    categoria: "motor",
-    categoriaLabel: "Deporte Motor",
-    titulo: "Mattia Colnaghi completa exitosos ensayos de F3 y Nicolás Varrone confirma programa en IMSA",
-    resumen: "El joven piloto argentino marcó el 3° mejor registro en los tests colectivos europeos, mientras Kevin y Luciano Benavides aceleran su preparación con KTM.",
-    fuente: "Carburando",
-    url: "https://carburando.com/",
-    tiempo: "Ayer"
-  },
-  {
-    categoria: "boca",
-    categoriaLabel: "Boca Juniors",
-    titulo: "Boca define los concentrados con el regreso de Cavani y la titularidad de Zenón",
-    resumen: "Fernando Gago probó el once táctico para el próximo choque del torneo, confirmando la recuperación física del delantero uruguayo.",
-    fuente: "Diario Olé",
-    url: "https://www.ole.com.ar/boca-juniors/",
-    tiempo: "Hoy"
-  },
-  {
-    categoria: "boca",
-    categoriaLabel: "Boca Juniors",
-    titulo: "La Bombonera: Boca presentó el proyecto para ampliar la capacidad a 72.000 espectadores",
-    resumen: "El plan arquitectónico contempla la construcción de una nueva tribuna de tres bandejas sin necesidad de cortar calles aledañas.",
-    fuente: "TyC Sports",
-    url: "https://www.tycsports.com/boca-juniors/",
-    tiempo: "Ayer"
-  },
-  {
-    categoria: "tenis",
-    categoriaLabel: "Tenis",
-    titulo: "Francisco Cerúndolo venció a Lorenzo Musetti por 6-4 y 7-6 y avanzó a cuartos de final",
-    resumen: "El tenista argentino desplegó una sólida actuación con 28 tiros ganadores sobre cemento, asegurando puntos clave para ingresar al top 25 mundial.",
-    fuente: "ESPN Tenis",
-    url: "https://www.espn.com.ar/tenis/",
-    tiempo: "Hoy"
-  },
-  {
-    categoria: "tenis",
-    categoriaLabel: "Tenis",
-    titulo: "Tomás Etcheverry batalló dos horas y media para sellar su triunfo ante Jack Draper en tres sets",
-    resumen: "Con un 82% de primeros saques ganados, el platense selló su clasificación en el circuito ATP de cara a la serie de Copa Davis.",
-    fuente: "Puntodebreak",
-    url: "https://www.puntodebreak.com/",
-    tiempo: "Ayer"
-  },
-  {
-    categoria: "ciencia",
-    categoriaLabel: "Ciencia & Tech",
-    titulo: "BYD inicia la preventa en Argentina de la SUV híbrida enchufable Song Plus y el eléctrico Seal",
-    resumen: "La automotriz china oficializó su llegada al país con precios desde USD 46.000 y autonomías combinadas que superan los 1.000 kilómetros.",
-    fuente: "Infobae Autos",
-    url: "https://www.infobae.com/autos/",
-    tiempo: "Hoy"
-  },
-  {
-    categoria: "ciencia",
-    categoriaLabel: "Ciencia & Tech",
-    titulo: "SpaceX recupera exitosamente la primera etapa Super Heavy en su nuevo vuelo del Starship",
-    resumen: "La torre de lanzamiento atrapó el propulsor con los brazos mecánicos Mechazilla tras 7 minutos de vuelo desde Boca Chica, Texas.",
-    fuente: "Space.com",
-    url: "https://www.space.com/",
-    tiempo: "Ayer"
+  ciencia: {
+    label: 'Ciencia & Tech',
+    cat: 'ciencia',
+    query: 'SpaceX OR NASA OR "autos electricos" OR "hibridos enchufables"',
+    country: null
   }
-];
+};
 
 let filtroNoticiasActual = 'todas';
 let noticiasDataActual = [];
 let actualizandoNoticiasFlag = false;
 
+function formatTiempoRelativoGNews(isoDateStr) {
+  if (!isoDateStr) return "Hoy";
+  const diffMs = Date.now() - new Date(isoDateStr).getTime();
+  const diffMins = Math.floor(diffMs / (1000 * 60));
+  if (diffMins < 60) return `Hace ${Math.max(1, diffMins)}m`;
+  const diffHoras = Math.floor(diffMins / 60);
+  if (diffHoras < 24) return `Hace ${diffHoras}h`;
+  const diffDias = Math.floor(diffHoras / 24);
+  if (diffDias === 1) return "Ayer";
+  return `Hace ${diffDias}d`;
+}
+
 function inicializarNoticias() {
   try {
-    const rawCache = localStorage.getItem('gp_noticias_cache');
+    const rawCache = localStorage.getItem('gp_gnews_cache');
     if (rawCache) {
       const parsed = JSON.parse(rawCache);
       if (parsed && Array.isArray(parsed.data) && parsed.data.length > 0) {
-        // Descartar automáticamente la caché vieja si contiene los textos genéricos antiguos o enlaces a google.com/search
-        const esDataViejaSemilla = parsed.data.some(n =>
-          (n.titulo && (n.titulo.includes("armado del equipo y tabla de posiciones") || n.titulo.includes("auge de autos híbridos"))) ||
-          (n.url && n.url.includes("google.com/search"))
-        );
+        noticiasDataActual = parsed.data;
+        const diffHoras = (Date.now() - (parsed.timestamp || 0)) / (1000 * 60 * 60);
+        actualizarUINoticiasTimestamp(parsed.timestamp, "En vivo (Caché)");
+        renderizarNoticias(noticiasDataActual, filtroNoticiasActual);
 
-        if (!esDataViejaSemilla) {
-          noticiasDataActual = parsed.data;
-          const diffHoras = (Date.now() - (parsed.timestamp || 0)) / (1000 * 60 * 60);
-          actualizarUINoticiasTimestamp(parsed.timestamp);
-          renderizarNoticias(noticiasDataActual, filtroNoticiasActual);
-
-          // Si la caché tiene más de 3 horas, refrescar en segundo plano sin bloquear
-          if (diffHoras > 3) {
-            setTimeout(() => { actualizarNoticiasIA(false); }, 1500);
-          }
-          return;
-        } else {
-          localStorage.removeItem('gp_noticias_cache');
+        // Si la caché tiene más de 3 horas y hay API key, refrescar en segundo plano
+        if (diffHoras > 3 && localStorage.getItem('GNEWS_API_KEY')) {
+          setTimeout(() => { actualizarNoticiasEnVivo(false); }, 2500);
         }
+        return;
       }
     }
   } catch (e) {
-    console.warn("Error leyendo caché de noticias:", e);
+    console.warn("Error leyendo caché de noticias GNews:", e);
   }
 
-  // Si tenemos API Key en localStorage, buscar noticias frescas reales inmediatamente
-  const apiKey = localStorage.getItem('GEMINI_API_KEY');
+  const apiKey = localStorage.getItem('GNEWS_API_KEY');
   if (apiKey) {
     renderizarSkeletonNoticias();
-    setTimeout(() => { actualizarNoticiasIA(false); }, 400);
+    setTimeout(() => { actualizarNoticiasEnVivo(false); }, 400);
   } else {
-    // Si todavía no configuró la clave, cargar la semilla con enlaces reales a los portales
-    noticiasDataActual = [...NOTICIAS_SEMILLA];
-    actualizarUINoticiasTimestamp(Date.now(), "Listo (Titulares Destacados)");
-    renderizarNoticias(noticiasDataActual, filtroNoticiasActual);
+    renderizarEstadoConfigGNews();
   }
 }
 
@@ -24020,7 +23952,7 @@ function renderizarSkeletonNoticias() {
   const dotEl = document.getElementById('noticias-status-dot');
   const statusEl = document.getElementById('noticias-status-text');
   if (dotEl) dotEl.className = 'w-1.5 h-1.5 rounded-full bg-cyan-400 inline-block animate-ping';
-  if (statusEl) statusEl.innerText = "Buscando noticias de hoy y ayer en tiempo real...";
+  if (statusEl) statusEl.innerText = "Consultando noticias de hoy en GNews...";
 
   if (!contenedor) return;
   const skeletons = Array(8).fill(0).map(() => `
@@ -24040,47 +23972,71 @@ function renderizarSkeletonNoticias() {
   contenedor.innerHTML = skeletons;
 }
 
-function renderizarEstadoSinApiKey() {
+function renderizarEstadoConfigGNews(mensajeError = null) {
   const contenedor = document.getElementById('contenedor-tarjetas-noticias');
+  const dotEl = document.getElementById('noticias-status-dot');
   const statusEl = document.getElementById('noticias-status-text');
-  if (statusEl) statusEl.innerText = "Esperando configuración de API Key";
+  if (dotEl) dotEl.className = 'w-1.5 h-1.5 rounded-full bg-amber-400 inline-block';
+  if (statusEl) statusEl.innerText = "Configuración requerida";
+
   if (!contenedor) return;
+  const currentKey = localStorage.getItem('GNEWS_API_KEY') || '';
 
   contenedor.innerHTML = `
-    <div class="col-span-full py-12 px-4 bg-slate-900/30 rounded-xl border border-slate-800 text-center flex flex-col items-center justify-center">
-      <div class="w-10 h-10 rounded-2xl bg-cyan-950/80 border border-cyan-800/50 flex items-center justify-center mb-3">
-        <i class="fas fa-key text-cyan-400 text-sm"></i>
+    <div class="col-span-full py-10 px-6 bg-slate-900/50 rounded-2xl border border-slate-800 text-center flex flex-col items-center justify-center max-w-xl mx-auto my-3 shadow-xl">
+      <div class="w-12 h-12 rounded-2xl bg-cyan-950/80 border border-cyan-700/60 flex items-center justify-center mb-4 shadow-lg shadow-cyan-950/50">
+        <i class="fas fa-satellite-dish text-cyan-400 text-base"></i>
       </div>
-      <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-1">Conecta tu API Key de Gemini</h4>
-      <p class="text-[11px] text-slate-400 max-w-md mb-4 leading-relaxed">
-        Para ver noticias de hoy y ayer en tiempo real de tus temas (F1, Boca, Tenis, Finanzas, IA y Ciencia), ingresa tu clave de Google Gemini.
+      <h4 class="text-xs font-black text-white uppercase tracking-[0.2em] mb-1.5">Conectar Noticias en Vivo (GNews)</h4>
+      <p class="text-[11px] text-slate-400 mb-4 leading-relaxed max-w-md">
+        Ingresa tu API Key gratuita de <strong>GNews.io</strong> para recibir noticias reales de hoy al minuto con enlaces directos a Olé, Infobae, Ámbito, Motorsport, etc.
       </p>
-      <button type="button" onclick="configurarApiKeyNoticias()" class="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-[10px] uppercase tracking-wider transition-colors shadow-lg shadow-cyan-900/30">
-        <i class="fas fa-plug mr-1.5"></i> Configurar API Key
-      </button>
+
+      ${mensajeError ? `<div class="mb-4 px-3 py-1.5 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 text-[10px] font-bold">${mensajeError}</div>` : ''}
+
+      <div class="flex flex-col sm:flex-row items-center gap-2 w-full max-w-md">
+        <input type="text" id="input-gnews-api-key" value="${currentKey}" placeholder="Pega tu API Key de GNews aquí..." 
+               class="w-full bg-slate-950 border border-slate-700 focus:border-cyan-500 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none mono transition-colors">
+        <button type="button" onclick="guardarGNewsApiKey()" 
+                class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-xs uppercase tracking-wider transition-all shrink-0 cursor-pointer shadow-md">
+          Guardar
+        </button>
+      </div>
+
+      <div class="mt-4 flex items-center gap-2 text-[10px] text-slate-500">
+        <span>¿No tienes una clave?</span>
+        <a href="https://gnews.io/" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:text-cyan-300 font-bold underline flex items-center gap-1">
+          <span>Obtener gratis en gnews.io (100 consultas/día)</span>
+          <i class="fas fa-external-link-alt text-[8px]"></i>
+        </a>
+      </div>
     </div>
   `;
 }
 
-function configurarApiKeyNoticias() {
-  const key = prompt("Por favor ingresa tu API Key de Google Gemini:");
-  if (key && key.trim()) {
-    localStorage.setItem('GEMINI_API_KEY', key.trim());
-    actualizarNoticiasIA(true);
+function guardarGNewsApiKey() {
+  const input = document.getElementById('input-gnews-api-key');
+  const key = input ? input.value.trim() : '';
+  if (!key) {
+    if (typeof showToast === 'function') showToast("Por favor ingresa una API Key válida", "warning");
+    return;
   }
+  localStorage.setItem('GNEWS_API_KEY', key);
+  if (typeof showToast === 'function') showToast("API Key guardada ✓ Conectando con GNews...", "success");
+  renderizarSkeletonNoticias();
+  actualizarNoticiasEnVivo(true);
 }
 
-async function actualizarNoticiasIA(forzar = false) {
+function abrirConfiguracionGNews() {
+  renderizarEstadoConfigGNews();
+}
+
+async function actualizarNoticiasEnVivo(forzar = false) {
   if (actualizandoNoticiasFlag) return;
 
-  let apiKey = localStorage.getItem('GEMINI_API_KEY');
-  if (!apiKey && forzar) {
-    apiKey = prompt("Ingresa tu API Key de Google Gemini para buscar noticias en tiempo real con IA:");
-    if (!apiKey) return;
-    localStorage.setItem('GEMINI_API_KEY', apiKey.trim());
-  }
+  const apiKey = localStorage.getItem('GNEWS_API_KEY');
   if (!apiKey) {
-    renderizarEstadoSinApiKey();
+    renderizarEstadoConfigGNews();
     return;
   }
 
@@ -24093,166 +24049,84 @@ async function actualizarNoticiasIA(forzar = false) {
   if (btnRefresh) btnRefresh.classList.add('opacity-70', 'pointer-events-none');
   if (iconRefresh) iconRefresh.classList.add('fa-spin');
   if (dotEl) dotEl.className = 'w-1.5 h-1.5 rounded-full bg-cyan-400 inline-block animate-ping';
-  if (statusEl) statusEl.innerText = "Buscando sucesos de hoy y ayer con Google Search...";
-
-  const ahora = new Date();
-  const ayer = new Date(ahora.getTime() - 24 * 60 * 60 * 1000);
-  const fechaHoyStr = ahora.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-  const fechaAyerStr = ayer.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-
-  const promptNoticias = `Eres un editor y curador periodístico de máxima precisión en tiempo real.
-Hoy es: ${fechaHoyStr}. Ayer fue: ${fechaAyerStr}.
-
-REGLAS OBLIGATORIAS:
-1. SUCESOS CONCRETOS Y HECHOS PUNTUALES (NO TEMAS GENERALES):
-   - Cada noticia DEBE ser un suceso real con nombres propios, marcas, modelos, precios, resultados deportivos o cifras exactas.
-   - PROHIBIDO titulares genéricos o atemporales como "Actualidad del plantel", "Auge de autos", "Novedades de F1", "El avance de la IA".
-   - Por ejemplo: "Ferrari presentó el F80 híbrido de 1200 CV", "Boca le ganó 1-0 a Unión con gol de Giménez", "El Dólar Blue bajó a $1.130 y el Central compró USD 85M", "Anthropic lanzó Claude 3.7 con razonamiento híbrido".
-2. ESTRICTA VIGENCIA (SOLO HOY O AYER):
-   - Todas las noticias deben haberse publicado estrictamente HOY (${fechaHoyStr}) o AYER (${fechaAyerStr}). Descarta noticias anteriores.
-3. ENLACE DIRECTO AL ARTÍCULO DEL MEDIO DIGITAL:
-   - "url": DEBE ser el link web directo y real al artículo en el portal de noticias (ej: https://www.infobae.com/deportes/..., https://www.ole.com.ar/boca-juniors/..., https://es.motorsport.com/f1/..., https://techcrunch.com/..., etc.).
-   - PROHIBIDO enlaces a google.com/search o portadas genéricas.
-
-EJES TEMÁTICOS (Genera 2 noticias bien específicas por cada uno):
-1. "ia": IA y Desarrollo (lanzamientos de modelos de OpenAI/Anthropic/Google, features de APIs, agentes n8n, RAG, Python/Django/Flask).
-2. "finanzas": Finanzas y Economía (cotizaciones de Dólar MEP/CCL, medidas BCRA/CNV, licitaciones de ONs, Merval, ETF Bitcoin IBIT).
-3. "motor": Deporte Motor (resultados y declaraciones de F1, novedades contractuales de Franco Colapinto, Mattia Colnaghi en F3, Varrone, Benavides Dakar, MotoGP).
-4. "boca": Boca Juniors (resultado del último partido, formación confirmada por Gago con nombres, mercado de pases con futbolistas puntuales, ampliación de La Bombonera).
-5. "tenis": Tenis Profesional (resultados de torneos ATP con sets y rivales de Francisco Cerúndolo, Tomás Etcheverry, Sebastián Báez, Coria).
-6. "ciencia": Ciencia, Espacio y Tecnología (lanzamientos o descubrimientos concretos de NASA/SpaceX; presentación de nuevos modelos de autos eléctricos o híbridos enchufables con marca y precio).
-
-Formato de respuesta: Responde ÚNICAMENTE con un array JSON válido dentro de un bloque \`\`\`json ... \`\`\`:
-\`\`\`json
-[
-  {
-    "categoria": "ia",
-    "categoriaLabel": "IA & Dev",
-    "titulo": "Titular periodístico con nombres propios o marcas",
-    "resumen": "Resumen de 1 o 2 oraciones con el hecho concreto ocurrido hoy o ayer.",
-    "fuente": "Nombre del medio digital (ej: Infobae, Olé, Clarín, Motorsport, TechCrunch, Ámbito)",
-    "url": "https://url-directa-al-articulo-en-el-portal.com/...",
-    "tiempo": "Hoy"
-  }
-]
-\`\`\``;
-
-  const models = ['gemini-3.6-flash', 'gemini-3.5-flash-lite', 'gemini-3.5-flash', 'gemini-flash-lite-latest', 'gemini-2.5-flash', 'gemini-2.0-flash'];
-  let response = null;
-  let lastError = '';
+  if (statusEl) statusEl.innerText = "Consultando noticias de hoy en GNews...";
 
   try {
-    // Intento 1: Con Google Search Grounding
-    for (const model of models) {
-      try {
-        response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: promptNoticias }] }],
-            tools: [{ googleSearch: {} }]
-          })
-        });
-        if (response.ok) break;
-        const errData = await response.json().catch(() => ({}));
-        lastError = errData.error?.message || `HTTP ${response.status}`;
-      } catch (e) {
-        lastError = e.message;
+    const keys = Object.keys(GNEWS_TOPICS);
+    const promesas = keys.map(async (key) => {
+      const topic = GNEWS_TOPICS[key];
+      let url = `https://gnews.io/api/v4/search?q=${encodeURIComponent(topic.query)}&lang=es&max=2&apikey=${apiKey.trim()}`;
+      if (topic.country) {
+        url += `&country=${topic.country}`;
       }
-    }
-
-    // Intento 2: Fallback sin tools si grounding estuviera restringido en esa API key
-    if (!response || !response.ok) {
-      for (const model of models) {
-        try {
-          response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: promptNoticias }] }]
-            })
-          });
-          if (response.ok) break;
-          const errData = await response.json().catch(() => ({}));
-          lastError = errData.error?.message || `HTTP ${response.status}`;
-        } catch (e) {
-          lastError = e.message;
-        }
+      const res = await fetch(url);
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.errors?.[0] || `HTTP ${res.status}`);
       }
-    }
-
-    if (!response || !response.ok) {
-      throw new Error(lastError || "No se pudo conectar con la API de Gemini.");
-    }
-
-    const data = await response.json();
-    const candidateText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-
-    let jsonStr = candidateText;
-    const match = candidateText.match(/```json\s*([\s\S]*?)\s*```/) || candidateText.match(/```\s*([\s\S]*?)\s*```/);
-    if (match) {
-      jsonStr = match[1];
-    } else {
-      const p1 = candidateText.indexOf('[');
-      const p2 = candidateText.lastIndexOf(']');
-      if (p1 !== -1 && p2 > p1) jsonStr = candidateText.substring(p1, p2 + 1);
-    }
-
-    const noticiasParsed = JSON.parse(jsonStr);
-    if (!Array.isArray(noticiasParsed) || noticiasParsed.length === 0) {
-      throw new Error("El formato devuelto por la IA no fue una lista de noticias válida.");
-    }
-
-    // Extraer chunks reales de Google Search Grounding si están disponibles
-    const groundingChunks = data.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
-    const webChunks = groundingChunks.map(c => c.web).filter(w => w && w.uri);
-
-    // Normalizar y enriquecer enlaces directos
-    noticiasParsed.forEach(n => {
-      const esUrlValida = n.url && n.url.startsWith('http') && !n.url.includes('google.com/search');
-
-      if (!esUrlValida && webChunks.length > 0) {
-        // Buscar el chunk web de grounding más representativo del título o medio
-        const nTitle = (n.titulo || '').toLowerCase();
-        const nFuente = (n.fuente || '').toLowerCase().replace(/\s+/g, '');
-
-        const matchChunk = webChunks.find(w => {
-          const wTitle = (w.title || '').toLowerCase();
-          const wUri = (w.uri || '').toLowerCase();
-          const palabras = nTitle.split(/\s+/).filter(p => p.length > 4);
-          const coincidencias = palabras.filter(p => wTitle.includes(p) || wUri.includes(p));
-          return coincidencias.length >= 2 || (nFuente && wUri.includes(nFuente));
-        });
-
-        if (matchChunk && matchChunk.uri) {
-          n.url = matchChunk.uri;
-        } else {
-          const unusedChunk = webChunks.find(w => !noticiasParsed.some(other => other.url === w.uri));
-          if (unusedChunk && unusedChunk.uri) n.url = unusedChunk.uri;
-        }
-      }
-
-      if (!n.tiempo) n.tiempo = "Hoy";
+      const data = await res.json();
+      const articles = Array.isArray(data.articles) ? data.articles : [];
+      return articles.map(art => ({
+        categoria: key,
+        categoriaLabel: topic.label,
+        titulo: art.title || 'Sin título',
+        resumen: art.description || art.content || '',
+        fuente: art.source?.name || 'Diario Digital',
+        url: art.url,
+        tiempo: formatTiempoRelativoGNews(art.publishedAt),
+        publishedAt: art.publishedAt || new Date().toISOString(),
+        image: art.image || null
+      }));
     });
 
-    noticiasDataActual = noticiasParsed;
-    localStorage.setItem('gp_noticias_cache', JSON.stringify({
+    const resultados = await Promise.allSettled(promesas);
+    let todasLasNoticias = [];
+    let errores = [];
+
+    resultados.forEach((r, idx) => {
+      if (r.status === 'fulfilled') {
+        todasLasNoticias = todasLasNoticias.concat(r.value);
+      } else {
+        errores.push(`${keys[idx]}: ${r.reason?.message || 'Error'}`);
+      }
+    });
+
+    if (todasLasNoticias.length === 0 && errores.length > 0) {
+      const primerError = errores[0];
+      if (primerError.toLowerCase().includes('forbidden') || primerError.toLowerCase().includes('api key') || primerError.toLowerCase().includes('unauthorized') || primerError.includes('403') || primerError.includes('401')) {
+        renderizarEstadoConfigGNews("La API Key ingresada no es válida o expiró. Por favor verifica tu clave de GNews.");
+        if (typeof showToast === 'function') showToast("API Key de GNews inválida", "error");
+        return;
+      }
+      if (primerError.includes('429') || primerError.toLowerCase().includes('rate limit') || primerError.toLowerCase().includes('quota')) {
+        if (typeof showToast === 'function') showToast("Límite diario de GNews alcanzado (100 consultas)", "warning");
+        if (statusEl) statusEl.innerText = "Límite de consultas diarias alcanzado";
+        return;
+      }
+      throw new Error(errores.join(' | '));
+    }
+
+    // Ordenar noticias por fecha de publicación descendente (más recientes primero)
+    todasLasNoticias.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+
+    noticiasDataActual = todasLasNoticias;
+    localStorage.setItem('gp_gnews_cache', JSON.stringify({
       timestamp: Date.now(),
       data: noticiasDataActual
     }));
 
-    actualizarUINoticiasTimestamp(Date.now(), "Actualizado en vivo");
+    actualizarUINoticiasTimestamp(Date.now(), "En vivo desde GNews");
     renderizarNoticias(noticiasDataActual, filtroNoticiasActual);
     if (typeof showToast === 'function') {
-      showToast("Radar de noticias actualizado con noticias reales de hoy ✓", "success");
+      showToast("Radar de noticias actualizado en vivo ✓", "success");
     }
 
   } catch (error) {
-    console.error("Error al actualizar noticias IA:", error);
-    if (statusEl) statusEl.innerText = "Error al actualizar (usando noticias guardadas)";
+    console.error("Error al actualizar noticias GNews:", error);
+    if (statusEl) statusEl.innerText = "Error de conexión con GNews";
     if (dotEl) dotEl.className = 'w-1.5 h-1.5 rounded-full bg-rose-500 inline-block';
     if (forzar && typeof showToast === 'function') {
-      showToast("Error al conectar con IA: " + error.message, "error");
+      showToast("Error al conectar con GNews: " + error.message, "error");
     }
   } finally {
     actualizandoNoticiasFlag = false;
@@ -24260,6 +24134,9 @@ Formato de respuesta: Responde ÚNICAMENTE con un array JSON válido dentro de u
     if (iconRefresh) iconRefresh.classList.remove('fa-spin');
   }
 }
+
+// Compatibilidad con llamadas previas
+const actualizarNoticiasIA = actualizarNoticiasEnVivo;
 
 function renderizarNoticias(noticias, filtro = 'todas') {
   const contenedor = document.getElementById('contenedor-tarjetas-noticias');
@@ -24282,7 +24159,7 @@ function renderizarNoticias(noticias, filtro = 'todas') {
     const cat = (n.categoria || 'ia').toLowerCase();
     const estilo = NOTICIAS_CATEGORIAS_ESTILOS[cat] || NOTICIAS_CATEGORIAS_ESTILOS.ia;
     const catLabel = n.categoriaLabel || estilo.label;
-    const url = n.url || `https://www.google.com/search?q=${encodeURIComponent(n.titulo + ' ' + (n.fuente || ''))}`;
+    const url = n.url || '#';
 
     return `
       <a href="${url}" target="_blank" rel="noopener noreferrer"
@@ -24297,9 +24174,9 @@ function renderizarNoticias(noticias, filtro = 'todas') {
               <i class="fas ${estilo.icon} mr-1 text-[8px]"></i>${catLabel}
             </span>
             <span class="text-[9px] text-slate-500 font-mono flex items-center gap-1 shrink-0">
-              <span class="text-slate-400 font-bold truncate max-w-[85px]">${n.fuente || 'Noticia'}</span>
+              <span class="text-slate-400 font-bold truncate max-w-[85px]">${n.fuente || 'Diario'}</span>
               <span>•</span>
-              <span>${n.tiempo || 'Reciente'}</span>
+              <span>${n.tiempo || 'Hoy'}</span>
             </span>
           </div>
 
@@ -24317,7 +24194,7 @@ function renderizarNoticias(noticias, filtro = 'todas') {
         <!-- Footer -->
         <div class="relative z-10 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-slate-500 group-hover:text-slate-300 transition-colors">
           <span class="font-bold flex items-center gap-1 text-[9px] uppercase tracking-wider">
-            Leer nota completa
+            Leer en ${n.fuente || 'medio'}
           </span>
           <i class="fas fa-arrow-up-right-from-square text-[9px] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"></i>
         </div>
@@ -24432,8 +24309,9 @@ function filtrarCommandPalette() {
     { title: 'Escena Domótica: Modo Cine',                   sub: 'Enciende TV Living y climatización', icon: 'fa-film text-violet-400', badge: 'Domótica', fn: () => ejecutarEscenaDomotica('modo_cine') },
     { title: 'Asistente IA: Dictar para Listas',             sub: 'Hablar por micrófono para agregar o tildar tareas', icon: 'fa-microphone text-purple-400', badge: 'Listas', fn: () => toggleVozIAListas() },
     { title: 'Asistente IA: Dictar Movimiento en Balance',   sub: 'Hablar por micrófono para registrar gasto o ingreso', icon: 'fa-microphone text-purple-400', badge: 'Balance', fn: () => { showSection('finanzas'); toggleVozIABalance(); } },
-    { title: 'Ir a Radar de Noticias',                       sub: 'Ver últimas novedades personalizadas en Inicio', icon: 'fa-newspaper text-cyan-400', badge: 'Noticias', fn: () => { showSection('inicio'); setTimeout(() => { const el = document.getElementById('inicio-seccion-noticias'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }, 150); } },
-    { title: 'Actualizar Radar de Noticias con IA',          sub: 'Buscar noticias frescas con Google Search y Gemini', icon: 'fa-rotate text-cyan-400', badge: 'Noticias', fn: () => { showSection('inicio'); setTimeout(() => { const el = document.getElementById('inicio-seccion-noticias'); if (el) el.scrollIntoView({ behavior: 'smooth' }); actualizarNoticiasIA(true); }, 150); } },
+    { title: 'Ir a Radar de Noticias',                       sub: 'Ver últimas novedades en Inicio', icon: 'fa-newspaper text-cyan-400', badge: 'Noticias', fn: () => { showSection('inicio'); setTimeout(() => { const el = document.getElementById('inicio-seccion-noticias'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }, 150); } },
+    { title: 'Actualizar Radar de Noticias en Vivo',         sub: 'Descargar noticias reales al minuto con GNews', icon: 'fa-rotate text-cyan-400', badge: 'Noticias', fn: () => { showSection('inicio'); setTimeout(() => { const el = document.getElementById('inicio-seccion-noticias'); if (el) el.scrollIntoView({ behavior: 'smooth' }); actualizarNoticiasEnVivo(true); }, 150); } },
+    { title: 'Configurar API Key de GNews',                  sub: 'Conectar o cambiar clave de noticias en vivo', icon: 'fa-key text-cyan-400', badge: 'Noticias', fn: () => { showSection('inicio'); setTimeout(() => { const el = document.getElementById('inicio-seccion-noticias'); if (el) el.scrollIntoView({ behavior: 'smooth' }); abrirConfiguracionGNews(); }, 150); } },
     { title: 'Alternar Tema Claro / Oscuro',                 sub: 'Cambia entre Obsidian Glass y Nordic Daylight', icon: 'fa-adjust text-amber-400', badge: 'Ajuste', fn: () => toggleThemeMode() },
     { title: 'Exportar vista actual a CSV',                  sub: 'Descarga tabla del módulo activo', icon: 'fa-download text-emerald-400', badge: 'Acción', fn: () => exportarCSV() }
   ];
