@@ -3354,6 +3354,19 @@
               </tfoot>
             </table>
           </div>
+
+          <!-- Paginación Mis Inversiones -->
+          <div class="px-6 py-4 border-t border-slate-700/60 flex items-center justify-between">
+            <button id="btn-ahorros-prev" onclick="cambiarPaginaAhorros(-1)"
+                    class="h-8 px-4 bg-slate-800 rounded-lg text-[11px] font-bold uppercase text-slate-400 hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+              ← Anterior
+            </button>
+            <span id="ahorros-pagina-info" class="text-[11px] font-bold text-slate-400 mono">— / —</span>
+            <button id="btn-ahorros-next" onclick="cambiarPaginaAhorros(1)"
+                    class="h-8 px-4 bg-slate-800 rounded-lg text-[11px] font-bold uppercase text-slate-400 hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+              Siguiente →
+            </button>
+          </div>
         </div>
 
         <!-- Historial de operaciones (compras y ventas) -->
@@ -3394,6 +3407,19 @@
                 </tr>
               </tfoot>
             </table>
+          </div>
+
+          <!-- Paginación Operaciones -->
+          <div class="px-6 py-4 border-t border-slate-700/60 flex items-center justify-between">
+            <button id="btn-ops-prev" onclick="cambiarPaginaOperaciones(-1)"
+                    class="h-8 px-4 bg-slate-800 rounded-lg text-[11px] font-bold uppercase text-slate-400 hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+              ← Anterior
+            </button>
+            <span id="ops-pagina-info" class="text-[11px] font-bold text-slate-400 mono">— / —</span>
+            <button id="btn-ops-next" onclick="cambiarPaginaOperaciones(1)"
+                    class="h-8 px-4 bg-slate-800 rounded-lg text-[11px] font-bold uppercase text-slate-400 hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+              Siguiente →
+            </button>
           </div>
         </div>
 
@@ -3812,7 +3838,7 @@
             <input type="text" id="te-fecha-inicio" placeholder="Desde" class="w-24 h-8 px-3 bg-slate-900 border border-slate-700 rounded-xl text-[11px] font-bold text-white outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/50">
             <span class="text-slate-500 font-bold">-</span>
             <input type="text" id="te-fecha-fin" placeholder="Hasta" class="w-24 h-8 px-3 bg-slate-900 border border-slate-700 rounded-xl text-[11px] font-bold text-white outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/50">
-            <button onclick="renderTenis()" class="h-8 px-4 bg-slate-900 hover:bg-emerald-600 border border-slate-700 rounded-xl text-[11px] font-black text-white uppercase tracking-wider transition-colors">
+            <button onclick="tePaginaActual = 1; renderTenis()" class="h-8 px-4 bg-slate-900 hover:bg-emerald-600 border border-slate-700 rounded-xl text-[11px] font-black text-white uppercase tracking-wider transition-colors">
               Filtrar
             </button>
           </div>
@@ -3856,7 +3882,7 @@
             <div class="relative">
               <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
               <input type="text" id="te-buscador" placeholder="Buscar por torneo, rival, categoría o instancia..."
-                     oninput="renderTenis()"
+                     oninput="tePaginaActual = 1; renderTenis()"
                      class="w-full h-9 pl-8 pr-4 bg-black border border-slate-700 rounded-xl text-[12px] outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500/50 text-white">
             </div>
           </div>
@@ -3875,9 +3901,22 @@
                 </tr>
               </thead>
               <tbody id="te-tabla">
-                <tr><td colspan="7" class="text-center py-10 text-slate-500 text-sm"><i class="fas fa-inbox text-2xl mb-2 block"></i>Cargando...</td></tr>
+                <tr><td colspan="8" class="text-center py-10 text-slate-500 text-sm"><i class="fas fa-inbox text-2xl mb-2 block"></i>Cargando...</td></tr>
               </tbody>
             </table>
+          </div>
+
+          <!-- Paginación Tenis -->
+          <div class="px-6 py-4 border-t border-slate-700/60 flex items-center justify-between">
+            <button id="btn-te-prev" onclick="cambiarPaginaTenis(-1)"
+                    class="h-8 px-4 bg-slate-800 rounded-lg text-[11px] font-bold uppercase text-slate-400 hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+              ← Anterior
+            </button>
+            <span id="te-pagina-info" class="text-[11px] font-bold text-slate-400 mono">— / —</span>
+            <button id="btn-te-next" onclick="cambiarPaginaTenis(1)"
+                    class="h-8 px-4 bg-slate-800 rounded-lg text-[11px] font-bold uppercase text-slate-400 hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+              Siguiente →
+            </button>
           </div>
         </div>
 
@@ -4054,7 +4093,7 @@
         <div class="bg-black p-4 rounded-2xl border border-slate-700/60 flex flex-col xl:flex-row gap-3 xl:items-center justify-between">
           <div class="flex items-center gap-2 flex-wrap">
             <span class="text-[10px] font-black text-white uppercase tracking-widest mr-1">Filtros:</span>
-            <select id="pa-filtro-equipo" onchange="renderPartidos()" class="h-8 bg-slate-900 border border-slate-700/80 text-white text-[11px] font-bold rounded-xl px-3 outline-none focus:border-indigo-500">
+            <select id="pa-filtro-equipo" onchange="paPaginaActual = 1; renderPartidos()" class="h-8 bg-slate-900 border border-slate-700/80 text-white text-[11px] font-bold rounded-xl px-3 outline-none focus:border-indigo-500">
               <option value="Todos">Todos los equipos</option>
             </select>
             <div id="pa-filtro-anios" class="flex gap-2 flex-wrap ml-1"></div>
@@ -4063,7 +4102,7 @@
             <input type="text" id="pa-fecha-inicio" placeholder="Desde" class="w-24 h-8 px-3 bg-slate-900 border border-slate-700 rounded-xl text-[11px] font-bold text-white outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50">
             <span class="text-slate-500 font-bold">-</span>
             <input type="text" id="pa-fecha-fin" placeholder="Hasta" class="w-24 h-8 px-3 bg-slate-900 border border-slate-700 rounded-xl text-[11px] font-bold text-white outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50">
-            <button onclick="renderPartidos()" class="h-8 px-4 bg-slate-900 hover:bg-indigo-600 border border-slate-700 rounded-xl text-[11px] font-black text-white uppercase tracking-wider transition-colors">
+            <button onclick="paPaginaActual = 1; renderPartidos()" class="h-8 px-4 bg-slate-900 hover:bg-indigo-600 border border-slate-700 rounded-xl text-[11px] font-black text-white uppercase tracking-wider transition-colors">
               Filtrar
             </button>
           </div>
@@ -4107,7 +4146,7 @@
             <div class="relative">
               <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
               <input type="text" id="pa-buscador" placeholder="Buscar por rival, torneo, estadio o equipo..."
-                     oninput="renderPartidos()"
+                     oninput="paPaginaActual = 1; renderPartidos()"
                      class="w-full h-9 pl-8 pr-4 bg-black border border-slate-700 rounded-xl text-[12px] outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 text-white">
             </div>
           </div>
@@ -4127,6 +4166,19 @@
               </thead>
               <tbody id="pa-tbody" class="divide-y divide-slate-800/50"></tbody>
             </table>
+          </div>
+
+          <!-- Paginación Partidos Fútbol -->
+          <div class="px-6 py-4 border-t border-slate-700/60 flex items-center justify-between">
+            <button id="btn-pa-prev" onclick="cambiarPaginaPartidos(-1)"
+                    class="h-8 px-4 bg-slate-800 rounded-lg text-[11px] font-bold uppercase text-slate-400 hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+              ← Anterior
+            </button>
+            <span id="pa-pagina-info" class="text-[11px] font-bold text-slate-400 mono">— / —</span>
+            <button id="btn-pa-next" onclick="cambiarPaginaPartidos(1)"
+                    class="h-8 px-4 bg-slate-800 rounded-lg text-[11px] font-bold uppercase text-slate-400 hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+              Siguiente →
+            </button>
           </div>
         </div>
       </div>
@@ -9507,6 +9559,7 @@ async function iniciarAhorros() {
   const cachedOps = leerCacheModulo('operaciones');
   if (cachedOps && operacionesData.length === 0) {
     operacionesData = cachedOps;
+    ordenarOperacionesDesc();
     renderTablaOperaciones();
     renderPnlTotal();
     actualizarDatalistActivos();
@@ -11821,15 +11874,31 @@ function renderModalVerMasFiltrado(query) {
   }
 }
 
+let ahorrosPaginaActual = 1;
+const AHORROS_POR_PAG = 10;
+
+function cambiarPaginaAhorros(delta) {
+  const posiciones = (typeof calcularPosicionesNetas === 'function') ? calcularPosicionesNetas() : [];
+  const totalPags = Math.ceil(posiciones.length / AHORROS_POR_PAG) || 1;
+  ahorrosPaginaActual = Math.max(1, Math.min(ahorrosPaginaActual + delta, totalPags));
+  renderTablaAhorros();
+}
+
 function renderTablaAhorros() {
   const tbody = document.getElementById('tabla-ahorros');
   const tfoot = document.getElementById('tfoot-ahorros');
+  const pagInfo = document.getElementById('ahorros-pagina-info');
+  const btnPrev = document.getElementById('btn-ahorros-prev');
+  const btnNext = document.getElementById('btn-ahorros-next');
   if (!tbody) return;
 
   // Calcular posiciones netas desde el historial de operaciones
   const posiciones = calcularPosicionesNetas();
 
   if (!posiciones.length) {
+    if (pagInfo) pagInfo.textContent = '— / —';
+    if (btnPrev) btnPrev.disabled = true;
+    if (btnNext) btnNext.disabled = true;
     tbody.innerHTML = `<tr><td colspan="8" class="text-center py-12 text-slate-500 text-sm">
       <i class="fas fa-piggy-bank text-3xl mb-3 block"></i>Sin inversiones cargadas</td></tr>`;
     tfoot.classList.add('hidden');
@@ -11904,7 +11973,22 @@ function renderTablaAhorros() {
     return { ...a, precioARS, precioUSD, valorARS, valorUSD, esDolar };
   });
 
-  tbody.innerHTML = enriquecidas.map((a, i) => {
+  // Ordenar de mayor a menor valor en dólares (USD)
+  enriquecidas.sort((a, b) => (b.valorUSD || 0) - (a.valorUSD || 0));
+
+  const totalPags = Math.ceil(enriquecidas.length / AHORROS_POR_PAG) || 1;
+  if (ahorrosPaginaActual > totalPags) ahorrosPaginaActual = totalPags;
+  if (ahorrosPaginaActual < 1) ahorrosPaginaActual = 1;
+
+  if (pagInfo) pagInfo.textContent = `${ahorrosPaginaActual} / ${totalPags}`;
+  if (btnPrev) btnPrev.disabled = ahorrosPaginaActual <= 1;
+  if (btnNext) btnNext.disabled = ahorrosPaginaActual >= totalPags;
+
+  const inicio = (ahorrosPaginaActual - 1) * AHORROS_POR_PAG;
+  const slice = enriquecidas.slice(inicio, inicio + AHORROS_POR_PAG);
+
+  tbody.innerHTML = slice.map((a, i) => {
+    const globalIdx = inicio + i;
     const { precioARS, precioUSD, valorARS, valorUSD, esDolar } = a;
     const sinPrecio = tipoRequiereTicker(a.tipo) && !precioARS;
     const fmtARS = v => v != null ? '$' + Math.round(v).toLocaleString('es-AR') : '<span class="text-slate-500">—</span>';
@@ -11940,7 +12024,7 @@ function renderTablaAhorros() {
       : '';
 
     const pesoPct = (totalARS > 0 && valorARS != null) ? ((valorARS / totalARS) * 100) : 0;
-    const barColor = getColorActivoAhorro(a, i);
+    const barColor = getColorActivoAhorro(a, globalIdx);
 
     // 1. Rendimiento independiente en ARS
     const costoARS = a.costoTotalARS || (a.cantidad * (a.precioPromCompra || 0));
@@ -13038,7 +13122,11 @@ document.getElementById('ahorrosForm').addEventListener('submit', async e => {
 
   try {
     await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ accion: 'registrarOperacion', ...opCompra }) });
+    opCompra._rawIdx = Date.now();
     operacionesData.unshift(opCompra);
+    ordenarOperacionesDesc();
+    opsPaginaActual = 1;
+    ahorrosPaginaActual = 1;
     depurarFuturasComprasCompradas();
     renderTablaOperaciones();
     renderPnlTotal();
@@ -13207,7 +13295,11 @@ document.getElementById('ventaForm').addEventListener('submit', async e => {
 
   try {
     await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ accion: 'registrarOperacion', ...nuevaOp }) });
+    nuevaOp._rawIdx = Date.now();
     operacionesData.unshift(nuevaOp);
+    ordenarOperacionesDesc();
+    opsPaginaActual = 1;
+    ahorrosPaginaActual = 1;
     renderTablaOperaciones();
     renderPnlTotal();
     actualizarDatalistActivos();
@@ -13229,12 +13321,56 @@ document.getElementById('ventaForm').addEventListener('submit', async e => {
 
 // ─── HISTORIAL DE OPERACIONES ─────────────────────────────────────────────────
 let operacionesData = [];
+let opsPaginaActual = 1;
+const OPS_POR_PAG = 5;
+
+function parseOpTimestamp(fecha) {
+  if (!fecha) return 0;
+  if (typeof fecha === 'number') return fecha;
+  if (fecha instanceof Date) return fecha.getTime();
+  const str = String(fecha).trim();
+  const t = new Date(str).getTime();
+  if (!isNaN(t) && t > 0) return t;
+  const parts = str.split(/[\/\-]/);
+  if (parts.length === 3) {
+    let y, m, d;
+    if (parts[0].length === 4) {
+      y = parseInt(parts[0], 10);
+      m = parseInt(parts[1], 10) - 1;
+      d = parseInt(parts[2], 10);
+    } else {
+      d = parseInt(parts[0], 10);
+      m = parseInt(parts[1], 10) - 1;
+      y = parseInt(parts[2], 10);
+      if (y < 100) y += 2000;
+    }
+    const dt = new Date(y, m, d).getTime();
+    if (!isNaN(dt)) return dt;
+  }
+  return 0;
+}
+
+function ordenarOperacionesDesc() {
+  if (!Array.isArray(operacionesData)) return;
+  operacionesData.sort((a, b) => {
+    const tb = parseOpTimestamp(b.fecha);
+    const ta = parseOpTimestamp(a.fecha);
+    if (tb !== ta) return tb - ta;
+    return (b._rawIdx ?? 0) - (a._rawIdx ?? 0);
+  });
+}
+
+function cambiarPaginaOperaciones(delta) {
+  const totalPags = Math.ceil(operacionesData.length / OPS_POR_PAG) || 1;
+  opsPaginaActual = Math.max(1, Math.min(opsPaginaActual + delta, totalPags));
+  renderTablaOperaciones();
+}
 
 async function cargarOperacionesSheet() {
   try {
     const res  = await fetch(scriptURL + '?sheet=operaciones');
     const data = await res.json();
-    operacionesData = (data.operaciones || []).map(r => {
+    operacionesData = (data.operaciones || []).map((r, rawIdx) => {
       const tipo = r[2] || '';
       const ticker = r[3] || '';
       const desc = r[4] || '';
@@ -13267,6 +13403,7 @@ async function cargarOperacionesSheet() {
       const totalUSD = esDolar ? cant : (cant * (precioUSD || 0));
 
       return {
+        _rawIdx: rawIdx,
         fecha:        r[0] || '',
         operacion:    r[1] || 'Compra',
         tipo,
@@ -13283,6 +13420,7 @@ async function cargarOperacionesSheet() {
         moneda
       };
     });
+    ordenarOperacionesDesc();
     guardarCacheModulo('operaciones', operacionesData);
     depurarFuturasComprasCompradas();
     renderTablaOperaciones();
@@ -13301,11 +13439,26 @@ function renderTablaOperaciones() {
   const tbody = document.getElementById('tabla-operaciones');
   const tfoot = document.getElementById('tfoot-operaciones');
   const count = document.getElementById('ah-ops-count');
+  const pagInfo = document.getElementById('ops-pagina-info');
+  const btnPrev = document.getElementById('btn-ops-prev');
+  const btnNext = document.getElementById('btn-ops-next');
   if (!tbody) return;
+
+  const totalPags = Math.ceil(operacionesData.length / OPS_POR_PAG) || 1;
+  if (opsPaginaActual > totalPags) opsPaginaActual = totalPags;
+  if (opsPaginaActual < 1) opsPaginaActual = 1;
+
+  if (pagInfo) pagInfo.textContent = `${opsPaginaActual} / ${totalPags}`;
+  if (btnPrev) btnPrev.disabled = opsPaginaActual <= 1;
+  if (btnNext) btnNext.disabled = opsPaginaActual >= totalPags;
+
   if (!operacionesData.length) {
     tbody.innerHTML = '<tr><td colspan="10" class="text-center py-8 text-slate-500 text-xs">Sin operaciones registradas</td></tr>';
     if (count) count.textContent = '— operaciones';
     if (tfoot) tfoot.classList.add('hidden');
+    if (pagInfo) pagInfo.textContent = '— / —';
+    if (btnPrev) btnPrev.disabled = true;
+    if (btnNext) btnNext.disabled = true;
     return;
   }
 
@@ -13346,7 +13499,11 @@ function renderTablaOperaciones() {
     FCI: '📊', 'Fondos de Inversión': '📊', 'Fondo de Inversión': '📊', 'Fondos Comunes de Inversión': '📊', 'Fondo Común de Inversión': '📊', 'Fondos': '📊'
   };
 
-  tbody.innerHTML = operacionesData.map((op, i) => {
+  const inicio = (opsPaginaActual - 1) * OPS_POR_PAG;
+  const slice  = operacionesData.slice(inicio, inicio + OPS_POR_PAG);
+
+  tbody.innerHTML = slice.map((op, localIdx) => {
+    const i = inicio + localIdx;
     const esVenta    = op.operacion === 'Venta';
     const hasPnl     = esVenta && op.pnl !== 0;
     const pnlPos     = op.pnl >= 0;
@@ -13470,6 +13627,8 @@ async function confirmarEliminarOperacion() {
   if (pendingDeleteOpIdx === null) return;
   const op = operacionesData[pendingDeleteOpIdx];
   operacionesData.splice(pendingDeleteOpIdx, 1);
+  const maxPags = Math.ceil(operacionesData.length / OPS_POR_PAG) || 1;
+  if (opsPaginaActual > maxPags) opsPaginaActual = maxPags;
   cerrarConfirmDeleteOp();
   renderTablaOperaciones();
   renderTablaAhorros();
@@ -13563,6 +13722,7 @@ async function guardarEdicionOperacion() {
   };
 
   cerrarModalEditarOp();
+  ordenarOperacionesDesc();
   renderTablaOperaciones();
   renderTablaAhorros();
   renderPnlTotal();
@@ -14966,6 +15126,7 @@ async function iniciarPartidos() {
         }
 
         guardarCacheModulo('partidos', partidosData);
+        paPaginaActual = 1;
         paFiltroPeriodo = 'Todos';
         renderPartidos();
         showToast(isEdit ? 'Partido actualizado' : 'Partido registrado con éxito', 'success');
@@ -15011,6 +15172,8 @@ async function iniciarPartidos() {
           body: JSON.stringify({ accion: 'eliminarPartido', rowIndex })
         });
         partidosData = partidosData.filter(r => r.rowIndex !== rowIndex);
+        const maxP = Math.ceil(partidosData.length / PA_POR_PAG) || 1;
+        if (paPaginaActual > maxP) paPaginaActual = maxP;
         renderPartidos();
         showToast('Partido eliminado', 'ok');
       } catch (e) {
@@ -15103,6 +15266,24 @@ function actualizarFiltrosEquipos() {
     equipos.map(e => `<option value="${e}">${e}</option>`).join('');
 }
 
+let paPaginaActual = 1;
+const PA_POR_PAG = 10;
+
+function cambiarPaginaPartidos(delta) {
+  const qPa = (document.getElementById('pa-buscador')?.value || '').toLowerCase().trim();
+  const filtrados = typeof filtrarPartidosActivos === 'function' ? filtrarPartidosActivos() : partidosData;
+  const tablaFilas = !qPa ? filtrados : filtrados.filter(r =>
+    (r.rival || '').toLowerCase().includes(qPa) ||
+    (r.torneo || '').toLowerCase().includes(qPa) ||
+    (r.estadio || '').toLowerCase().includes(qPa) ||
+    (r.equipo || '').toLowerCase().includes(qPa) ||
+    (r.fecha || '').toLowerCase().includes(qPa)
+  );
+  const totalPags = Math.ceil(tablaFilas.length / PA_POR_PAG) || 1;
+  paPaginaActual = Math.max(1, Math.min(paPaginaActual + delta, totalPags));
+  renderPartidos();
+}
+
 function renderFiltroAniosPartidos() {
   const container = document.getElementById('pa-filtro-anios');
   if (!container) return;
@@ -15111,13 +15292,13 @@ function renderFiltroAniosPartidos() {
   const activeCls = 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/25 border border-indigo-500';
   const inactiveCls = 'bg-slate-900 border border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-white';
 
-  let html = `<button onclick="paFiltroPeriodo='Todos'; renderPartidos()" class="h-8 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${paFiltroPeriodo==='Todos' ? activeCls : inactiveCls}">Histórico</button>`;
+  let html = `<button onclick="paPaginaActual=1; paFiltroPeriodo='Todos'; renderPartidos()" class="h-8 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${paFiltroPeriodo==='Todos' ? activeCls : inactiveCls}">Histórico</button>`;
 
   anios.forEach(y => {
-    html += `<button onclick="paFiltroPeriodo='${y}'; renderPartidos()" class="h-8 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${paFiltroPeriodo===String(y) ? activeCls : inactiveCls}">${y}</button>`;
+    html += `<button onclick="paPaginaActual=1; paFiltroPeriodo='${y}'; renderPartidos()" class="h-8 px-4 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${paFiltroPeriodo===String(y) ? activeCls : inactiveCls}">${y}</button>`;
   });
 
-  html += `<button onclick="paFiltroPeriodo='personalizado'; renderPartidos()" class="h-8 px-3.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${paFiltroPeriodo==='personalizado' ? activeCls : inactiveCls}"><i class="fas fa-calendar-alt"></i> Personalizado</button>`;
+  html += `<button onclick="paPaginaActual=1; paFiltroPeriodo='personalizado'; renderPartidos()" class="h-8 px-3.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${paFiltroPeriodo==='personalizado' ? activeCls : inactiveCls}"><i class="fas fa-calendar-alt"></i> Personalizado</button>`;
 
   container.innerHTML = html;
 }
@@ -15242,11 +15423,28 @@ function renderPartidos() {
     (r.fecha || '').toLowerCase().includes(qPa)
   );
   document.getElementById('pa-count').textContent = `${tablaFilas.length} partidos`;
+
+  const totalPags = Math.ceil(tablaFilas.length / PA_POR_PAG) || 1;
+  if (paPaginaActual > totalPags) paPaginaActual = totalPags;
+  if (paPaginaActual < 1) paPaginaActual = 1;
+
+  const pagInfo = document.getElementById('pa-pagina-info');
+  const btnPrev = document.getElementById('btn-pa-prev');
+  const btnNext = document.getElementById('btn-pa-next');
+  if (pagInfo) pagInfo.textContent = `${paPaginaActual} / ${totalPags}`;
+  if (btnPrev) btnPrev.disabled = paPaginaActual <= 1;
+  if (btnNext) btnNext.disabled = paPaginaActual >= totalPags;
+
   const tbody = document.getElementById('pa-tbody');
   if (!tablaFilas.length) {
+    if (pagInfo) pagInfo.textContent = '— / —';
+    if (btnPrev) btnPrev.disabled = true;
+    if (btnNext) btnNext.disabled = true;
     tbody.innerHTML = '<tr><td colspan="8" class="text-center py-10 text-slate-500 text-sm"><i class="fas fa-futbol text-2xl mb-2 block"></i>Sin registros</td></tr>';
   } else {
-    tbody.innerHTML = tablaFilas.map(r => {
+    const inicio = (paPaginaActual - 1) * PA_POR_PAG;
+    const slice = tablaFilas.slice(inicio, inicio + PA_POR_PAG);
+    tbody.innerHTML = slice.map(r => {
       let badge = '';
       if (r.resultado === 'V') badge = `<span class="bg-green-500/20 text-green-400 border border-green-500/30 px-2 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider">✓ V</span>`;
       else if (r.resultado === 'E') badge = `<span class="bg-slate-500/20 text-slate-300 border border-slate-500/30 px-2 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider">= E</span>`;
@@ -15622,6 +15820,24 @@ function filtrarTenisActivos() {
   return tenisData.filter(r => parseTenisYear(r.fecha) === parseInt(p));
 }
 
+let tePaginaActual = 1;
+const TE_POR_PAG = 10;
+
+function cambiarPaginaTenis(delta) {
+  const qTe = (document.getElementById('te-buscador')?.value || '').toLowerCase().trim();
+  const filtrados = typeof filtrarTenisActivos === 'function' ? filtrarTenisActivos() : tenisData;
+  const tablaTenisFilas = !qTe ? filtrados : filtrados.filter(r =>
+    (r.torneo || '').toLowerCase().includes(qTe) ||
+    (r.rival || '').toLowerCase().includes(qTe) ||
+    (r.categoria || '').toLowerCase().includes(qTe) ||
+    (r.instancia || '').toLowerCase().includes(qTe) ||
+    (r.fecha || '').toLowerCase().includes(qTe)
+  );
+  const totalPags = Math.ceil(tablaTenisFilas.length / TE_POR_PAG) || 1;
+  tePaginaActual = Math.max(1, Math.min(tePaginaActual + delta, totalPags));
+  renderTenis();
+}
+
 function renderTenis() {
   renderFiltroAniosTenis();
   const isCustom = teFiltroPeriodo === 'personalizado';
@@ -15703,11 +15919,28 @@ function renderTenis() {
     (r.fecha || '').toLowerCase().includes(qTe)
   );
   document.getElementById('te-count').textContent = `${tablaTenisFilas.length} partidos`;
+
+  const totalPags = Math.ceil(tablaTenisFilas.length / TE_POR_PAG) || 1;
+  if (tePaginaActual > totalPags) tePaginaActual = totalPags;
+  if (tePaginaActual < 1) tePaginaActual = 1;
+
+  const pagInfo = document.getElementById('te-pagina-info');
+  const btnPrev = document.getElementById('btn-te-prev');
+  const btnNext = document.getElementById('btn-te-next');
+  if (pagInfo) pagInfo.textContent = `${tePaginaActual} / ${totalPags}`;
+  if (btnPrev) btnPrev.disabled = tePaginaActual <= 1;
+  if (btnNext) btnNext.disabled = tePaginaActual >= totalPags;
+
   const tbody = document.getElementById('te-tabla');
   if (!tablaTenisFilas.length) {
+    if (pagInfo) pagInfo.textContent = '— / —';
+    if (btnPrev) btnPrev.disabled = true;
+    if (btnNext) btnNext.disabled = true;
     tbody.innerHTML = '<tr><td colspan="8" class="text-center py-10 text-slate-500 text-sm"><i class="fas fa-inbox text-2xl mb-2 block"></i>Sin registros</td></tr>';
   } else {
-    tbody.innerHTML = tablaTenisFilas.map(r => {
+    const inicio = (tePaginaActual - 1) * TE_POR_PAG;
+    const slice = tablaTenisFilas.slice(inicio, inicio + TE_POR_PAG);
+    tbody.innerHTML = slice.map(r => {
       const isWin = r.ganado;
       const badgeW = isWin
         ? `<span class="bg-green-500/20 text-green-400 border border-green-500/30 px-2 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider"><i class="fas fa-check mr-0.5"></i> V</span>`
@@ -15873,7 +16106,7 @@ function renderGraficosTenis(filtrados) {
   });
 }
 
-function teSelAnio(anio) { teFiltroPeriodo = anio; renderTenis(); }
+function teSelAnio(anio) { tePaginaActual = 1; teFiltroPeriodo = anio; renderTenis(); }
 
 function renderFiltroAniosTenis() {
   const anios = [...new Set(tenisData.map(r => parseTenisYear(r.fecha)).filter(Boolean))].sort((a,b) => b-a);
@@ -15961,6 +16194,7 @@ document.getElementById('tenisForm')?.addEventListener('submit', async (e) => {
       else el.value = dInput;
     }
 
+    tePaginaActual = 1;
     teFiltroPeriodo = 'Todos';
     guardarCacheModulo('tenis', tenisData);
     renderTenis();
@@ -16018,6 +16252,8 @@ window.eliminarTenisUI = function(rowIndex) {
         body: JSON.stringify({ accion: 'eliminarTenis', rowIndex })
       });
       tenisData = tenisData.filter(r => r.rowIndex !== rowIndex);
+      const maxP = Math.ceil(tenisData.length / TE_POR_PAG) || 1;
+      if (tePaginaActual > maxP) tePaginaActual = maxP;
       guardarCacheModulo('tenis', tenisData);
       renderTenis();
       showToast('Partido eliminado', 'ok');
@@ -24430,6 +24666,7 @@ function filtrarCommandPalette() {
             cerrarCommandPalette();
             showSection('tenis');
             teSelAnio('Todos');
+            tePaginaActual = 1;
             const b = document.getElementById('te-buscador');
             if (b) { b.value = r.rival; renderTenis(); }
           }
@@ -24449,6 +24686,7 @@ function filtrarCommandPalette() {
             cerrarCommandPalette();
             showSection('partidos');
             paFiltroPeriodo = 'Todos';
+            paPaginaActual = 1;
             const b = document.getElementById('pa-buscador');
             if (b) { b.value = r.rival; }
             renderPartidos();
