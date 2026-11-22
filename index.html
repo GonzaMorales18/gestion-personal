@@ -4427,7 +4427,7 @@
           </div>
           <div class="overflow-hidden">
             <p class="text-xs md:text-[13px] font-black text-white uppercase tracking-wider truncate">Modo Cine</p>
-            <p class="text-[9.5px] md:text-[10.5px] text-slate-400 truncate mt-0.5">A/C 24°C + Encender TV</p>
+            <p class="text-[9.5px] md:text-[10.5px] text-slate-400 truncate mt-0.5">A/C 24°C Frío • TV ON</p>
           </div>
         </button>
       </div>
@@ -22200,15 +22200,19 @@ async function ejecutarEscenaDomotica(escena) {
     renderDomoticaUI();
     actualizarUltimaOrdenDomotica('dom-ac-subtitle', '24°C Frío');
     actualizarUltimaOrdenDomotica('dom-tv-subtitle', 'Encendido (Modo Cine)');
-    showToast('Modo Cine: A/C 24°C Frío + Encender TV', 'ok');
-    // 1. Prender Aire en 24°C Frío (usando pulso power: false y ajuste 24°C)
-    await enviarComandoSmartLife('Aire Acondicionado (IR)', 'Escena "Modo Cine": Encender A/C en 24°C Frío', {
+    showToast('Modo Cine: A/C 24°C Frío + TV ON', 'ok');
+    // 1. Prender Aire en 24°C Frío (usando pulso power: false y asegurando modo Frío en 24°C)
+    await enviarComandoSmartLife('Aire Acondicionado (IR)', 'Escena "Modo Cine": Encender A/C (24°C Frío)', {
       ...domState.ac,
+      temp: 24,
+      mode: 'cool',
       power: false
     });
     setTimeout(() => {
-      enviarComandoSmartLife('Aire Acondicionado (IR)', 'Escena "Modo Cine": Fijar A/C 24°C Frío', {
+      enviarComandoSmartLife('Aire Acondicionado (IR)', 'Escena "Modo Cine": Fijar 24°C Frío', {
         ...domState.ac,
+        temp: 24,
+        mode: 'cool',
         power: true
       });
     }, 900);
@@ -24675,7 +24679,7 @@ function filtrarCommandPalette() {
     { title: 'Escena Domótica: Aire y Ventilador (A/C 24°C + Ventilador ON)', sub: 'A/C a 24°C Frío Auto y asegura enchufe inteligente encendido', icon: 'fa-fan text-sky-400', badge: 'Domótica', fn: () => ejecutarEscenaDomotica('aire_ventilador') },
     { title: 'Escena Domótica: Tengo Calor (Aires a 22°C)', sub: 'Enciende ambos aires en frío', icon: 'fa-snowflake text-cyan-400', badge: 'Domótica', fn: () => ejecutarEscenaDomotica('tengo_calor') },
     { title: 'Escena Domótica: Salir de Casa (Aspirar + Enchufe OFF)', sub: 'Inicia aspiradora y apaga enchufe si está encendido', icon: 'fa-robot text-emerald-400', badge: 'Domótica', fn: () => ejecutarEscenaDomotica('salir_casa') },
-    { title: 'Escena Domótica: Modo Cine',                   sub: 'Enciende TV Living y climatización', icon: 'fa-film text-violet-400', badge: 'Domótica', fn: () => ejecutarEscenaDomotica('modo_cine') },
+    { title: 'Escena Domótica: Modo Cine',                   sub: 'Enciende TV Living y A/C a 24°C Frío', icon: 'fa-film text-violet-400', badge: 'Domótica', fn: () => ejecutarEscenaDomotica('modo_cine') },
     { title: 'Asistente IA: Dictar para Listas',             sub: 'Hablar por micrófono para agregar o tildar tareas', icon: 'fa-microphone text-purple-400', badge: 'Listas', fn: () => toggleVozIAListas() },
     { title: 'Asistente IA: Dictar Movimiento en Balance',   sub: 'Hablar por micrófono para registrar gasto o ingreso', icon: 'fa-microphone text-purple-400', badge: 'Balance', fn: () => { showSection('finanzas'); toggleVozIABalance(); } },
     { title: 'Ir a Radar de Noticias',                       sub: 'Ver últimas novedades en Inicio', icon: 'fa-newspaper text-cyan-400', badge: 'Noticias', fn: () => { showSection('inicio'); setTimeout(() => { const el = document.getElementById('inicio-seccion-noticias'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }, 150); } },
