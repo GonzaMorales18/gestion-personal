@@ -1791,7 +1791,11 @@
                   <span>Ver más</span><i class="fas fa-arrow-right text-[9px]"></i>
                 </div>
               </div>
-              <div class="grid grid-cols-3 gap-2 relative z-10">
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 relative z-10">
+                <button onclick="event.stopPropagation(); ejecutarEscenaDomotica('aire_ventilador')" class="py-1.5 px-2 rounded-xl bg-slate-900/90 hover:bg-sky-950/60 border border-slate-700/80 hover:border-sky-500/40 flex items-center justify-center gap-1.5 transition-all active:scale-95">
+                  <i class="fas fa-fan text-sky-400 text-xs"></i>
+                  <span class="text-[9px] font-black text-white uppercase tracking-wider truncate">Aire+Vent</span>
+                </button>
                 <button onclick="event.stopPropagation(); ejecutarEscenaDomotica('tengo_calor')" class="py-1.5 px-2 rounded-xl bg-slate-900/90 hover:bg-cyan-950/60 border border-slate-700/80 hover:border-cyan-500/40 flex items-center justify-center gap-1.5 transition-all active:scale-95">
                   <i class="fas fa-snowflake text-cyan-400 text-xs"></i>
                   <span class="text-[9px] font-black text-white uppercase tracking-wider truncate">Frío 22°</span>
@@ -4386,7 +4390,17 @@
       <div class="flex items-center justify-between mb-1.5 sm:mb-2 ml-1">
         <h3 class="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Escenas Rápidas (Tap-to-Run)</h3>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 md:gap-3">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 md:gap-3">
+        <button onclick="ejecutarEscenaDomotica('aire_ventilador')" class="group bg-black hover:bg-slate-900/80 rounded-xl md:rounded-2xl border border-slate-700/60 hover:border-sky-500/50 py-2.5 md:py-3 px-3.5 md:px-4 text-left transition-all flex items-center gap-3">
+          <div class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-sky-900/40 border border-sky-500/30 flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
+            <i class="fas fa-fan text-sky-400 text-sm md:text-base"></i>
+          </div>
+          <div class="overflow-hidden">
+            <p class="text-xs md:text-[13px] font-black text-white uppercase tracking-wider truncate">Aire y Ventilador</p>
+            <p class="text-[9.5px] md:text-[10.5px] text-slate-400 truncate mt-0.5">A/C 24°C Frío • Vent ON</p>
+          </div>
+        </button>
+
         <button onclick="ejecutarEscenaDomotica('tengo_calor')" class="group bg-black hover:bg-slate-900/80 rounded-xl md:rounded-2xl border border-slate-700/60 hover:border-cyan-500/50 py-2.5 md:py-3 px-3.5 md:px-4 text-left transition-all flex items-center gap-3">
           <div class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-cyan-900/40 border border-cyan-500/30 flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
             <i class="fas fa-snowflake text-cyan-400 text-sm md:text-base"></i>
@@ -22069,7 +22083,56 @@ async function domAbrirAppTV(appKey, silentToast = false) {
 
 // ─── Escenas Rápidas (Tap-to-Run) ─────────────────────────────────────────────
 async function ejecutarEscenaDomotica(escena) {
-  if (escena === 'tengo_calor') {
+  if (escena === 'aire_ventilador') {
+    // Escena: Aire en 24°C Frío (Fan Auto) y Enchufe Inteligente asegurado prendido
+    domState.ac.power = true;
+    domState.ac.temp = 24;
+    domState.ac.mode = 'cool';
+    domState.ac.fan = 'auto';
+    guardarEstadoDomotica();
+    renderDomoticaUI();
+    actualizarUltimaOrdenDomotica('dom-ac-subtitle', '24°C Frío • Fan Auto');
+    showToast('Aire y Ventilador: Verificando enchufe y configurando A/C...', 'ok');
+
+    // 1. Consultar estado del enchufe inteligente primero
+    const usaApi = domConfig.mode !== 'local' && (domConfig.clientId || domConfig.bridgeUrl);
+    if (usaApi) {
+      registrarLogDomotica('Enchufe Inteligente', 'Escena "Aire y Ventilador": Consultando estado actual...');
+      await enviarComandoSmartLife('Sistema', 'Escena "Aire y Ventilador": Consultar estado del enchufe', { action: 'status_sync' });
+    }
+
+    // 2. Asegurarse de que el enchufe inteligente quede encendido
+    const estabaEncendido = !!domState.plug.power;
+    if (!estabaEncendido) {
+      domState.plug.power = true;
+      domState.plug.lastChange = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+      guardarEstadoDomotica();
+      renderDomoticaUI();
+      actualizarUltimaOrdenDomotica('dom-plug-subtitle', 'Encendido (Escena)');
+      registrarLogDomotica('Enchufe Inteligente', 'Escena "Aire y Ventilador": Estaba apagado → Encendido (ON)');
+      await enviarComandoSmartLife('Enchufe Inteligente', 'Escena "Aire y Ventilador": Encender enchufe (ON)', { switch_1: true });
+    } else {
+      actualizarUltimaOrdenDomotica('dom-plug-subtitle', 'Verificado Encendido');
+      registrarLogDomotica('Enchufe Inteligente', 'Escena "Aire y Ventilador": Verificado (ya estaba encendido)');
+      if (usaApi && domConfig.plugId) {
+        enviarComandoSmartLife('Enchufe Inteligente', 'Escena "Aire y Ventilador": Confirmar encendido (ON)', { switch_1: true });
+      }
+    }
+
+    // 3. Encender A/C en 24°C Frío con turbina en Automático (pulso power:false y luego fijar 24°C)
+    await enviarComandoSmartLife('Aire Acondicionado (IR)', 'Escena "Aire y Ventilador": Encender A/C (24°C Frío • Auto)', {
+      ...domState.ac,
+      power: false
+    });
+    setTimeout(() => {
+      enviarComandoSmartLife('Aire Acondicionado (IR)', 'Escena "Aire y Ventilador": Fijar 24°C Frío • Turbina Auto', {
+        ...domState.ac,
+        power: true
+      });
+    }, 900);
+
+    showToast('Aire y Ventilador: A/C en 24°C Frío (Auto) y Ventilador ON', 'ok');
+  } else if (escena === 'tengo_calor') {
     domState.ac.power = true;
     domState.ac.temp = 22;
     domState.ac.mode = 'cool';
@@ -24610,6 +24673,7 @@ function filtrarCommandPalette() {
 
   // 2. Escenas rápidas de Domótica y Acciones
   const acciones = [
+    { title: 'Escena Domótica: Aire y Ventilador (A/C 24°C + Ventilador ON)', sub: 'A/C a 24°C Frío Auto y asegura enchufe inteligente encendido', icon: 'fa-fan text-sky-400', badge: 'Domótica', fn: () => ejecutarEscenaDomotica('aire_ventilador') },
     { title: 'Escena Domótica: Tengo Calor (Aires a 22°C)', sub: 'Enciende ambos aires en frío', icon: 'fa-snowflake text-cyan-400', badge: 'Domótica', fn: () => ejecutarEscenaDomotica('tengo_calor') },
     { title: 'Escena Domótica: Salir de Casa (Aspirar + Enchufe OFF)', sub: 'Inicia aspiradora y apaga enchufe si está encendido', icon: 'fa-robot text-emerald-400', badge: 'Domótica', fn: () => ejecutarEscenaDomotica('salir_casa') },
     { title: 'Escena Domótica: Modo Cine',                   sub: 'Enciende TV Living y climatización', icon: 'fa-film text-violet-400', badge: 'Domótica', fn: () => ejecutarEscenaDomotica('modo_cine') },
