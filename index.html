@@ -4427,7 +4427,7 @@
           </div>
           <div class="overflow-hidden">
             <p class="text-xs md:text-[13px] font-black text-white uppercase tracking-wider truncate">Modo Cine</p>
-            <p class="text-[9.5px] md:text-[10.5px] text-slate-400 truncate mt-0.5">A/C 24°C + TV Stremio</p>
+            <p class="text-[9.5px] md:text-[10.5px] text-slate-400 truncate mt-0.5">A/C 24°C + Encender TV</p>
           </div>
         </button>
       </div>
@@ -22195,10 +22195,12 @@ async function ejecutarEscenaDomotica(escena) {
     domState.ac.temp = 24;
     domState.ac.mode = 'cool';
     domState.tv.power = true;
-    domState.tv.activeApp = 'stremio';
+    domState.tv.activeApp = 'home';
     guardarEstadoDomotica();
     renderDomoticaUI();
-    showToast('Modo Cine: A/C 24°C Frío + TV en Stremio', 'ok');
+    actualizarUltimaOrdenDomotica('dom-ac-subtitle', '24°C Frío');
+    actualizarUltimaOrdenDomotica('dom-tv-subtitle', 'Encendido (Modo Cine)');
+    showToast('Modo Cine: A/C 24°C Frío + Encender TV', 'ok');
     // 1. Prender Aire en 24°C Frío (usando pulso power: false y ajuste 24°C)
     await enviarComandoSmartLife('Aire Acondicionado (IR)', 'Escena "Modo Cine": Encender A/C en 24°C Frío', {
       ...domState.ac,
@@ -22210,11 +22212,8 @@ async function ejecutarEscenaDomotica(escena) {
         power: true
       });
     }, 900);
-    // 2. Prender TV y luego ejecutar la macro para abrir Stremio
+    // 2. Prender TV (solo encendido de TV por infrarrojo, sin abrir Stremio)
     await enviarComandoSmartLife('TV (Control IR)', 'Escena "Modo Cine": Encender Android TV', { key: 'power' });
-    setTimeout(() => {
-      domAbrirAppTV('stremio', true);
-    }, 4500);
   }
 }
 
