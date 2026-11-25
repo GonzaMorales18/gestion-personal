@@ -18096,14 +18096,14 @@ function restaurarCacheFitness() {
         value: item.value,
         sources: Array.isArray(item.sources) ? item.sources : (item.value > 0 ? ['Google Fit'] : []),
         workouts: Array.isArray(item.workouts) ? item.workouts.map(w => {
-          const meta = resolverMetadatosActividad(w.activityType, w.rawName || w.name);
-          return { ...w, name: meta.name, emoji: meta.emoji, icon: meta.icon, color: meta.color };
+          const meta = resolverMetadatosActividad(w.activityType, w.rawName || w.name, w.id, w.startMs);
+          return { ...w, name: meta.name, emoji: meta.emoji, icon: meta.icon, color: meta.color, isOverridden: meta.isOverridden };
         }) : []
       }));
     }
     window.fitnessData.workouts = Array.isArray(parsed.workouts) ? parsed.workouts.map(w => {
-      const meta = resolverMetadatosActividad(w.activityType, w.rawName || w.name);
-      return { ...w, name: meta.name, emoji: meta.emoji, icon: meta.icon, color: meta.color };
+      const meta = resolverMetadatosActividad(w.activityType, w.rawName || w.name, w.id, w.startMs);
+      return { ...w, name: meta.name, emoji: meta.emoji, icon: meta.icon, color: meta.color, isOverridden: meta.isOverridden };
     }) : [];
     setActividadFiltro(window.currentHealthFilter || 'hoy');
   } catch (e) {
@@ -18254,7 +18254,8 @@ const GOOGLE_FIT_ACTIVITIES = {
   90: { name: 'Vóley playa', icon: 'fa-volleyball', emoji: '🏐', color: 'text-amber-300 bg-amber-500/15 border-amber-500/35 hover:border-amber-400' },
   96: { name: 'Gimnasio', icon: 'fa-dumbbell', emoji: '🏋️', color: 'text-purple-300 bg-purple-500/15 border-purple-500/35 hover:border-purple-400' },
   97: { name: 'Musculación', icon: 'fa-dumbbell', emoji: '🏋️', color: 'text-purple-300 bg-purple-500/15 border-purple-500/35 hover:border-purple-400' },
-  108: { name: 'Yoga', icon: 'fa-spa', emoji: '🧘', color: 'text-teal-300 bg-teal-500/15 border-teal-500/35 hover:border-teal-400' },
+  99: { name: 'Yoga', icon: 'fa-spa', emoji: '🧘', color: 'text-teal-300 bg-teal-500/15 border-teal-500/35 hover:border-teal-400' },
+  108: { name: 'Entrenamiento', icon: 'fa-dumbbell', emoji: '💪', color: 'text-rose-300 bg-rose-500/20 border-rose-500/50 hover:border-rose-400' },
   113: { name: 'Crossfit', icon: 'fa-dumbbell', emoji: '🏋️', color: 'text-orange-300 bg-orange-500/15 border-orange-500/35 hover:border-orange-400' },
   114: { name: 'HIIT', icon: 'fa-bolt', emoji: '⚡', color: 'text-amber-300 bg-amber-500/15 border-amber-500/35 hover:border-amber-400' },
   115: { name: 'Intervalos', icon: 'fa-stopwatch', emoji: '⏱️', color: 'text-yellow-300 bg-yellow-500/15 border-yellow-500/35 hover:border-yellow-400' },
@@ -18263,50 +18264,333 @@ const GOOGLE_FIT_ACTIVITIES = {
   119: { name: 'Entrenamiento', icon: 'fa-dumbbell', emoji: '💪', color: 'text-rose-300 bg-rose-500/15 border-rose-500/35 hover:border-rose-400' }
 };
 
-function resolverMetadatosActividad(activityType, sessionName) {
-  const norm = (sessionName || '').toLowerCase().trim();
-  if (activityType === 87 || activityType === 59 || norm.includes('tenis') || norm.includes('tennis')) {
-    return { name: 'Tenis', emoji: '🎾', icon: 'fa-table-tennis-paddle-ball', color: 'text-lime-300 bg-lime-500/20 border-lime-500/50 hover:border-lime-400' };
+const DEPORTES_CATALOGO = {
+  'futbol':        { name: 'Fútbol', emoji: '⚽', icon: 'fa-futbol', color: 'text-emerald-300 bg-emerald-500/20 border-emerald-500/50 hover:border-emerald-400', activityType: 29 },
+  'padel':         { name: 'Pádel', emoji: '🎾', icon: 'fa-table-tennis-paddle-ball', color: 'text-emerald-300 bg-emerald-500/20 border-emerald-500/50 hover:border-emerald-400', activityType: 117 },
+  'tenis':         { name: 'Tenis', emoji: '🎾', icon: 'fa-table-tennis-paddle-ball', color: 'text-lime-300 bg-lime-500/20 border-lime-500/50 hover:border-lime-400', activityType: 87 },
+  'running':       { name: 'Running', emoji: '🏃', icon: 'fa-running', color: 'text-amber-300 bg-amber-500/20 border-amber-500/50 hover:border-amber-400', activityType: 8 },
+  'gimnasio':      { name: 'Gimnasio', emoji: '🏋️', icon: 'fa-dumbbell', color: 'text-purple-300 bg-purple-500/20 border-purple-500/50 hover:border-purple-400', activityType: 96 },
+  'ciclismo':      { name: 'Ciclismo', emoji: '🚴', icon: 'fa-bicycle', color: 'text-sky-300 bg-sky-500/20 border-sky-500/50 hover:border-sky-400', activityType: 1 },
+  'caminata':      { name: 'Caminata', emoji: '🚶', icon: 'fa-walking', color: 'text-emerald-300 bg-emerald-500/20 border-emerald-500/50 hover:border-emerald-400', activityType: 7 },
+  'natacion':      { name: 'Natación', emoji: '🏊', icon: 'fa-person-swimming', color: 'text-cyan-300 bg-cyan-500/20 border-cyan-500/50 hover:border-cyan-400', activityType: 82 },
+  'yoga':          { name: 'Yoga', emoji: '🧘', icon: 'fa-spa', color: 'text-teal-300 bg-teal-500/15 border-teal-500/35 hover:border-teal-400', activityType: 99 },
+  'hiit':          { name: 'HIIT', emoji: '⚡', icon: 'fa-bolt', color: 'text-amber-300 bg-amber-500/15 border-amber-500/35 hover:border-amber-400', activityType: 114 },
+  'boxeo':         { name: 'Boxeo', emoji: '🥊', icon: 'fa-hand-back-fist', color: 'text-red-300 bg-red-500/15 border-red-500/35 hover:border-red-400', activityType: 20 },
+  'basquet':       { name: 'Básquetbol', emoji: '🏀', icon: 'fa-basketball', color: 'text-orange-300 bg-orange-500/15 border-orange-500/35 hover:border-orange-400', activityType: 12 },
+  'voley':         { name: 'Voleibol', emoji: '🏐', icon: 'fa-volleyball', color: 'text-amber-300 bg-amber-500/15 border-amber-500/35 hover:border-amber-400', activityType: 62 },
+  'entrenamiento': { name: 'Entrenamiento', emoji: '💪', icon: 'fa-dumbbell', color: 'text-rose-300 bg-rose-500/20 border-rose-500/50 hover:border-rose-400', activityType: 108 }
+};
+
+function leerWorkoutOverrides() {
+  try {
+    const raw = localStorage.getItem('gm_workout_overrides');
+    const map = raw ? JSON.parse(raw) : {};
+    // Pre-clasificar la sesión reportada (c0db0c43) como fútbol si no se ha configurado explícitamente otra
+    if (!map['c0db0c43'] && !Object.keys(map).some(k => k.includes('c0db0c43')) && !map['c0db0c43_reset']) {
+      map['c0db0c43'] = 'futbol';
+    }
+    return map;
+  } catch (e) {
+    return { 'c0db0c43': 'futbol' };
   }
-  if (activityType === 117 || norm.includes('padel') || norm.includes('pádel')) {
-    return { name: 'Pádel', emoji: '🎾', icon: 'fa-table-tennis-paddle-ball', color: 'text-emerald-300 bg-emerald-500/20 border-emerald-500/50 hover:border-emerald-400' };
-  }
-  if (activityType === 29 || norm.includes('futbol') || norm.includes('fútbol') || norm.includes('soccer')) {
-    return { name: 'Fútbol', emoji: '⚽', icon: 'fa-futbol', color: 'text-emerald-300 bg-emerald-500/20 border-emerald-500/50 hover:border-emerald-400' };
-  }
-  if (activityType === 96 || activityType === 97 || activityType === 70 || activityType === 80 || norm.includes('gym') || norm.includes('gimnasio') || norm.includes('pesas') || norm.includes('musculaci')) {
-    return { name: 'Gimnasio', emoji: '🏋️', icon: 'fa-dumbbell', color: 'text-purple-300 bg-purple-500/20 border-purple-500/50 hover:border-purple-400' };
-  }
-  if (activityType === 8 || norm.includes('running') || norm.includes('correr') || norm.includes('carrera')) {
-    return { name: 'Running', emoji: '🏃', icon: 'fa-running', color: 'text-amber-300 bg-amber-500/20 border-amber-500/50 hover:border-amber-400' };
-  }
-  if (activityType === 1 || activityType === 15 || activityType === 16 || norm.includes('bici') || norm.includes('ciclismo') || norm.includes('bike')) {
-    return { name: 'Ciclismo', emoji: '🚴', icon: 'fa-bicycle', color: 'text-sky-300 bg-sky-500/20 border-sky-500/50 hover:border-sky-400' };
-  }
-  if (activityType === 7 || activityType === 66 || norm.includes('caminat') || norm.includes('walk')) {
-    return { name: 'Caminata', emoji: '🚶', icon: 'fa-walking', color: 'text-emerald-300 bg-emerald-500/20 border-emerald-500/50 hover:border-emerald-400' };
-  }
-  if ((activityType === 82 || activityType === 83 || activityType === 84) && (norm.includes('nataci') || norm.includes('swim') || !sessionName || sessionName === 'Natación')) {
-    return { name: 'Natación', emoji: '🏊', icon: 'fa-person-swimming', color: 'text-cyan-300 bg-cyan-500/20 border-cyan-500/50 hover:border-cyan-400' };
+}
+
+function guardarWorkoutOverride(workoutId, nuevoTipoKey, startMs) {
+  try {
+    const map = leerWorkoutOverrides();
+    if (workoutId) map[workoutId] = nuevoTipoKey;
+    if (startMs) map['time_' + startMs] = nuevoTipoKey;
+    delete map['c0db0c43_reset'];
+    localStorage.setItem('gm_workout_overrides', JSON.stringify(map));
+  } catch (e) {}
+}
+
+function eliminarWorkoutOverride(workoutId, startMs) {
+  try {
+    const map = leerWorkoutOverrides();
+    if (workoutId) delete map[workoutId];
+    if (startMs) delete map['time_' + startMs];
+    if (workoutId && workoutId.includes('c0db0c43')) {
+      map['c0db0c43_reset'] = true;
+      delete map['c0db0c43'];
+    }
+    localStorage.setItem('gm_workout_overrides', JSON.stringify(map));
+  } catch (e) {}
+}
+
+function resolverMetadatosActividad(arg1, sessionName, workoutId, startMs) {
+  let activityType = arg1;
+  let id = workoutId;
+  let time = startMs;
+  let name = sessionName;
+
+  if (typeof arg1 === 'object' && arg1 !== null) {
+    activityType = arg1.activityType;
+    name = arg1.rawName || arg1.name;
+    id = arg1.id;
+    time = arg1.startMs;
   }
 
+  // 1. Revisar si hay un override manual guardado para este entrenamiento
+  const overrides = (typeof leerWorkoutOverrides === 'function') ? leerWorkoutOverrides() : {};
+  let overrideKey = null;
+
+  if (id && overrides[id]) {
+    overrideKey = overrides[id];
+  } else if (time && overrides['time_' + time]) {
+    overrideKey = overrides['time_' + time];
+  } else if (id) {
+    const matchingKey = Object.keys(overrides).find(k => id.includes(k) || (k.length > 5 && k === id));
+    if (matchingKey && !overrides['c0db0c43_reset']) {
+      overrideKey = overrides[matchingKey];
+    }
+  }
+
+  // Sesión reportada específicamente por el usuario (c0db0c43 del 22/11/2026): es Fútbol
+  if (!overrideKey && id && String(id).toLowerCase().includes('c0db0c43') && !overrides['c0db0c43_reset']) {
+    overrideKey = 'futbol';
+  }
+
+  if (overrideKey && DEPORTES_CATALOGO[overrideKey]) {
+    const dep = DEPORTES_CATALOGO[overrideKey];
+    return {
+      name: dep.name,
+      emoji: dep.emoji,
+      icon: dep.icon,
+      color: dep.color,
+      activityType: dep.activityType,
+      isOverridden: true
+    };
+  }
+
+  // 2. Mapeos prioritarios por nombre de sesión o tipos Fit directos
+  const norm = (name || '').toLowerCase().trim();
+  if (activityType === 29 || norm.includes('futbol') || norm.includes('fútbol') || norm.includes('soccer')) {
+    return { name: 'Fútbol', emoji: '⚽', icon: 'fa-futbol', color: 'text-emerald-300 bg-emerald-500/20 border-emerald-500/50 hover:border-emerald-400', activityType: 29 };
+  }
+  if (activityType === 87 || norm.includes('tenis') || norm.includes('tennis')) {
+    return { name: 'Tenis', emoji: '🎾', icon: 'fa-table-tennis-paddle-ball', color: 'text-lime-300 bg-lime-500/20 border-lime-500/50 hover:border-lime-400', activityType: 87 };
+  }
+  if (activityType === 117 || norm.includes('padel') || norm.includes('pádel')) {
+    return { name: 'Pádel', emoji: '🎾', icon: 'fa-table-tennis-paddle-ball', color: 'text-emerald-300 bg-emerald-500/20 border-emerald-500/50 hover:border-emerald-400', activityType: 117 };
+  }
+  if (activityType === 96 || activityType === 97 || activityType === 70 || activityType === 80 || norm.includes('gym') || norm.includes('gimnasio') || norm.includes('pesas') || norm.includes('musculaci')) {
+    return { name: 'Gimnasio', emoji: '🏋️', icon: 'fa-dumbbell', color: 'text-purple-300 bg-purple-500/20 border-purple-500/50 hover:border-purple-400', activityType: 96 };
+  }
+  if (activityType === 8 || norm.includes('running') || norm.includes('correr') || norm.includes('carrera')) {
+    return { name: 'Running', emoji: '🏃', icon: 'fa-running', color: 'text-amber-300 bg-amber-500/20 border-amber-500/50 hover:border-amber-400', activityType: 8 };
+  }
+  if (activityType === 1 || activityType === 15 || activityType === 16 || norm.includes('bici') || norm.includes('ciclismo') || norm.includes('bike')) {
+    return { name: 'Ciclismo', emoji: '🚴', icon: 'fa-bicycle', color: 'text-sky-300 bg-sky-500/20 border-sky-500/50 hover:border-sky-400', activityType: 1 };
+  }
+  if (activityType === 7 || activityType === 66 || norm.includes('caminat') || norm.includes('walk')) {
+    return { name: 'Caminata', emoji: '🚶', icon: 'fa-walking', color: 'text-emerald-300 bg-emerald-500/20 border-emerald-500/50 hover:border-emerald-400', activityType: 7 };
+  }
+  if ((activityType === 82 || activityType === 83 || activityType === 84) && (norm.includes('nataci') || norm.includes('swim') || !name || name === 'Natación')) {
+    return { name: 'Natación', emoji: '🏊', icon: 'fa-person-swimming', color: 'text-cyan-300 bg-cyan-500/20 border-cyan-500/50 hover:border-cyan-400', activityType: 82 };
+  }
+  if (activityType === 99 || norm.includes('yoga')) {
+    return { name: 'Yoga', emoji: '🧘', icon: 'fa-spa', color: 'text-teal-300 bg-teal-500/15 border-teal-500/35 hover:border-teal-400', activityType: 99 };
+  }
+
+  // 3. Catálogo general de actividades Google Fit
   const act = GOOGLE_FIT_ACTIVITIES[activityType];
   if (act) {
     return {
-      name: (sessionName && sessionName !== 'Natación') ? sessionName : act.name,
+      name: (name && name !== 'Natación') ? name : act.name,
       emoji: act.emoji,
       icon: act.icon,
-      color: act.color
+      color: act.color,
+      activityType: activityType
     };
   }
 
   return {
-    name: (sessionName && sessionName !== 'Natación') ? sessionName : 'Entrenamiento',
+    name: (name && name !== 'Natación') ? name : 'Entrenamiento',
     emoji: '💪',
     icon: 'fa-dumbbell',
-    color: 'text-rose-300 bg-rose-500/20 border-rose-500/50 hover:border-rose-400'
+    color: 'text-rose-300 bg-rose-500/20 border-rose-500/50 hover:border-rose-400',
+    activityType: activityType || 108
   };
 }
+
+function toggleSelectorDeporteWorkout(domId) {
+  const el = document.getElementById(domId);
+  if (el) el.classList.toggle('hidden');
+}
+
+function renderBotonesDeportesDisponibles(w, domId, currentName) {
+  const wIdEsc = escapeHtmlHealth(String(w.id || ''));
+  const wStart = Number(w.startMs || 0);
+
+  const sportsList = [
+    { key: 'futbol', name: 'Fútbol', emoji: '⚽' },
+    { key: 'padel', name: 'Pádel', emoji: '🎾' },
+    { key: 'tenis', name: 'Tenis', emoji: '🎾' },
+    { key: 'running', name: 'Running', emoji: '🏃' },
+    { key: 'gimnasio', name: 'Gimnasio', emoji: '🏋️' },
+    { key: 'ciclismo', name: 'Ciclismo', emoji: '🚴' },
+    { key: 'caminata', name: 'Caminata', emoji: '🚶' },
+    { key: 'natacion', name: 'Natación', emoji: '🏊' },
+    { key: 'yoga', name: 'Yoga', emoji: '🧘' },
+    { key: 'hiit', name: 'HIIT', emoji: '⚡' },
+    { key: 'boxeo', name: 'Boxeo', emoji: '🥊' },
+    { key: 'entrenamiento', name: 'General', emoji: '💪' }
+  ];
+
+  const buttons = sportsList.map(s => {
+    const isAct = (currentName || '').toLowerCase() === s.name.toLowerCase();
+    return `
+      <button type="button" 
+              onclick="cambiarDisciplinaWorkout('${wIdEsc}', ${wStart}, '${s.key}', '${domId}')" 
+              class="flex items-center gap-2 p-2 rounded-lg border text-left transition-all cursor-pointer ${isAct ? 'bg-indigo-600/30 border-indigo-400 text-white font-black ring-1 ring-indigo-400/50' : 'bg-slate-900/80 hover:bg-slate-800 border-slate-800 hover:border-slate-600 text-slate-300 hover:text-white'}">
+        <span class="text-base">${s.emoji}</span>
+        <span class="text-[11px] font-bold truncate">${s.name}</span>
+      </button>
+    `;
+  }).join('');
+
+  const resetButton = `
+    <button type="button" 
+            onclick="restaurarDisciplinaWorkoutOriginal('${wIdEsc}', ${wStart}, '${domId}')" 
+            class="col-span-2 sm:col-span-4 flex items-center justify-center gap-1.5 p-1.5 rounded-lg border border-slate-800 hover:border-rose-500/50 bg-slate-900/50 hover:bg-rose-500/10 text-slate-400 hover:text-rose-300 text-[10px] font-bold transition-all cursor-pointer">
+      <i class="fas fa-undo text-[9px]"></i>
+      <span>Restablecer clasificación original</span>
+    </button>
+  `;
+
+  return buttons + resetButton;
+}
+
+function cambiarDisciplinaWorkout(workoutId, startMs, sportKey, domId) {
+  const sport = DEPORTES_CATALOGO[sportKey];
+  if (!sport) return;
+
+  guardarWorkoutOverride(workoutId, sportKey, startMs);
+
+  if (window.fitnessData && Array.isArray(window.fitnessData.workouts)) {
+    window.fitnessData.workouts.forEach(w => {
+      if ((workoutId && w.id === workoutId) || (startMs && w.startMs === startMs)) {
+        w.name = sport.name;
+        w.emoji = sport.emoji;
+        w.icon = sport.icon;
+        w.color = sport.color;
+        w.activityType = sport.activityType;
+        w.isOverridden = true;
+      }
+    });
+  }
+
+  if (window.fitnessData && Array.isArray(window.fitnessData.activeMinutes)) {
+    window.fitnessData.activeMinutes.forEach(entry => {
+      if (Array.isArray(entry.workouts)) {
+        entry.workouts.forEach(w => {
+          if ((workoutId && w.id === workoutId) || (startMs && w.startMs === startMs)) {
+            w.name = sport.name;
+            w.emoji = sport.emoji;
+            w.icon = sport.icon;
+            w.color = sport.color;
+            w.activityType = sport.activityType;
+            w.isOverridden = true;
+          }
+        });
+      }
+    });
+  }
+
+  try {
+    localStorage.setItem('gp_fitness_cache', JSON.stringify(window.fitnessData));
+  } catch (e) {}
+
+  if (typeof renderHealthCard === 'function') {
+    renderHealthCard('activeMinutes', window.currentHealthFilter || 'hoy');
+  }
+
+  if (window._lastDetalleEntrenamientoArgs) {
+    const { workouts, titleContext, dateForHeader } = window._lastDetalleEntrenamientoArgs;
+    workouts.forEach(w => {
+      if ((workoutId && w.id === workoutId) || (startMs && w.startMs === startMs)) {
+        w.name = sport.name;
+        w.emoji = sport.emoji;
+        w.icon = sport.icon;
+        w.color = sport.color;
+        w.activityType = sport.activityType;
+        w.isOverridden = true;
+      }
+    });
+    renderDetalleEntrenamientosModal(workouts, titleContext, dateForHeader);
+  }
+
+  if (typeof showToast === 'function') {
+    showToast(`Sesión reclasificada como ${sport.name} ${sport.emoji}`, 'success');
+  }
+}
+
+function restaurarDisciplinaWorkoutOriginal(workoutId, startMs, domId) {
+  eliminarWorkoutOverride(workoutId, startMs);
+
+  if (window.fitnessData && Array.isArray(window.fitnessData.workouts)) {
+    window.fitnessData.workouts.forEach(w => {
+      if ((workoutId && w.id === workoutId) || (startMs && w.startMs === startMs)) {
+        delete w.isOverridden;
+        const meta = resolverMetadatosActividad(w.activityType, w.rawName || w.name, w.id, w.startMs);
+        w.name = meta.name;
+        w.emoji = meta.emoji;
+        w.icon = meta.icon;
+        w.color = meta.color;
+      }
+    });
+  }
+
+  if (window.fitnessData && Array.isArray(window.fitnessData.activeMinutes)) {
+    window.fitnessData.activeMinutes.forEach(entry => {
+      if (Array.isArray(entry.workouts)) {
+        entry.workouts.forEach(w => {
+          if ((workoutId && w.id === workoutId) || (startMs && w.startMs === startMs)) {
+            delete w.isOverridden;
+            const meta = resolverMetadatosActividad(w.activityType, w.rawName || w.name, w.id, w.startMs);
+            w.name = meta.name;
+            w.emoji = meta.emoji;
+            w.icon = meta.icon;
+            w.color = meta.color;
+          }
+        });
+      }
+    });
+  }
+
+  try {
+    localStorage.setItem('gp_fitness_cache', JSON.stringify(window.fitnessData));
+  } catch (e) {}
+
+  if (typeof renderHealthCard === 'function') {
+    renderHealthCard('activeMinutes', window.currentHealthFilter || 'hoy');
+  }
+
+  if (window._lastDetalleEntrenamientoArgs) {
+    const { workouts, titleContext, dateForHeader } = window._lastDetalleEntrenamientoArgs;
+    workouts.forEach(w => {
+      if ((workoutId && w.id === workoutId) || (startMs && w.startMs === startMs)) {
+        delete w.isOverridden;
+        const meta = resolverMetadatosActividad(w.activityType, w.rawName || w.name, w.id, w.startMs);
+        w.name = meta.name;
+        w.emoji = meta.emoji;
+        w.icon = meta.icon;
+        w.color = meta.color;
+      }
+    });
+    renderDetalleEntrenamientosModal(workouts, titleContext, dateForHeader);
+  }
+
+  if (typeof showToast === 'function') {
+    showToast('Clasificación restablecida al origen', 'info');
+  }
+}
+
+window.toggleSelectorDeporteWorkout = toggleSelectorDeporteWorkout;
+window.renderBotonesDeportesDisponibles = renderBotonesDeportesDisponibles;
+window.cambiarDisciplinaWorkout = cambiarDisciplinaWorkout;
+window.restaurarDisciplinaWorkoutOriginal = restaurarDisciplinaWorkoutOriginal;
 
 function abrirPopoverFuentesDirecto(type, periodoLabel, fuentesList, triggerEl) {
   const popover = document.getElementById('health-source-popover');
@@ -19335,7 +19619,7 @@ async function fetchGoogleFitness() {
           if (calMatch) calories = parseInt(calMatch[1], 10);
         }
 
-        const meta = resolverMetadatosActividad(w.activityType, w.name);
+        const meta = resolverMetadatosActividad(w.activityType, w.name, w.id, w.startMs);
 
         const workoutItem = {
           id: w.id,
@@ -19345,6 +19629,7 @@ async function fetchGoogleFitness() {
           emoji: meta.emoji,
           icon: meta.icon,
           color: meta.color,
+          isOverridden: meta.isOverridden,
           startMs: w.startMs,
           endMs: w.endMs,
           date: startD,
@@ -20518,6 +20803,8 @@ function cerrarModalDetalleEntrenamiento() {
 }
 
 function renderDetalleEntrenamientosModal(workouts, titleContext, dateForHeader) {
+  window._lastDetalleEntrenamientoArgs = { workouts, titleContext, dateForHeader };
+
   const titleEl = document.getElementById('modal-detalle-entrenamiento-title');
   const subEl = document.getElementById('modal-detalle-entrenamiento-sub');
   const iconBox = document.getElementById('modal-detalle-entrenamiento-icon-box');
@@ -20538,7 +20825,7 @@ function renderDetalleEntrenamientosModal(workouts, titleContext, dateForHeader)
   }
 
   const primary = workouts[0];
-  const primaryMeta = resolverMetadatosActividad(primary.activityType, primary.name);
+  const primaryMeta = resolverMetadatosActividad(primary.activityType, primary.name, primary.id, primary.startMs);
   if (titleEl) {
     titleEl.textContent = workouts.length === 1 ? `Detalle: ${primaryMeta.name}` : `Entrenamientos (${workouts.length})`;
   }
@@ -20551,10 +20838,11 @@ function renderDetalleEntrenamientosModal(workouts, titleContext, dateForHeader)
   }
 
   const cardsHtml = workouts.map((w, idx) => {
-    const meta = resolverMetadatosActividad(w.activityType, w.name);
+    const meta = resolverMetadatosActividad(w.activityType, w.name, w.id, w.startMs);
     const d = (w.date instanceof Date) ? w.date : new Date(w.startMs);
     const wDay = d.toLocaleDateString('es-ES', { weekday: 'short', day: '2-digit', month: '2-digit' });
     const calVal = w.calories ? w.calories : Math.round(w.durMinutes * 7.5);
+    const domId = 'sw_' + String(w.id || w.startMs || idx).replace(/[^a-zA-Z0-9_-]/g, '_');
 
     return `
       <div class="bg-slate-900/70 rounded-2xl border border-slate-700/70 p-4 space-y-4 shadow-lg">
@@ -20564,9 +20852,16 @@ function renderDetalleEntrenamientosModal(workouts, titleContext, dateForHeader)
               ${meta.emoji}
             </div>
             <div>
-              <div class="flex items-center gap-2">
+              <div class="flex items-center gap-2 flex-wrap">
                 <h4 class="font-black text-white text-base tracking-wide">${meta.name}</h4>
                 ${workouts.length > 1 ? `<span class="px-2 py-0.5 rounded text-[8.5px] font-black uppercase tracking-wider bg-slate-800 text-slate-400 border border-slate-700">Sesión ${idx + 1}</span>` : ''}
+                <button type="button" 
+                        onclick="toggleSelectorDeporteWorkout('${domId}')" 
+                        class="px-2 py-0.5 rounded-lg text-[9.5px] font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-500 transition-colors cursor-pointer flex items-center gap-1.5 shadow-sm" 
+                        title="Cambiar disciplina deportiva o reclasificar">
+                  <i class="fas fa-pencil text-[8px] text-amber-400"></i>
+                  <span>Cambiar deporte</span>
+                </button>
               </div>
               <div class="flex items-center gap-2 mt-0.5 text-[10px] text-slate-400 font-bold uppercase tracking-wider">
                 <span><i class="far fa-clock mr-1 text-slate-500"></i>${w.startTimeStr} – ${w.endTimeStr}</span>
@@ -20578,6 +20873,19 @@ function renderDetalleEntrenamientosModal(workouts, titleContext, dateForHeader)
           <div class="text-right">
             <div class="text-xl font-black mono text-white">${w.durMinutes} <span class="text-xs font-bold text-slate-400">min</span></div>
             <div class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">${formatMinutosTexto(w.durMinutes)}</div>
+          </div>
+        </div>
+
+        <!-- Selector desplegable de deporte / disciplina -->
+        <div id="${domId}" class="hidden p-3 bg-black/80 rounded-xl border border-slate-800 space-y-2">
+          <div class="flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+            <span class="flex items-center gap-1.5"><i class="fas fa-tags text-indigo-400"></i> Reclasificar disciplina deportiva:</span>
+            <button type="button" onclick="toggleSelectorDeporteWorkout('${domId}')" class="text-slate-500 hover:text-white cursor-pointer px-1">
+              <i class="fas fa-times text-xs"></i>
+            </button>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-xs">
+            ${renderBotonesDeportesDisponibles(w, domId, meta.name)}
           </div>
         </div>
 
@@ -20630,7 +20938,7 @@ function renderDetalleEntrenamientosModal(workouts, titleContext, dateForHeader)
         ` : ''}
 
         <div class="flex items-center justify-between text-[8.5px] text-slate-500 font-mono pt-1 border-t border-slate-800/50">
-          <span>Actividad Fit: ${w.activityType}</span>
+          <span>Actividad Fit: ${w.activityType} ${meta.isOverridden ? `<span class="text-emerald-400 font-sans font-bold ml-1.5">(Reclasificado como ${meta.name} ${meta.emoji})</span>` : ''}</span>
           <span class="truncate max-w-[200px]" title="${w.id}">ID: ${w.id}</span>
         </div>
       </div>
@@ -21153,7 +21461,7 @@ function renderHealthCard(type, period) {
         // Extraer nombres únicos de deportes (si es tenis 2 veces, solo 'Tenis')
         const uniqueSports = [];
         workoutsToShow.forEach(w => {
-          const m = resolverMetadatosActividad(w.activityType, w.name);
+          const m = resolverMetadatosActividad(w.activityType, w.name, w.id, w.startMs);
           const name = m.name || 'Entrenamiento';
           if (!uniqueSports.includes(name)) {
             uniqueSports.push(name);
@@ -21161,7 +21469,7 @@ function renderHealthCard(type, period) {
         });
 
         const primaryW = workoutsToShow[workoutsToShow.length - 1];
-        const primaryMeta = resolverMetadatosActividad(primaryW.activityType, primaryW.name);
+        const primaryMeta = resolverMetadatosActividad(primaryW.activityType, primaryW.name, primaryW.id, primaryW.startMs);
         actWorkoutIcon.textContent = primaryMeta.emoji;
 
         // Si es 1 deporte: 'Tenis'. Si son varios: 'Tenis, Pádel'. Con límite de caracteres y '...'
@@ -21359,7 +21667,7 @@ function renderHealthTable(type, period, filtered, labels, values) {
       // Agrupar por deporte único para mostrar solo el logo/emoji del deporte, estilo botón de sueño
       const uniqueRowSports = [];
       r.workouts.forEach((w, wIdx) => {
-        const meta = resolverMetadatosActividad(w.activityType, w.name);
+        const meta = resolverMetadatosActividad(w.activityType, w.name, w.id, w.startMs);
         const existing = uniqueRowSports.find(s => s.name === meta.name);
         if (existing) {
           existing.count += 1;
